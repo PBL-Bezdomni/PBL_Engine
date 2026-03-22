@@ -15,7 +15,8 @@
 #include "stb_image.h"
 #include <vector>
 #include "miniaudio.h"
-#include "ft2build.h"
+#include <ft2build.h>
+#include FT_FREETYPE_H  
 
 //#define IMGUI_IMPL_OPENGL_LOADER_GLAD
 
@@ -383,6 +384,21 @@ bool init()
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetScrollCallback(window, scroll_callback);
+
+
+    /*FT_Library ft;
+    if (FT_Init_FreeType(&ft))
+    {
+        std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
+        return -1;
+    }
+
+    FT_Face face;
+    if (FT_New_Face(ft, "fonts/arial.ttf", 0, &face))
+    {
+        std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
+        return -1;
+    }*/
 
     return true;
 }

@@ -25,7 +25,7 @@ target_include_directories(miniaudio PRIVATE ${MINIAUDIO_DIR})
 # freetype
 set(FREETYPE_DIR ${CMAKE_CURRENT_LIST_DIR}/freetype-2.14.3)
 set(freetype_SOURCE_DIR ${FREETYPE_DIR}/include CACHE INTERNAL "")
-add_library(freetype STATIC ${FREETYPE_DIR}/src/base/ftbase.c)
+add_library(freetype STATIC ${FREETYPE_DIR}/include/ft2build.c)
 target_include_directories(freetype PRIVATE ${FREETYPE_DIR}/include)
 
 # other
