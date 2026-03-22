@@ -22,6 +22,12 @@ set(miniaudio_SOURCE_DIR ${MINIAUDIO_DIR} CACHE INTERNAL "")
 add_library(miniaudio STATIC ${MINIAUDIO_DIR}/miniaudio.c)
 target_include_directories(miniaudio PRIVATE ${MINIAUDIO_DIR})
 
+# freetype
+set(FREETYPE_DIR ${CMAKE_CURRENT_LIST_DIR}/freetype-2.14.3)
+set(freetype_SOURCE_DIR ${FREETYPE_DIR}/include CACHE INTERNAL "")
+add_library(freetype STATIC ${FREETYPE_DIR}/src/base/ftbase.c)
+target_include_directories(freetype PRIVATE ${FREETYPE_DIR}/include)
+
 # other
 CPMAddPackage("gh:assimp/assimp@5.4.3")
 CPMAddPackage("gh:glfw/glfw#3.3.8")
@@ -40,6 +46,7 @@ add_library(imgui STATIC ${imgui_SOURCE_DIR}/imgui.cpp
 set_target_properties(glad
                       stb_image
 					  miniaudio
+					  freetype
                       assimp 
                       glfw 
                       glm 

@@ -15,8 +15,7 @@
 #include "stb_image.h"
 #include <vector>
 #include "miniaudio.h"
-
-
+#include "ft2build.h"
 
 //#define IMGUI_IMPL_OPENGL_LOADER_GLAD
 

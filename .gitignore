@@ -13,6 +13,14 @@ CMakeUserPresets.json
 
 [Bb]uild/
 
+.vs
+
+thirdparty/freetype-2.14.3/builds
+thirdparty/freetype-2.14.3/tests
+thirdparty/freetype-2.14.3/docs
+thirdparty/freetype-2.14.3/objs
+thirdparty/freetype-2.14.3/subprojects
+
 # CLion
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
 #  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
