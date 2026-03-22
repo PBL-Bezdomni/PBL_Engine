@@ -16,6 +16,12 @@ set(stb_image_SOURCE_DIR ${STB_IMAGE_DIR} CACHE INTERNAL "")
 add_library(stb_image STATIC ${STB_IMAGE_DIR}/stb_image.cpp)
 target_include_directories(stb_image PRIVATE ${STB_IMAGE_DIR})
 
+# miniaudio
+set(MINIAUDIO_DIR ${CMAKE_CURRENT_LIST_DIR}/miniaudio)
+set(miniaudio_SOURCE_DIR ${MINIAUDIO_DIR} CACHE INTERNAL "")
+add_library(miniaudio STATIC ${MINIAUDIO_DIR}/miniaudio.c)
+target_include_directories(miniaudio PRIVATE ${MINIAUDIO_DIR})
+
 # other
 CPMAddPackage("gh:assimp/assimp@5.4.3")
 CPMAddPackage("gh:glfw/glfw#3.3.8")
@@ -32,7 +38,8 @@ add_library(imgui STATIC ${imgui_SOURCE_DIR}/imgui.cpp
 					     ${imgui_SOURCE_DIR}/imgui_widgets.cpp)
 						 
 set_target_properties(glad
-                      stb_image 
+                      stb_image
+					  miniaudio
                       assimp 
                       glfw 
                       glm 
