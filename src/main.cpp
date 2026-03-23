@@ -131,6 +131,7 @@ Entity refractNanosuit;
 Entity reflectNanosuit;
 
 Entity house;
+Entity monkey;
 Entity house_roof;
 Entity house_floor;
 Entity objectsTransform;
@@ -218,7 +219,7 @@ float m_PointLightHeight = 5.f;
 float m_PointLightLinear = 0.09f;
 float m_PointLightQuadratic = 0.032f;
 
-glm::vec3 m_DirLightDirection = glm::vec3(-0.2f, -1.0f, -0.3f);
+glm::vec3 m_DirLightDirection = glm::vec3(0.2f, -1.0f, -3.3f);
 glm::vec3 m_DirLightVisualPos = glm::vec3(0.f, 10.f, 0.f);
 glm::vec3 m_DirLightColor = glm::vec3(1.f, 1.f, 1.f);
 float m_DirLightAngleX = -45.f;
@@ -617,7 +618,7 @@ void render()
     glm::mat4 projection;
     projection = MainCamera.GetProjectionMatrix(float(WINDOW_WIDTH) / float(WINDOW_HEIGHT), CAMERA_NEAR_PLANE, CAMERA_FAR_PLANE);
 
-    DrawSkybox(skyboxView, projection);
+    //DrawSkybox(skyboxView, projection);
 
     glm::vec3 dirrotTemp = quat.rotate_quat(glm::vec3(0.f, -1.f, 0.f), axisX, m_DirLightAngleX);
     m_DirLightDirection = quat.rotate_quat(dirrotTemp, axisY, m_DirLightAngleZ);
@@ -662,7 +663,12 @@ void render()
     world.transform.pos = glm::vec3(0.f, 0.f, -30.f);
     world.transform.scale = glm::vec3(0.7f);
 
-    house_floor.transform.scale = glm::vec3(FLOOR_SCALE, 1.f, FLOOR_SCALE);
+    house_floor.transform.scale = glm::vec3(0.1f, 0.1f, 0.1f);
+    house_floor.transform.pos = glm::vec3(5.f, 0.f, 0.f);
+    house_floor.transform.eulerRot.x = 45.f;
+
+    monkey.transform.pos = glm::vec3(-5.f, 0.f, 0.f);
+    monkey.transform.scale = glm::vec3(2.f);
 
     m_PointLightPos = quat.rotate_quat(glm::vec3(m_PointLightRadius, m_PointLightHeight, 0.f), axisY, glfwGetTime() * 50);
     pointLight.transform.pos = m_PointLightPos;
@@ -877,7 +883,8 @@ void LoadModels()
     house_roof = Entity(m_InstanceShader, (relativePath + "res/models/house/roof.obj").c_str(), houseNetSize, RoofInstanceMatrix);
     house_floor = Entity(m_BasicShader, (relativePath + "res/models/house/floor.obj").c_str());
     house_floor.AssignTexture(m_FloorTex);
-    house_floor.ScaleTexture(FLOOR_TEX_SCALE * FLOOR_SCALE);
+    //house_floor.ScaleTexture(FLOOR_TEX_SCALE * FLOOR_SCALE);
+    monkey = Entity(m_BasicShader, (relativePath + "res/models/monkey/Monkey.obj").c_str());
 
     lightsTransform = Entity(m_LightSourceShader);
     pointLight = Entity(m_LightSourceShader);
@@ -899,26 +906,27 @@ void LoadModels()
 void AssignSceneGraph()
 {
     world.addChild(&objectsTransform);
-    world.addChild(&lightsTransform);
+    //world.addChild(&lightsTransform);
 
     objectsTransform.addChild(&house_floor);
-    objectsTransform.addChild(&house);
-    objectsTransform.addChild(&airplane);
-    objectsTransform.addChild(&refractNanosuit);
-    objectsTransform.addChild(&reflectNanosuit);
+    objectsTransform.addChild(&monkey);
+    //objectsTransform.addChild(&house);
+    //objectsTransform.addChild(&airplane);
+    //objectsTransform.addChild(&refractNanosuit);
+    //objectsTransform.addChild(&reflectNanosuit);
 
-    house.addChild(&house_roof);
+    //house.addChild(&house_roof);
 
-    lightsTransform.addChild(&pointLight);
-    lightsTransform.addChild(&dirLight);
-    lightsTransform.addChild(&spotLight1);
-    lightsTransform.addChild(&spotLight2);
+    //lightsTransform.addChild(&pointLight);
+    //lightsTransform.addChild(&dirLight);
+    //lightsTransform.addChild(&spotLight1);
+    //lightsTransform.addChild(&spotLight2);
 
-    pointLight.addChild(&pointLightSphere);
-    dirLight.addChild(&dirLightTransform);
-    dirLightTransform.addChild(&dirLightArrow);
-    spotLight1.addChild(&spotLight1Cone);
-    spotLight2.addChild(&spotLight2Cone);
+    //pointLight.addChild(&pointLightSphere);
+    //dirLight.addChild(&dirLightTransform);
+    //dirLightTransform.addChild(&dirLightArrow);
+    //spotLight1.addChild(&spotLight1Cone);
+    //spotLight2.addChild(&spotLight2Cone);
 
     world.updateSelfAndChild();
 }
