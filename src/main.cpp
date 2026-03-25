@@ -90,6 +90,7 @@ bool m_IsFirstMouse = true;
 
 Shader m_BasicShader;
 Shader m_SkyboxShader;
+Shader m_2DShader;
 
 Texture m_FloorTex;
 Texture m_SkyboxTex;
@@ -291,6 +292,7 @@ void init_imgui()
 void init_shader()
 {
     m_BasicShader = Shader((relativePath + "res/shaders/basic.vert").c_str(), (relativePath + "res/shaders/basic.frag").c_str());
+    m_2DShader = Shader((relativePath + "res/shaders/basic.vert").c_str(), (relativePath + "res/shaders/basic.frag").c_str());
     m_SkyboxShader = Shader((relativePath + "res/shaders/cubemap.vert").c_str(), (relativePath + "res/shaders/cubemap.frag").c_str());
 
     LoadTexture((relativePath + "res/textures/stone.jpg").c_str(), &m_FloorTex);
@@ -414,12 +416,17 @@ void render()
     m_BasicShader.setMat4("projection", projection);
     SetupShaderLight(m_BasicShader);
 
+    m_2DShader.use();
+    m_2DShader.setMat4("view", glm::mat4(1.0f));
+    m_2DShader.setMat4("projection", projection);
+    SetupShaderLight(m_2DShader);
+
     world.transform.pos = glm::vec3(0.f, 0.f, -30.f);
     world.transform.scale = glm::vec3(0.7f);
 
     house_floor.transform.scale = glm::vec3(0.1f, 0.1f, 0.1f);
-    house_floor.transform.pos = glm::vec3(5.f, 0.f, 0.f);
-    house_floor.transform.eulerRot.x = 45.f;
+    house_floor.transform.pos = glm::vec3(7.f, 0.f, 0.f);
+    house_floor.transform.eulerRot.x = 90.f;
 
     monkey.transform.pos = glm::vec3(-5.f, 0.f, 0.f);
     monkey.transform.scale = glm::vec3(2.f);
@@ -496,7 +503,7 @@ void LoadModels()
     world = Entity();
     objectsTransform = Entity(m_BasicShader);
 
-    house_floor = Entity(m_BasicShader, (relativePath + "res/models/house/floor.obj").c_str());
+    house_floor = Entity(m_2DShader, (relativePath + "res/models/house/floor.obj").c_str());
     house_floor.AssignTexture(m_FloorTex);
     //house_floor.ScaleTexture(FLOOR_TEX_SCALE * FLOOR_SCALE);
     monkey = Entity(m_BasicShader, (relativePath + "res/models/monkey/Monkey.obj").c_str());
