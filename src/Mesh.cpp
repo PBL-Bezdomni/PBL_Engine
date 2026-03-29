@@ -3,32 +3,32 @@
 
 Mesh::Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures, unsigned int instancing, vector<glm::mat4> instanceMatrix)
 {
-    this->vertices = vertices;
-    this->indices = indices;
-    this->textures = textures;
-    this->instancing = instancing;
+    this->Vertices = vertices;
+    this->Indices = indices;
+    this->Textures = textures;
+    this->Instancing = instancing;
 
-    setupMesh();
+    SetupMesh();
     if (instancing > 1)
     {
-        setupInstanceMatrix(instanceMatrix);
+        SetupInstanceMatrix(instanceMatrix);
     }
 }
 
-void Mesh::setupMesh()
+void Mesh::SetupMesh()
 {
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
+    glGenVertexArrays(1, &m_VAO);
+    glGenBuffers(1, &m_VBO);
+    glGenBuffers(1, &m_EBO);
 
-    glBindVertexArray(VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBindVertexArray(m_VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
 
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, Vertices.size() * sizeof(Vertex), &Vertices[0], GL_STATIC_DRAW);
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int),
-        &indices[0], GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, Indices.size() * sizeof(unsigned int),
+        &Indices[0], GL_STATIC_DRAW);
 
     // vertex positions
     glEnableVertexAttribArray(0);
@@ -44,11 +44,11 @@ void Mesh::setupMesh()
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void Mesh::setupInstanceMatrix(vector<glm::mat4> instanceMatrix)
+void Mesh::SetupInstanceMatrix(vector<glm::mat4> instanceMatrix)
 {
-    glBindVertexArray(VAO);
-    glGenBuffers(1, &instanceVBO);
-    glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
+    glBindVertexArray(m_VAO);
+    glGenBuffers(1, &m_InstanceVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, m_InstanceVBO);
     glBufferData(GL_ARRAY_BUFFER, instanceMatrix.size() * sizeof(glm::mat4), &instanceMatrix[0], GL_STATIC_DRAW);
 
     
@@ -77,45 +77,45 @@ void Mesh::setupInstanceMatrix(vector<glm::mat4> instanceMatrix)
 
 void Mesh::RefreshInstanceMatrix(Shader& shader, vector<glm::mat4> newInstance)
 {
-    glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, m_InstanceVBO);
     glBufferData(GL_ARRAY_BUFFER, newInstance.size() * sizeof(glm::mat4), &newInstance[0], GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void Mesh::Draw(Shader& shader)
 {
-    shader.use();
-    glBindVertexArray(VAO);
+    shader.Use();
+    glBindVertexArray(m_VAO);
 
     unsigned int diffuseNr = 1;
     unsigned int specularNr = 1;
 
-    for (unsigned int i = 0; i < textures.size(); i++)
+    for (unsigned int i = 0; i < Textures.size(); i++)
     {
         glActiveTexture(GL_TEXTURE0 + i); // activate proper texture unit before binding
         // retrieve texture number (the N in diffuse_textureN)
         string number;
-        string name = textures[i].type;
+        string name = Textures[i].Type;
         if (name == "texture_diffuse")
             number = std::to_string(diffuseNr++);
         else if (name == "texture_specular")
             number = std::to_string(specularNr++);
 
-        shader.setInt(("material." + name + number).c_str(), i);
-        glBindTexture(GL_TEXTURE_2D, textures[i].id);
+        shader.SetInt(("material." + name + number).c_str(), i);
+        glBindTexture(GL_TEXTURE_2D, Textures[i].ID);
     }
     glActiveTexture(GL_TEXTURE0);
     // draw mesh
 
-    if (instancing > 1)
+    if (Instancing > 1)
     {
-        glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
-        glDrawElementsInstanced(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0, instancing);
+        glBindBuffer(GL_ARRAY_BUFFER, m_InstanceVBO);
+        glDrawElementsInstanced(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0, Instancing);
     }
     else
     {
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+        glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+        glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
     }
     
     glBindVertexArray(0);
@@ -123,9 +123,9 @@ void Mesh::Draw(Shader& shader)
 
 void Mesh::ScaleTexture(float scale)
 {
-    for (int i = 0; i < vertices.size(); i++)
+    for (int i = 0; i < Vertices.size(); i++)
     {
-        vertices[i].TexCoords *= scale;
+        Vertices[i].TexCoords *= scale;
     }
-    setupMesh();
+    SetupMesh();
 }

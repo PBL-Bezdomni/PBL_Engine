@@ -20,12 +20,10 @@
 #include "Shader.h"
 #include "Model.h"
 #include "Entity.h"
-#include "Quat.h"
+#include "Quaternion.h"
 #include "Camera.h"
-#include "Airplane.h"
 
 #define _USE_MATH_DEFINES
-#include <math.h>
 
 const float CAMERA_NEAR_PLANE = .1f;
 const float CAMERA_FAR_PLANE = 200.f;
@@ -151,7 +149,7 @@ float m_Posy = 0;
 float m_Posz = 0;
 
 const string relativePath = "../../";
-//const string relativePath = "../../../";
+// const string relativePath = "../../../";
 
 vector<string> m_CubemapFaces { 
     relativePath + "res/textures/cubemap/right.jpg", 
@@ -184,8 +182,8 @@ int main(int, char**)
     glEnable(GL_DEPTH_TEST);
 
     GenerateSkybox();
-    m_SkyboxShader.use();
-    m_SkyboxShader.setInt("skybox", 0);
+    m_SkyboxShader.Use();
+    m_SkyboxShader.SetInt("skybox", 0);
     
     //m_SkyboxShader.setInt("skybox", 0);
 
@@ -219,7 +217,7 @@ int main(int, char**)
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 
-    m_BasicShader.deleteProgram();
+    m_BasicShader.DeleteProgram();
     //glDeleteProgram(m_ShaderProgram);
 
     glfwDestroyWindow(window);
@@ -398,7 +396,7 @@ void render()
     glm::vec3 axisX = glm::vec3(1.0f, 0.f, 0.f);
     glm::vec3 axisY = glm::vec3(.0f, 1.f, 0.f);
     glm::vec3 axisZ = glm::vec3(.0f, 0.f, 1.f);
-    Quat quat = Quat();
+    Quaternion quat = Quaternion();
     
     glm::mat4 view = glm::mat4(1.0f);
     glm::mat4 skyboxView = glm::mat4(glm::mat3(MainCamera.GetViewMatrix()));;
@@ -411,38 +409,39 @@ void render()
 
     //DrawSkybox(skyboxView, projection);
 
-    m_BasicShader.use();
-    m_BasicShader.setMat4("view", view);
-    m_BasicShader.setMat4("projection", projection);
+    m_BasicShader.Use();
+    m_BasicShader.SetMat4("view", view);
+    m_BasicShader.SetMat4("projection", projection);
     SetupShaderLight(m_BasicShader);
 
-    m_2DShader.use();
-    m_2DShader.setMat4("view", glm::mat4(1.0f));
-    m_2DShader.setMat4("projection", projection);
+    m_2DShader.Use();
+    m_2DShader.SetMat4("view", glm::mat4(1.0f));
+    m_2DShader.SetMat4("projection", projection);
     SetupShaderLight(m_2DShader);
 
-    world.transform.pos = glm::vec3(0.f, 0.f, -30.f);
-    world.transform.scale = glm::vec3(0.7f);
+    world.transform.Position = glm::vec3(0.f, 0.f, -30.f);
+    world.transform.Scale = glm::vec3(0.7f);
 
-    house_floor.transform.scale = glm::vec3(0.1f, 0.1f, 0.1f);
-    house_floor.transform.pos = glm::vec3(7.f, 0.f, 0.f);
-    house_floor.transform.eulerRot.x = 90.f;
+    house_floor.transform.Scale = glm::vec3(0.1f, 0.1f, 0.1f);
+    house_floor.transform.Position = glm::vec3(7.f, 0.f, 0.f);
+    house_floor.transform.EulerAngles.x = 90.f;
 
-    monkey.transform.pos = glm::vec3(-5.f, 0.f, 0.f);
-    monkey.transform.scale = glm::vec3(2.f);
+    monkey.transform.Position = glm::vec3(-5.f, 0.f, 0.f);
+    monkey.transform.EulerAngles.y = 45.f;
+    monkey.transform.Scale = glm::vec3(2.f);
 
-    m_PointLightPos = quat.rotate_quat(glm::vec3(m_PointLightRadius, m_PointLightHeight, 0.f), axisY, glfwGetTime() * 50);
+    m_PointLightPos = quat.RotateQuaternion(glm::vec3(m_PointLightRadius, m_PointLightHeight, 0.f), axisY, glfwGetTime() * 50);
 
-    world.updateSelfAndChild();
-    world.drawSelfAndChild();
+    world.UpdateSelfAndChild();
+    world.DrawSelfAndChild();
 }
 
 void LoadTexture(const char* path, Texture* tex)
 {
-    tex->path = path;
-    tex->type = "texture_diffuse";
-    glGenTextures(1, &tex->id);
-    glBindTexture(GL_TEXTURE_2D, tex->id);
+    tex->Path = path;
+    tex->Type = "texture_diffuse";
+    glGenTextures(1, &tex->ID);
+    glBindTexture(GL_TEXTURE_2D, tex->ID);
     // set the texture wrapping/filtering options (on the currently bound texture object)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -511,47 +510,47 @@ void LoadModels()
 
 void AssignSceneGraph()
 {
-    world.addChild(&objectsTransform);
+    world.AddChild(&objectsTransform);
 
-    objectsTransform.addChild(&house_floor);
-    objectsTransform.addChild(&monkey);
+    objectsTransform.AddChild(&house_floor);
+    objectsTransform.AddChild(&monkey);
 
-    world.updateSelfAndChild();
+    world.UpdateSelfAndChild();
 }
 
 void SetupShaderLight(Shader& shader)
 {
-    shader.setBool("useDirLight", m_UseDirLight);
-    shader.setVec3("dirLight.color", m_DirLightColor);
-    shader.setVec3("dirLight.direction", m_DirLightDirection);
+    shader.SetBool("useDirLight", m_UseDirLight);
+    shader.SetVec3("dirLight.color", m_DirLightColor);
+    shader.SetVec3("dirLight.direction", m_DirLightDirection);
 
-    shader.setBool("usePointLight", m_UsePointLight);
-    shader.setVec3("pointLight.color", m_PointLightColor);
-    shader.setVec3("pointLight.position", m_PointLightPos);
-    shader.setFloat("pointLight.constant", 1.0f);
-    shader.setFloat("pointLight.linear", m_PointLightLinear);
-    shader.setFloat("pointLight.quadratic", m_PointLightQuadratic);
-    shader.setVec3("viewPos", MainCamera.Position);
+    shader.SetBool("usePointLight", m_UsePointLight);
+    shader.SetVec3("pointLight.color", m_PointLightColor);
+    shader.SetVec3("pointLight.position", m_PointLightPos);
+    shader.SetFloat("pointLight.constant", 1.0f);
+    shader.SetFloat("pointLight.linear", m_PointLightLinear);
+    shader.SetFloat("pointLight.quadratic", m_PointLightQuadratic);
+    shader.SetVec3("viewPos", MainCamera.Position);
 
-    shader.setBool("useSpotLight1", m_UseSpotLight1);
-    shader.setVec3("spotLight1.color", m_SpotLight1Color);
-    shader.setVec3("spotLight1.position", m_SpotLight1Position);
-    shader.setVec3("spotLight1.direction", m_SpotLight1Direction);
-    shader.setFloat("spotLight1.cutOff", glm::cos(glm::radians(m_SpotLight1CutOff)));
-    shader.setFloat("spotLight1.outerCutOff", glm::cos(glm::radians(m_SpotLight1OuterCutOff)));
-    shader.setFloat("spotLight1.constant", 1.0f);
-    shader.setFloat("spotLight1.linear", m_SpotLight1Linear);
-    shader.setFloat("spotLight1.quadratic", m_SpotLight2Quadratic);
+    shader.SetBool("useSpotLight1", m_UseSpotLight1);
+    shader.SetVec3("spotLight1.color", m_SpotLight1Color);
+    shader.SetVec3("spotLight1.position", m_SpotLight1Position);
+    shader.SetVec3("spotLight1.direction", m_SpotLight1Direction);
+    shader.SetFloat("spotLight1.cutOff", glm::cos(glm::radians(m_SpotLight1CutOff)));
+    shader.SetFloat("spotLight1.outerCutOff", glm::cos(glm::radians(m_SpotLight1OuterCutOff)));
+    shader.SetFloat("spotLight1.constant", 1.0f);
+    shader.SetFloat("spotLight1.linear", m_SpotLight1Linear);
+    shader.SetFloat("spotLight1.quadratic", m_SpotLight2Quadratic);
 
-    shader.setBool("useSpotLight2", m_UseSpotLight2);
-    shader.setVec3("spotLight2.color", m_SpotLight2Color);
-    shader.setVec3("spotLight2.position", m_SpotLight2Position);
-    shader.setVec3("spotLight2.direction", m_SpotLight2Direction);
-    shader.setFloat("spotLight2.cutOff", glm::cos(glm::radians(m_SpotLight2CutOff)));
-    shader.setFloat("spotLight2.outerCutOff", glm::cos(glm::radians(m_SpotLight2OuterCutOff)));
-    shader.setFloat("spotLight2.constant", 1.0f);
-    shader.setFloat("spotLight2.linear", m_SpotLight2Linear);
-    shader.setFloat("spotLight2.quadratic", m_SpotLight2Quadratic);
+    shader.SetBool("useSpotLight2", m_UseSpotLight2);
+    shader.SetVec3("spotLight2.color", m_SpotLight2Color);
+    shader.SetVec3("spotLight2.position", m_SpotLight2Position);
+    shader.SetVec3("spotLight2.direction", m_SpotLight2Direction);
+    shader.SetFloat("spotLight2.cutOff", glm::cos(glm::radians(m_SpotLight2CutOff)));
+    shader.SetFloat("spotLight2.outerCutOff", glm::cos(glm::radians(m_SpotLight2OuterCutOff)));
+    shader.SetFloat("spotLight2.constant", 1.0f);
+    shader.SetFloat("spotLight2.linear", m_SpotLight2Linear);
+    shader.SetFloat("spotLight2.quadratic", m_SpotLight2Quadratic);
 }
 
 void GenerateSkybox()
@@ -601,7 +600,7 @@ void GenerateSkybox()
          1.0f, -1.0f,  1.0f
     };
 
-    m_SkyboxShader.use();
+    m_SkyboxShader.Use();
     glGenVertexArrays(1, &m_SkyboxVAO);
     glGenBuffers(1, &m_SkyboxVBO);
     glBindVertexArray(m_SkyboxVAO);
@@ -616,12 +615,12 @@ void GenerateSkybox()
 void DrawSkybox(glm::mat4 view, glm::mat4 projection)
 {
     glDepthFunc(GL_LEQUAL);
-    m_SkyboxShader.use();
-    m_SkyboxShader.setMat4("view", view);
-    m_SkyboxShader.setMat4("projection", projection);
+    m_SkyboxShader.Use();
+    m_SkyboxShader.SetMat4("view", view);
+    m_SkyboxShader.SetMat4("projection", projection);
     glBindVertexArray(m_SkyboxVAO);
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, m_SkyboxTex.id);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, m_SkyboxTex.ID);
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
     glDepthFunc(GL_LESS);
@@ -629,8 +628,8 @@ void DrawSkybox(glm::mat4 view, glm::mat4 projection)
 
 void LoadCubemapTextures(vector<string> faces, Texture* texture)
 {
-    texture->path = "";
-    texture->type = "texture_diffuse";
+    texture->Path = "";
+    texture->Type = "texture_diffuse";
     unsigned int textureID;
     glGenTextures(1, &textureID);
     glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
@@ -659,5 +658,5 @@ void LoadCubemapTextures(vector<string> faces, Texture* texture)
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-    texture->id = textureID;
+    texture->ID = textureID;
 }

@@ -13,20 +13,20 @@ struct Vertex {
 };
 
 struct Texture {
-    unsigned int id;
-    string type;
-    string path;
+    unsigned int ID;
+    string Type;
+    string Path;
 };
 
 class Mesh
 {
 public:
     // mesh data
-    vector<Vertex>       vertices;
-    vector<unsigned int> indices;
-    vector<Texture>      textures;
+    vector<Vertex>       Vertices;
+    vector<unsigned int> Indices;
+    vector<Texture>      Textures;
 
-    unsigned int instancing;
+    unsigned int Instancing;
 
     Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures, unsigned int instancing = 1, vector<glm::mat4> instanceMatrix = {});
     void Draw(Shader& shader);
@@ -34,9 +34,9 @@ public:
     void ScaleTexture(float scale);
 private:
     //  render data
-    unsigned int VAO, VBO, EBO, instanceVBO;
+    unsigned int m_VAO, m_VBO, m_EBO, m_InstanceVBO;
 
-    void setupMesh();
-    void setupInstanceMatrix(vector<glm::mat4> instanceMatrix);
+    void SetupMesh();
+    void SetupInstanceMatrix(vector<glm::mat4> instanceMatrix);
 };
 

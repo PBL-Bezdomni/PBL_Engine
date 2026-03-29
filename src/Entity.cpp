@@ -3,13 +3,13 @@
 Entity::Entity()
 {
     m_Shader = Shader();
-    instancing = 0;
+    Instancing = 0;
 }
 
 Entity::Entity(Shader& shader)
 {
     m_Shader = shader;
-    instancing = 0;
+    Instancing = 0;
 }
 
 Entity::Entity(Shader& shader, vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures, unsigned int instancing, vector<glm::mat4> instanceMatrix) : Model(vertices, indices, textures, instancing, instanceMatrix)
@@ -22,56 +22,56 @@ Entity::Entity(Shader& shader, const char* path, unsigned int instancing, vector
     m_Shader = shader;
 }
 
-void Entity::addChild(Entity* child) 
+void Entity::AddChild(Entity* child) 
 {
-	children.push_back(child);
-	children.back()->parent = this;
+	Children.push_back(child);
+	Children.back()->Parent = this;
 }
 
-glm::mat4 Entity::getLocalModelMatrix()
+glm::mat4 Entity::GetLocalModelMatrix()
 {
     glm::mat4 rotationMatrix = glm::mat4(1.0f);
-    rotationMatrix = glm::rotate(rotationMatrix, glm::radians(transform.eulerRot.x), glm::vec3(1.0f, 0.0f, 0.0f));
-    rotationMatrix = glm::rotate(rotationMatrix, glm::radians(transform.eulerRot.y), glm::vec3(0.0f, 1.0f, 0.0f));
-    rotationMatrix = glm::rotate(rotationMatrix, glm::radians(transform.eulerRot.z), glm::vec3(0.0f, 0.0f, 1.0f));
+    rotationMatrix = glm::rotate(rotationMatrix, glm::radians(transform.EulerAngles.x), glm::vec3(1.0f, 0.0f, 0.0f));
+    rotationMatrix = glm::rotate(rotationMatrix, glm::radians(transform.EulerAngles.y), glm::vec3(0.0f, 1.0f, 0.0f));
+    rotationMatrix = glm::rotate(rotationMatrix, glm::radians(transform.EulerAngles.z), glm::vec3(0.0f, 0.0f, 1.0f));
 
     // Y * X * Z
     /*const glm::mat4 rotationMatrix = transformY * transformX * transformZ;*/
 
     // translation * rotation * scale (also know as TRS matrix)
-    return glm::translate(glm::mat4(1.0f), transform.pos) * rotationMatrix * glm::scale(glm::mat4(1.0f), transform.scale);//glm::translate(glm::mat4(1.0f), transform.pos) * 
+    return glm::translate(glm::mat4(1.0f), transform.Position) * rotationMatrix * glm::scale(glm::mat4(1.0f), transform.Scale);//glm::translate(glm::mat4(1.0f), transform.pos) * 
 }
 
 glm::vec3 Entity::GetWorldPosition()
 {
-    return glm::vec3(transform.modelMatrix[3]);
+    return glm::vec3(transform.ModelMatrix[3]);
 }
 
-void Entity::updateSelfAndChild()
+void Entity::UpdateSelfAndChild()
 {
-    if (parent != nullptr)
+    if (Parent != nullptr)
     {
-        transform.modelMatrix = parent->transform.modelMatrix * getLocalModelMatrix();
+        transform.ModelMatrix = Parent->transform.ModelMatrix * GetLocalModelMatrix();
     }
     else
     {
-        transform.modelMatrix = getLocalModelMatrix();
+        transform.ModelMatrix = GetLocalModelMatrix();
     }
 
-    for (auto&& child : children)
+    for (auto&& child : Children)
     {
-        child->updateSelfAndChild();
+        child->UpdateSelfAndChild();
     }
 }
 
-void Entity::updateSelfAndChildInstanceMatrix(glm::vec3 transform, glm::vec3 rotation, glm::vec3 scale, int index, Shader& shader, bool saveNew)
+void Entity::UpdateSelfAndChildInstanceMatrix(glm::vec3 transform, glm::vec3 rotation, glm::vec3 scale, int index, Shader& shader, bool saveNew)
 {
-    if (index >= 0 && instancing > 1 && instanceMatrix.size() > index)
+    if (index >= 0 && Instancing > 1 && InstanceMatrix.size() > index)
     {
         vector<glm::mat4> newInstanceMatrix;
-        for (int i = 0; i < instanceMatrix.size(); i++)
+        for (int i = 0; i < InstanceMatrix.size(); i++)
         {
-            newInstanceMatrix.push_back(instanceMatrix[i]);
+            newInstanceMatrix.push_back(InstanceMatrix[i]);
         }
         newInstanceMatrix[index] = glm::translate(newInstanceMatrix[index], transform);
         newInstanceMatrix[index] = glm::rotate(newInstanceMatrix[index], glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -81,43 +81,43 @@ void Entity::updateSelfAndChildInstanceMatrix(glm::vec3 transform, glm::vec3 rot
 
         if (saveNew)
         {
-            instanceMatrix[index] = newInstanceMatrix[index];
+            InstanceMatrix[index] = newInstanceMatrix[index];
         }
 
-        for (int i = 0; i < meshes.size(); i++)
+        for (int i = 0; i < Meshes.size(); i++)
         {
-            meshes[i].RefreshInstanceMatrix(shader, newInstanceMatrix);
+            Meshes[i].RefreshInstanceMatrix(shader, newInstanceMatrix);
         }
 
-        for (auto&& child : children)
+        for (auto&& child : Children)
         {
-            child->updateSelfAndChildInstanceMatrix(transform, rotation, scale, index, shader, saveNew);
+            child->UpdateSelfAndChildInstanceMatrix(transform, rotation, scale, index, shader, saveNew);
         }
     }
 }
 
-void Entity::drawSelfAndChild()
+void Entity::DrawSelfAndChild()
 {
-    if (RenderModel)
+    if (m_IsModelRendered)
     {
-        m_Shader.use();
-        m_Shader.setMat4("model", transform.modelMatrix);
+        m_Shader.Use();
+        m_Shader.SetMat4("model", transform.ModelMatrix);
 
         Draw(m_Shader);
 
-        for (auto&& child : children)
+        for (auto&& child : Children)
         {
-            child->drawSelfAndChild();
+            child->DrawSelfAndChild();
         }
     }
 }
 
-void Entity::drawSelf()
+void Entity::DrawSelf()
 {
-    if (RenderModel)
+    if (m_IsModelRendered)
     {
-        m_Shader.use();
-        m_Shader.setMat4("model", transform.modelMatrix);
+        m_Shader.Use();
+        m_Shader.SetMat4("model", transform.ModelMatrix);
         Draw(m_Shader);
     }
 }
@@ -129,5 +129,5 @@ void Entity::ReassignShader(Shader& shader)
 
 void Entity::SetModelRenderBool(bool render)
 {
-    RenderModel = render;
+    m_IsModelRendered = render;
 }

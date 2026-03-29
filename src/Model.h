@@ -19,20 +19,19 @@ public:
     Model(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures, unsigned int instancing = 1, vector<glm::mat4> instanceMatrix = {});
     Model(const char* path, unsigned int instancing = 1, vector<glm::mat4> instanceMatrix = {});
     void Draw(Shader& shader);
-    //void DrawInstanced(Shader& shader, int amount);
     void AssignTexture(Texture tex);
     void UpdateVertices(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures);
-    vector<Mesh> meshes;
-    unsigned int instancing;
-    vector<glm::mat4> instanceMatrix;
+    vector<Mesh> Meshes;
+    unsigned int Instancing;
+    vector<glm::mat4> InstanceMatrix;
     void ScaleTexture(float scale);
 private:
     // model data
-    string directory;
-    vector<Texture> textures_loaded;
+    string m_FileDirectory;
+    vector<Texture> m_TexturesLoaded;
 
-    void loadModel(string path);
-    void processNode(aiNode* node, const aiScene* scene);
-    Mesh processMesh(aiMesh* mesh, const aiScene* scene);
-    vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, string typeName);
+    void LoadModel(string path);
+    void ProcessNode(aiNode* node, const aiScene* scene);
+    Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
+    vector<Texture> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, string typeName);
 };

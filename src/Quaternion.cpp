@@ -1,9 +1,9 @@
-#include "Quat.h"
+#include "Quaternion.h"
 #include <cmath>
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-Quat::Quat()
+Quaternion::Quaternion()
 {
     this->w = 0;
     this->x = 0;
@@ -11,7 +11,7 @@ Quat::Quat()
     this->z = 0;
 }
 
-Quat::Quat(float w, float x, float y, float z)
+Quaternion::Quaternion(float w, float x, float y, float z)
 {
     this->w = w;
     this->x = x;
@@ -19,7 +19,7 @@ Quat::Quat(float w, float x, float y, float z)
     this->z = z;
 }
 
-Quat::Quat(glm::vec3 vec, float w)
+Quaternion::Quaternion(glm::vec3 vec, float w)
 {
     this->w = w;
     this->x = vec.x;
@@ -27,12 +27,12 @@ Quat::Quat(glm::vec3 vec, float w)
     this->z = vec.z;
 }
 
-Quat Quat::conjugate()
+Quaternion Quaternion::Conjugate()
 {
-    return Quat(this->w, - this->x, - this->y, - this->z);
+    return Quaternion(this->w, - this->x, - this->y, - this->z);
 }
 
-float Quat::length()
+float Quaternion::Length()
 {
     float w = this->w * this->w;
     float x = this->x * this->x;
@@ -41,17 +41,17 @@ float Quat::length()
     return sqrt(w + x + y + z);
 }
 
-Quat Quat::normalize()
+Quaternion Quaternion::Normalize()
 {
-    float n = this->length();
+    float n = this->Length();
     float w = this->w / n;
     float x = this->x / n;
     float y = this->y / n;
     float z = this->z / n;
-    return Quat(w, x, y, z);
+    return Quaternion(w, x, y, z);
 }
 
-glm::vec3 Quat::rotate_quat(glm::vec3 point, glm::vec3 axis, float angle)
+glm::vec3 Quaternion::RotateQuaternion(glm::vec3 point, glm::vec3 axis, float angle)
 {
     int angle_degrees = (int)angle % 360;
     angle_degrees /= 2;
@@ -59,9 +59,9 @@ glm::vec3 Quat::rotate_quat(glm::vec3 point, glm::vec3 axis, float angle)
     w = cos(rad_angle);
     axis = glm::normalize(axis);
     axis *= sin(rad_angle);
-    Quat q = Quat(axis, w);
-    Quat q_con = q.conjugate();
-    Quat p = Quat(point, 0.f);
-    Quat p_prime = q * p * q_con;
+    Quaternion q = Quaternion(axis, w);
+    Quaternion q_con = q.Conjugate();
+    Quaternion p = Quaternion(point, 0.f);
+    Quaternion p_prime = q * p * q_con;
     return glm::vec3(p_prime.x, p_prime.y, p_prime.z);
 }

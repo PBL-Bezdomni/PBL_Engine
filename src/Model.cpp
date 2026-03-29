@@ -9,54 +9,54 @@ Model::Model()
 
 Model::Model(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures, unsigned int instancing, vector<glm::mat4> instanceMatrix)
 {
-    this->instancing = instancing;
-    this->instanceMatrix = instanceMatrix;
-    meshes.push_back(Mesh(vertices, indices, textures, instancing, instanceMatrix));
+    this->Instancing = instancing;
+    this->InstanceMatrix = instanceMatrix;
+    Meshes.push_back(Mesh(vertices, indices, textures, instancing, instanceMatrix));
 }
 
 Model::Model(const char* path, unsigned int instancing, vector<glm::mat4> instanceMatrix)
 {
-    this->instancing = instancing;
-    this->instanceMatrix = instanceMatrix;
-    loadModel(path);
+    this->Instancing = instancing;
+    this->InstanceMatrix = instanceMatrix;
+    LoadModel(path);
 }
 
 void Model::UpdateVertices(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures)
 {
-    if (meshes.size() > 0)
+    if (Meshes.size() > 0)
     {
-        meshes[0] = Mesh(vertices, indices, textures, instancing, instanceMatrix);
+        Meshes[0] = Mesh(vertices, indices, textures, Instancing, InstanceMatrix);
     }
     else
     {
-        meshes.push_back(Mesh(vertices, indices, textures, instancing, instanceMatrix));
+        Meshes.push_back(Mesh(vertices, indices, textures, Instancing, InstanceMatrix));
     }
 }
 
 void Model::AssignTexture(Texture tex)
 {
-    if (meshes.size() > 0)
+    if (Meshes.size() > 0)
     {
-        if (meshes[0].textures.size() > 0)
+        if (Meshes[0].Textures.size() > 0)
         {
-            meshes[0].textures[0] = tex;
+            Meshes[0].Textures[0] = tex;
         }
         else
         {
-            meshes[0].textures.push_back(tex);
+            Meshes[0].Textures.push_back(tex);
         }
     }
 }
 
 void Model::Draw(Shader& shader)
 {
-    for (unsigned int i = 0; i < meshes.size(); i++)
+    for (unsigned int i = 0; i < Meshes.size(); i++)
     {
-        meshes[i].Draw(shader);
+        Meshes[i].Draw(shader);
     }
 }
 
-void Model::loadModel(string path)
+void Model::LoadModel(string path)
 {
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
@@ -67,27 +67,27 @@ void Model::loadModel(string path)
         spdlog::error(importer.GetErrorString());
         return;
     }
-    directory = path.substr(0, path.find_last_of('/'));
+    m_FileDirectory = path.substr(0, path.find_last_of('/'));
 
-    processNode(scene->mRootNode, scene);
+    ProcessNode(scene->mRootNode, scene);
 }
 
-void Model::processNode(aiNode* node, const aiScene* scene)
+void Model::ProcessNode(aiNode* node, const aiScene* scene)
 {
     // process all the node's meshes (if any)
     for (unsigned int i = 0; i < node->mNumMeshes; i++)
     {
         aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-        meshes.push_back(processMesh(mesh, scene));
+        Meshes.push_back(ProcessMesh(mesh, scene));
     }
     // then do the same for each of its children
     for (unsigned int i = 0; i < node->mNumChildren; i++)
     {
-        processNode(node->mChildren[i], scene);
+        ProcessNode(node->mChildren[i], scene);
     }
 }
 
-Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
+Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 {
     vector<Vertex> vertices;
     vector<unsigned int> indices;
@@ -136,18 +136,18 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
     if(mesh->mMaterialIndex >= 0)
     {
         aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-        vector<Texture> diffuseMaps = loadMaterialTextures(material,
+        vector<Texture> diffuseMaps = LoadMaterialTextures(material,
             aiTextureType_DIFFUSE, "texture_diffuse");
         textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-        vector<Texture> specularMaps = loadMaterialTextures(material,
+        vector<Texture> specularMaps = LoadMaterialTextures(material,
             aiTextureType_SPECULAR, "texture_specular");
         textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
     }
 
-    return Mesh(vertices, indices, textures, instancing, instanceMatrix);
+    return Mesh(vertices, indices, textures, Instancing, InstanceMatrix);
 }
 
-vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, string typeName)
+vector<Texture> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, string typeName)
 {
     vector<Texture> textures;
     for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
@@ -155,11 +155,11 @@ vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type,
         aiString str;
         mat->GetTexture(type, i, &str);
         bool skip = false;
-        for (unsigned int j = 0; j < textures_loaded.size(); j++)
+        for (unsigned int j = 0; j < m_TexturesLoaded.size(); j++)
         {
-            if (std::strcmp(textures_loaded[j].path.data(), str.C_Str()) == 0)
+            if (std::strcmp(m_TexturesLoaded[j].Path.data(), str.C_Str()) == 0)
             {
-                textures.push_back(textures_loaded[j]);
+                textures.push_back(m_TexturesLoaded[j]);
                 skip = true;
                 break;
             }
@@ -167,11 +167,11 @@ vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type,
         if (!skip)
         {   // if texture hasn't been loaded already, load it
             Texture texture;
-            texture.id = TextureFromFile(str.C_Str(), directory);
-            texture.type = typeName;
-            texture.path = str.C_Str();
+            texture.ID = TextureFromFile(str.C_Str(), m_FileDirectory);
+            texture.Type = typeName;
+            texture.Path = str.C_Str();
             textures.push_back(texture);
-            textures_loaded.push_back(texture); // add to loaded textures
+            m_TexturesLoaded.push_back(texture); // add to loaded textures
         }
     }
     return textures;
@@ -219,8 +219,8 @@ unsigned int TextureFromFile(const char* path, const string& directory, bool gam
 
 void Model::ScaleTexture(float scale)
 {
-    for (int i = 0; i < meshes.size(); i++)
+    for (int i = 0; i < Meshes.size(); i++)
     {
-        meshes[i].ScaleTexture(scale);
+        Meshes[i].ScaleTexture(scale);
     }
 }
