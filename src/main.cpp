@@ -22,6 +22,7 @@
 #include "Entity.h"
 #include "Quaternion.h"
 #include "Camera.h"
+#include "Loader.h"
 
 #define _USE_MATH_DEFINES
 
@@ -148,16 +149,15 @@ float m_Posx = 0;
 float m_Posy = 0;
 float m_Posz = 0;
 
-const string relativePath = "../../";
-// const string relativePath = "../../../";
+Loader LoadManager = Loader();
 
 vector<string> m_CubemapFaces { 
-    relativePath + "res/textures/cubemap/right.jpg", 
-    relativePath + "res/textures/cubemap/left.jpg",
-    relativePath + "res/textures/cubemap/top.jpg", 
-    relativePath + "res/textures/cubemap/bottom.jpg", 
-    relativePath + "res/textures/cubemap/front.jpg", 
-    relativePath + "res/textures/cubemap/back.jpg"
+    LoadManager.RelativePath + "res/textures/cubemap/right.jpg", 
+    LoadManager.RelativePath + "res/textures/cubemap/left.jpg",
+    LoadManager.RelativePath + "res/textures/cubemap/top.jpg", 
+    LoadManager.RelativePath + "res/textures/cubemap/bottom.jpg", 
+    LoadManager.RelativePath + "res/textures/cubemap/front.jpg", 
+    LoadManager.RelativePath + "res/textures/cubemap/back.jpg"
 };
 
 int main(int, char**)
@@ -289,11 +289,11 @@ void init_imgui()
 
 void init_shader()
 {
-    m_BasicShader = Shader((relativePath + "res/shaders/basic.vert").c_str(), (relativePath + "res/shaders/basic.frag").c_str());
-    m_2DShader = Shader((relativePath + "res/shaders/basic.vert").c_str(), (relativePath + "res/shaders/basic.frag").c_str());
-    m_SkyboxShader = Shader((relativePath + "res/shaders/cubemap.vert").c_str(), (relativePath + "res/shaders/cubemap.frag").c_str());
+    m_BasicShader = Shader((LoadManager.RelativePath + "res/shaders/basic.vert").c_str(), (LoadManager.RelativePath + "res/shaders/basic.frag").c_str());
+    m_2DShader = Shader((LoadManager.RelativePath + "res/shaders/basic.vert").c_str(), (LoadManager.RelativePath + "res/shaders/basic.frag").c_str());
+    m_SkyboxShader = Shader((LoadManager.RelativePath + "res/shaders/cubemap.vert").c_str(), (LoadManager.RelativePath + "res/shaders/cubemap.frag").c_str());
 
-    LoadTexture((relativePath + "res/textures/stone.jpg").c_str(), &m_FloorTex);
+    LoadTexture((LoadManager.RelativePath + "res/textures/stone.jpg").c_str(), &m_FloorTex);
 }
 
 void clear()
@@ -502,10 +502,10 @@ void LoadModels()
     world = Entity();
     objectsTransform = Entity(m_BasicShader);
 
-    house_floor = Entity(m_2DShader, (relativePath + "res/models/house/floor.obj").c_str());
+    house_floor = Entity(m_2DShader, (LoadManager.RelativePath + "res/models/house/floor.obj").c_str());
     house_floor.AssignTexture(m_FloorTex);
     //house_floor.ScaleTexture(FLOOR_TEX_SCALE * FLOOR_SCALE);
-    monkey = Entity(m_BasicShader, (relativePath + "res/models/monkey/Monkey.obj").c_str());
+    monkey = Entity(m_BasicShader, (LoadManager.RelativePath + "res/models/monkey/Monkey.obj").c_str());
 }
 
 void AssignSceneGraph()
