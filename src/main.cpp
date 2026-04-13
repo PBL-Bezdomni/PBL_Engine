@@ -23,6 +23,8 @@
 #include "Quaternion.h"
 #include "Camera.h"
 #include "Loader.h"
+#include "Entity.h"
+#include "Engine/Engine.h"
 
 #define _USE_MATH_DEFINES
 
@@ -162,6 +164,8 @@ vector<string> m_CubemapFaces {
 
 int main(int, char**)
 {
+    Engine& engine = Engine::GetInstance();
+    engine.Start();
     if (!init())
     {
         spdlog::error("Failed to initialize project!");
