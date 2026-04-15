@@ -91,8 +91,9 @@ bool m_IsFirstMouse = true;
 
 Shader m_BasicShader;
 Shader m_SkyboxShader;
-Shader m_2DShader;
+Shader m_UIShader;
 Shader m_TextShader;
+Shader m_SliderShader;
 
 FreeType m_TextRenderer;
 
@@ -302,7 +303,8 @@ void init_imgui()
 void init_shader()
 {
     m_BasicShader = Shader((LoadManager.RelativePath + "res/shaders/basic.vert").c_str(), (LoadManager.RelativePath + "res/shaders/basic.frag").c_str());
-    m_2DShader = Shader((LoadManager.RelativePath + "res/shaders/basic.vert").c_str(), (LoadManager.RelativePath + "res/shaders/basic.frag").c_str());
+    m_UIShader = Shader((LoadManager.RelativePath + "res/shaders/UIShader.vert").c_str(), (LoadManager.RelativePath + "res/shaders/UIShader.frag").c_str());
+    m_SliderShader = Shader((LoadManager.RelativePath + "res/shaders/UIShader.vert").c_str(), (LoadManager.RelativePath + "res/shaders/UISlider.frag").c_str());
     m_SkyboxShader = Shader((LoadManager.RelativePath + "res/shaders/cubemap.vert").c_str(), (LoadManager.RelativePath + "res/shaders/cubemap.frag").c_str());
 
     LoadTexture((LoadManager.RelativePath + "res/textures/duck.png").c_str(), &m_FloorTex);
@@ -412,6 +414,9 @@ void update()
     m_LastFrame = currentFrame;
 }
 
+float m_CurrentRotationDegrees;
+int m_RotationCount;
+
 void render()
 {
     glm::vec3 axisX = glm::vec3(1.0f, 0.f, 0.f);
@@ -435,10 +440,12 @@ void render()
     m_BasicShader.SetMat4("projection", projection);
     SetupShaderLight(m_BasicShader);
 
-    m_2DShader.Use();
-    m_2DShader.SetMat4("view", glm::mat4(1.0f));
-    m_2DShader.SetMat4("projection", projection);
-    SetupShaderLight(m_2DShader);
+    m_UIShader.Use();
+    m_UIShader.SetMat4("projection", projection);
+    
+    m_SliderShader.Use();
+    m_SliderShader.SetMat4("projection", projection);
+    m_SliderShader.SetFloat("slider_load", m_CurrentRotationDegrees / 360.0f);
 
     world.transform.Position = glm::vec3(0.f, 0.f, -30.f);
     world.transform.Scale = glm::vec3(0.7f);
@@ -447,17 +454,21 @@ void render()
     duckTransparent.transform.Position = glm::vec3(16.4f, 13.5f, 0.f);
     duckTransparent.transform.EulerAngles.x = 90.f;
 
-    slider.transform.Scale = glm::vec3(0.1f, 10.f, 0.1f);
-    slider.transform.Position = glm::vec3(-16.4f, 13.5f, 0.f);
+    slider.transform.Scale = glm::vec3(0.2f, 0.1f, 0.02f);
+    slider.transform.Position = glm::vec3(-10.4f, 13.5f, 0.f);
     slider.transform.EulerAngles.x = 90.f;
     
-    float currentRotationDegrees = glfwGetTime() * 60.0f;
+    m_CurrentRotationDegrees += m_DeltaTime * 60.0f;
+
+    if (static_cast<int>(m_CurrentRotationDegrees) / 360 >= 1)
+    {
+        m_CurrentRotationDegrees = 0;
+        m_RotationCount++;
+    }
 
     monkey.transform.Position = glm::vec3(-5.f, 0.f, 0.f);
-    monkey.transform.EulerAngles.x = currentRotationDegrees;
+    monkey.transform.EulerAngles.x = m_CurrentRotationDegrees;
     monkey.transform.Scale = glm::vec3(2.f);
-
-    int rotationCount = static_cast<int>(currentRotationDegrees / 360.0f);
 
     m_PointLightPos = quat.RotateQuaternion(glm::vec3(m_PointLightRadius, m_PointLightHeight, 0.f), axisY, glfwGetTime() * 50);
 
@@ -468,7 +479,7 @@ void render()
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    std::wstring monkeyText = L"Ilość obrotów małpki: " + std::to_wstring(rotationCount);
+    std::wstring monkeyText = L"Monkey's rotations: " + std::to_wstring(m_RotationCount);
 
     m_TextRenderer.RenderText(m_TextShader, monkeyText, 10.0f, 1700.0f, 2.0f, glm::vec3(0.3f, 0.3f, 0.3f));
     glEnable(GL_DEPTH_TEST);
@@ -545,8 +556,8 @@ void LoadModels()
     world = Entity();
     objectsTransform = Entity(m_BasicShader);
 
-    duckTransparent = Entity(m_2DShader, (LoadManager.RelativePath + "res/models/house/floor.obj").c_str());
-    slider = Entity(m_2DShader, (LoadManager.RelativePath + "res/models/house/floor.obj").c_str());
+    duckTransparent = Entity(m_UIShader, (LoadManager.RelativePath + "res/models/house/floor.obj").c_str());
+    slider = Entity(m_SliderShader, (LoadManager.RelativePath + "res/models/house/floor.obj").c_str());
     duckTransparent.AssignTexture(m_FloorTex);
     slider.AssignTexture(m_SliderTex);
     //house_floor.ScaleTexture(FLOOR_TEX_SCALE * FLOOR_SCALE);
