@@ -97,6 +97,7 @@ Shader m_TextShader;
 FreeType m_TextRenderer;
 
 Texture m_FloorTex;
+Texture m_SliderTex;
 Texture m_SkyboxTex;
 unsigned int m_SkyboxTexID;
 Entity world;
@@ -104,6 +105,7 @@ Entity skybox;
 
 Entity monkey;
 Entity duckTransparent;
+Entity slider;
 Entity objectsTransform;
 
 unsigned int m_SkyboxVAO;
@@ -304,6 +306,7 @@ void init_shader()
     m_SkyboxShader = Shader((LoadManager.RelativePath + "res/shaders/cubemap.vert").c_str(), (LoadManager.RelativePath + "res/shaders/cubemap.frag").c_str());
 
     LoadTexture((LoadManager.RelativePath + "res/textures/duck.png").c_str(), &m_FloorTex);
+    LoadTexture((LoadManager.RelativePath + "res/textures/white.png").c_str(), &m_SliderTex);
     
     m_TextShader = Shader((LoadManager.RelativePath + "res/shaders/text.vert").c_str(), (LoadManager.RelativePath + "res/shaders/text.frag").c_str());
 
@@ -443,6 +446,10 @@ void render()
     duckTransparent.transform.Scale = glm::vec3(0.1f, 0.1f, 0.1f);
     duckTransparent.transform.Position = glm::vec3(16.4f, 13.5f, 0.f);
     duckTransparent.transform.EulerAngles.x = 90.f;
+
+    slider.transform.Scale = glm::vec3(0.1f, 10.f, 0.1f);
+    slider.transform.Position = glm::vec3(-16.4f, 13.5f, 0.f);
+    slider.transform.EulerAngles.x = 90.f;
     
     float currentRotationDegrees = glfwGetTime() * 60.0f;
 
@@ -539,7 +546,9 @@ void LoadModels()
     objectsTransform = Entity(m_BasicShader);
 
     duckTransparent = Entity(m_2DShader, (LoadManager.RelativePath + "res/models/house/floor.obj").c_str());
+    slider = Entity(m_2DShader, (LoadManager.RelativePath + "res/models/house/floor.obj").c_str());
     duckTransparent.AssignTexture(m_FloorTex);
+    slider.AssignTexture(m_SliderTex);
     //house_floor.ScaleTexture(FLOOR_TEX_SCALE * FLOOR_SCALE);
     monkey = Entity(m_BasicShader, (LoadManager.RelativePath + "res/models/monkey/Monkey.obj").c_str());
 }
@@ -549,6 +558,7 @@ void AssignSceneGraph()
     world.AddChild(&objectsTransform);
 
     objectsTransform.AddChild(&duckTransparent);
+    objectsTransform.AddChild(&slider);
     objectsTransform.AddChild(&monkey);
 
     world.UpdateSelfAndChild();
