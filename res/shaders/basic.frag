@@ -61,10 +61,10 @@ void main()
     vec3 viewDir = normalize(viewPos - FragPos);
 
     vec4 texColor = texture(texture_diffuse1, TexCoord);
-    if (texColor.a < 0.1)
-    {
-        discard;
-    }
+//    if (texColor.a < 0.1)
+//    {
+//        discard;
+//    }
     vec3 result = vec3(0.0);
     if (useDirLight)
     {
