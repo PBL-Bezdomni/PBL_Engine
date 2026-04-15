@@ -1,4 +1,4 @@
-#include "imgui.h"
+﻿#include "imgui.h"
 #include "imgui_impl/imgui_impl_glfw.h"
 #include "imgui_impl/imgui_impl_opengl3.h"
 #include <stdio.h>
@@ -17,13 +17,13 @@
 #include <GLFW/glfw3.h> // Include glfw3.h after our OpenGL definitions
 #include <spdlog/spdlog.h>
 
+#include "FreeType.h"
 #include "Shader.h"
 #include "Model.h"
 #include "Entity.h"
 #include "Quaternion.h"
 #include "Camera.h"
 #include "Engine/Loader.h"
-#include "Entity.h"
 #include "Engine/Engine.h"
 
 #define _USE_MATH_DEFINES
@@ -92,6 +92,9 @@ bool m_IsFirstMouse = true;
 Shader m_BasicShader;
 Shader m_SkyboxShader;
 Shader m_2DShader;
+Shader m_TextShader;
+
+FreeType m_TextRenderer;
 
 Texture m_FloorTex;
 Texture m_SkyboxTex;
@@ -100,7 +103,7 @@ Entity world;
 Entity skybox;
 
 Entity monkey;
-Entity house_floor;
+Entity duckTransparent;
 Entity objectsTransform;
 
 unsigned int m_SkyboxVAO;
@@ -190,7 +193,7 @@ int main(int, char**)
     m_SkyboxShader.SetInt("skybox", 0);
     
     //m_SkyboxShader.setInt("skybox", 0);
-
+    
     // Main loop
     while (!glfwWindowShouldClose(window))
     {
@@ -270,6 +273,9 @@ bool init()
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetScrollCallback(window, scroll_callback);
 
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     return true;
 }
 
@@ -297,7 +303,15 @@ void init_shader()
     m_2DShader = Shader((LoadManager.RelativePath + "res/shaders/basic.vert").c_str(), (LoadManager.RelativePath + "res/shaders/basic.frag").c_str());
     m_SkyboxShader = Shader((LoadManager.RelativePath + "res/shaders/cubemap.vert").c_str(), (LoadManager.RelativePath + "res/shaders/cubemap.frag").c_str());
 
-    LoadTexture((LoadManager.RelativePath + "res/textures/stone.jpg").c_str(), &m_FloorTex);
+    LoadTexture((LoadManager.RelativePath + "res/textures/duck.png").c_str(), &m_FloorTex);
+    
+    m_TextShader = Shader((LoadManager.RelativePath + "res/shaders/text.vert").c_str(), (LoadManager.RelativePath + "res/shaders/text.frag").c_str());
+
+    glm::mat4 textProjection = glm::ortho(0.0f, static_cast<float>(WINDOW_WIDTH), 0.0f, static_cast<float>(WINDOW_HEIGHT));
+    m_TextShader.Use();
+    m_TextShader.SetMat4("projection", textProjection);
+
+    m_TextRenderer.Init((LoadManager.RelativePath + "res/fonts/Berylium.ttf").c_str(), 48);
 }
 
 void clear()
@@ -411,7 +425,7 @@ void render()
     glm::mat4 projection;
     projection = MainCamera.GetProjectionMatrix(float(WINDOW_WIDTH) / float(WINDOW_HEIGHT), CAMERA_NEAR_PLANE, CAMERA_FAR_PLANE);
 
-    //DrawSkybox(skyboxView, projection);
+    DrawSkybox(skyboxView, projection);
 
     m_BasicShader.Use();
     m_BasicShader.SetMat4("view", view);
@@ -426,18 +440,31 @@ void render()
     world.transform.Position = glm::vec3(0.f, 0.f, -30.f);
     world.transform.Scale = glm::vec3(0.7f);
 
-    house_floor.transform.Scale = glm::vec3(0.1f, 0.1f, 0.1f);
-    house_floor.transform.Position = glm::vec3(7.f, 0.f, 0.f);
-    house_floor.transform.EulerAngles.x = 90.f;
+    duckTransparent.transform.Scale = glm::vec3(0.1f, 0.1f, 0.1f);
+    duckTransparent.transform.Position = glm::vec3(16.4f, 13.5f, 0.f);
+    duckTransparent.transform.EulerAngles.x = 90.f;
+    
+    float currentRotationDegrees = glfwGetTime() * 60.0f;
 
     monkey.transform.Position = glm::vec3(-5.f, 0.f, 0.f);
-    monkey.transform.EulerAngles.y = 45.f;
+    monkey.transform.EulerAngles.x = currentRotationDegrees;
     monkey.transform.Scale = glm::vec3(2.f);
+
+    int rotationCount = static_cast<int>(currentRotationDegrees / 360.0f);
 
     m_PointLightPos = quat.RotateQuaternion(glm::vec3(m_PointLightRadius, m_PointLightHeight, 0.f), axisY, glfwGetTime() * 50);
 
     world.UpdateSelfAndChild();
     world.DrawSelfAndChild();
+
+    glDisable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    std::wstring monkeyText = L"Ilość obrotów małpki: " + std::to_wstring(rotationCount);
+
+    m_TextRenderer.RenderText(m_TextShader, monkeyText, 10.0f, 1700.0f, 2.0f, glm::vec3(0.3f, 0.3f, 0.3f));
+    glEnable(GL_DEPTH_TEST);
 }
 
 void LoadTexture(const char* path, Texture* tex)
@@ -457,8 +484,13 @@ void LoadTexture(const char* path, Texture* tex)
     unsigned char* data = stbi_load(path, &width, &height, &nrChannels, 0);
     if (data)
     {
-        spdlog::info("Loaded Texture");
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        GLenum format = GL_RGB;
+        if (nrChannels == 4)
+        {
+            format = GL_RGBA;
+        }
+        spdlog::info("Loaded Texture: {} with {} channels", path, nrChannels);
+        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
     }
     else
@@ -506,8 +538,8 @@ void LoadModels()
     world = Entity();
     objectsTransform = Entity(m_BasicShader);
 
-    house_floor = Entity(m_2DShader, (LoadManager.RelativePath + "res/models/house/floor.obj").c_str());
-    house_floor.AssignTexture(m_FloorTex);
+    duckTransparent = Entity(m_2DShader, (LoadManager.RelativePath + "res/models/house/floor.obj").c_str());
+    duckTransparent.AssignTexture(m_FloorTex);
     //house_floor.ScaleTexture(FLOOR_TEX_SCALE * FLOOR_SCALE);
     monkey = Entity(m_BasicShader, (LoadManager.RelativePath + "res/models/monkey/Monkey.obj").c_str());
 }
@@ -516,7 +548,7 @@ void AssignSceneGraph()
 {
     world.AddChild(&objectsTransform);
 
-    objectsTransform.AddChild(&house_floor);
+    objectsTransform.AddChild(&duckTransparent);
     objectsTransform.AddChild(&monkey);
 
     world.UpdateSelfAndChild();
@@ -622,6 +654,7 @@ void DrawSkybox(glm::mat4 view, glm::mat4 projection)
     m_SkyboxShader.Use();
     m_SkyboxShader.SetMat4("view", view);
     m_SkyboxShader.SetMat4("projection", projection);
+    m_SkyboxShader.SetFloat("time", glfwGetTime());
     glBindVertexArray(m_SkyboxVAO);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, m_SkyboxTex.ID);

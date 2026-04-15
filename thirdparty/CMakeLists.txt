@@ -23,10 +23,10 @@ add_library(miniaudio STATIC ${MINIAUDIO_DIR}/miniaudio.c)
 target_include_directories(miniaudio PRIVATE ${MINIAUDIO_DIR})
 
 # freetype
-set(FREETYPE_DIR ${CMAKE_CURRENT_LIST_DIR}/freetype-2.14.3)
-set(freetype_SOURCE_DIR ${FREETYPE_DIR}/include CACHE INTERNAL "")
-add_library(freetype STATIC ${FREETYPE_DIR}/include/ft2build.c)
-target_include_directories(freetype PRIVATE ${FREETYPE_DIR}/include)
+CPMAddPackage(
+    NAME freetype
+    URL "https://download.savannah.gnu.org/releases/freetype/freetype-2.13.2.tar.xz"
+)
 
 # other
 CPMAddPackage("gh:assimp/assimp@5.4.3")
