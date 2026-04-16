@@ -67,6 +67,9 @@ void SetupShaderLight(Shader& shader);
 
 void LoadCubemapTextures(vector<string> faces, Texture* texture);
 
+void LoadSceneModels();
+void AssignSceneModelsGraph();
+
 constexpr int32_t WINDOW_WIDTH = 2100;
 constexpr int32_t WINDOW_HEIGHT = 1800;
 
@@ -98,8 +101,14 @@ Shader m_SliderShader;
 FreeType m_TextRenderer;
 
 Texture m_FloorTex;
+Texture m_WallTex;
+Texture m_TableTex;
+Texture m_WaterpoolTex;
+Texture m_TowelsTex;
 Texture m_SliderTex;
 Texture m_SkyboxTex;
+Texture m_UIDuckTex;
+
 unsigned int m_SkyboxTexID;
 Entity world;
 Entity skybox;
@@ -109,23 +118,41 @@ Entity duckTransparent;
 Entity slider;
 Entity objectsTransform;
 
+Entity m_Scene;
+Entity m_Floor;
+Entity m_WallDir;
+Entity m_WallLeft;
+Entity m_WallRight;
+Entity m_WallBack;
+Entity m_WallFrontRight;
+Entity m_WallFrontLeft;
+Entity m_OnsenObjects;
+Entity m_TowelsBed;
+Entity m_Waterpool;
+Entity m_TablesDir;
+Entity m_Table1;
+Entity m_Table2;
+Entity m_Table3;
+Entity m_Table4;
+Entity m_Table5;
+
 unsigned int m_SkyboxVAO;
 unsigned int m_SkyboxVBO;
 
 // Values for light
-bool m_UseDirLight = true;
-bool m_UsePointLight = false;
+bool m_UseDirLight = false;
+bool m_UsePointLight = true;
 bool m_UseSpotLight1 = false;
 bool m_UseSpotLight2 = false;
 
-glm::vec3 m_PointLightPos = glm::vec3(1.2f, 1.0f, 2.0f);
+glm::vec3 m_PointLightPos = glm::vec3(0.f, 15.0f, -30.0f);
 glm::vec3 m_PointLightColor = glm::vec3(1.f, 1.f, 1.f);
-float m_PointLightRadius = 10.f;
+float m_PointLightRadius = 100.f;
 float m_PointLightHeight = 5.f;
-float m_PointLightLinear = 0.09f;
-float m_PointLightQuadratic = 0.032f;
+float m_PointLightLinear = 0.0014f;
+float m_PointLightQuadratic = 0.000007f;
 
-glm::vec3 m_DirLightDirection = glm::vec3(0.f, -1.0f, -1.f);
+glm::vec3 m_DirLightDirection = glm::vec3(0.f, -1.0f, 0.f);
 glm::vec3 m_DirLightVisualPos = glm::vec3(0.f, 10.f, 0.f);
 glm::vec3 m_DirLightColor = glm::vec3(1.f, 1.f, 1.f);
 float m_DirLightAngleX = -45.f;
@@ -184,7 +211,7 @@ int main(int, char**)
 
     init_shader();
 
-    MainCamera = Camera(glm::vec3(0.f, 0.f, 3.f));
+    MainCamera = Camera(glm::vec3(0.f, 25.f, 47.f), glm::vec3(0.0, 1.0, 0.0), -90.f, -25.f);
 
     LoadModels();
     AssignSceneGraph();
@@ -307,7 +334,10 @@ void init_shader()
     m_SliderShader = Shader((LoadManager.RelativePath + "res/shaders/UIShader.vert").c_str(), (LoadManager.RelativePath + "res/shaders/UISlider.frag").c_str());
     m_SkyboxShader = Shader((LoadManager.RelativePath + "res/shaders/cubemap.vert").c_str(), (LoadManager.RelativePath + "res/shaders/cubemap.frag").c_str());
 
-    LoadTexture((LoadManager.RelativePath + "res/textures/duck.png").c_str(), &m_FloorTex);
+    LoadTexture((LoadManager.RelativePath + "res/textures/duck.png").c_str(), &m_UIDuckTex);
+    LoadTexture((LoadManager.RelativePath + "res/models/scena_v1/floor/floor_textures/Stylized_Stone_Floor_010_basecolor.png").c_str(), &m_FloorTex);
+    LoadTexture((LoadManager.RelativePath + "res/models/scena_v1/walls/walls_textures/Stylized_Wall_002_basecolor.png").c_str(), &m_WallTex);
+    // LoadTexture((LoadManager.RelativePath + "res/models/scena_v1/for_towels/drewno.jpg").c_str(), &m_TowelsTex);
     LoadTexture((LoadManager.RelativePath + "res/textures/white.png").c_str(), &m_SliderTex);
     
     m_TextShader = Shader((LoadManager.RelativePath + "res/shaders/text.vert").c_str(), (LoadManager.RelativePath + "res/shaders/text.frag").c_str());
@@ -470,7 +500,7 @@ void render()
     monkey.transform.EulerAngles.x = m_CurrentRotationDegrees;
     monkey.transform.Scale = glm::vec3(2.f);
 
-    m_PointLightPos = quat.RotateQuaternion(glm::vec3(m_PointLightRadius, m_PointLightHeight, 0.f), axisY, glfwGetTime() * 50);
+    // m_PointLightPos = quat.RotateQuaternion(glm::vec3(m_PointLightRadius, m_PointLightHeight, 0.f), axisY, glfwGetTime() * 50);
 
     world.UpdateSelfAndChild();
     world.DrawSelfAndChild();
@@ -529,7 +559,14 @@ void imgui_begin()
 
 void imgui_render()
 {
-   
+    // ImGui::Begin("Camera");
+    // ImGui::InputFloat("Camera Pos.x", &MainCamera.Position.x);
+    // ImGui::InputFloat("Camera Pos.y", &MainCamera.Position.y);
+    // ImGui::InputFloat("Camera Pos.z", &MainCamera.Position.z);
+    //
+    // ImGui::InputFloat("Camera Yaw", &MainCamera.Yaw);
+    // ImGui::InputFloat("Camera Pitch", &MainCamera.Pitch);
+    // ImGui::End();
 }
 
 void imgui_end()
@@ -558,10 +595,32 @@ void LoadModels()
 
     duckTransparent = Entity(m_UIShader, (LoadManager.RelativePath + "res/models/house/floor.obj").c_str());
     slider = Entity(m_SliderShader, (LoadManager.RelativePath + "res/models/house/floor.obj").c_str());
-    duckTransparent.AssignTexture(m_FloorTex);
+    duckTransparent.AssignTexture(m_UIDuckTex);
     slider.AssignTexture(m_SliderTex);
     //house_floor.ScaleTexture(FLOOR_TEX_SCALE * FLOOR_SCALE);
     monkey = Entity(m_BasicShader, (LoadManager.RelativePath + "res/models/monkey/Monkey.obj").c_str());
+
+    LoadSceneModels();
+}
+
+void LoadSceneModels()
+{
+    m_Scene = Entity(m_BasicShader);
+    m_Floor = Entity(m_BasicShader, (LoadManager.RelativePath + "res/models/scena_v1/floor/floor.fbx").c_str());
+    m_Floor.AssignTexture(m_FloorTex);
+    m_WallDir = Entity(m_BasicShader);
+    m_WallBack = Entity(m_BasicShader, (LoadManager.RelativePath + "res/models/scena_v1/walls/wall1.fbx").c_str());
+    m_WallFrontLeft = Entity(m_BasicShader, (LoadManager.RelativePath + "res/models/scena_v1/walls/wall1.fbx").c_str());
+    m_WallFrontRight = Entity(m_BasicShader, (LoadManager.RelativePath + "res/models/scena_v1/walls/wall1.fbx").c_str());
+    m_WallLeft = Entity(m_BasicShader, (LoadManager.RelativePath + "res/models/scena_v1/walls/wall1.fbx").c_str());
+    m_WallRight = Entity(m_BasicShader, (LoadManager.RelativePath + "res/models/scena_v1/walls/wall1.fbx").c_str());
+    m_TowelsBed = Entity(m_BasicShader, (LoadManager.RelativePath + "res/models/scena_v1/for_towels/for_towels.fbx").c_str());
+    
+    m_WallBack.AssignTexture(m_WallTex);
+    m_WallFrontLeft.AssignTexture(m_WallTex);
+    m_WallFrontRight.AssignTexture(m_WallTex);
+    m_WallLeft.AssignTexture(m_WallTex);
+    m_WallRight.AssignTexture(m_WallTex);
 }
 
 void AssignSceneGraph()
@@ -572,7 +631,38 @@ void AssignSceneGraph()
     objectsTransform.AddChild(&slider);
     objectsTransform.AddChild(&monkey);
 
+    AssignSceneModelsGraph();
+
     world.UpdateSelfAndChild();
+}
+
+void AssignSceneModelsGraph()
+{
+    world.AddChild(&m_Scene);
+    m_Scene.AddChild(&m_Floor);
+    m_Scene.AddChild(&m_WallDir);
+    m_Scene.AddChild(&m_OnsenObjects);
+
+    m_WallDir.AddChild(&m_WallBack);
+    m_WallDir.AddChild(&m_WallFrontLeft);
+    m_WallDir.AddChild(&m_WallFrontRight);
+    m_WallDir.AddChild(&m_WallRight);
+    m_WallDir.AddChild(&m_WallLeft);
+
+    m_OnsenObjects.AddChild(&m_TowelsBed);
+
+    m_Scene.transform.EulerAngles.x = -90.f;
+    m_Floor.transform.EulerAngles.z = 90.f;
+
+    m_WallBack.transform.Position.y = 53.f;
+    m_WallFrontLeft.transform.Position = glm::vec3(-63.f, -50.f, -30.f);
+    m_WallFrontRight.transform.Position = glm::vec3(63.f, -50.f, -30.f);
+    m_WallLeft.transform.EulerAngles.z = 90.f;
+    m_WallRight.transform.EulerAngles.z = 90.f;
+    m_WallLeft.transform.Position.x = -37.f;
+    m_WallRight.transform.Position.x = 37.f;
+
+    m_OnsenObjects.transform.Position.z = 1.f;
 }
 
 void SetupShaderLight(Shader& shader)
