@@ -2,6 +2,7 @@
 #include "imgui_impl/imgui_impl_glfw.h"
 #include "imgui_impl/imgui_impl_opengl3.h"
 #include <stdio.h>
+#include <random>
 #include <string.h>
 #include <cmath>
 #include <iostream>
@@ -25,6 +26,7 @@
 #include "Camera.h"
 #include "Engine/Loader.h"
 #include "Engine/Engine.h"
+#include "SpawnManager.h"
 
 #define _USE_MATH_DEFINES
 
@@ -33,6 +35,9 @@ const float CAMERA_FAR_PLANE = 200.f;
 const float FLOOR_TEX_SCALE = 8.f;
 const float FLOOR_SCALE = 100.f;
 const int HOUSE_NET_DIM = 200;
+
+float WALL_X_BORDER = 37.f;
+float WALL_Y_BORDER = 50.f;
 
 static void glfw_error_callback(int error, const char* description)
 {
@@ -52,6 +57,7 @@ void input(GLFWwindow* window);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void update();
+int RandomValue(int min, int max);
 void render();
 
 void imgui_begin();
@@ -185,6 +191,7 @@ float m_Posy = 0;
 float m_Posz = 0;
 
 Loader LoadManager = Loader();
+SpawnManager m_SpawnManager = SpawnManager();
 
 vector<string> m_CubemapFaces { 
     LoadManager.RelativePath + "res/textures/cubemap/right.jpg", 
@@ -446,6 +453,19 @@ void update()
 
 float m_CurrentRotationDegrees;
 int m_RotationCount;
+float m_SpawnCounter;
+float m_SpawnTime = 2.f;
+
+int RandomValue(int min, int max)
+{
+    max = abs(min) + abs(max);
+    std::mt19937 rng;
+    rng.seed(std::random_device()());
+    std::uniform_int_distribution<std::mt19937::result_type> dist(0,max);
+    int r = dist(rng);
+    r -= abs(min);
+    return r;
+}
 
 void render()
 {
@@ -494,6 +514,20 @@ void render()
     {
         m_CurrentRotationDegrees = 0;
         m_RotationCount++;
+    }
+
+    m_SpawnCounter += m_DeltaTime;
+    if (m_SpawnCounter >= m_SpawnTime)
+    {
+        m_SpawnCounter = 0;
+        Entity* spawnedEntity = m_SpawnManager.SpawnEntity(m_BasicShader, LoadManager);
+        if (spawnedEntity != nullptr)
+        {
+            float posX = RandomValue(-WALL_X_BORDER, WALL_X_BORDER);
+            float posY = RandomValue(-WALL_Y_BORDER, WALL_Y_BORDER);
+            spawnedEntity->transform.Position = glm::vec3(posX, 5, posY);
+            objectsTransform.AddChild(spawnedEntity);
+        }
     }
 
     monkey.transform.Position = glm::vec3(-5.f, 0.f, 0.f);
@@ -654,13 +688,13 @@ void AssignSceneModelsGraph()
     m_Scene.transform.EulerAngles.x = -90.f;
     m_Floor.transform.EulerAngles.z = 90.f;
 
-    m_WallBack.transform.Position.y = 53.f;
-    m_WallFrontLeft.transform.Position = glm::vec3(-63.f, -50.f, -30.f);
-    m_WallFrontRight.transform.Position = glm::vec3(63.f, -50.f, -30.f);
+    m_WallBack.transform.Position.y = WALL_Y_BORDER;
+    m_WallFrontLeft.transform.Position = glm::vec3(-63.f, -WALL_Y_BORDER, -30.f);
+    m_WallFrontRight.transform.Position = glm::vec3(63.f, -WALL_Y_BORDER, -30.f);
     m_WallLeft.transform.EulerAngles.z = 90.f;
     m_WallRight.transform.EulerAngles.z = 90.f;
-    m_WallLeft.transform.Position.x = -37.f;
-    m_WallRight.transform.Position.x = 37.f;
+    m_WallLeft.transform.Position.x = -WALL_X_BORDER;
+    m_WallRight.transform.Position.x = WALL_X_BORDER;
 
     m_OnsenObjects.transform.Position.z = 1.f;
 }
