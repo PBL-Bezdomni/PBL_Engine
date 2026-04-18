@@ -15,7 +15,7 @@ public:
 	const int32_t WINDOW_WIDTH = 2100;
 	const int32_t WINDOW_HEIGHT = 1800;
 	
-	WindowManager();
+	WindowManager() = default;
 	GLFWwindow* GetWindowPointer();
 	void Initialize(int32_t versionMajor, int32_t versionMinor);
 	bool GetIsInitialized();

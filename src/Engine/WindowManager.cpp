@@ -1,10 +1,5 @@
 #include "WindowManager.h"
 
-#include "Engine.h"
-
-WindowManager::WindowManager()
-{}
-
 void WindowManager::Initialize(int32_t versionMajor, int32_t versionMinor)
 {
 	// Setup window

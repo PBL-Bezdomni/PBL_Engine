@@ -1,7 +1,4 @@
-﻿#include "imgui.h"
-#include "imgui_impl/imgui_impl_glfw.h"
-#include "imgui_impl/imgui_impl_opengl3.h"
-#include <stdio.h>
+﻿#include <stdio.h>
 #include <random>
 #include <string.h>
 #include <cmath>
@@ -27,6 +24,7 @@
 #include "Engine/Loader.h"
 #include "Engine/Engine.h"
 #include "SpawnManager.h"
+#include "Engine/DebugManager.h"
 
 #define _USE_MATH_DEFINES
 
@@ -39,7 +37,6 @@ const int HOUSE_NET_DIM = 200;
 float WALL_X_BORDER = 37.f;
 float WALL_Y_BORDER = 50.f;
 
-void init_imgui();
 void LoadTexture(const char* path, Texture* texture);
 void LoadModels();
 void AssignSceneGraph();
@@ -53,10 +50,6 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void update();
 int RandomValue(int min, int max);
 void render();
-
-void imgui_begin();
-void imgui_render();
-void imgui_end();
 
 void GenerateSkybox();
 void DrawSkybox(glm::mat4 view, glm::mat4 projection);
@@ -188,10 +181,12 @@ vector<string> m_CubemapFaces {
 };
 
 WindowManager* WindowMgr = nullptr;
+DebugManager* DebugMgr = nullptr;
 
 int main(int, char**)
 {
     Engine& engine = Engine::GetInstance();
+    bool isDebugDraw = engine.GetIsDebugDrawn();
 
     WindowMgr = &Engine::GetInstance().GetWindowManager();
     
@@ -211,8 +206,7 @@ int main(int, char**)
     
     spdlog::info("Initialized project.");
 
-    init_imgui();
-    spdlog::info("Initialized ImGui.");
+    // spdlog::info("Initialized ImGui.");
 
     init_shader();
 
@@ -245,9 +239,12 @@ int main(int, char**)
         render();
 
         // Draw ImGui
-        imgui_begin();
-        imgui_render(); // edit this function to add your own ImGui controls
-        imgui_end();    // this call effectively renders ImGui
+        if (isDebugDraw)
+        {
+            DebugMgr->ImGUIBegin();
+            DebugMgr->ImGUIRender(); // edit this function to add your own ImGui controls
+            DebugMgr->ImGUIEnd();    // this call effectively renders ImGui
+        }
 
 
         // End frame and swap buffers (double buffering)
@@ -266,24 +263,6 @@ int main(int, char**)
     glfwTerminate();
 
     return 0;
-}
-
-void init_imgui()
-{
-    // Setup Dear ImGui binding
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO();
-    (void)io;
-    // io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;  // Enable Keyboard Controls
-    // io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;   // Enable Gamepad Controls
-
-    ImGui_ImplGlfw_InitForOpenGL(WindowMgr->GetWindowPointer(), true);
-    ImGui_ImplOpenGL3_Init(glsl_version);
-
-    // Setup style
-    ImGui::StyleColorsDark();
-    // ImGui::StyleColorsClassic();
 }
 
 void init_shader()
@@ -533,38 +512,6 @@ void LoadTexture(const char* path, Texture* tex)
         spdlog::error(stbi_failure_reason());
     }
     stbi_image_free(data);
-}
-
-void imgui_begin()
-{
-    // Start the Dear ImGui frame
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplGlfw_NewFrame();
-    ImGui::NewFrame();
-}
-
-void imgui_render()
-{
-    // ImGui::Begin("Camera");
-    // ImGui::InputFloat("Camera Pos.x", &MainCamera.Position.x);
-    // ImGui::InputFloat("Camera Pos.y", &MainCamera.Position.y);
-    // ImGui::InputFloat("Camera Pos.z", &MainCamera.Position.z);
-    //
-    // ImGui::InputFloat("Camera Yaw", &MainCamera.Yaw);
-    // ImGui::InputFloat("Camera Pitch", &MainCamera.Pitch);
-    // ImGui::End();
-}
-
-void imgui_end()
-{
-    ImGui::Render();
-    int display_w, display_h;
-    glfwMakeContextCurrent(WindowMgr->GetWindowPointer());
-    glfwGetFramebufferSize(WindowMgr->GetWindowPointer(), &display_w, &display_h);
-
-    glViewport(0, 0, display_w, display_h);
-
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
 void LoadModels()
