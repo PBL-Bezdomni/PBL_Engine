@@ -3,21 +3,28 @@
 Engine& Engine::GetInstance()
 {
 	static Engine instance;
+	if (!instance.m_IsInitialized)
+	{
+		instance.Initialize();
+		instance.m_IsInitialized = true;
+	}
 	return instance;
-}
-
-Engine::Engine()
-{
-	Initialize();
 }
 
 void Engine::Initialize()
 {
-	// TODO Initialize modules
+	m_WindowMgr = std::make_unique<WindowManager>();
+	m_WindowMgr->Initialize(GL_VERSION_MAJOR, GL_VERSION_MINOR);
 }
 
 void Engine::Start()
 {
 	// TODO start engine
 }
+
+WindowManager& Engine::GetWindowManager()
+{
+	return *m_WindowMgr;
+}
+
 

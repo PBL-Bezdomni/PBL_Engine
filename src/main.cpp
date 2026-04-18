@@ -39,12 +39,6 @@ const int HOUSE_NET_DIM = 200;
 float WALL_X_BORDER = 37.f;
 float WALL_Y_BORDER = 50.f;
 
-static void glfw_error_callback(int error, const char* description)
-{
-    fprintf(stderr, "Glfw Error %d: %s\n", error, description);
-}
-
-bool init();
 void init_imgui();
 void LoadTexture(const char* path, Texture* texture);
 void LoadModels();
@@ -64,8 +58,6 @@ void imgui_begin();
 void imgui_render();
 void imgui_end();
 
-void end_frame();
-
 void GenerateSkybox();
 void DrawSkybox(glm::mat4 view, glm::mat4 projection);
 
@@ -76,15 +68,8 @@ void LoadCubemapTextures(vector<string> faces, Texture* texture);
 void LoadSceneModels();
 void AssignSceneModelsGraph();
 
-constexpr int32_t WINDOW_WIDTH = 2100;
-constexpr int32_t WINDOW_HEIGHT = 1800;
-
-GLFWwindow* window = nullptr;
-
 // Change these to lower GL version like 4.5 if GL 4.6 can't be initialized on your machine
 const char* glsl_version = "#version 410";
-constexpr int32_t GL_VERSION_MAJOR = 4;
-constexpr int32_t GL_VERSION_MINOR = 1;
 
 ImVec4 m_ClearColor = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
@@ -94,8 +79,8 @@ float m_DeltaTime = 0.0f;
 float m_LastFrame = 0.0f;
 
 // Mouse fields
-float m_MouseLastX = WINDOW_WIDTH / 2; 
-float m_MouseLastY = WINDOW_HEIGHT / 2;
+float m_MouseLastX;// = WINDOW_WIDTH / 2; 
+float m_MouseLastY;// = WINDOW_HEIGHT / 2;
 bool m_IsFirstMouse = true;
 
 Shader m_BasicShader;
@@ -202,15 +187,28 @@ vector<string> m_CubemapFaces {
     LoadManager.RelativePath + "res/textures/cubemap/back.jpg"
 };
 
+WindowManager* WindowMgr = nullptr;
+
 int main(int, char**)
 {
     Engine& engine = Engine::GetInstance();
-    engine.Start();
-    if (!init())
+
+    WindowMgr = &Engine::GetInstance().GetWindowManager();
+    
+    // engine.Start();
+    if (!engine.GetWindowManager().GetIsInitialized())
     {
         spdlog::error("Failed to initialize project!");
         return EXIT_FAILURE;
     }
+
+    m_MouseLastX = WindowMgr->WINDOW_WIDTH / 2; 
+    m_MouseLastY = WindowMgr->WINDOW_HEIGHT / 2;
+
+    glfwSetInputMode(WindowMgr->GetWindowPointer(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetCursorPosCallback(WindowMgr->GetWindowPointer(), mouse_callback);
+    glfwSetScrollCallback(WindowMgr->GetWindowPointer(), scroll_callback);
+    
     spdlog::info("Initialized project.");
 
     init_imgui();
@@ -232,13 +230,13 @@ int main(int, char**)
     //m_SkyboxShader.setInt("skybox", 0);
     
     // Main loop
-    while (!glfwWindowShouldClose(window))
+    while (!glfwWindowShouldClose(WindowMgr->GetWindowPointer()))
     {
         // Clear screen
         clear();
 
         // Process I/O operations here
-        input(window);
+        input(WindowMgr->GetWindowPointer());
 
         // Update game objects' state here
         update();
@@ -253,7 +251,7 @@ int main(int, char**)
 
 
         // End frame and swap buffers (double buffering)
-        end_frame();
+        WindowMgr->EndFrame();
     }
 
     // Cleanup
@@ -264,56 +262,10 @@ int main(int, char**)
     m_BasicShader.DeleteProgram();
     //glDeleteProgram(m_ShaderProgram);
 
-    glfwDestroyWindow(window);
+    glfwDestroyWindow(WindowMgr->GetWindowPointer());
     glfwTerminate();
 
     return 0;
-}
-
-bool init()
-{
-    // Setup window
-    glfwSetErrorCallback(glfw_error_callback);
-    if (!glfwInit())
-    {
-        spdlog::error("Failed to initalize GLFW!");
-        return false;
-    }
-
-    // GL 4.6 + GLSL 460
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, GL_VERSION_MAJOR);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, GL_VERSION_MINOR);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // 3.2+ only
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);           // 3.0+ only
-
-    // Create window with graphics context
-    window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Bezdomni", NULL, NULL);
-    if (window == NULL)
-    {
-        spdlog::error("Failed to create GLFW Window!");
-        return false;
-    }
-
-    glfwMakeContextCurrent(window);
-    glfwSwapInterval(1); // Enable VSync - fixes FPS at the refresh rate of your screen
-
-    bool err = !gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-
-    if (err)
-    {
-        spdlog::error("Failed to initialize OpenGL loader!");
-        return false;
-    }
-
-    // Mouse settings
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    glfwSetCursorPosCallback(window, mouse_callback);
-    glfwSetScrollCallback(window, scroll_callback);
-
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    return true;
 }
 
 void init_imgui()
@@ -326,7 +278,7 @@ void init_imgui()
     // io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;  // Enable Keyboard Controls
     // io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;   // Enable Gamepad Controls
 
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplGlfw_InitForOpenGL(WindowMgr->GetWindowPointer(), true);
     ImGui_ImplOpenGL3_Init(glsl_version);
 
     // Setup style
@@ -349,7 +301,7 @@ void init_shader()
     
     m_TextShader = Shader((LoadManager.RelativePath + "res/shaders/text.vert").c_str(), (LoadManager.RelativePath + "res/shaders/text.frag").c_str());
 
-    glm::mat4 textProjection = glm::ortho(0.0f, static_cast<float>(WINDOW_WIDTH), 0.0f, static_cast<float>(WINDOW_HEIGHT));
+    glm::mat4 textProjection = glm::ortho(0.0f, static_cast<float>(WindowMgr->WINDOW_WIDTH), 0.0f, static_cast<float>(WindowMgr->WINDOW_HEIGHT));
     m_TextShader.Use();
     m_TextShader.SetMat4("projection", textProjection);
 
@@ -481,7 +433,7 @@ void render()
     view = MainCamera.GetViewMatrix();
    
     glm::mat4 projection;
-    projection = MainCamera.GetProjectionMatrix(float(WINDOW_WIDTH) / float(WINDOW_HEIGHT), CAMERA_NEAR_PLANE, CAMERA_FAR_PLANE);
+    projection = MainCamera.GetProjectionMatrix(float(WindowMgr->WINDOW_WIDTH) / float(WindowMgr->WINDOW_HEIGHT), CAMERA_NEAR_PLANE, CAMERA_FAR_PLANE);
 
     DrawSkybox(skyboxView, projection);
 
@@ -607,19 +559,12 @@ void imgui_end()
 {
     ImGui::Render();
     int display_w, display_h;
-    glfwMakeContextCurrent(window);
-    glfwGetFramebufferSize(window, &display_w, &display_h);
+    glfwMakeContextCurrent(WindowMgr->GetWindowPointer());
+    glfwGetFramebufferSize(WindowMgr->GetWindowPointer(), &display_w, &display_h);
 
     glViewport(0, 0, display_w, display_h);
 
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-}
-
-void end_frame()
-{
-    glfwPollEvents();
-    glfwMakeContextCurrent(window);
-    glfwSwapBuffers(window);
 }
 
 void LoadModels()
