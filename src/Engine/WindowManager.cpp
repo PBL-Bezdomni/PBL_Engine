@@ -65,6 +65,16 @@ bool WindowManager::GetIsInitialized()
 	return m_IsInitialized;
 }
 
+void WindowManager::ClearFrame()
+{
+	// Clear z-buffer
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	// Clear space with full color
+	glClearColor(m_ClearColor.x, m_ClearColor.y, m_ClearColor.z, m_ClearColor.w);
+	glClear(GL_COLOR_BUFFER_BIT);
+}
+
+
 void WindowManager::EndFrame()
 {
 	glfwPollEvents();

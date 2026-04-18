@@ -43,7 +43,6 @@ void AssignSceneGraph();
 
 void init_shader();
 
-void clear();
 void input(GLFWwindow* window);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
@@ -60,9 +59,6 @@ void LoadCubemapTextures(vector<string> faces, Texture* texture);
 
 void LoadSceneModels();
 void AssignSceneModelsGraph();
-
-// Change these to lower GL version like 4.5 if GL 4.6 can't be initialized on your machine
-const char* glsl_version = "#version 410";
 
 ImVec4 m_ClearColor = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
@@ -227,7 +223,7 @@ int main(int, char**)
     while (!glfwWindowShouldClose(WindowMgr->GetWindowPointer()))
     {
         // Clear screen
-        clear();
+        WindowMgr->ClearFrame();
 
         // Process I/O operations here
         input(WindowMgr->GetWindowPointer());
@@ -285,15 +281,6 @@ void init_shader()
     m_TextShader.SetMat4("projection", textProjection);
 
     m_TextRenderer.Init((LoadManager.RelativePath + "res/fonts/Berylium.ttf").c_str(), 48);
-}
-
-void clear()
-{
-    // Clear z-buffer
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    // Clear space with full color
-    glClearColor(m_ClearColor.x, m_ClearColor.y, m_ClearColor.z, m_ClearColor.w);
-    glClear(GL_COLOR_BUFFER_BIT);
 }
 
 void input(GLFWwindow* window)
