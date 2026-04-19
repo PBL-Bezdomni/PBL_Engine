@@ -8,11 +8,11 @@ SpawnManager::SpawnManager()
 }
 
 
-Entity* SpawnManager::SpawnBall(Shader& shader, Loader loader)
+Entity* SpawnManager::SpawnBall(Shader& shader)
 {
 	if (m_SpawnedBalls.size() < m_BallLimit)
 	{
-		auto ball = make_unique<Entity>(shader, (loader.RelativePath + "res/models/sphere/sphere.obj").c_str()); //Entity(shader, (loader.RelativePath + "res/models/sphere/sphere.obj").c_str());
+		auto ball = make_unique<Entity>(shader, (Loader::RelativePath() + "res/models/sphere/sphere.obj").c_str()); //Entity(shader, (loader.RelativePath + "res/models/sphere/sphere.obj").c_str());
 		Entity* ptr = ball.get();
 		m_SpawnedBalls.push_back(move(ball));
 		m_SpawnedEntities.push_back(move(ball));
@@ -21,11 +21,11 @@ Entity* SpawnManager::SpawnBall(Shader& shader, Loader loader)
 	return nullptr;
 }
 
-Entity* SpawnManager::SpawnMonkey(Shader& shader, Loader loader)
+Entity* SpawnManager::SpawnMonkey(Shader& shader)
 {
 	if (m_SpawnedMonkeys.size() < m_MonkeyLimit)
 	{
-		auto monkey = make_unique<Entity>(shader, (loader.RelativePath + "res/models/monkey/Monkey.obj").c_str());
+		auto monkey = make_unique<Entity>(shader, (Loader::RelativePath() + "res/models/monkey/Monkey.obj").c_str());
 		Entity* ptr = monkey.get();
 		m_SpawnedBalls.push_back(move(monkey));
 		m_SpawnedEntities.push_back(move(monkey));
@@ -34,7 +34,7 @@ Entity* SpawnManager::SpawnMonkey(Shader& shader, Loader loader)
 	return nullptr;
 }
 
-Entity* SpawnManager::SpawnEntity(Shader& shader, Loader loader)
+Entity* SpawnManager::SpawnEntity(Shader& shader)
 {
 	if (m_SpawnedEntities.size() < m_MainLimit)
 	{
@@ -44,11 +44,11 @@ Entity* SpawnManager::SpawnEntity(Shader& shader, Loader loader)
 		int r = dist(rng);
 		if (r < m_MonkeyProb && m_SpawnedMonkeys.size() < m_MonkeyLimit)
 		{
-			return SpawnMonkey(shader, loader);
+			return SpawnMonkey(shader);
 		}
 		else
 		{
-			return SpawnBall(shader, loader);
+			return SpawnBall(shader);
 		}
 	}
 	return nullptr;

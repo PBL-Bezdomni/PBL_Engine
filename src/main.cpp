@@ -21,6 +21,7 @@
 #include "Entity.h"
 #include "Quaternion.h"
 #include "Camera.h"
+#include "Skybox.h"
 #include "Engine/Loader.h"
 #include "Engine/Engine.h"
 #include "SpawnManager.h"
@@ -50,12 +51,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 int RandomValue(int min, int max);
 void render();
 
-void GenerateSkybox();
-void DrawSkybox(glm::mat4 view, glm::mat4 projection);
-
 void SetupShaderLight(Shader& shader);
-
-void LoadCubemapTextures(vector<string> faces, Texture* texture);
 
 void LoadSceneModels();
 void AssignSceneModelsGraph();
@@ -81,10 +77,8 @@ Texture m_TableTex;
 Texture m_WaterpoolTex;
 Texture m_TowelsTex;
 Texture m_SliderTex;
-Texture m_SkyboxTex;
 Texture m_UIDuckTex;
 
-unsigned int m_SkyboxTexID;
 Entity world;
 Entity skybox;
 
@@ -151,31 +145,20 @@ float m_SpotLight2Angle = 135.f;
 float m_SpotLight2Linear = 0.09f;
 float m_SpotLight2Quadratic = 0.032f;
 
-// timing
-float deltaTime = 0.0f;
-float lastFrame = 0.0f;
-
 float m_Posx = 0;
 float m_Posy = 0;
 float m_Posz = 0;
 
-Loader LoadManager = Loader();
+// Loader LoadManager = Loader();
 SpawnManager m_SpawnManager = SpawnManager();
-
-vector<string> m_CubemapFaces { 
-    LoadManager.RelativePath + "res/textures/cubemap/right.jpg", 
-    LoadManager.RelativePath + "res/textures/cubemap/left.jpg",
-    LoadManager.RelativePath + "res/textures/cubemap/top.jpg", 
-    LoadManager.RelativePath + "res/textures/cubemap/bottom.jpg", 
-    LoadManager.RelativePath + "res/textures/cubemap/front.jpg", 
-    LoadManager.RelativePath + "res/textures/cubemap/back.jpg"
-};
+Skybox m_Skybox;
 
 WindowManager* WindowMgr = nullptr;
 DebugManager* DebugMgr = nullptr;
 
 int main(int, char**)
 {
+    Loader::Initialize();
     Engine& engine = Engine::GetInstance();
     bool isDebugDraw = engine.GetIsDebugDrawn();
 
@@ -208,9 +191,7 @@ int main(int, char**)
 
     glEnable(GL_DEPTH_TEST);
 
-    GenerateSkybox();
-    m_SkyboxShader.Use();
-    m_SkyboxShader.SetInt("skybox", 0);
+    m_Skybox = Skybox(m_SkyboxShader);
     
     //m_SkyboxShader.setInt("skybox", 0);
     
@@ -258,24 +239,24 @@ int main(int, char**)
 
 void init_shader()
 {
-    m_BasicShader = Shader((LoadManager.RelativePath + "res/shaders/basic.vert").c_str(), (LoadManager.RelativePath + "res/shaders/basic.frag").c_str());
-    m_UIShader = Shader((LoadManager.RelativePath + "res/shaders/UIShader.vert").c_str(), (LoadManager.RelativePath + "res/shaders/UIShader.frag").c_str());
-    m_SliderShader = Shader((LoadManager.RelativePath + "res/shaders/UIShader.vert").c_str(), (LoadManager.RelativePath + "res/shaders/UISlider.frag").c_str());
-    m_SkyboxShader = Shader((LoadManager.RelativePath + "res/shaders/cubemap.vert").c_str(), (LoadManager.RelativePath + "res/shaders/cubemap.frag").c_str());
+    m_BasicShader = Shader((Loader::RelativePath()+ "res/shaders/basic.vert").c_str(), (Loader::RelativePath()+ "res/shaders/basic.frag").c_str());
+    m_UIShader = Shader((Loader::RelativePath()+ "res/shaders/UIShader.vert").c_str(), (Loader::RelativePath()+ "res/shaders/UIShader.frag").c_str());
+    m_SliderShader = Shader((Loader::RelativePath()+ "res/shaders/UIShader.vert").c_str(), (Loader::RelativePath()+ "res/shaders/UISlider.frag").c_str());
+    m_SkyboxShader = Shader((Loader::RelativePath()+ "res/shaders/cubemap.vert").c_str(), (Loader::RelativePath()+ "res/shaders/cubemap.frag").c_str());
 
-    LoadTexture((LoadManager.RelativePath + "res/textures/duck.png").c_str(), &m_UIDuckTex);
-    LoadTexture((LoadManager.RelativePath + "res/models/scena_v1/floor/floor_textures/Stylized_Stone_Floor_010_basecolor.png").c_str(), &m_FloorTex);
-    LoadTexture((LoadManager.RelativePath + "res/models/scena_v1/walls/walls_textures/Stylized_Wall_002_basecolor.png").c_str(), &m_WallTex);
-    // LoadTexture((LoadManager.RelativePath + "res/models/scena_v1/for_towels/drewno.jpg").c_str(), &m_TowelsTex);
-    LoadTexture((LoadManager.RelativePath + "res/textures/white.png").c_str(), &m_SliderTex);
+    LoadTexture((Loader::RelativePath()+ "res/textures/duck.png").c_str(), &m_UIDuckTex);
+    LoadTexture((Loader::RelativePath()+ "res/models/scena_v1/floor/floor_textures/Stylized_Stone_Floor_010_basecolor.png").c_str(), &m_FloorTex);
+    LoadTexture((Loader::RelativePath()+ "res/models/scena_v1/walls/walls_textures/Stylized_Wall_002_basecolor.png").c_str(), &m_WallTex);
+    // LoadTexture((Loader::RelativePath()+ "res/models/scena_v1/for_towels/drewno.jpg").c_str(), &m_TowelsTex);
+    LoadTexture((Loader::RelativePath()+ "res/textures/white.png").c_str(), &m_SliderTex);
     
-    m_TextShader = Shader((LoadManager.RelativePath + "res/shaders/text.vert").c_str(), (LoadManager.RelativePath + "res/shaders/text.frag").c_str());
+    m_TextShader = Shader((Loader::RelativePath()+ "res/shaders/text.vert").c_str(), (Loader::RelativePath()+ "res/shaders/text.frag").c_str());
 
     glm::mat4 textProjection = glm::ortho(0.0f, static_cast<float>(WindowMgr->WINDOW_WIDTH), 0.0f, static_cast<float>(WindowMgr->WINDOW_HEIGHT));
     m_TextShader.Use();
     m_TextShader.SetMat4("projection", textProjection);
 
-    m_TextRenderer.Init((LoadManager.RelativePath + "res/fonts/Berylium.ttf").c_str(), 48);
+    m_TextRenderer.Init((Loader::RelativePath()+ "res/fonts/Berylium.ttf").c_str(), 48);
 }
 
 void input(GLFWwindow* window)
@@ -389,7 +370,7 @@ void render()
     glm::mat4 projection;
     projection = MainCamera.GetProjectionMatrix(float(WindowMgr->WINDOW_WIDTH) / float(WindowMgr->WINDOW_HEIGHT), CAMERA_NEAR_PLANE, CAMERA_FAR_PLANE);
 
-    DrawSkybox(skyboxView, projection);
+    m_Skybox.DrawSkybox(skyboxView, projection);
 
     m_BasicShader.Use();
     m_BasicShader.SetMat4("view", view);
@@ -426,7 +407,7 @@ void render()
     if (m_SpawnCounter >= m_SpawnTime)
     {
         m_SpawnCounter = 0;
-        Entity* spawnedEntity = m_SpawnManager.SpawnEntity(m_BasicShader, LoadManager);
+        Entity* spawnedEntity = m_SpawnManager.SpawnEntity(m_BasicShader);
         if (spawnedEntity != nullptr)
         {
             float posX = RandomValue(-WALL_X_BORDER, WALL_X_BORDER);
@@ -494,12 +475,12 @@ void LoadModels()
     world = Entity();
     objectsTransform = Entity(m_BasicShader);
 
-    duckTransparent = Entity(m_UIShader, (LoadManager.RelativePath + "res/models/house/floor.obj").c_str());
-    slider = Entity(m_SliderShader, (LoadManager.RelativePath + "res/models/house/floor.obj").c_str());
+    duckTransparent = Entity(m_UIShader, (Loader::RelativePath()+ "res/models/house/floor.obj").c_str());
+    slider = Entity(m_SliderShader, (Loader::RelativePath()+ "res/models/house/floor.obj").c_str());
     duckTransparent.AssignTexture(m_UIDuckTex);
     slider.AssignTexture(m_SliderTex);
     //house_floor.ScaleTexture(FLOOR_TEX_SCALE * FLOOR_SCALE);
-    monkey = Entity(m_BasicShader, (LoadManager.RelativePath + "res/models/monkey/Monkey.obj").c_str());
+    monkey = Entity(m_BasicShader, (Loader::RelativePath()+ "res/models/monkey/Monkey.obj").c_str());
 
     LoadSceneModels();
 }
@@ -507,15 +488,15 @@ void LoadModels()
 void LoadSceneModels()
 {
     m_Scene = Entity(m_BasicShader);
-    m_Floor = Entity(m_BasicShader, (LoadManager.RelativePath + "res/models/scena_v1/floor/floor.fbx").c_str());
+    m_Floor = Entity(m_BasicShader, (Loader::RelativePath()+ "res/models/scena_v1/floor/floor.fbx").c_str());
     m_Floor.AssignTexture(m_FloorTex);
     m_WallDir = Entity(m_BasicShader);
-    m_WallBack = Entity(m_BasicShader, (LoadManager.RelativePath + "res/models/scena_v1/walls/wall1.fbx").c_str());
-    m_WallFrontLeft = Entity(m_BasicShader, (LoadManager.RelativePath + "res/models/scena_v1/walls/wall1.fbx").c_str());
-    m_WallFrontRight = Entity(m_BasicShader, (LoadManager.RelativePath + "res/models/scena_v1/walls/wall1.fbx").c_str());
-    m_WallLeft = Entity(m_BasicShader, (LoadManager.RelativePath + "res/models/scena_v1/walls/wall1.fbx").c_str());
-    m_WallRight = Entity(m_BasicShader, (LoadManager.RelativePath + "res/models/scena_v1/walls/wall1.fbx").c_str());
-    m_TowelsBed = Entity(m_BasicShader, (LoadManager.RelativePath + "res/models/scena_v1/for_towels/for_towels.fbx").c_str());
+    m_WallBack = Entity(m_BasicShader, (Loader::RelativePath()+ "res/models/scena_v1/walls/wall1.fbx").c_str());
+    m_WallFrontLeft = Entity(m_BasicShader, (Loader::RelativePath()+ "res/models/scena_v1/walls/wall1.fbx").c_str());
+    m_WallFrontRight = Entity(m_BasicShader, (Loader::RelativePath()+ "res/models/scena_v1/walls/wall1.fbx").c_str());
+    m_WallLeft = Entity(m_BasicShader, (Loader::RelativePath()+ "res/models/scena_v1/walls/wall1.fbx").c_str());
+    m_WallRight = Entity(m_BasicShader, (Loader::RelativePath()+ "res/models/scena_v1/walls/wall1.fbx").c_str());
+    m_TowelsBed = Entity(m_BasicShader, (Loader::RelativePath()+ "res/models/scena_v1/for_towels/for_towels.fbx").c_str());
     
     m_WallBack.AssignTexture(m_WallTex);
     m_WallFrontLeft.AssignTexture(m_WallTex);
@@ -599,113 +580,4 @@ void SetupShaderLight(Shader& shader)
     shader.SetFloat("spotLight2.constant", 1.0f);
     shader.SetFloat("spotLight2.linear", m_SpotLight2Linear);
     shader.SetFloat("spotLight2.quadratic", m_SpotLight2Quadratic);
-}
-
-void GenerateSkybox()
-{
-    float skyboxVertices[] = {
-        // positions          
-        -1.0f,  1.0f, -1.0f,
-        -1.0f, -1.0f, -1.0f,
-         1.0f, -1.0f, -1.0f,
-         1.0f, -1.0f, -1.0f,
-         1.0f,  1.0f, -1.0f,
-        -1.0f,  1.0f, -1.0f,
-
-        -1.0f, -1.0f,  1.0f,
-        -1.0f, -1.0f, -1.0f,
-        -1.0f,  1.0f, -1.0f,
-        -1.0f,  1.0f, -1.0f,
-        -1.0f,  1.0f,  1.0f,
-        -1.0f, -1.0f,  1.0f,
-
-         1.0f, -1.0f, -1.0f,
-         1.0f, -1.0f,  1.0f,
-         1.0f,  1.0f,  1.0f,
-         1.0f,  1.0f,  1.0f,
-         1.0f,  1.0f, -1.0f,
-         1.0f, -1.0f, -1.0f,
-
-        -1.0f, -1.0f,  1.0f,
-        -1.0f,  1.0f,  1.0f,
-         1.0f,  1.0f,  1.0f,
-         1.0f,  1.0f,  1.0f,
-         1.0f, -1.0f,  1.0f,
-        -1.0f, -1.0f,  1.0f,
-
-        -1.0f,  1.0f, -1.0f,
-         1.0f,  1.0f, -1.0f,
-         1.0f,  1.0f,  1.0f,
-         1.0f,  1.0f,  1.0f,
-        -1.0f,  1.0f,  1.0f,
-        -1.0f,  1.0f, -1.0f,
-
-        -1.0f, -1.0f, -1.0f,
-        -1.0f, -1.0f,  1.0f,
-         1.0f, -1.0f, -1.0f,
-         1.0f, -1.0f, -1.0f,
-        -1.0f, -1.0f,  1.0f,
-         1.0f, -1.0f,  1.0f
-    };
-
-    m_SkyboxShader.Use();
-    glGenVertexArrays(1, &m_SkyboxVAO);
-    glGenBuffers(1, &m_SkyboxVBO);
-    glBindVertexArray(m_SkyboxVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, m_SkyboxVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-
-    LoadCubemapTextures(m_CubemapFaces, &m_SkyboxTex);
-}
-
-void DrawSkybox(glm::mat4 view, glm::mat4 projection)
-{
-    glDepthFunc(GL_LEQUAL);
-    m_SkyboxShader.Use();
-    m_SkyboxShader.SetMat4("view", view);
-    m_SkyboxShader.SetMat4("projection", projection);
-    m_SkyboxShader.SetFloat("time", glfwGetTime());
-    glBindVertexArray(m_SkyboxVAO);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, m_SkyboxTex.ID);
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-    glBindVertexArray(0);
-    glDepthFunc(GL_LESS);
-}
-
-void LoadCubemapTextures(vector<string> faces, Texture* texture)
-{
-    texture->Path = "";
-    texture->Type = "texture_diffuse";
-    unsigned int textureID;
-    glGenTextures(1, &textureID);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
-
-    int width, height, nrChannels;
-    unsigned char* data;
-    for (unsigned int i = 0; i < faces.size(); i++)
-    {
-        data = stbi_load(faces[i].c_str(), &width, &height, &nrChannels, 0);
-        if (data)
-        {
-            stbi_set_flip_vertically_on_load(false);
-            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-            stbi_image_free(data);
-        }
-        else
-        {
-            std::cout << "Cubemap texture failed to load at path: " << faces[i] << std::endl;
-            stbi_image_free(data);
-        }
-    }
-
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-
-    texture->ID = textureID;
 }

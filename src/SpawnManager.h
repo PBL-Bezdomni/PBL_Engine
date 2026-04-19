@@ -19,7 +19,7 @@ private:
 	float m_BallProb = 70.f;
 public:
 	SpawnManager();
-	Entity* SpawnBall(Shader& shader, Loader loader);
-	Entity* SpawnMonkey(Shader& shader, Loader loader);
-	Entity* SpawnEntity(Shader& shader, Loader loader);
+	Entity* SpawnBall(Shader& shader);
+	Entity* SpawnMonkey(Shader& shader);
+	Entity* SpawnEntity(Shader& shader);
 };

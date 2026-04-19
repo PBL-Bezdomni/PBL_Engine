@@ -2,10 +2,18 @@
 
 #include "spdlog/spdlog.h"
 
-Loader::Loader()
+Loader Loader::m_Instance;
+
+void Loader::Initialize()
 {
-	TestLoad();
+	m_Instance.TestLoad();
 }
+
+string Loader::RelativePath()
+{
+	return m_Instance.m_RelativePath;
+}
+
 
 void Loader::TestLoad()
 {
@@ -13,14 +21,14 @@ void Loader::TestLoad()
 	unsigned char* data = stbi_load((VS_BUILD_RELATIVE_PATH + TEST_PATH).c_str(), &width, &height, &nrChannels, 0);
 	if (data)
 	{
-		RelativePath = VS_BUILD_RELATIVE_PATH;
+		m_RelativePath = VS_BUILD_RELATIVE_PATH;
 	}
 	else
 	{
 		data = stbi_load((EXE_BUILD_RELATIVE_PATH + TEST_PATH).c_str(), &width, &height, &nrChannels, 0);
 		if (data)
 		{
-			RelativePath = EXE_BUILD_RELATIVE_PATH;
+			m_RelativePath = EXE_BUILD_RELATIVE_PATH;
 		}
 		else
 		{
