@@ -25,6 +25,7 @@
 #include "Engine/Engine.h"
 #include "SpawnManager.h"
 #include "Engine/DebugManager.h"
+#include "Engine/Time.h"
 
 #define _USE_MATH_DEFINES
 
@@ -46,7 +47,6 @@ void init_shader();
 void input(GLFWwindow* window);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-void update();
 int RandomValue(int min, int max);
 void render();
 
@@ -60,12 +60,7 @@ void LoadCubemapTextures(vector<string> faces, Texture* texture);
 void LoadSceneModels();
 void AssignSceneModelsGraph();
 
-ImVec4 m_ClearColor = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-
 Camera MainCamera;
-
-float m_DeltaTime = 0.0f;
-float m_LastFrame = 0.0f;
 
 // Mouse fields
 float m_MouseLastX;// = WINDOW_WIDTH / 2; 
@@ -229,7 +224,7 @@ int main(int, char**)
         input(WindowMgr->GetWindowPointer());
 
         // Update game objects' state here
-        update();
+        Time::Update();
 
         // OpenGL rendering code here
         render();
@@ -287,19 +282,19 @@ void input(GLFWwindow* window)
 {
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         {
-            MainCamera.ProcessKeyboard(FORWARD, m_DeltaTime);
+            MainCamera.ProcessKeyboard(FORWARD, Time::GetDeltaTime());
         }
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
         {
-            MainCamera.ProcessKeyboard(BACKWARD, m_DeltaTime);
+            MainCamera.ProcessKeyboard(BACKWARD, Time::GetDeltaTime());
         }
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
         {
-            MainCamera.ProcessKeyboard(LEFT, m_DeltaTime);
+            MainCamera.ProcessKeyboard(LEFT, Time::GetDeltaTime());
         }
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         {
-            MainCamera.ProcessKeyboard(RIGHT, m_DeltaTime);
+            MainCamera.ProcessKeyboard(RIGHT, Time::GetDeltaTime());
         }
 
         if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_2) == GLFW_PRESS)
@@ -362,13 +357,6 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
     }
 }
 
-void update()
-{
-    float currentFrame = glfwGetTime();
-    m_DeltaTime = currentFrame - m_LastFrame;
-    m_LastFrame = currentFrame;
-}
-
 float m_CurrentRotationDegrees;
 int m_RotationCount;
 float m_SpawnCounter;
@@ -426,7 +414,7 @@ void render()
     slider.transform.Position = glm::vec3(-10.4f, 13.5f, 0.f);
     slider.transform.EulerAngles.x = 90.f;
     
-    m_CurrentRotationDegrees += m_DeltaTime * 60.0f;
+    m_CurrentRotationDegrees += Time::GetDeltaTime() * 60.0f;
 
     if (static_cast<int>(m_CurrentRotationDegrees) / 360 >= 1)
     {
@@ -434,7 +422,7 @@ void render()
         m_RotationCount++;
     }
 
-    m_SpawnCounter += m_DeltaTime;
+    m_SpawnCounter += Time::GetDeltaTime();
     if (m_SpawnCounter >= m_SpawnTime)
     {
         m_SpawnCounter = 0;
