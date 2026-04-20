@@ -430,7 +430,7 @@ void render()
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    std::wstring monkeyText = L"Monkey's rotations: " + std::to_wstring(m_RotationCount);
+    std::wstring monkeyText = L"FPS: " + std::to_wstring(Time::GetFPS());
 
     m_TextRenderer.RenderText(m_TextShader, monkeyText, 10.0f, 1700.0f, 2.0f, glm::vec3(0.3f, 0.3f, 0.3f));
     glEnable(GL_DEPTH_TEST);
