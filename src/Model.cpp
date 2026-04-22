@@ -1,5 +1,6 @@
 #include "Model.h"
 #include "stb_image.cpp"
+#include "assimp/postprocess.h"
 
 unsigned int TextureFromFile(const char* path, const string& directory, bool gamma = false);
 
@@ -7,20 +8,28 @@ Model::Model()
 {
 }
 
-Model::Model(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures, unsigned int instancing, vector<glm::mat4> instanceMatrix)
+Model::Model(Shader& shader)
 {
+    this->m_Shader = shader;
+}
+
+Model::Model(Shader& shader, vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures, unsigned int instancing, vector<glm::mat4> instanceMatrix)
+{
+    this->m_Shader = shader;
     this->Instancing = instancing;
     this->InstanceMatrix = instanceMatrix;
     Meshes.push_back(Mesh(vertices, indices, textures, instancing, instanceMatrix));
 }
 
-Model::Model(const char* path, unsigned int instancing, vector<glm::mat4> instanceMatrix)
+Model::Model(Shader& shader, const char* path, unsigned int instancing, vector<glm::mat4> instanceMatrix)
 {
+    this->m_Shader = shader;
     this->Instancing = instancing;
     this->InstanceMatrix = instanceMatrix;
     LoadModel(path);
 }
 
+// Reducted TODO remove
 void Model::UpdateVertices(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures)
 {
     if (Meshes.size() > 0)
@@ -33,6 +42,7 @@ void Model::UpdateVertices(vector<Vertex> vertices, vector<unsigned int> indices
     }
 }
 
+// TODO make at least applicable for other types of textures. 
 void Model::AssignTexture(Texture tex)
 {
     if (Meshes.size() > 0)
@@ -48,11 +58,14 @@ void Model::AssignTexture(Texture tex)
     }
 }
 
-void Model::Draw(Shader& shader)
+void Model::Draw(glm::mat4 modelMatrix)
 {
+    m_Shader.Use();
+    m_Shader.SetMat4("model", modelMatrix);
+    
     for (unsigned int i = 0; i < Meshes.size(); i++)
     {
-        Meshes[i].Draw(shader);
+        Meshes[i].Draw(m_Shader);
     }
 }
 
@@ -217,10 +230,43 @@ unsigned int TextureFromFile(const char* path, const string& directory, bool gam
     return textureID;
 }
 
+// Reducted TODO remove
 void Model::ScaleTexture(float scale)
 {
     for (int i = 0; i < Meshes.size(); i++)
     {
         Meshes[i].ScaleTexture(scale);
+    }
+}
+
+void Model::ReassignShader(Shader& shader)
+{
+    this->m_Shader = shader;
+}
+
+void Model::UpdateInstanceMatrix(glm::vec3 transform, glm::vec3 rotation, glm::vec3 scale, int index, Shader& shader, bool saveNew)
+{
+    if (index >= 0 && Instancing > 1 && InstanceMatrix.size() > index)
+    {
+        vector<glm::mat4> newInstanceMatrix;
+        for (int i = 0; i < InstanceMatrix.size(); i++)
+        {
+            newInstanceMatrix.push_back(InstanceMatrix[i]);
+        }
+        newInstanceMatrix[index] = glm::translate(newInstanceMatrix[index], transform);
+        newInstanceMatrix[index] = glm::rotate(newInstanceMatrix[index], glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+        newInstanceMatrix[index] = glm::rotate(newInstanceMatrix[index], glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+        newInstanceMatrix[index] = glm::rotate(newInstanceMatrix[index], glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+        newInstanceMatrix[index] = glm::scale(newInstanceMatrix[index], scale);
+
+        if (saveNew)
+        {
+            InstanceMatrix[index] = newInstanceMatrix[index];
+        }
+
+        for (int i = 0; i < Meshes.size(); i++)
+        {
+            Meshes[i].RefreshInstanceMatrix(shader, newInstanceMatrix);
+        }
     }
 }

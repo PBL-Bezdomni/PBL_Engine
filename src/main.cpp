@@ -18,7 +18,7 @@
 #include "FreeType.h"
 #include "Shader.h"
 #include "Model.h"
-#include "Entity.h"
+#include "GameObject.h"
 #include "Quaternion.h"
 #include "Camera.h"
 #include "Skybox.h"
@@ -27,6 +27,7 @@
 #include "SpawnManager.h"
 #include "Engine/DebugManager.h"
 #include "Engine/Time.h"
+#include "Model.h"
 
 #define _USE_MATH_DEFINES
 
@@ -79,31 +80,31 @@ Texture m_TowelsTex;
 Texture m_SliderTex;
 Texture m_UIDuckTex;
 
-Entity world;
-Entity skybox;
+GameObject world;
+GameObject skybox;
 
-Entity monkey;
-Entity duckTransparent;
-Entity slider;
-Entity objectsTransform;
+GameObject monkey;
+GameObject duckTransparent;
+GameObject slider;
+GameObject objectsTransform;
 
-Entity m_Scene;
-Entity m_Floor;
-Entity m_WallDir;
-Entity m_WallLeft;
-Entity m_WallRight;
-Entity m_WallBack;
-Entity m_WallFrontRight;
-Entity m_WallFrontLeft;
-Entity m_OnsenObjects;
-Entity m_TowelsBed;
-Entity m_Waterpool;
-Entity m_TablesDir;
-Entity m_Table1;
-Entity m_Table2;
-Entity m_Table3;
-Entity m_Table4;
-Entity m_Table5;
+GameObject m_Scene;
+GameObject m_Floor;
+GameObject m_WallDir;
+GameObject m_WallLeft;
+GameObject m_WallRight;
+GameObject m_WallBack;
+GameObject m_WallFrontRight;
+GameObject m_WallFrontLeft;
+GameObject m_OnsenObjects;
+GameObject m_TowelsBed;
+GameObject m_Waterpool;
+GameObject m_TablesDir;
+GameObject m_Table1;
+GameObject m_Table2;
+GameObject m_Table3;
+GameObject m_Table4;
+GameObject m_Table5;
 
 unsigned int m_SkyboxVAO;
 unsigned int m_SkyboxVBO;
@@ -158,11 +159,10 @@ DebugManager* DebugMgr = nullptr;
 
 int main(int, char**)
 {
-    Loader::Initialize();
     Engine& engine = Engine::GetInstance();
     bool isDebugDraw = engine.GetIsDebugDrawn();
 
-    WindowMgr = &Engine::GetInstance().GetWindowManager();
+    WindowMgr = &engine.GetWindowManager();
     
     // engine.Start();
     if (!engine.GetWindowManager().GetIsInitialized())
@@ -384,16 +384,16 @@ void render()
     m_SliderShader.SetMat4("projection", projection);
     m_SliderShader.SetFloat("slider_load", m_CurrentRotationDegrees / 360.0f);
 
-    world.transform.Position = glm::vec3(0.f, 0.f, -30.f);
-    world.transform.Scale = glm::vec3(0.7f);
+    world.transform->Position = glm::vec3(0.f, 0.f, -30.f);
+    world.transform->Scale = glm::vec3(0.7f);
 
-    duckTransparent.transform.Scale = glm::vec3(0.1f, 0.1f, 0.1f);
-    duckTransparent.transform.Position = glm::vec3(16.4f, 13.5f, 0.f);
-    duckTransparent.transform.EulerAngles.x = 90.f;
+    duckTransparent.transform->Scale = glm::vec3(0.1f, 0.1f, 0.1f);
+    duckTransparent.transform->Position = glm::vec3(16.4f, 13.5f, 0.f);
+    duckTransparent.transform->EulerAngles.x = 90.f;
 
-    slider.transform.Scale = glm::vec3(0.2f, 0.1f, 0.02f);
-    slider.transform.Position = glm::vec3(-10.4f, 13.5f, 0.f);
-    slider.transform.EulerAngles.x = 90.f;
+    slider.transform->Scale = glm::vec3(0.2f, 0.1f, 0.02f);
+    slider.transform->Position = glm::vec3(-10.4f, 13.5f, 0.f);
+    slider.transform->EulerAngles.x = 90.f;
     
     m_CurrentRotationDegrees += Time::GetDeltaTime() * 60.0f;
 
@@ -407,19 +407,19 @@ void render()
     if (m_SpawnCounter >= m_SpawnTime)
     {
         m_SpawnCounter = 0;
-        Entity* spawnedEntity = m_SpawnManager.SpawnEntity(m_BasicShader);
+        GameObject* spawnedEntity = m_SpawnManager.SpawnEntity(m_BasicShader);
         if (spawnedEntity != nullptr)
         {
             float posX = RandomValue(-WALL_X_BORDER, WALL_X_BORDER);
             float posY = RandomValue(-WALL_Y_BORDER, WALL_Y_BORDER);
-            spawnedEntity->transform.Position = glm::vec3(posX, 5, posY);
+            spawnedEntity->transform->Position = glm::vec3(posX, 5, posY);
             objectsTransform.AddChild(spawnedEntity);
         }
     }
 
-    monkey.transform.Position = glm::vec3(-5.f, 0.f, 0.f);
-    monkey.transform.EulerAngles.x = m_CurrentRotationDegrees;
-    monkey.transform.Scale = glm::vec3(2.f);
+    monkey.transform->Position = glm::vec3(-5.f, 0.f, 0.f);
+    monkey.transform->EulerAngles.x = m_CurrentRotationDegrees;
+    monkey.transform->Scale = glm::vec3(2.f);
 
     // m_PointLightPos = quat.RotateQuaternion(glm::vec3(m_PointLightRadius, m_PointLightHeight, 0.f), axisY, glfwGetTime() * 50);
 
@@ -472,37 +472,51 @@ void LoadTexture(const char* path, Texture* tex)
 
 void LoadModels()
 {
-    world = Entity();
-    objectsTransform = Entity(m_BasicShader);
+    world = GameObject();
+    objectsTransform = GameObject();
+    objectsTransform.AddComponent<Model>(m_BasicShader);
 
-    duckTransparent = Entity(m_UIShader, (Loader::RelativePath()+ "res/models/house/floor.obj").c_str());
-    slider = Entity(m_SliderShader, (Loader::RelativePath()+ "res/models/house/floor.obj").c_str());
-    duckTransparent.AssignTexture(m_UIDuckTex);
-    slider.AssignTexture(m_SliderTex);
+    duckTransparent = GameObject();
+    duckTransparent.AddComponent<Model>(m_UIShader, (Loader::RelativePath()+ "res/models/house/floor.obj").c_str());
+    slider = GameObject();
+    slider.AddComponent<Model>(m_SliderShader, (Loader::RelativePath()+ "res/models/house/floor.obj").c_str());
+    duckTransparent.GetComponent<Model>()->AssignTexture(m_UIDuckTex);
+    slider.GetComponent<Model>()->AssignTexture(m_SliderTex);
     //house_floor.ScaleTexture(FLOOR_TEX_SCALE * FLOOR_SCALE);
-    monkey = Entity(m_BasicShader, (Loader::RelativePath()+ "res/models/monkey/Monkey.obj").c_str());
+    monkey = GameObject();
+    monkey.AddComponent<Model>(m_BasicShader, (Loader::RelativePath()+ "res/models/monkey/Monkey.obj").c_str());
 
     LoadSceneModels();
 }
 
 void LoadSceneModels()
 {
-    m_Scene = Entity(m_BasicShader);
-    m_Floor = Entity(m_BasicShader, (Loader::RelativePath()+ "res/models/scena_v1/floor/floor.fbx").c_str());
-    m_Floor.AssignTexture(m_FloorTex);
-    m_WallDir = Entity(m_BasicShader);
-    m_WallBack = Entity(m_BasicShader, (Loader::RelativePath()+ "res/models/scena_v1/walls/wall1.fbx").c_str());
-    m_WallFrontLeft = Entity(m_BasicShader, (Loader::RelativePath()+ "res/models/scena_v1/walls/wall1.fbx").c_str());
-    m_WallFrontRight = Entity(m_BasicShader, (Loader::RelativePath()+ "res/models/scena_v1/walls/wall1.fbx").c_str());
-    m_WallLeft = Entity(m_BasicShader, (Loader::RelativePath()+ "res/models/scena_v1/walls/wall1.fbx").c_str());
-    m_WallRight = Entity(m_BasicShader, (Loader::RelativePath()+ "res/models/scena_v1/walls/wall1.fbx").c_str());
-    m_TowelsBed = Entity(m_BasicShader, (Loader::RelativePath()+ "res/models/scena_v1/for_towels/for_towels.fbx").c_str());
+    m_Scene = GameObject();
+    m_Scene.AddComponent<Model>(m_BasicShader);
+    m_Floor = GameObject();
+    m_Floor.AddComponent<Model>(m_BasicShader, (Loader::RelativePath()+ "res/models/scena_v1/floor/floor.fbx").c_str());
+    m_Floor.GetComponent<Model>()->AssignTexture(m_FloorTex);
+    // m_Floor.AssignTexture(m_FloorTex);
+    m_WallDir = GameObject();
+    m_WallDir.AddComponent<Model>(m_BasicShader);
+    m_WallBack = GameObject();
+    m_WallBack.AddComponent<Model>(m_BasicShader, (Loader::RelativePath()+ "res/models/scena_v1/walls/wall1.fbx").c_str());
+    m_WallFrontLeft = GameObject();
+    m_WallFrontLeft.AddComponent<Model>(m_BasicShader, (Loader::RelativePath()+ "res/models/scena_v1/walls/wall1.fbx").c_str());
+    m_WallFrontRight = GameObject();
+    m_WallFrontRight.AddComponent<Model>(m_BasicShader, (Loader::RelativePath()+ "res/models/scena_v1/walls/wall1.fbx").c_str());
+    m_WallLeft = GameObject();
+    m_WallLeft.AddComponent<Model>(m_BasicShader, (Loader::RelativePath()+ "res/models/scena_v1/walls/wall1.fbx").c_str());
+    m_WallRight = GameObject();
+    m_WallRight.AddComponent<Model>(m_BasicShader, (Loader::RelativePath()+ "res/models/scena_v1/walls/wall1.fbx").c_str());
+    m_TowelsBed = GameObject();
+    m_TowelsBed.AddComponent<Model>(m_BasicShader, (Loader::RelativePath()+ "res/models/scena_v1/for_towels/for_towels.fbx").c_str());
     
-    m_WallBack.AssignTexture(m_WallTex);
-    m_WallFrontLeft.AssignTexture(m_WallTex);
-    m_WallFrontRight.AssignTexture(m_WallTex);
-    m_WallLeft.AssignTexture(m_WallTex);
-    m_WallRight.AssignTexture(m_WallTex);
+    m_WallBack.GetComponent<Model>()->AssignTexture(m_WallTex);
+    m_WallFrontLeft.GetComponent<Model>()->AssignTexture(m_WallTex);
+    m_WallFrontRight.GetComponent<Model>()->AssignTexture(m_WallTex);
+    m_WallLeft.GetComponent<Model>()->AssignTexture(m_WallTex);
+    m_WallRight.GetComponent<Model>()->AssignTexture(m_WallTex);
 }
 
 void AssignSceneGraph()
@@ -533,18 +547,18 @@ void AssignSceneModelsGraph()
 
     m_OnsenObjects.AddChild(&m_TowelsBed);
 
-    m_Scene.transform.EulerAngles.x = -90.f;
-    m_Floor.transform.EulerAngles.z = 90.f;
+    m_Scene.transform->EulerAngles.x = -90.f;
+    m_Floor.transform->EulerAngles.z = 90.f;
 
-    m_WallBack.transform.Position.y = WALL_Y_BORDER;
-    m_WallFrontLeft.transform.Position = glm::vec3(-63.f, -WALL_Y_BORDER, -30.f);
-    m_WallFrontRight.transform.Position = glm::vec3(63.f, -WALL_Y_BORDER, -30.f);
-    m_WallLeft.transform.EulerAngles.z = 90.f;
-    m_WallRight.transform.EulerAngles.z = 90.f;
-    m_WallLeft.transform.Position.x = -WALL_X_BORDER;
-    m_WallRight.transform.Position.x = WALL_X_BORDER;
+    m_WallBack.transform->Position.y = WALL_Y_BORDER;
+    m_WallFrontLeft.transform->Position = glm::vec3(-63.f, -WALL_Y_BORDER, -30.f);
+    m_WallFrontRight.transform->Position = glm::vec3(63.f, -WALL_Y_BORDER, -30.f);
+    m_WallLeft.transform->EulerAngles.z = 90.f;
+    m_WallRight.transform->EulerAngles.z = 90.f;
+    m_WallLeft.transform->Position.x = -WALL_X_BORDER;
+    m_WallRight.transform->Position.x = WALL_X_BORDER;
 
-    m_OnsenObjects.transform.Position.z = 1.f;
+    m_OnsenObjects.transform->Position.z = 1.f;
 }
 
 void SetupShaderLight(Shader& shader)

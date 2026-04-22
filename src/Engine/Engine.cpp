@@ -1,5 +1,5 @@
 #include "Engine.h"
-
+#include "Loader.h"
 
 Engine& Engine::GetInstance()
 {
@@ -14,6 +14,8 @@ Engine& Engine::GetInstance()
 
 void Engine::Initialize()
 {
+	Loader::Initialize();
+	
 	m_WindowMgr = std::make_unique<WindowManager>();
 	m_WindowMgr->Initialize(GL_VERSION_MAJOR, GL_VERSION_MINOR);
 

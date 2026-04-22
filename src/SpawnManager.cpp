@@ -1,6 +1,9 @@
 #include "SpawnManager.h"
 #include "Engine/Loader.h"
 #include <random>
+// #include "Model.h"
+#include "GameObject.h"
+#include "Shader.h"
 
 SpawnManager::SpawnManager()
 {
@@ -8,12 +11,13 @@ SpawnManager::SpawnManager()
 }
 
 
-Entity* SpawnManager::SpawnBall(Shader& shader)
+GameObject* SpawnManager::SpawnBall(Shader& shader)
 {
 	if (m_SpawnedBalls.size() < m_BallLimit)
 	{
-		auto ball = make_unique<Entity>(shader, (Loader::RelativePath() + "res/models/sphere/sphere.obj").c_str()); //Entity(shader, (loader.RelativePath + "res/models/sphere/sphere.obj").c_str());
-		Entity* ptr = ball.get();
+		auto ball = make_unique<GameObject>(); //Entity(shader, (loader.RelativePath + "res/models/sphere/sphere.obj").c_str());
+		ball->AddComponent<Model>(shader, (Loader::RelativePath() + "res/models/sphere/sphere.obj").c_str());
+		GameObject* ptr = ball.get();
 		m_SpawnedBalls.push_back(move(ball));
 		m_SpawnedEntities.push_back(move(ball));
 		return ptr;
@@ -21,12 +25,13 @@ Entity* SpawnManager::SpawnBall(Shader& shader)
 	return nullptr;
 }
 
-Entity* SpawnManager::SpawnMonkey(Shader& shader)
+GameObject* SpawnManager::SpawnMonkey(Shader& shader)
 {
 	if (m_SpawnedMonkeys.size() < m_MonkeyLimit)
 	{
-		auto monkey = make_unique<Entity>(shader, (Loader::RelativePath() + "res/models/monkey/Monkey.obj").c_str());
-		Entity* ptr = monkey.get();
+		auto monkey = make_unique<GameObject>();
+		monkey->AddComponent<Model>(shader, (Loader::RelativePath() + "res/models/monkey/Monkey.obj").c_str());
+		GameObject* ptr = monkey.get();
 		m_SpawnedBalls.push_back(move(monkey));
 		m_SpawnedEntities.push_back(move(monkey));
 		return ptr;
@@ -34,7 +39,7 @@ Entity* SpawnManager::SpawnMonkey(Shader& shader)
 	return nullptr;
 }
 
-Entity* SpawnManager::SpawnEntity(Shader& shader)
+GameObject* SpawnManager::SpawnEntity(Shader& shader)
 {
 	if (m_SpawnedEntities.size() < m_MainLimit)
 	{
