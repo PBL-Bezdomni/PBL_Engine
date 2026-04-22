@@ -1,0 +1,6 @@
+Temporary fix to run cmake:
+1. Run cmake -B build in main folder or run setup_project.bat
+2. When cmake fails, enter folder build/_deps/freetype_src and open CMakeLists.txt
+3. In line cmake_minimal_version change version from 3.0 to 3.21
+4. Run cmake -B build in main folder again
+Now cmake should finish successfully and solution will be in build folder
