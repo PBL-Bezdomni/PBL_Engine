@@ -34,7 +34,16 @@ CPMAddPackage("gh:glfw/glfw#3.3.8")
 CPMAddPackage("gh:g-truc/glm#1.0.1")
 CPMAddPackage("gh:ocornut/imgui@1.88")
 CPMAddPackage("gh:gabime/spdlog@1.10.0")
-CPMAddPackage("gh:jrouwe/JoltPhysics@5.5.0")
+CPMAddPackage(
+		NAME JoltPhysics
+		GITHUB_REPOSITORY jrouwe/JoltPhysics
+		VERSION 5.5.0
+		SOURCE_SUBDIR Build
+)
+
+if(MSVC AND TARGET Jolt)
+	set_property(TARGET Jolt PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+endif()
 
 set(imgui_SOURCE_DIR ${imgui_SOURCE_DIR} CACHE INTERNAL "")
 add_library(imgui STATIC ${imgui_SOURCE_DIR}/imgui.cpp
