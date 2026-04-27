@@ -193,8 +193,9 @@ int main(int, char**)
 
     MainCamera = Camera(glm::vec3(0.f, 25.f, 47.f), glm::vec3(0.0, 1.0, 0.0), -90.f, -25.f);
 
-    physics = new PhysicsEngine();
-    physics->Init();
+    physics = &engine.GetPhysicsEngine();
+    // physics = new PhysicsEngine();
+    // physics->Init();
 
     LoadModels();
     AssignSceneGraph();
