@@ -29,7 +29,7 @@
 #include "Engine/Time.h"
 #include "Model.h"
 #include "Engine/PhysicsEngine/PhysicsEngine.h"
-#include "Engine/PhysicsEngine/RigidBodyComponent.h"
+#include "Engine/Components/RigidBody.h"
 
 #define _USE_MATH_DEFINES
 
@@ -208,8 +208,8 @@ int main(int, char**)
     world.UpdateSelfAndChild();
 
     glm::vec3 floorHalfExtents = glm::vec3(FLOOR_SCALE / 2.0f, FLOOR_SCALE / 2.0f, 1.0f);
-    m_Floor.AddComponent<RigidBodyComponent>();
-    m_Floor.GetComponent<RigidBodyComponent>()->Init(physics, floorHalfExtents, true);
+    m_Floor.AddComponent<RigidBody>();
+    m_Floor.GetComponent<RigidBody>()->Init(physics, floorHalfExtents, true);
     
     // Main loop
     while (!glfwWindowShouldClose(WindowMgr->GetWindowPointer()))
@@ -445,8 +445,8 @@ void render()
             spawnedEntity->transform->Position = glm::vec3(posX, 5, posY);
 
             spawnedEntity->UpdateSelfAndChild();
-            spawnedEntity->AddComponent<RigidBodyComponent>();
-            spawnedEntity->GetComponent<RigidBodyComponent>()->Init(physics, glm::vec3(1.0f, 1.0f, 1.0f), false);
+            spawnedEntity->AddComponent<RigidBody>();
+            spawnedEntity->GetComponent<RigidBody>()->Init(physics, glm::vec3(1.0f, 1.0f, 1.0f), false);
 
             objectsTransform.AddChild(spawnedEntity);
         }

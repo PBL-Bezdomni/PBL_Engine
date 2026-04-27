@@ -1,10 +1,11 @@
-#include "RigidBodyComponent.h"
+#include "Engine/Engine.h"
+#include "RigidBody.h"
 #include "GameObject.h"
-#include "PhysicsEngine.h"
+#include "Engine/PhysicsEngine/PhysicsEngine.h"
 #include <Jolt/Jolt.h>
 #include <Jolt/Physics/Body/BodyID.h>
 
-void RigidBodyComponent::Init(PhysicsEngine* engine, const glm::vec3& halfExtents, bool isStatic)
+void RigidBody::Init(PhysicsEngine* engine, const glm::vec3& halfExtents, bool isStatic)
 {
     m_PhysicsEngine = engine;
 
@@ -18,7 +19,7 @@ void RigidBodyComponent::Init(PhysicsEngine* engine, const glm::vec3& halfExtent
     m_Initialized = true;
 }
 
-void RigidBodyComponent::Update()
+void RigidBody::Update()
 {
     if (!m_Initialized || !m_PhysicsEngine) return;
 

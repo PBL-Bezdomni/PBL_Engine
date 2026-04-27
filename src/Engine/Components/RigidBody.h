@@ -5,10 +5,10 @@
 
 class PhysicsEngine;
 
-class RigidBodyComponent : public Component
+class RigidBody : public Component
 {
 public:
-    RigidBodyComponent() = default;
+    RigidBody() = default;
 
     void Init(PhysicsEngine* engine, const glm::vec3& halfExtents, bool isStatic);
 

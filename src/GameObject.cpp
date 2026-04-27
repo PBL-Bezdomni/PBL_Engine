@@ -1,6 +1,6 @@
 #include "GameObject.h"
 
-#include "Engine/PhysicsEngine/RigidBodyComponent.h"
+#include "Engine/Components/RigidBody.h"
 
 GameObject::GameObject()
 {
@@ -22,7 +22,7 @@ glm::vec3 GameObject::GetWorldPosition()
 
 void GameObject::UpdateSelfAndChild()
 {
-    RigidBodyComponent* rb = GetComponent<RigidBodyComponent>();
+    RigidBody* rb = GetComponent<RigidBody>();
 
     if (rb != nullptr)
     {
