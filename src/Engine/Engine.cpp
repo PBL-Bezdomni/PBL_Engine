@@ -24,6 +24,9 @@ void Engine::Initialize()
 
 	m_DebugMgr = make_unique<DebugManager>();
 	m_DebugMgr->InitializeImGUI(m_WindowMgr->GetWindowPointer(), GLSL_VERSION);
+	
+	m_AssetMgr = make_unique<AssetManager>();
+	m_AssetMgr->Initialize();
 }
 
 bool Engine::GetIsDebugDrawn()
@@ -50,5 +53,10 @@ WindowManager& Engine::GetWindowManager()
 DebugManager& Engine::GetDebugManager()
 {
 	return *m_DebugMgr;
+}
+
+AssetManager& Engine::GetAssetManager()
+{
+	return *m_AssetMgr;
 }
 

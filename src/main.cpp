@@ -162,7 +162,8 @@ Skybox m_Skybox;
 
 WindowManager* WindowMgr = nullptr;
 DebugManager* DebugMgr = nullptr;
-PhysicsEngine* physics = nullptr;
+PhysicsEngine* Physics = nullptr;
+AssetManager* AssetMgr = nullptr;
 
 int main(int, char**)
 {
@@ -170,6 +171,7 @@ int main(int, char**)
     bool isDebugDraw = engine.GetIsDebugDrawn();
 
     WindowMgr = &engine.GetWindowManager();
+    AssetMgr = &engine.GetAssetManager();
     
     // engine.Start();
     if (!engine.GetWindowManager().GetIsInitialized())
@@ -193,7 +195,7 @@ int main(int, char**)
 
     MainCamera = Camera(glm::vec3(0.f, 25.f, 47.f), glm::vec3(0.0, 1.0, 0.0), -90.f, -25.f);
 
-    physics = &engine.GetPhysicsEngine();
+    Physics = &engine.GetPhysicsEngine();
     // physics = new PhysicsEngine();
     // physics->Init();
 
@@ -233,7 +235,7 @@ int main(int, char**)
 
         while (physicsAccumulator >= FIXED_TIME_STEP)
         {
-            physics->Update(FIXED_TIME_STEP);
+            Physics->Update(FIXED_TIME_STEP);
             physicsAccumulator -= FIXED_TIME_STEP;
         }
 
@@ -269,11 +271,11 @@ int main(int, char**)
 
 void init_shader()
 {
-    m_BasicShader = Shader((Loader::RelativePath()+ "res/shaders/basic.vert").c_str(), (Loader::RelativePath()+ "res/shaders/basic.frag").c_str());
-    m_UIShader = Shader((Loader::RelativePath()+ "res/shaders/UIShader.vert").c_str(), (Loader::RelativePath()+ "res/shaders/UIShader.frag").c_str());
-    m_SliderShader = Shader((Loader::RelativePath()+ "res/shaders/UIShader.vert").c_str(), (Loader::RelativePath()+ "res/shaders/UISlider.frag").c_str());
-    m_SkyboxShader = Shader((Loader::RelativePath()+ "res/shaders/cubemap.vert").c_str(), (Loader::RelativePath()+ "res/shaders/cubemap.frag").c_str());
-    m_LineShader = Shader((Loader::RelativePath() + "res/shaders/line.vert").c_str(), (Loader::RelativePath() + "res/shaders/line.frag").c_str());
+    m_BasicShader = *AssetMgr->GetShader("res/shaders/basic.vert", "res/shaders/basic.frag");
+    m_UIShader = *AssetMgr->GetShader("res/shaders/UIShader.vert", "res/shaders/UIShader.frag");
+    m_SliderShader = *AssetMgr->GetShader("res/shaders/UIShader.vert", "res/shaders/UISlider.frag");
+    m_SkyboxShader = *AssetMgr->GetShader("res/shaders/cubemap.vert", "res/shaders/cubemap.frag");
+    m_LineShader = *AssetMgr->GetShader("res/shaders/line.vert", "res/shaders/line.frag");
 
     LoadTexture((Loader::RelativePath()+ "res/textures/duck.png").c_str(), &m_UIDuckTex);
     LoadTexture((Loader::RelativePath()+ "res/models/scena_v1/floor/floor_textures/Stylized_Stone_Floor_010_basecolor.png").c_str(), &m_FloorTex);
@@ -281,7 +283,7 @@ void init_shader()
     // LoadTexture((Loader::RelativePath()+ "res/models/scena_v1/for_towels/drewno.jpg").c_str(), &m_TowelsTex);
     LoadTexture((Loader::RelativePath()+ "res/textures/white.png").c_str(), &m_SliderTex);
     
-    m_TextShader = Shader((Loader::RelativePath()+ "res/shaders/text.vert").c_str(), (Loader::RelativePath()+ "res/shaders/text.frag").c_str());
+    m_TextShader = *AssetMgr->GetShader("res/shaders/text.vert", "res/shaders/text.frag");
 
     glm::mat4 textProjection = glm::ortho(0.0f, static_cast<float>(WindowMgr->WINDOW_WIDTH), 0.0f, static_cast<float>(WindowMgr->WINDOW_HEIGHT));
     m_TextShader.Use();
@@ -464,9 +466,9 @@ void render()
 
     glDisable(GL_DEPTH_TEST);
 
-    if (physics != nullptr)
+    if (Physics != nullptr)
     {
-        physics->DrawHitboxes(m_LineShader, view, projection);
+        Physics->DrawHitboxes(m_LineShader, view, projection);
     }
 
 

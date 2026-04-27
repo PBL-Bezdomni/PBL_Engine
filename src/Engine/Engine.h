@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 
+#include "AssetManager.h"
 #include "WindowManager.h"
 #include "DebugManager.h"
 #include "PhysicsEngine/PhysicsEngine.h"
@@ -18,10 +19,11 @@ private:
 	
 	Engine(const Engine&) = delete;
 	Engine& operator=(const Engine&) = delete;
-	
+
 	unique_ptr<PhysicsEngine> m_PhysicsEngine;
 	unique_ptr<WindowManager> m_WindowMgr;
 	unique_ptr<DebugManager> m_DebugMgr;
+	unique_ptr<AssetManager> m_AssetMgr;
 	
 	void Initialize();
 public:
@@ -34,5 +36,6 @@ public:
 	PhysicsEngine& GetPhysicsEngine();
 	WindowManager& GetWindowManager();
 	DebugManager& GetDebugManager();
+	AssetManager& GetAssetManager();
 	void Start();
 };
