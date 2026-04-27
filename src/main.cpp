@@ -210,7 +210,7 @@ int main(int, char**)
 
     glm::vec3 floorHalfExtents = glm::vec3(FLOOR_SCALE / 2.0f, FLOOR_SCALE / 2.0f, 1.0f);
     m_Floor.AddComponent<RigidBody>();
-    m_Floor.GetComponent<RigidBody>()->Init(physics, floorHalfExtents, true);
+    m_Floor.GetComponent<RigidBody>()->Init(floorHalfExtents, true);
     
     // Main loop
     while (!glfwWindowShouldClose(WindowMgr->GetWindowPointer()))
@@ -447,7 +447,7 @@ void render()
 
             spawnedEntity->UpdateSelfAndChild();
             spawnedEntity->AddComponent<RigidBody>();
-            spawnedEntity->GetComponent<RigidBody>()->Init(physics, glm::vec3(1.0f, 1.0f, 1.0f), false);
+            spawnedEntity->GetComponent<RigidBody>()->Init();
 
             objectsTransform.AddChild(spawnedEntity);
         }

@@ -10,7 +10,7 @@ class RigidBody : public Component
 public:
     RigidBody() = default;
 
-    void Init(PhysicsEngine* engine, const glm::vec3& halfExtents, bool isStatic);
+    void Init(const glm::vec3& halfExtents = glm::vec3(1.0, 1.0, 1.0), bool isStatic = false);
 
     void Update();
 

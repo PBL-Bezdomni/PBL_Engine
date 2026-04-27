@@ -5,9 +5,9 @@
 #include <Jolt/Jolt.h>
 #include <Jolt/Physics/Body/BodyID.h>
 
-void RigidBody::Init(PhysicsEngine* engine, const glm::vec3& halfExtents, bool isStatic)
+void RigidBody::Init(const glm::vec3& halfExtents, bool isStatic)
 {
-    m_PhysicsEngine = engine;
+    m_PhysicsEngine = &Engine::GetInstance().GetPhysicsEngine();
 
     glm::mat4 currentMatrix = m_Owner->transform->ModelMatrix;
     glm::vec3 worldPos = glm::vec3(currentMatrix[3]);
