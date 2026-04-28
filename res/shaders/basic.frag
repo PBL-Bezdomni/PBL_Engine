@@ -116,7 +116,7 @@ vec3 CalcPointLight(vec3 norm, vec3 viewDir, vec3 objectColor)
     float diff = max(dot(norm, lightDir), 0.0);
     vec3 diffuse = diff * pointLight.color;
 
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 256);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 8);
     vec3 specular = specularStrength * spec * pointLight.color;
 
     ambient *= attenuation;

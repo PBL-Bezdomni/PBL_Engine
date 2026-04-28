@@ -112,6 +112,8 @@ GameObject m_Table3;
 GameObject m_Table4;
 GameObject m_Table5;
 
+GameObject m_Ball1;
+
 unsigned int m_SkyboxVAO;
 unsigned int m_SkyboxVBO;
 
@@ -459,6 +461,8 @@ void render()
     monkey.transform->EulerAngles.x = m_CurrentRotationDegrees;
     monkey.transform->Scale = glm::vec3(2.f);
 
+    m_Ball1.transform->Position = glm::vec3(0, 30.0f, -20.0f);
+
     // m_PointLightPos = quat.RotateQuaternion(glm::vec3(m_PointLightRadius, m_PointLightHeight, 0.f), axisY, glfwGetTime() * 50);
 
     world.UpdateSelfAndChild();
@@ -531,15 +535,19 @@ void LoadModels()
     monkey = GameObject();
     monkey.AddComponent<Model>(m_BasicShader, (Loader::RelativePath()+ "res/models/monkey/Monkey.obj").c_str());
 
+    m_Ball1 = GameObject();
+    m_Ball1.AddComponent<Model>(m_BasicShader, (Loader::RelativePath() + "res/models/sphere/ball.obj").c_str());
+
     LoadSceneModels();
 }
 
 void LoadSceneModels()
 {
     m_Scene = GameObject();
+    Model m = Model(m_BasicShader, (Loader::RelativePath()+ "res/models/scena_v1/floor/floor.fbx").c_str());
     m_Scene.AddComponent<Model>(m_BasicShader);
     m_Floor = GameObject();
-    m_Floor.AddComponent<Model>(m_BasicShader, (Loader::RelativePath()+ "res/models/scena_v1/floor/floor.fbx").c_str());
+    m_Floor.AddComponent<Model>(m);
     m_Floor.GetComponent<Model>()->AssignTexture(m_FloorTex);
     // m_Floor.AssignTexture(m_FloorTex);
     m_WallDir = GameObject();
@@ -571,6 +579,7 @@ void AssignSceneGraph()
     objectsTransform.AddChild(&duckTransparent);
     objectsTransform.AddChild(&slider);
     objectsTransform.AddChild(&monkey);
+    objectsTransform.AddChild(&m_Ball1);
 
     AssignSceneModelsGraph();
 
