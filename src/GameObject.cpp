@@ -1,5 +1,7 @@
 #include "GameObject.h"
 
+#include "Engine/Components/RigidBody.h"
+
 GameObject::GameObject()
 {
     AddComponent<Transform>();
@@ -20,13 +22,22 @@ glm::vec3 GameObject::GetWorldPosition()
 
 void GameObject::UpdateSelfAndChild()
 {
-    if (Parent != nullptr)
+    RigidBody* rb = GetComponent<RigidBody>();
+
+    if (rb != nullptr)
     {
-        transform->ModelMatrix = Parent->transform->ModelMatrix * transform->GetLocalModelMatrix();
+        rb->Update();
     }
     else
     {
-        transform->ModelMatrix = transform->GetLocalModelMatrix();
+        if (Parent != nullptr)
+        {
+            transform->ModelMatrix = Parent->transform->ModelMatrix * transform->GetLocalModelMatrix();
+        }
+        else
+        {
+            transform->ModelMatrix = transform->GetLocalModelMatrix();
+        }
     }
 
     for (auto&& child : Children)

@@ -28,6 +28,8 @@
 #include "Engine/DebugManager.h"
 #include "Engine/Time.h"
 #include "Model.h"
+#include "Engine/PhysicsEngine/PhysicsEngine.h"
+#include "Engine/Components/RigidBody.h"
 
 #define _USE_MATH_DEFINES
 
@@ -39,6 +41,9 @@ const int HOUSE_NET_DIM = 200;
 
 float WALL_X_BORDER = 37.f;
 float WALL_Y_BORDER = 50.f;
+
+const float FIXED_TIME_STEP = 1.0f / 60.0f;
+float physicsAccumulator = 0.0f;
 
 void LoadTexture(const char* path, Texture* texture);
 void LoadModels();
@@ -69,6 +74,7 @@ Shader m_SkyboxShader;
 Shader m_UIShader;
 Shader m_TextShader;
 Shader m_SliderShader;
+Shader m_LineShader;
 
 FreeType m_TextRenderer;
 
@@ -156,6 +162,8 @@ Skybox m_Skybox;
 
 WindowManager* WindowMgr = nullptr;
 DebugManager* DebugMgr = nullptr;
+PhysicsEngine* Physics = nullptr;
+AssetManager* AssetMgr = nullptr;
 
 int main(int, char**)
 {
@@ -163,6 +171,7 @@ int main(int, char**)
     bool isDebugDraw = engine.GetIsDebugDrawn();
 
     WindowMgr = &engine.GetWindowManager();
+    AssetMgr = &engine.GetAssetManager();
     
     // engine.Start();
     if (!engine.GetWindowManager().GetIsInitialized())
@@ -186,6 +195,10 @@ int main(int, char**)
 
     MainCamera = Camera(glm::vec3(0.f, 25.f, 47.f), glm::vec3(0.0, 1.0, 0.0), -90.f, -25.f);
 
+    Physics = &engine.GetPhysicsEngine();
+    // physics = new PhysicsEngine();
+    // physics->Init();
+
     LoadModels();
     AssignSceneGraph();
 
@@ -194,6 +207,12 @@ int main(int, char**)
     m_Skybox = Skybox(m_SkyboxShader);
     
     //m_SkyboxShader.setInt("skybox", 0);
+
+    world.UpdateSelfAndChild();
+
+    glm::vec3 floorHalfExtents = glm::vec3(FLOOR_SCALE / 2.0f, FLOOR_SCALE / 2.0f, 1.0f);
+    m_Floor.AddComponent<RigidBody>();
+    m_Floor.GetComponent<RigidBody>()->Init(floorHalfExtents, true);
     
     // Main loop
     while (!glfwWindowShouldClose(WindowMgr->GetWindowPointer()))
@@ -206,6 +225,19 @@ int main(int, char**)
 
         // Update game objects' state here
         Time::Update();
+
+        float frameTime = Time::GetDeltaTime();
+        if (frameTime > 0.25f) {
+            frameTime = 0.25f;
+        }
+
+        physicsAccumulator += frameTime;
+
+        while (physicsAccumulator >= FIXED_TIME_STEP)
+        {
+            Physics->Update(FIXED_TIME_STEP);
+            physicsAccumulator -= FIXED_TIME_STEP;
+        }
 
         // OpenGL rendering code here
         render();
@@ -239,10 +271,11 @@ int main(int, char**)
 
 void init_shader()
 {
-    m_BasicShader = Shader((Loader::RelativePath()+ "res/shaders/basic.vert").c_str(), (Loader::RelativePath()+ "res/shaders/basic.frag").c_str());
-    m_UIShader = Shader((Loader::RelativePath()+ "res/shaders/UIShader.vert").c_str(), (Loader::RelativePath()+ "res/shaders/UIShader.frag").c_str());
-    m_SliderShader = Shader((Loader::RelativePath()+ "res/shaders/UIShader.vert").c_str(), (Loader::RelativePath()+ "res/shaders/UISlider.frag").c_str());
-    m_SkyboxShader = Shader((Loader::RelativePath()+ "res/shaders/cubemap.vert").c_str(), (Loader::RelativePath()+ "res/shaders/cubemap.frag").c_str());
+    m_BasicShader = *AssetMgr->GetShader("res/shaders/basic.vert", "res/shaders/basic.frag");
+    m_UIShader = *AssetMgr->GetShader("res/shaders/UIShader.vert", "res/shaders/UIShader.frag");
+    m_SliderShader = *AssetMgr->GetShader("res/shaders/UIShader.vert", "res/shaders/UISlider.frag");
+    m_SkyboxShader = *AssetMgr->GetShader("res/shaders/cubemap.vert", "res/shaders/cubemap.frag");
+    m_LineShader = *AssetMgr->GetShader("res/shaders/line.vert", "res/shaders/line.frag");
 
     LoadTexture((Loader::RelativePath()+ "res/textures/duck.png").c_str(), &m_UIDuckTex);
     LoadTexture((Loader::RelativePath()+ "res/models/scena_v1/floor/floor_textures/Stylized_Stone_Floor_010_basecolor.png").c_str(), &m_FloorTex);
@@ -250,7 +283,7 @@ void init_shader()
     // LoadTexture((Loader::RelativePath()+ "res/models/scena_v1/for_towels/drewno.jpg").c_str(), &m_TowelsTex);
     LoadTexture((Loader::RelativePath()+ "res/textures/white.png").c_str(), &m_SliderTex);
     
-    m_TextShader = Shader((Loader::RelativePath()+ "res/shaders/text.vert").c_str(), (Loader::RelativePath()+ "res/shaders/text.frag").c_str());
+    m_TextShader = *AssetMgr->GetShader("res/shaders/text.vert", "res/shaders/text.frag");
 
     glm::mat4 textProjection = glm::ortho(0.0f, static_cast<float>(WindowMgr->WINDOW_WIDTH), 0.0f, static_cast<float>(WindowMgr->WINDOW_HEIGHT));
     m_TextShader.Use();
@@ -413,6 +446,11 @@ void render()
             float posX = RandomValue(-WALL_X_BORDER, WALL_X_BORDER);
             float posY = RandomValue(-WALL_Y_BORDER, WALL_Y_BORDER);
             spawnedEntity->transform->Position = glm::vec3(posX, 5, posY);
+
+            spawnedEntity->UpdateSelfAndChild();
+            spawnedEntity->AddComponent<RigidBody>();
+            spawnedEntity->GetComponent<RigidBody>()->Init();
+
             objectsTransform.AddChild(spawnedEntity);
         }
     }
@@ -427,6 +465,13 @@ void render()
     world.DrawSelfAndChild();
 
     glDisable(GL_DEPTH_TEST);
+
+    if (Physics != nullptr)
+    {
+        Physics->DrawHitboxes(m_LineShader, view, projection);
+    }
+
+
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 

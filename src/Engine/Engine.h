@@ -1,8 +1,12 @@
 #pragma once
 #include <memory>
 
+#include "AssetManager.h"
 #include "WindowManager.h"
 #include "DebugManager.h"
+#include "PhysicsEngine/PhysicsEngine.h"
+
+using namespace std;
 
 class Engine
 {
@@ -15,9 +19,11 @@ private:
 	
 	Engine(const Engine&) = delete;
 	Engine& operator=(const Engine&) = delete;
-	
-	std::unique_ptr<WindowManager> m_WindowMgr;
-	std::unique_ptr<DebugManager> m_DebugMgr;
+
+	unique_ptr<PhysicsEngine> m_PhysicsEngine;
+	unique_ptr<WindowManager> m_WindowMgr;
+	unique_ptr<DebugManager> m_DebugMgr;
+	unique_ptr<AssetManager> m_AssetMgr;
 	
 	void Initialize();
 public:
@@ -27,7 +33,9 @@ public:
 
 	bool GetIsDebugDrawn();
 	static Engine& GetInstance();
+	PhysicsEngine& GetPhysicsEngine();
 	WindowManager& GetWindowManager();
 	DebugManager& GetDebugManager();
+	AssetManager& GetAssetManager();
 	void Start();
 };
