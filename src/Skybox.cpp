@@ -123,8 +123,6 @@ void Skybox::DrawSkybox(glm::mat4 view, glm::mat4 projection)
 	m_Shader.Use();
 	m_Shader.SetMat4("view", view);
 	m_Shader.SetMat4("projection", projection);
-	// TODO remove beneath line and time value from shader.
-	m_Shader.SetFloat("time", glfwGetTime());
 	glBindVertexArray(m_SkyboxVAO);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, m_SkyboxTex.ID);
