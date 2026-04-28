@@ -45,7 +45,7 @@ float WALL_Y_BORDER = 50.f;
 const float FIXED_TIME_STEP = 1.0f / 60.0f;
 float physicsAccumulator = 0.0f;
 
-void LoadTexture(const char* path, Texture* texture);
+// void LoadTexture(const char* path, Texture* texture);
 void LoadModels();
 void AssignSceneGraph();
 
@@ -113,9 +113,6 @@ GameObject m_Table4;
 GameObject m_Table5;
 
 GameObject m_Ball1;
-
-unsigned int m_SkyboxVAO;
-unsigned int m_SkyboxVBO;
 
 // Values for light
 bool m_UseDirLight = false;
@@ -279,11 +276,10 @@ void init_shader()
     m_SkyboxShader = *AssetMgr->GetShader("res/shaders/cubemap.vert", "res/shaders/cubemap.frag");
     m_LineShader = *AssetMgr->GetShader("res/shaders/line.vert", "res/shaders/line.frag");
 
-    LoadTexture((Loader::RelativePath()+ "res/textures/duck.png").c_str(), &m_UIDuckTex);
-    LoadTexture((Loader::RelativePath()+ "res/models/scena_v1/floor/floor_textures/Stylized_Stone_Floor_010_basecolor.png").c_str(), &m_FloorTex);
-    LoadTexture((Loader::RelativePath()+ "res/models/scena_v1/walls/walls_textures/Stylized_Wall_002_basecolor.png").c_str(), &m_WallTex);
-    // LoadTexture((Loader::RelativePath()+ "res/models/scena_v1/for_towels/drewno.jpg").c_str(), &m_TowelsTex);
-    LoadTexture((Loader::RelativePath()+ "res/textures/white.png").c_str(), &m_SliderTex);
+    m_UIDuckTex = *AssetMgr->GetTexture("res/textures/duck.png");
+    m_FloorTex = *AssetMgr->GetTexture("res/models/scena_v1/floor/floor_textures/Stylized_Stone_Floor_010_basecolor.png");
+    m_WallTex = *AssetMgr->GetTexture("res/models/scena_v1/walls/walls_textures/Stylized_Wall_002_basecolor.png");
+    m_SliderTex = *AssetMgr->GetTexture("res/textures/white.png");
     
     m_TextShader = *AssetMgr->GetShader("res/shaders/text.vert", "res/shaders/text.frag");
 
@@ -485,58 +481,28 @@ void render()
     glEnable(GL_DEPTH_TEST);
 }
 
-void LoadTexture(const char* path, Texture* tex)
-{
-    tex->Path = path;
-    tex->Type = "texture_diffuse";
-    glGenTextures(1, &tex->ID);
-    glBindTexture(GL_TEXTURE_2D, tex->ID);
-    // set the texture wrapping/filtering options (on the currently bound texture object)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    //stbi_set_flip_vertically_on_load(1);
-    // load and generate the texture
-    int width, height, nrChannels;
-    unsigned char* data = stbi_load(path, &width, &height, &nrChannels, 0);
-    if (data)
-    {
-        GLenum format = GL_RGB;
-        if (nrChannels == 4)
-        {
-            format = GL_RGBA;
-        }
-        spdlog::info("Loaded Texture: {} with {} channels", path, nrChannels);
-        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    }
-    else
-    {
-        spdlog::error("Failed to load texture");
-        spdlog::error(stbi_failure_reason());
-    }
-    stbi_image_free(data);
-}
-
 void LoadModels()
 {
     world = GameObject();
     objectsTransform = GameObject();
-    objectsTransform.AddComponent<Model>(m_BasicShader);
+    // objectsTransform.AddComponent<Model>(m_BasicShader);
 
     duckTransparent = GameObject();
-    duckTransparent.AddComponent<Model>(m_UIShader, (Loader::RelativePath()+ "res/models/house/floor.obj").c_str());
-    slider = GameObject();
-    slider.AddComponent<Model>(m_SliderShader, (Loader::RelativePath()+ "res/models/house/floor.obj").c_str());
+    Model UISprite = *AssetMgr->GetModel(m_UIShader, "res/models/house/floor.obj");
+    duckTransparent.AddComponent<Model>(UISprite);
     duckTransparent.GetComponent<Model>()->AssignTexture(m_UIDuckTex);
+    slider = GameObject();
+    slider.AddComponent<Model>(UISprite);
+    slider.GetComponent<Model>()->ReassignShader(m_SliderShader);
     slider.GetComponent<Model>()->AssignTexture(m_SliderTex);
     //house_floor.ScaleTexture(FLOOR_TEX_SCALE * FLOOR_SCALE);
     monkey = GameObject();
-    monkey.AddComponent<Model>(m_BasicShader, (Loader::RelativePath()+ "res/models/monkey/Monkey.obj").c_str());
+    Model monkeyModel = *AssetMgr->GetModel(m_BasicShader, "res/models/monkey/Monkey.obj");
+    monkey.AddComponent<Model>(monkeyModel);
 
     m_Ball1 = GameObject();
-    m_Ball1.AddComponent<Model>(m_BasicShader, (Loader::RelativePath() + "res/models/sphere/ball.obj").c_str());
+    Model ballModel = *AssetMgr->GetModel(m_BasicShader, "res/models/sphere/ball.obj");
+    m_Ball1.AddComponent<Model>(ballModel);
 
     LoadSceneModels();
 }
@@ -544,26 +510,28 @@ void LoadModels()
 void LoadSceneModels()
 {
     m_Scene = GameObject();
-    Model m = Model(m_BasicShader, (Loader::RelativePath()+ "res/models/scena_v1/floor/floor.fbx").c_str());
+    Model floorModel = Model(m_BasicShader, "res/models/scena_v1/floor/floor.fbx");
     m_Scene.AddComponent<Model>(m_BasicShader);
     m_Floor = GameObject();
-    m_Floor.AddComponent<Model>(m);
+    m_Floor.AddComponent<Model>(floorModel);
     m_Floor.GetComponent<Model>()->AssignTexture(m_FloorTex);
     // m_Floor.AssignTexture(m_FloorTex);
     m_WallDir = GameObject();
     m_WallDir.AddComponent<Model>(m_BasicShader);
+    Model wallModel = *AssetMgr->GetModel(m_BasicShader, "res/models/scena_v1/walls/wall1.fbx");
     m_WallBack = GameObject();
-    m_WallBack.AddComponent<Model>(m_BasicShader, (Loader::RelativePath()+ "res/models/scena_v1/walls/wall1.fbx").c_str());
+    m_WallBack.AddComponent<Model>(wallModel);
     m_WallFrontLeft = GameObject();
-    m_WallFrontLeft.AddComponent<Model>(m_BasicShader, (Loader::RelativePath()+ "res/models/scena_v1/walls/wall1.fbx").c_str());
+    m_WallFrontLeft.AddComponent<Model>(wallModel);
     m_WallFrontRight = GameObject();
-    m_WallFrontRight.AddComponent<Model>(m_BasicShader, (Loader::RelativePath()+ "res/models/scena_v1/walls/wall1.fbx").c_str());
+    m_WallFrontRight.AddComponent<Model>(wallModel);
     m_WallLeft = GameObject();
-    m_WallLeft.AddComponent<Model>(m_BasicShader, (Loader::RelativePath()+ "res/models/scena_v1/walls/wall1.fbx").c_str());
+    m_WallLeft.AddComponent<Model>(wallModel);
     m_WallRight = GameObject();
-    m_WallRight.AddComponent<Model>(m_BasicShader, (Loader::RelativePath()+ "res/models/scena_v1/walls/wall1.fbx").c_str());
+    m_WallRight.AddComponent<Model>(wallModel);
+    Model towelBedModel = *AssetMgr->GetModel(m_BasicShader, "res/models/scena_v1/for_towels/for_towels.fbx");
     m_TowelsBed = GameObject();
-    m_TowelsBed.AddComponent<Model>(m_BasicShader, (Loader::RelativePath()+ "res/models/scena_v1/for_towels/for_towels.fbx").c_str());
+    m_TowelsBed.AddComponent<Model>(towelBedModel);
     
     m_WallBack.GetComponent<Model>()->AssignTexture(m_WallTex);
     m_WallFrontLeft.GetComponent<Model>()->AssignTexture(m_WallTex);

@@ -19,19 +19,10 @@ void AssetManager::Initialize()
 shared_ptr<Shader> AssetManager::GetShader(const char* vertexPath, const char* fragmentPath)
 {
 	// Check if string starts with relative path.
-	// Just to make sure, in case something that passes path with relative path is still somewhere in code, this will still work.
+	// Just to make sure, in case something that passes path with relative path is still somewhere in code, this wil]l still work.
+	string vPath = GetPathWithRelativePrefix(vertexPath);
+	string fPath = GetPathWithRelativePrefix(fragmentPath);
 	string relativePath = Loader::RelativePath();
-	string vPath = vertexPath;
-	string fPath = fragmentPath;
-	
-	if (vPath.rfind(relativePath, 0) != 0)
-	{
-		vPath = relativePath + vertexPath;
-	}
-	if (fPath.rfind(relativePath, 0) != 0)
-	{
-		fPath = relativePath + fragmentPath;
-	}
 	
 	m_Shaders.push_back(make_shared<Shader>(vPath.c_str(), fPath.c_str()));
 	return m_Shaders.back();	
@@ -39,7 +30,8 @@ shared_ptr<Shader> AssetManager::GetShader(const char* vertexPath, const char* f
 
 shared_ptr<Model> AssetManager::GetModel(Shader& shader, const char* path, unsigned int instancing, vector<glm::mat4> instanceMatrix)
 {
-	std::string key(path);
+	string mPath = GetPathWithRelativePrefix(path);
+	std::string key(mPath);
 
 	auto it = m_LoadedModels.find(key);
 	if (it != m_LoadedModels.end())
@@ -47,8 +39,69 @@ shared_ptr<Model> AssetManager::GetModel(Shader& shader, const char* path, unsig
 		return it->second;
 	}
 	
-	Model model = Model(shader, path, instancing, instanceMatrix);
+	Model model = Model(shader, mPath.c_str(), instancing, instanceMatrix);
 	m_LoadedModels[key] = make_shared<Model>(model);
 	return m_LoadedModels[key];
 }
 
+shared_ptr<Texture> AssetManager::GetTexture(const char* path)
+{
+	string tPath = GetPathWithRelativePrefix(path);
+
+	std::string key(tPath);
+
+	auto it = m_LoadedTextures.find(key);
+	if (it != m_LoadedTextures.end())
+	{
+		return it->second;
+	}
+
+	shared_ptr<Texture> tex = make_shared<Texture>();
+	tex->Path = path;
+	tex->Type = "texture_diffuse";
+	glGenTextures(1, &tex->ID);
+	glBindTexture(GL_TEXTURE_2D, tex->ID);
+	// set the texture wrapping/filtering options (on the currently bound texture object)
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	//stbi_set_flip_vertically_on_load(1);
+	// load and generate the texture
+	int width, height, nrChannels;
+	unsigned char* data = stbi_load(path, &width, &height, &nrChannels, 0);
+	if (data)
+	{
+		GLenum format = GL_RGB;
+		if (nrChannels == 4)
+		{
+			format = GL_RGBA;
+		}
+		spdlog::info("Loaded Texture: {} with {} channels", path, nrChannels);
+		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		spdlog::error("Failed to load texture");
+		spdlog::error(stbi_failure_reason());
+	}
+	stbi_image_free(data);
+
+	m_LoadedTextures[key] = tex;
+	return m_LoadedTextures[key];
+}
+
+
+string AssetManager::GetPathWithRelativePrefix(const char* cPath)
+{
+	string relativePath = Loader::RelativePath();
+	string path = cPath;
+	
+	if (path.rfind(relativePath, 0) != 0)
+	{
+		path = relativePath + cPath;
+	}
+
+	return path;
+}
