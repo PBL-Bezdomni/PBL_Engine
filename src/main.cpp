@@ -28,6 +28,7 @@
 #include "Engine/DebugManager.h"
 #include "Engine/Time.h"
 #include "Model.h"
+#include "Random.h"
 #include "Engine/PhysicsEngine/PhysicsEngine.h"
 #include "Engine/Components/RigidBody.h"
 
@@ -54,7 +55,6 @@ void init_shader();
 void input(GLFWwindow* window);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-int RandomValue(int min, int max);
 void render();
 
 void SetupShaderLight(Shader& shader);
@@ -374,17 +374,6 @@ int m_RotationCount;
 float m_SpawnCounter;
 float m_SpawnTime = 2.f;
 
-int RandomValue(int min, int max)
-{
-    max = abs(min) + abs(max);
-    std::mt19937 rng;
-    rng.seed(std::random_device()());
-    std::uniform_int_distribution<std::mt19937::result_type> dist(0,max);
-    int r = dist(rng);
-    r -= abs(min);
-    return r;
-}
-
 void render()
 {
     glm::vec3 axisX = glm::vec3(1.0f, 0.f, 0.f);
@@ -441,8 +430,8 @@ void render()
         GameObject* spawnedEntity = m_SpawnManager.SpawnEntity(m_BasicShader);
         if (spawnedEntity != nullptr)
         {
-            float posX = RandomValue(-WALL_X_BORDER, WALL_X_BORDER);
-            float posY = RandomValue(-WALL_Y_BORDER, WALL_Y_BORDER);
+            float posX = Random::GetRandomInt(-WALL_X_BORDER, WALL_X_BORDER);
+            float posY = Random::GetRandomInt(-WALL_Y_BORDER, WALL_Y_BORDER);
             spawnedEntity->transform->Position = glm::vec3(posX, 5, posY);
 
             spawnedEntity->UpdateSelfAndChild();
