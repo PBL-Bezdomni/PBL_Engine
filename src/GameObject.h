@@ -15,6 +15,7 @@ class GameObject
 private:
 	unordered_map<type_index, vector<unique_ptr<Component>>> m_Components;
 	bool m_IsModelRendered = true;
+	string m_Name;
 public:
 	Transform* transform;
 	GameObject();

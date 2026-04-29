@@ -81,3 +81,8 @@ void WindowManager::EndFrame()
 	glfwMakeContextCurrent(m_Window);
 	glfwSwapBuffers(m_Window);
 }
+
+bool WindowManager::ShouldWindowClose()
+{
+	return glfwWindowShouldClose(m_Window);
+}

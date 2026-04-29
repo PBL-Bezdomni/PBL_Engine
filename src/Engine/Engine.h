@@ -4,9 +4,8 @@
 #include "AssetManager.h"
 #include "WindowManager.h"
 #include "DebugManager.h"
+#include "Game/GameManager.h"
 #include "PhysicsEngine/PhysicsEngine.h"
-
-using namespace std;
 
 class Engine
 {
@@ -20,10 +19,11 @@ private:
 	Engine(const Engine&) = delete;
 	Engine& operator=(const Engine&) = delete;
 
-	unique_ptr<PhysicsEngine> m_PhysicsEngine;
-	unique_ptr<WindowManager> m_WindowMgr;
-	unique_ptr<DebugManager> m_DebugMgr;
-	unique_ptr<AssetManager> m_AssetMgr;
+	std::unique_ptr<PhysicsEngine> m_PhysicsEngine;
+	std::unique_ptr<WindowManager> m_WindowMgr;
+	std::unique_ptr<DebugManager> m_DebugMgr;
+	std::unique_ptr<AssetManager> m_AssetMgr;
+	std::unique_ptr<GameManager> m_GameMgr;
 	
 	void Initialize();
 public:
@@ -37,5 +37,6 @@ public:
 	WindowManager& GetWindowManager();
 	DebugManager& GetDebugManager();
 	AssetManager& GetAssetManager();
+	GameManager& GetGameManager();
 	void Start();
 };

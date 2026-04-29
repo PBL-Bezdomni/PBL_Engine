@@ -16,17 +16,20 @@ void Engine::Initialize()
 {
 	Loader::Initialize();
 	
-	m_WindowMgr = make_unique<WindowManager>();
+	m_WindowMgr = std::make_unique<WindowManager>();
 	m_WindowMgr->Initialize(GL_VERSION_MAJOR, GL_VERSION_MINOR);
 	
-	m_PhysicsEngine = make_unique<PhysicsEngine>();
+	m_PhysicsEngine = std::make_unique<PhysicsEngine>();
 	m_PhysicsEngine->Init();
 
-	m_DebugMgr = make_unique<DebugManager>();
+	m_DebugMgr = std::make_unique<DebugManager>();
 	m_DebugMgr->InitializeImGUI(m_WindowMgr->GetWindowPointer(), GLSL_VERSION);
 	
-	m_AssetMgr = make_unique<AssetManager>();
+	m_AssetMgr = std::make_unique<AssetManager>();
 	m_AssetMgr->Initialize();
+
+	m_GameMgr = std::make_unique<GameManager>();
+	m_GameMgr->Initialize();
 }
 
 bool Engine::GetIsDebugDrawn()
@@ -37,7 +40,10 @@ bool Engine::GetIsDebugDrawn()
 
 void Engine::Start()
 {
-	// TODO start engine
+	if (m_GameMgr != nullptr)
+	{
+		m_GameMgr->StartGame();
+	}
 }
 
 PhysicsEngine& Engine::GetPhysicsEngine()
@@ -60,3 +66,7 @@ AssetManager& Engine::GetAssetManager()
 	return *m_AssetMgr;
 }
 
+GameManager& Engine::GetGameManager()
+{
+	return *m_GameMgr;
+}

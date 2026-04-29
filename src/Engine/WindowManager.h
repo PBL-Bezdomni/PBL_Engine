@@ -24,4 +24,6 @@ public:
 
 	void ClearFrame();
 	void EndFrame();
+
+	bool ShouldWindowClose();
 };
