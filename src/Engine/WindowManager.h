@@ -1,7 +1,5 @@
 #pragma once
 #include <GLFW/glfw3.h>
-#include <spdlog/spdlog.h>
-#include <glad/glad.h>
 #include <glm/glm.hpp>
 
 class WindowManager

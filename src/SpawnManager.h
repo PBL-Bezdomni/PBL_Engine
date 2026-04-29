@@ -1,8 +1,7 @@
 #pragma once
 #include <list>
 #include <memory>
-
-
+#include "Engine/AssetManager.h"
 #include "Engine/Loader.h"
 
 class GameObject;
@@ -20,9 +19,11 @@ private:
 
 	float m_MonkeyProb = 20.f;	
 	float m_BallProb = 70.f;
+	AssetManager* m_AssetMgr;
 public:
-	SpawnManager();
-	GameObject* SpawnBall(Shader& shader);
-	GameObject* SpawnMonkey(Shader& shader);
+	SpawnManager() = default;
+	void Initialize();
+	GameObject* SpawnBunny(Shader& shader);
+	GameObject* SpawnBear(Shader& shader);
 	GameObject* SpawnEntity(Shader& shader);
 };

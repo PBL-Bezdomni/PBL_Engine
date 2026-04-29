@@ -133,7 +133,7 @@ private:
 	float m_Posz = 0;
 
 	// Loader LoadManager = Loader();
-	SpawnManager m_SpawnManager = SpawnManager();
+	SpawnManager m_SpawnManager;
 	Skybox       m_Skybox;
 
 	WindowManager* WindowMgr = nullptr;

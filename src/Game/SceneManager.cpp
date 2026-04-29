@@ -19,7 +19,9 @@ int SceneManager::Initialize()
 
 	WindowMgr = &engine.GetWindowManager();
 	AssetMgr = &engine.GetAssetManager();
-    
+
+	m_SpawnManager.Initialize();
+	
 	// engine.Start();
 	if (!engine.GetWindowManager().GetIsInitialized())
 	{
@@ -71,19 +73,10 @@ void SceneManager::UpdateScene()
 
 void SceneManager::RenderScene()
 {
-	glm::vec3 axisX = glm::vec3(1.0f, 0.f, 0.f);
-    glm::vec3 axisY = glm::vec3(.0f, 1.f, 0.f);
-    glm::vec3 axisZ = glm::vec3(.0f, 0.f, 1.f);
-    Quaternion quat = Quaternion();
-    
-    glm::mat4 view = glm::mat4(1.0f);
-    glm::mat4 skyboxView = glm::mat4(glm::mat3(MainCamera.GetViewMatrix()));;
-    // note that we're translating the scene in the reverse direction of where we want to move
-    //view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-    view = MainCamera.GetViewMatrix();
-   
-    glm::mat4 projection;
-    projection = MainCamera.GetProjectionMatrix(float(WindowMgr->WINDOW_WIDTH) / float(WindowMgr->WINDOW_HEIGHT), CAMERA_NEAR_PLANE, CAMERA_FAR_PLANE);
+    glm::mat4 skyboxView = glm::mat4(glm::mat3(MainCamera.GetViewMatrix()));
+    glm::mat4 view = MainCamera.GetViewMatrix();
+	
+    glm::mat4 projection = MainCamera.GetProjectionMatrix(float(WindowMgr->WINDOW_WIDTH) / float(WindowMgr->WINDOW_HEIGHT), CAMERA_NEAR_PLANE, CAMERA_FAR_PLANE);
 
     m_Skybox.DrawSkybox(skyboxView, projection);
 
