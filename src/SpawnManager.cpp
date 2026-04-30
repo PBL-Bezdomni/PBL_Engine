@@ -4,36 +4,39 @@
 // #include "Model.h"
 #include "GameObject.h"
 #include "Shader.h"
+#include "Engine/Engine.h"
 
-SpawnManager::SpawnManager()
+void SpawnManager::Initialize()
 {
-	
+	m_AssetMgr = &Engine::GetInstance().GetAssetManager();
 }
 
 
-GameObject* SpawnManager::SpawnBall(Shader& shader)
+GameObject* SpawnManager::SpawnBunny(Shader& shader)
 {
 	if (m_SpawnedBalls.size() < m_BallLimit)
 	{
-		auto ball = make_unique<GameObject>(); //Entity(shader, (loader.RelativePath + "res/models/sphere/sphere.obj").c_str());
-		ball->AddComponent<Model>(shader, (Loader::RelativePath() + "res/models/sphere/sphere.obj").c_str());
-		GameObject* ptr = ball.get();
-		m_SpawnedBalls.push_back(move(ball));
-		m_SpawnedEntities.push_back(move(ball));
+		auto bunny = make_unique<GameObject>();
+		Model bunnyModel = *m_AssetMgr->GetModel(shader, "res/models/animals/bunny/bunny.fbx");
+		bunny->AddComponent<Model>(bunnyModel);
+		GameObject* ptr = bunny.get();
+		m_SpawnedBalls.push_back(move(bunny));
+		m_SpawnedEntities.push_back(move(bunny));
 		return ptr;
 	}
 	return nullptr;
 }
 
-GameObject* SpawnManager::SpawnMonkey(Shader& shader)
+GameObject* SpawnManager::SpawnBear(Shader& shader)
 {
 	if (m_SpawnedMonkeys.size() < m_MonkeyLimit)
 	{
-		auto monkey = make_unique<GameObject>();
-		monkey->AddComponent<Model>(shader, (Loader::RelativePath() + "res/models/monkey/Monkey.obj").c_str());
-		GameObject* ptr = monkey.get();
-		m_SpawnedBalls.push_back(move(monkey));
-		m_SpawnedEntities.push_back(move(monkey));
+		auto bear = make_unique<GameObject>();
+		Model bearModel = *m_AssetMgr->GetModel(shader, "res/models/animals/bear/bear_1500.fbx");
+		bear->AddComponent<Model>(bearModel);
+		GameObject* ptr = bear.get();
+		m_SpawnedBalls.push_back(move(bear));
+		m_SpawnedEntities.push_back(move(bear));
 		return ptr;
 	}
 	return nullptr;
@@ -49,11 +52,11 @@ GameObject* SpawnManager::SpawnEntity(Shader& shader)
 		int r = dist(rng);
 		if (r < m_MonkeyProb && m_SpawnedMonkeys.size() < m_MonkeyLimit)
 		{
-			return SpawnMonkey(shader);
+			return SpawnBear(shader);
 		}
 		else
 		{
-			return SpawnBall(shader);
+			return SpawnBunny(shader);
 		}
 	}
 	return nullptr;

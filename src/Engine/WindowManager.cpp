@@ -1,4 +1,6 @@
 #include "WindowManager.h"
+#include <spdlog/spdlog.h>
+#include <glad/glad.h>
 
 void WindowManager::Initialize(int32_t versionMajor, int32_t versionMinor)
 {
