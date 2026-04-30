@@ -6,6 +6,7 @@
 #include "GameObject.h"
 #include "Skybox.h"
 #include "SpawnManager.h"
+#include "Player.h"
 
 class AssetManager;
 class PhysicsEngine;
@@ -37,6 +38,7 @@ private:
 	static void MouseCallbackDispatcher(GLFWwindow* window, double xpos, double ypos);
 	void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
 	static void ScrollCallbackDispatcher(GLFWwindow* window, double xoffset, double yoffset);
+	static void JoystickCallback(int jid, int event);
 	// void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 	// static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
@@ -90,6 +92,10 @@ private:
 	GameObject m_Table5;
 
 	GameObject m_Ball1;
+
+	InputManager inputManager;
+	Player* p1;
+	Player* p2;
 
 	// Values for light
 	bool m_UseDirLight = false;

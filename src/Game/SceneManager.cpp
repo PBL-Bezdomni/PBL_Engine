@@ -10,6 +10,8 @@
 #include "Engine/Time.h"
 #include "Engine/WindowManager.h"
 
+#include "Engine/InputManager.h"
+
 #define _USE_MATH_DEFINES
 
 int SceneManager::Initialize()
@@ -34,6 +36,7 @@ int SceneManager::Initialize()
 	glfwSetWindowUserPointer(WindowMgr->GetWindowPointer(), this);
 	glfwSetCursorPosCallback(WindowMgr->GetWindowPointer(), SceneManager::MouseCallbackDispatcher);
 	glfwSetScrollCallback(WindowMgr->GetWindowPointer(), ScrollCallbackDispatcher);
+	glfwSetJoystickCallback(SceneManager::JoystickCallback);
     
 	spdlog::info("Initialized project.");
 
@@ -61,6 +64,25 @@ int SceneManager::Initialize()
 	glm::vec3 floorHalfExtents = glm::vec3(FLOOR_SCALE / 2.0f, FLOOR_SCALE / 2.0f, 1.0f);
 	m_Floor.AddComponent<RigidBody>();
 	m_Floor.GetComponent<RigidBody>()->Init(floorHalfExtents, true);
+
+
+	//GAMEPAD
+
+	inputManager = InputManager();
+
+	inputManager.createAction("MoveForward");
+	inputManager.createAction("MoveStrafe");
+
+	inputManager.addBinding("MoveForward", {BindingType::Axis, GLFW_GAMEPAD_AXIS_LEFT_Y });
+	inputManager.addBinding("MoveStrafe", {BindingType::Axis, GLFW_GAMEPAD_AXIS_LEFT_X });
+
+	p1 = new Player(inputManager, m_SpawnManager, m_BasicShader, 0);
+	p2 = new Player(inputManager, m_SpawnManager, m_BasicShader, 1);
+
+	objectsTransform.AddChild(p1->body);
+	objectsTransform.AddChild(p2->body);
+	p1->body->transform->Position = glm::vec3(0.0f, 5.0f, 0.0f);
+	p2->body->transform->Position = glm::vec3(5.0f, 5.0f, 0.0f);
 }
 
 void SceneManager::UpdateScene()
@@ -142,6 +164,10 @@ void SceneManager::RenderScene()
     monkey.transform->Scale = glm::vec3(2.f);
 
     m_Ball1.transform->Position = glm::vec3(0, 30.0f, -20.0f);
+
+	inputManager.update();
+	p1->update(Time::GetDeltaTime());
+	p2->update(Time::GetDeltaTime());
 
     // m_PointLightPos = quat.RotateQuaternion(glm::vec3(m_PointLightRadius, m_PointLightHeight, 0.f), axisY, glfwGetTime() * 50);
 
@@ -425,6 +451,15 @@ void SceneManager::ScrollCallbackDispatcher(GLFWwindow* window, double xoffset, 
 	SceneManager* self = static_cast<SceneManager*>(glfwGetWindowUserPointer(window));
 	if (self) {
 		self->ScrollCallback(window, xoffset, yoffset);
+	}
+}
+
+void SceneManager::JoystickCallback(int jid, int event) {
+	if (event == GLFW_CONNECTED) {
+		spdlog::info("Joystick connected: {}", glfwGetJoystickName(jid));
+	}
+	else if (event == GLFW_DISCONNECTED) {
+		spdlog::warn("Joystick disconnected: {}", jid);
 	}
 }
 
