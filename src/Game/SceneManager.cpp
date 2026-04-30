@@ -142,7 +142,9 @@ void SceneManager::RenderScene()
         {
             float posX = Random::GetRandomInt(-WALL_X_BORDER, WALL_X_BORDER);
             float posY = Random::GetRandomInt(-WALL_Y_BORDER, WALL_Y_BORDER);
+			//spawnedEntity->transform->Scale = glm::vec3(2, 2, 2);
             spawnedEntity->transform->Position = glm::vec3(posX, 5, posY);
+			
 
             spawnedEntity->UpdateSelfAndChild();
             spawnedEntity->AddComponent<RigidBody>();
