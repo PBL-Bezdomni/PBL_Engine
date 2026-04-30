@@ -9,7 +9,7 @@
 #include "Engine/DebugManager.h"
 #include "Engine/Time.h"
 #include "Engine/WindowManager.h"
-
+#include "Player.h"
 #include "Engine/InputManager.h"
 
 #define _USE_MATH_DEFINES
@@ -81,8 +81,8 @@ int SceneManager::Initialize()
 	p1 = new Player(inputManager, m_SpawnManager, m_BasicShader, 0);
 	p2 = new Player(inputManager, m_SpawnManager, m_BasicShader, 1);
 
-	objectsTransform.AddChild(p1->body);
-	objectsTransform.AddChild(p2->body);
+	objectsTransform.AddChild(p1->body.get());
+	objectsTransform.AddChild(p2->body.get());
 	p1->body->transform->Position = glm::vec3(0.0f, 5.0f, 0.0f);
 	p2->body->transform->Position = glm::vec3(5.0f, 5.0f, 0.0f);
 }
@@ -159,8 +159,8 @@ void SceneManager::RenderScene()
     m_Ball1.transform->Position = glm::vec3(0, 30.0f, -20.0f);
 
 	inputManager.update();
-	p1->update(Time::GetDeltaTime());
-	p2->update(Time::GetDeltaTime());
+	p1->Update(Time::GetDeltaTime());
+	p2->Update(Time::GetDeltaTime());
 
     // m_PointLightPos = quat.RotateQuaternion(glm::vec3(m_PointLightRadius, m_PointLightHeight, 0.f), axisY, glfwGetTime() * 50);
 

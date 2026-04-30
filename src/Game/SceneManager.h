@@ -6,12 +6,13 @@
 #include "GameObject.h"
 #include "Skybox.h"
 #include "SpawnManager.h"
-#include "Player.h"
+#include "Engine/InputManager.h"
 
 class AssetManager;
 class PhysicsEngine;
 class DebugManager;
 class WindowManager;
+class Player;
 
 class SceneManager
 {
