@@ -17,7 +17,7 @@ GameObject* SpawnManager::SpawnBunny(Shader& shader)
 	if (m_SpawnedBalls.size() < m_BallLimit)
 	{
 		auto bunny = make_unique<GameObject>();
-		Model bunnyModel = *m_AssetMgr->GetModel(shader, "res/models/animals/bunny/bunny.fbx");
+		Model bunnyModel = *m_AssetMgr->GetModel(shader, "res/models/animals/bunny/bunny2.fbx");
 		bunny->AddComponent<Model>(bunnyModel);
 		GameObject* ptr = bunny.get();
 		m_SpawnedBalls.push_back(move(bunny));
