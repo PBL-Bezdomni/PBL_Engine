@@ -74,16 +74,16 @@ int SceneManager::Initialize()
 
 	//GAMEPAD
 
-	inputManager = InputManager();
+	inputManager = &engine.GetGameManager().GetInputManager();
 
-	inputManager.createAction("MoveForward");
-	inputManager.createAction("MoveStrafe");
+	inputManager->createAction("MoveForward");
+	inputManager->createAction("MoveStrafe");
 
-	inputManager.addBinding("MoveForward", {BindingType::Axis, GLFW_GAMEPAD_AXIS_LEFT_Y });
-	inputManager.addBinding("MoveStrafe", {BindingType::Axis, GLFW_GAMEPAD_AXIS_LEFT_X });
+	inputManager->addBinding("MoveForward", {BindingType::Axis, GLFW_GAMEPAD_AXIS_LEFT_Y });
+	inputManager->addBinding("MoveStrafe", {BindingType::Axis, GLFW_GAMEPAD_AXIS_LEFT_X });
 
-	p1 = new Player(inputManager, m_SpawnManager, *AssetMgr->BasicShader, 0);
-	p2 = new Player(inputManager, m_SpawnManager, *AssetMgr->BasicShader, 1);
+	p1 = new Player(*inputManager, m_SpawnManager, *AssetMgr->BasicShader, 0);
+	p2 = new Player(*inputManager, m_SpawnManager, *AssetMgr->BasicShader, 1);
 
 	objectsTransform.AddChild(p1->body.get());
 	objectsTransform.AddChild(p2->body.get());
@@ -169,7 +169,7 @@ void SceneManager::RenderScene()
 
     m_Ball1.transform->Position = glm::vec3(0, 30.0f, -20.0f);
 
-	inputManager.update();
+	// inputManager.update();
 	p1->Update(Time::GetDeltaTime());
 	p2->Update(Time::GetDeltaTime());
 

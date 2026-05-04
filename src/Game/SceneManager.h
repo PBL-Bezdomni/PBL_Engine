@@ -90,7 +90,7 @@ private:
 	GameObject m_LightSource;
 	GameObject m_LightSourceObject;
 
-	InputManager inputManager;
+	InputManager* inputManager;
 	Player* p1;
 	Player* p2;
 
@@ -115,9 +115,6 @@ private:
 
 	float WALL_X_BORDER = 37.f;
 	float WALL_Y_BORDER = 50.f;
-
-	// const float FIXED_TIME_STEP = 1.0f / 60.0f;
-	// float physicsAccumulator = 0.0f;
 
 	float m_CurrentRotationDegrees;
 	int m_RotationCount;

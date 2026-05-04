@@ -8,7 +8,11 @@
 class GameManager
 {
 private:
+	std::unique_ptr<InputManager> m_InputMgr;
 	std::unique_ptr<SceneManager> m_SceneMgr;
+
+	PhysicsEngine* Physics = nullptr;
+	WindowManager* WindowMgr = nullptr;
 	
 	void LoadScene();
 public:
@@ -17,7 +21,6 @@ public:
 	void StartGame();
 	void UpdateGame();
 	void RenderGame();
-private:	
-	PhysicsEngine* Physics = nullptr;
-	WindowManager* WindowMgr = nullptr;
+
+	InputManager& GetInputManager();
 };

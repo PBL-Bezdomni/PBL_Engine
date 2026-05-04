@@ -6,7 +6,13 @@
 
 void GameManager::Initialize()
 {
+	m_InputMgr = std::make_unique<InputManager>();
 	m_SceneMgr = std::make_unique<SceneManager>();
+}
+
+InputManager& GameManager::GetInputManager()
+{
+	return *m_InputMgr;
 }
 
 void GameManager::StartGame()
@@ -21,6 +27,7 @@ void GameManager::StartGame()
 void GameManager::UpdateGame()
 {
 	// Process I/O operations here
+	m_InputMgr->update();
 	m_SceneMgr->UpdateScene();
 }
 void GameManager::RenderGame()
