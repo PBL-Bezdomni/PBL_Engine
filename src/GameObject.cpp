@@ -21,15 +21,35 @@ glm::vec3 GameObject::GetWorldPosition()
     return glm::vec3(transform->ModelMatrix[3]);
 }
 
+void GameObject::StartSelfAndChild()
+{
+    for (auto it = m_Components.begin(); it != m_Components.end(); it++)
+    {
+        for (auto i = it->second.begin(); i != it->second.end(); i++)
+        {
+            i->get()->Start();
+        }
+    }
+
+    for (auto&& child : Children)
+    {
+        child->StartSelfAndChild();
+    }
+}
+
 void GameObject::UpdateSelfAndChild()
 {    
     RigidBody* rb = GetComponent<RigidBody>();
 
-    if (rb != nullptr)
+    for (auto it = m_Components.begin(); it != m_Components.end(); it++)
     {
-        rb->Update();
+        for (auto i = it->second.begin(); i != it->second.end(); i++)
+        {
+            i->get()->Update();
+        }
     }
-    else
+
+    if (rb == nullptr)
     {
         if (Parent != nullptr)
         {

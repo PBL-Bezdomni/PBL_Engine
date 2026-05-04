@@ -29,6 +29,7 @@ public:
 	void DrawSelf();
 	glm::vec3 GetWorldPosition();
 	void SetActive(bool active);
+	void StartSelfAndChild();
 
 	// template methods, must be in header apparently
 	template<typename T, typename... Args>
@@ -48,6 +49,7 @@ public:
 			}
 
 			component->SetOwner(this);
+			component->Awake();
 
 			T* ptr = component.get();
 			vec.push_back(move(component));

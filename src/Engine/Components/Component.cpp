@@ -11,9 +11,16 @@ void Component::SetOwner(GameObject* gameObject)
 	m_Owner = gameObject;
 }
 
+void Component::Awake()
+{
+}
+
+void Component::Start()
+{
+}
+
 void Component::Update()
 {
-	
 }
 
 void Component::SetActive(bool active)

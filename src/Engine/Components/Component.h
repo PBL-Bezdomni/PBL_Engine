@@ -16,6 +16,8 @@ public:
 	void SetOwner(GameObject* gameObject);
 	
 	virtual bool AllowMultiple() const { return false; }
+	virtual void Awake();
+	virtual void Start();
 	virtual void Update();
 
 	void SetActive(bool active);
