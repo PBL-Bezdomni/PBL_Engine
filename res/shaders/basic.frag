@@ -28,8 +28,7 @@ uniform float specularStrength = 0.5;
 
 uniform bool useDirLight;
 uniform bool usePointLight;
-uniform bool useSpotLight1;
-uniform bool useSpotLight2;
+uniform bool useSpotLight;
 
 struct Light {
     vec3 direction;
@@ -46,8 +45,7 @@ struct Light {
 
 uniform Light dirLight;
 uniform Light pointLight;
-uniform Light spotLight1;
-uniform Light spotLight2;
+uniform Light spotLight;
 
 vec3 CalcDirLight(vec3 norm, vec3 viewDir, vec3 objectColor);
 vec3 CalcPointLight(vec3 norm, vec3 viewDir, vec3 objectColor);
@@ -74,13 +72,9 @@ void main()
     {
         result += CalcPointLight(norm, viewDir, vec3(texColor));
     }
-    if (useSpotLight1)
+    if (useSpotLight)
     {
-        result += CalcSpotLight(spotLight1, norm, viewDir, vec3(texColor));
-    }
-    if (useSpotLight2)
-    {
-        result += CalcSpotLight(spotLight2, norm, viewDir, vec3(texColor));
+        result += CalcSpotLight(spotLight, norm, viewDir, vec3(texColor));
     }
 
     FragColor = vec4(result, texColor.a);

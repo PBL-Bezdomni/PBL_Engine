@@ -11,6 +11,10 @@
 #include "Engine/WindowManager.h"
 #include "Player.h"
 #include "Engine/InputManager.h"
+#include "Engine/Light/DirectionalLight.h"
+#include "Engine/Light/LightSource.h"
+#include "Engine/Light/PointLight.h"
+#include "Engine/Light/SpotLight.h"
 
 #define _USE_MATH_DEFINES
 
@@ -46,7 +50,7 @@ int SceneManager::Initialize()
 
 	init_shader();
 
-	MainCamera = Camera(glm::vec3(0.f, 25.f, 47.f), glm::vec3(0.0, 1.0, 0.0), -90.f, -25.f);
+	MainCamera = make_shared<Camera>(glm::vec3(0.f, 25.f, 47.f), glm::vec3(0.0, 1.0, 0.0), -90.f, -25.f);
 
 	Physics = &engine.GetPhysicsEngine();
 	// physics = new PhysicsEngine();
@@ -95,17 +99,22 @@ void SceneManager::UpdateScene()
 
 void SceneManager::RenderScene()
 {
-    glm::mat4 skyboxView = glm::mat4(glm::mat3(MainCamera.GetViewMatrix()));
-    glm::mat4 view = MainCamera.GetViewMatrix();
+    glm::mat4 skyboxView = glm::mat4(glm::mat3(MainCamera->GetViewMatrix()));
+    glm::mat4 view = MainCamera->GetViewMatrix();
 	
-    glm::mat4 projection = MainCamera.GetProjectionMatrix(float(WindowMgr->WINDOW_WIDTH) / float(WindowMgr->WINDOW_HEIGHT), CAMERA_NEAR_PLANE, CAMERA_FAR_PLANE);
+    glm::mat4 projection = MainCamera->GetProjectionMatrix(float(WindowMgr->WINDOW_WIDTH) / float(WindowMgr->WINDOW_HEIGHT), CAMERA_NEAR_PLANE, CAMERA_FAR_PLANE);
 
     m_Skybox.DrawSkybox(skyboxView, projection);
 
     m_BasicShader.Use();
     m_BasicShader.SetMat4("view", view);
     m_BasicShader.SetMat4("projection", projection);
-    SetupShaderLight(m_BasicShader);
+
+	m_BasicShader.SetBool("useDirLight", false);
+	m_BasicShader.SetBool("usePointLight", false);
+	m_BasicShader.SetBool("useSpotLight1", false);
+	
+    UpdateShaderLight(&m_WorldParent, m_BasicShader);
 
     m_UIShader.Use();
     m_UIShader.SetMat4("projection", projection);
@@ -164,8 +173,6 @@ void SceneManager::RenderScene()
 	p1->Update(Time::GetDeltaTime());
 	p2->Update(Time::GetDeltaTime());
 
-    // m_PointLightPos = quat.RotateQuaternion(glm::vec3(m_PointLightRadius, m_PointLightHeight, 0.f), axisY, glfwGetTime() * 50);
-
     m_WorldParent.UpdateSelfAndChild();
     m_WorldParent.DrawSelfAndChild();
 
@@ -195,44 +202,40 @@ void SceneManager::RenderScene()
 }
 
 //TODO remove those methods or move them elsewhere
-void SceneManager::SetupShaderLight(Shader& shader)
+void SceneManager::UpdateShaderLight(GameObject* gameObject, Shader& shader)
 {
-	shader.SetBool("useDirLight", m_UseDirLight);
-	shader.SetVec3("dirLight.color", m_DirLightColor);
-	shader.SetVec3("dirLight.direction", m_DirLightDirection);
-
-	shader.SetBool("usePointLight", m_UsePointLight);
-	shader.SetVec3("pointLight.color", m_PointLightColor);
-	shader.SetVec3("pointLight.position", m_PointLightPos);
-	shader.SetFloat("pointLight.constant", 1.0f);
-	shader.SetFloat("pointLight.linear", m_PointLightLinear);
-	shader.SetFloat("pointLight.quadratic", m_PointLightQuadratic);
-	shader.SetVec3("viewPos", MainCamera.Position);
-
-	shader.SetBool("useSpotLight1", m_UseSpotLight1);
-	shader.SetVec3("spotLight1.color", m_SpotLight1Color);
-	shader.SetVec3("spotLight1.position", m_SpotLight1Position);
-	shader.SetVec3("spotLight1.direction", m_SpotLight1Direction);
-	shader.SetFloat("spotLight1.cutOff", glm::cos(glm::radians(m_SpotLight1CutOff)));
-	shader.SetFloat("spotLight1.outerCutOff", glm::cos(glm::radians(m_SpotLight1OuterCutOff)));
-	shader.SetFloat("spotLight1.constant", 1.0f);
-	shader.SetFloat("spotLight1.linear", m_SpotLight1Linear);
-	shader.SetFloat("spotLight1.quadratic", m_SpotLight2Quadratic);
-
-	shader.SetBool("useSpotLight2", m_UseSpotLight2);
-	shader.SetVec3("spotLight2.color", m_SpotLight2Color);
-	shader.SetVec3("spotLight2.position", m_SpotLight2Position);
-	shader.SetVec3("spotLight2.direction", m_SpotLight2Direction);
-	shader.SetFloat("spotLight2.cutOff", glm::cos(glm::radians(m_SpotLight2CutOff)));
-	shader.SetFloat("spotLight2.outerCutOff", glm::cos(glm::radians(m_SpotLight2OuterCutOff)));
-	shader.SetFloat("spotLight2.constant", 1.0f);
-	shader.SetFloat("spotLight2.linear", m_SpotLight2Linear);
-	shader.SetFloat("spotLight2.quadratic", m_SpotLight2Quadratic);
+	if (gameObject == nullptr)
+	{
+		return;
+	}
+	
+	LightSource* dLight = gameObject->GetComponent<DirectionalLight>();
+	if (dLight != nullptr)
+	{
+		dLight->SetLightValues(shader);
+	}
+	LightSource* pLight = gameObject->GetComponent<PointLight>();
+	if (pLight != nullptr)
+	{
+		pLight->SetLightValues(shader);
+	}
+	LightSource* sLight = gameObject->GetComponent<SpotLight>();
+	if (sLight != nullptr)
+	{
+		sLight->SetLightValues(shader);
+	}
+	for (int i = 0; i < gameObject->Children.size(); i++)
+	{
+		UpdateShaderLight(gameObject->Children[i], shader);
+	}
 }
 
 void SceneManager::AssignSceneGraph()
 {
 	m_WorldParent.AddChild(&objectsTransform);
+
+	m_WorldParent.AddChild(&m_LightSource);
+	// m_LightSource.AddChild(&m_LightSourceObject);
 
 	objectsTransform.AddChild(&duckTransparent);
 	objectsTransform.AddChild(&slider);
@@ -329,6 +332,14 @@ void SceneManager::LoadModels()
 	Model ballModel = *AssetMgr->GetModel(m_BasicShader, "res/models/sphere/ball.obj");
 	m_Ball1.AddComponent<Model>(ballModel);
 
+	m_LightSourceObject = GameObject();
+	Model lightModel = *AssetMgr->GetModel(m_LightSourceShader, "res/models/sphere/ball.obj");
+	m_LightSourceObject.AddComponent<Model>(lightModel);
+	
+	m_LightSource = GameObject();
+	m_LightSource.AddComponent<PointLight>(MainCamera, m_LightSource.transform, glm::vec3(1));
+	m_LightSource.transform->Position = glm::vec3(0.f, 15.0f, -30.0f);
+
 	LoadSceneModels();
 }
 
@@ -339,6 +350,7 @@ void SceneManager::init_shader()
 	m_SliderShader = *AssetMgr->GetShader("res/shaders/UIShader.vert", "res/shaders/UISlider.frag");
 	m_SkyboxShader = *AssetMgr->GetShader("res/shaders/cubemap.vert", "res/shaders/cubemap.frag");
 	m_LineShader = *AssetMgr->GetShader("res/shaders/line.vert", "res/shaders/line.frag");
+	m_LightSourceShader = *AssetMgr->GetShader("res/shaders/lightsource.vert", "res/shaders/lightsource.frag");
 
 	m_UIDuckTex = *AssetMgr->GetTexture("res/textures/duck.png");
 	m_FloorTex = *AssetMgr->GetTexture("res/models/scena_v1/floor/floor_textures/Stylized_Stone_Floor_010_basecolor.png");
@@ -358,19 +370,19 @@ void SceneManager::input(GLFWwindow* window)
 {
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
-		MainCamera.ProcessKeyboard(FORWARD, Time::GetDeltaTime());
+		MainCamera->ProcessKeyboard(FORWARD, Time::GetDeltaTime());
 	}
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 	{
-		MainCamera.ProcessKeyboard(BACKWARD, Time::GetDeltaTime());
+		MainCamera->ProcessKeyboard(BACKWARD, Time::GetDeltaTime());
 	}
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 	{
-		MainCamera.ProcessKeyboard(LEFT, Time::GetDeltaTime());
+		MainCamera->ProcessKeyboard(LEFT, Time::GetDeltaTime());
 	}
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 	{
-		MainCamera.ProcessKeyboard(RIGHT, Time::GetDeltaTime());
+		MainCamera->ProcessKeyboard(RIGHT, Time::GetDeltaTime());
 	}
 
 	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_2) == GLFW_PRESS)
@@ -385,19 +397,19 @@ void SceneManager::input(GLFWwindow* window)
 	// Simulate mouse movement with arrows.
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
 	{
-		MainCamera.ProcessMouseMovement(0, 1.f);
+		MainCamera->ProcessMouseMovement(0, 1.f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
 	{
-		MainCamera.ProcessMouseMovement(0, -1.f);
+		MainCamera->ProcessMouseMovement(0, -1.f);
 	}
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
 	{
-		MainCamera.ProcessMouseMovement(1.f, 0);
+		MainCamera->ProcessMouseMovement(1.f, 0);
 	}
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
 	{
-		MainCamera.ProcessMouseMovement(-1.f, 0);
+		MainCamera->ProcessMouseMovement(-1.f, 0);
 	}
 }
 
@@ -417,7 +429,7 @@ void SceneManager::MouseCallback(GLFWwindow* window, double xpos, double ypos)
 		m_MouseLastX = xpos;
 		m_MouseLastY = ypos;
 
-		MainCamera.ProcessMouseMovement(xoffset, yoffset);
+		MainCamera->ProcessMouseMovement(xoffset, yoffset);
 	}
 	else
 	{
@@ -437,7 +449,7 @@ void SceneManager::ScrollCallback(GLFWwindow* window, double xoffset, double yof
 {
 	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_2) == GLFW_PRESS)
 	{
-		MainCamera.ProcessMouseScroll(yoffset);
+		MainCamera->ProcessMouseScroll(yoffset);
 	}
 }
 
@@ -457,36 +469,3 @@ void SceneManager::JoystickCallback(int jid, int event) {
 		spdlog::warn("Joystick disconnected: {}", jid);
 	}
 }
-
-
-// void SceneManager::mouse_callback(GLFWwindow* window, double xpos, double ypos)
-// {
-// 	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_2) == GLFW_PRESS)
-// 	{
-// 		if (m_IsFirstMouse)
-// 		{
-// 			m_MouseLastX = xpos;
-// 			m_MouseLastY = ypos;
-// 			m_IsFirstMouse = false;
-// 		}
-//
-// 		float xoffset = xpos - m_MouseLastX;
-// 		float yoffset = m_MouseLastY - ypos; // reversed since y-coordinates range from bottom to top
-// 		m_MouseLastX = xpos;
-// 		m_MouseLastY = ypos;
-//
-// 		MainCamera.ProcessMouseMovement(xoffset, yoffset);
-// 	}
-// 	else
-// 	{
-// 		m_IsFirstMouse = true;
-// 	}
-// }
-
-// void SceneManager::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
-// {
-// 	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_2) == GLFW_PRESS)
-// 	{
-// 		MainCamera.ProcessMouseScroll(yoffset);
-// 	}
-// }

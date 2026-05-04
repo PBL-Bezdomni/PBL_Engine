@@ -1,6 +1,7 @@
 #include "GameObject.h"
 
 #include "Engine/Components/RigidBody.h"
+#include "Engine/Light/PointLight.h"
 
 GameObject::GameObject()
 {
@@ -21,7 +22,7 @@ glm::vec3 GameObject::GetWorldPosition()
 }
 
 void GameObject::UpdateSelfAndChild()
-{
+{    
     RigidBody* rb = GetComponent<RigidBody>();
 
     if (rb != nullptr)
@@ -65,10 +66,10 @@ void GameObject::UpdateSelfAndChildInstanceMatrix(glm::vec3 position, glm::vec3 
 
 void GameObject::DrawSelfAndChild()
 {
-    if (m_IsModelRendered)
+    if (m_IsActive)
     {
         Model* model = GetComponent<Model>();
-        if (model != nullptr)
+        if (model != nullptr && model->IsActive())
         {
             model->Draw(transform->ModelMatrix);
         }
@@ -82,17 +83,17 @@ void GameObject::DrawSelfAndChild()
 
 void GameObject::DrawSelf()
 {
-    if (m_IsModelRendered)
+    if (m_IsActive)
     {
         Model* model = GetComponent<Model>();
-        if (model != nullptr)
+        if (model != nullptr && model->IsActive())
         {
             model->Draw(transform->ModelMatrix);
         }
     }
 }
 
-void GameObject::SetModelRenderBool(bool render)
+void GameObject::SetActive(bool active)
 {
-    m_IsModelRendered = render;
+    m_IsActive = active;
 }

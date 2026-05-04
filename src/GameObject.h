@@ -14,12 +14,12 @@ class GameObject
 {
 private:
 	unordered_map<type_index, vector<unique_ptr<Component>>> m_Components;
-	bool m_IsModelRendered = true;
+	bool m_IsActive = true;
 	string m_Name;
 public:
 	Transform* transform;
 	GameObject();
-	list<GameObject*> Children;
+	vector<GameObject*> Children;
 	GameObject* Parent = nullptr;
 
 	void UpdateSelfAndChild();
@@ -28,9 +28,9 @@ public:
 	void DrawSelfAndChild();
 	void DrawSelf();
 	glm::vec3 GetWorldPosition();
-	void SetModelRenderBool(bool render);
+	void SetActive(bool active);
 
-	// template methods, must be in header apparaently
+	// template methods, must be in header apparently
 	template<typename T, typename... Args>
 	T* AddComponent(Args&&... args)
 	{

@@ -27,7 +27,7 @@ public:
 
 private:
 	//TODO move those functions elsewhere or remove them completely
-	void SetupShaderLight(Shader& shader);
+	void UpdateShaderLight(GameObject* gameObject, Shader& shader);
 	void AssignSceneGraph();
 	void AssignSceneModelsGraph();
 	void LoadSceneModels();
@@ -43,7 +43,7 @@ private:
 	// void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 	// static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
-	Camera MainCamera;
+	shared_ptr<Camera> MainCamera;
 
 	// Mouse fields
 	float m_MouseLastX; // = WINDOW_WIDTH / 2; 
@@ -56,6 +56,7 @@ private:
 	Shader m_TextShader;
 	Shader m_SliderShader;
 	Shader m_LineShader;
+	Shader m_LightSourceShader;
 
 	FreeType m_TextRenderer;
 
@@ -94,46 +95,12 @@ private:
 
 	GameObject m_Ball1;
 
+	GameObject m_LightSource;
+	GameObject m_LightSourceObject;
+
 	InputManager inputManager;
 	Player* p1;
 	Player* p2;
-
-	// Values for light
-	bool m_UseDirLight = false;
-	bool m_UsePointLight = true;
-	bool m_UseSpotLight1 = false;
-	bool m_UseSpotLight2 = false;
-
-	glm::vec3 m_PointLightPos = glm::vec3(0.f, 15.0f, -30.0f);
-	glm::vec3 m_PointLightColor = glm::vec3(1.f, 1.f, 1.f);
-	float     m_PointLightRadius = 100.f;
-	float     m_PointLightHeight = 5.f;
-	float     m_PointLightLinear = 0.0014f;
-	float     m_PointLightQuadratic = 0.000007f;
-
-	glm::vec3 m_DirLightDirection = glm::vec3(0.f, -1.0f, 0.f);
-	glm::vec3 m_DirLightVisualPos = glm::vec3(0.f, 10.f, 0.f);
-	glm::vec3 m_DirLightColor = glm::vec3(1.f, 1.f, 1.f);
-	float     m_DirLightAngleX = -45.f;
-	float     m_DirLightAngleZ = 30.f;
-
-	glm::vec3 m_SpotLight1Color = glm::vec3(1.f, 1.f, 1.f);
-	glm::vec3 m_SpotLight1Position = glm::vec3(0.0f, 0.0f, 4.0f);
-	glm::vec3 m_SpotLight1Direction = glm::vec3(0.0f, 0.0f, 1.0f);
-	float     m_SpotLight1CutOff = 24.5f;
-	float     m_SpotLight1OuterCutOff = 30.5f;
-	float     m_SpotLight1Angle = 0.f;
-	float     m_SpotLight1Linear = 0.09f;
-	float     m_SpotLight1Quadratic = 0.032f;
-
-	glm::vec3 m_SpotLight2Color = glm::vec3(1.f, 1.f, 1.f);
-	glm::vec3 m_SpotLight2Position = glm::vec3(8.f, 0.0f, -6.0f);
-	glm::vec3 m_SpotLight2Direction = glm::vec3(0.0f, 0.0f, -1.0f);
-	float     m_SpotLight2CutOff = 8.5f;
-	float     m_SpotLight2OuterCutOff = 12.5f;
-	float     m_SpotLight2Angle = 135.f;
-	float     m_SpotLight2Linear = 0.09f;
-	float     m_SpotLight2Quadratic = 0.032f;
 
 	float m_Posx = 0;
 	float m_Posy = 0;
