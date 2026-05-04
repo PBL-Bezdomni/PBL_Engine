@@ -1,5 +1,6 @@
 #include "Engine.h"
 #include "Loader.h"
+#include "Time.h"
 
 Engine& Engine::GetInstance()
 {
@@ -37,15 +38,6 @@ bool Engine::GetIsDebugDrawn()
 	return m_IsDebugDraw;
 }
 
-
-void Engine::Start()
-{
-	if (m_GameMgr != nullptr)
-	{
-		m_GameMgr->StartGame();
-	}
-}
-
 PhysicsEngine& Engine::GetPhysicsEngine()
 {
 	return *m_PhysicsEngine;
@@ -70,3 +62,51 @@ GameManager& Engine::GetGameManager()
 {
 	return *m_GameMgr;
 }
+
+void Engine::Start()
+{
+	if (m_GameMgr != nullptr)
+	{
+		m_GameMgr->StartGame();
+		MainLoop();
+	}
+}
+
+int Engine::MainLoop()
+{
+	while (!m_WindowMgr->ShouldWindowClose())
+	{
+		// Clear screen
+		m_WindowMgr->ClearFrame();
+
+		// Process I/O operations here
+		m_GameMgr->UpdateGame();
+		
+		// Update game objects' state here
+		Time::Update();
+
+		float frameTime = Time::GetDeltaTime();
+		if (frameTime > 0.25f) {
+			frameTime = 0.25f;
+		}
+
+		m_PhysicsAccumulator += frameTime;
+
+		while (m_PhysicsAccumulator >= FIXED_TIME_STEP)
+		{
+			m_PhysicsEngine->Update(FIXED_TIME_STEP);
+			m_PhysicsAccumulator -= FIXED_TIME_STEP;
+		}
+		
+		// OpenGL rendering code here
+		m_GameMgr->RenderGame();
+
+
+		// End frame and swap buffers (double buffering)
+		m_WindowMgr->EndFrame();
+	}
+
+	// TODO stop everything
+	return 0;
+}
+

@@ -16,42 +16,17 @@ void GameManager::StartGame()
 	WindowMgr = &engine.GetWindowManager();
 	
 	LoadScene();
-	GameLoop();
 }
 
-void GameManager::GameLoop()
+void GameManager::UpdateGame()
 {
-	while (!WindowMgr->ShouldWindowClose())
-	{
-		// Clear screen
-		WindowMgr->ClearFrame();
-
-		// Process I/O operations here
-		m_SceneMgr->UpdateScene();
-		
-		// Update game objects' state here
-		Time::Update();
-
-		float frameTime = Time::GetDeltaTime();
-		if (frameTime > 0.25f) {
-			frameTime = 0.25f;
-		}
-
-		physicsAccumulator += frameTime;
-
-		while (physicsAccumulator >= FIXED_TIME_STEP)
-		{
-			Physics->Update(FIXED_TIME_STEP);
-			physicsAccumulator -= FIXED_TIME_STEP;
-		}
-		
-		// OpenGL rendering code here
-		m_SceneMgr->RenderScene();
-
-
-		// End frame and swap buffers (double buffering)
-		WindowMgr->EndFrame();
-	}
+	// Process I/O operations here
+	m_SceneMgr->UpdateScene();
+}
+void GameManager::RenderGame()
+{
+	// OpenGL rendering code here
+	m_SceneMgr->RenderScene();
 }
 
 void GameManager::LoadScene()

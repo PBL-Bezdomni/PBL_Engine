@@ -12,7 +12,12 @@ class Engine
 private:
 	// DEBUG
 	bool m_IsDebugDraw = false;
+	
+	const float FIXED_TIME_STEP = 1.0f / 60.0f;
+	
 	bool m_IsInitialized = false;
+	float m_PhysicsAccumulator = 0.0f;
+	
 	Engine() = default;
 	~Engine() = default;
 	
@@ -39,4 +44,5 @@ public:
 	AssetManager& GetAssetManager();
 	GameManager& GetGameManager();
 	void Start();
+	int MainLoop();
 };
