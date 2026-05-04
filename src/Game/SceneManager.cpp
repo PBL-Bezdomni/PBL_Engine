@@ -48,7 +48,7 @@ int SceneManager::Initialize()
 
 	// spdlog::info("Initialized ImGui.");
 
-	init_shader();
+	InitializeUI();
 
 	MainCamera = make_shared<Camera>(glm::vec3(0.f, 25.f, 47.f), glm::vec3(0.0, 1.0, 0.0), -90.f, -25.f);
 
@@ -61,7 +61,7 @@ int SceneManager::Initialize()
 
 	glEnable(GL_DEPTH_TEST);
 
-	m_Skybox = Skybox(m_SkyboxShader);
+	m_Skybox = Skybox(*AssetMgr->SkyboxShader);
     
 	//m_SkyboxShader.setInt("skybox", 0);
 
@@ -82,8 +82,8 @@ int SceneManager::Initialize()
 	inputManager.addBinding("MoveForward", {BindingType::Axis, GLFW_GAMEPAD_AXIS_LEFT_Y });
 	inputManager.addBinding("MoveStrafe", {BindingType::Axis, GLFW_GAMEPAD_AXIS_LEFT_X });
 
-	p1 = new Player(inputManager, m_SpawnManager, m_BasicShader, 0);
-	p2 = new Player(inputManager, m_SpawnManager, m_BasicShader, 1);
+	p1 = new Player(inputManager, m_SpawnManager, *AssetMgr->BasicShader, 0);
+	p2 = new Player(inputManager, m_SpawnManager, *AssetMgr->BasicShader, 1);
 
 	objectsTransform.AddChild(p1->body.get());
 	objectsTransform.AddChild(p2->body.get());
@@ -106,22 +106,22 @@ void SceneManager::RenderScene()
 
     m_Skybox.DrawSkybox(skyboxView, projection);
 
-    m_BasicShader.Use();
-    m_BasicShader.SetMat4("view", view);
-    m_BasicShader.SetMat4("projection", projection);
+    AssetMgr->BasicShader->Use();
+    AssetMgr->BasicShader->SetMat4("view", view);
+    AssetMgr->BasicShader->SetMat4("projection", projection);
 
-	m_BasicShader.SetBool("useDirLight", false);
-	m_BasicShader.SetBool("usePointLight", false);
-	m_BasicShader.SetBool("useSpotLight1", false);
+	AssetMgr->BasicShader->SetBool("useDirLight", false);
+	AssetMgr->BasicShader->SetBool("usePointLight", false);
+	AssetMgr->BasicShader->SetBool("useSpotLight1", false);
 	
-    UpdateShaderLight(&m_WorldParent, m_BasicShader);
+    UpdateShaderLight(&m_WorldParent, *AssetMgr->BasicShader);
 
-    m_UIShader.Use();
-    m_UIShader.SetMat4("projection", projection);
+    AssetMgr->UIShader->Use();
+    AssetMgr->UIShader->SetMat4("projection", projection);
     
-    m_SliderShader.Use();
-    m_SliderShader.SetMat4("projection", projection);
-    m_SliderShader.SetFloat("slider_load", m_CurrentRotationDegrees / 360.0f);
+    AssetMgr->SliderShader->Use();
+    AssetMgr->SliderShader->SetMat4("projection", projection);
+    AssetMgr->SliderShader->SetFloat("slider_load", m_CurrentRotationDegrees / 360.0f);
 
     m_WorldParent.transform->Position = glm::vec3(0.f, 0.f, -30.f);
     m_WorldParent.transform->Scale = glm::vec3(0.7f);
@@ -146,7 +146,7 @@ void SceneManager::RenderScene()
     if (m_SpawnCounter >= m_SpawnTime)
     {
         m_SpawnCounter = 0;
-        GameObject* spawnedEntity = m_SpawnManager.SpawnEntity(m_BasicShader);
+        GameObject* spawnedEntity = m_SpawnManager.SpawnEntity(*AssetMgr->BasicShader);
         if (spawnedEntity != nullptr)
         {
             float posX = Random::GetRandomInt(-WALL_X_BORDER, WALL_X_BORDER);
@@ -180,7 +180,7 @@ void SceneManager::RenderScene()
 
     if (Physics != nullptr)
     {
-        Physics->DrawHitboxes(m_LineShader, view, projection);
+        Physics->DrawHitboxes(*AssetMgr->LineShader, view, projection);
     }
 
 
@@ -189,7 +189,7 @@ void SceneManager::RenderScene()
 
     std::wstring monkeyText = L"FPS: " + std::to_wstring(Time::GetFPS());
 
-    m_TextRenderer.RenderText(m_TextShader, monkeyText, 10.0f, 1700.0f, 2.0f, glm::vec3(0.3f, 0.3f, 0.3f));
+    m_TextRenderer.RenderText(*AssetMgr->TextShader, monkeyText, 10.0f, 1700.0f, 2.0f, glm::vec3(0.3f, 0.3f, 0.3f));
     glEnable(GL_DEPTH_TEST);
 
 	// Draw ImGui
@@ -201,7 +201,6 @@ void SceneManager::RenderScene()
 	}
 }
 
-//TODO remove those methods or move them elsewhere
 void SceneManager::UpdateShaderLight(GameObject* gameObject, Shader& shader)
 {
 	if (gameObject == nullptr)
@@ -230,6 +229,7 @@ void SceneManager::UpdateShaderLight(GameObject* gameObject, Shader& shader)
 	}
 }
 
+//TODO remove those methods or move them elsewhere
 void SceneManager::AssignSceneGraph()
 {
 	m_WorldParent.AddChild(&objectsTransform);
@@ -279,15 +279,16 @@ void SceneManager::AssignSceneModelsGraph()
 void SceneManager::LoadSceneModels()
 {
 	m_Scene = GameObject();
-	Model floorModel = Model(m_BasicShader, "res/models/scena_v1/floor/floor.fbx");
-	m_Scene.AddComponent<Model>(m_BasicShader);
+	Model floorModel = Model(*AssetMgr->BasicShader, "res/models/scena_v1/floor/floor.fbx");
+	m_Scene.AddComponent<Model>(*AssetMgr->BasicShader);
 	m_Floor = GameObject();
 	m_Floor.AddComponent<Model>(floorModel);
+	m_FloorTex = *AssetMgr->GetTexture("res/models/scena_v1/floor/floor_textures/Stylized_Stone_Floor_010_basecolor.png");
 	m_Floor.GetComponent<Model>()->AssignTexture(m_FloorTex);
 	// m_Floor.AssignTexture(m_FloorTex);
 	m_WallDir = GameObject();
-	m_WallDir.AddComponent<Model>(m_BasicShader);
-	Model wallModel = *AssetMgr->GetModel(m_BasicShader, "res/models/scena_v1/walls/wall1.fbx");
+	m_WallDir.AddComponent<Model>(*AssetMgr->BasicShader);
+	Model wallModel = *AssetMgr->GetModel(*AssetMgr->BasicShader, "res/models/scena_v1/walls/wall1.fbx");
 	m_WallBack = GameObject();
 	m_WallBack.AddComponent<Model>(wallModel);
 	m_WallFrontLeft = GameObject();
@@ -298,10 +299,11 @@ void SceneManager::LoadSceneModels()
 	m_WallLeft.AddComponent<Model>(wallModel);
 	m_WallRight = GameObject();
 	m_WallRight.AddComponent<Model>(wallModel);
-	Model towelBedModel = *AssetMgr->GetModel(m_BasicShader, "res/models/scena_v1/for_towels/for_towels.fbx");
+	Model towelBedModel = *AssetMgr->GetModel(*AssetMgr->BasicShader, "res/models/scena_v1/for_towels/for_towels.fbx");
 	m_TowelsBed = GameObject();
 	m_TowelsBed.AddComponent<Model>(towelBedModel);
-    
+
+	m_WallTex = *AssetMgr->GetTexture("res/models/scena_v1/walls/walls_textures/Stylized_Wall_002_basecolor.png");
 	m_WallBack.GetComponent<Model>()->AssignTexture(m_WallTex);
 	m_WallFrontLeft.GetComponent<Model>()->AssignTexture(m_WallTex);
 	m_WallFrontRight.GetComponent<Model>()->AssignTexture(m_WallTex);
@@ -316,24 +318,26 @@ void SceneManager::LoadModels()
 	// objectsTransform.AddComponent<Model>(m_BasicShader);
 
 	duckTransparent = GameObject();
-	Model UISprite = *AssetMgr->GetModel(m_UIShader, "res/models/house/floor.obj");
+	Model UISprite = *AssetMgr->GetModel(*AssetMgr->UIShader, "res/models/house/floor.obj");
 	duckTransparent.AddComponent<Model>(UISprite);
+	m_UIDuckTex = *AssetMgr->GetTexture("res/textures/duck.png");
 	duckTransparent.GetComponent<Model>()->AssignTexture(m_UIDuckTex);
 	slider = GameObject();
 	slider.AddComponent<Model>(UISprite);
-	slider.GetComponent<Model>()->ReassignShader(m_SliderShader);
+	slider.GetComponent<Model>()->ReassignShader(*AssetMgr->SliderShader);
+	m_SliderTex = *AssetMgr->GetTexture("res/textures/white.png");
 	slider.GetComponent<Model>()->AssignTexture(m_SliderTex);
 	//house_floor.ScaleTexture(FLOOR_TEX_SCALE * FLOOR_SCALE);
 	monkey = GameObject();
-	Model monkeyModel = *AssetMgr->GetModel(m_BasicShader, "res/models/monkey/Monkey.obj");
+	Model monkeyModel = *AssetMgr->GetModel(*AssetMgr->BasicShader, "res/models/monkey/Monkey.obj");
 	monkey.AddComponent<Model>(monkeyModel);
 
 	m_Ball1 = GameObject();
-	Model ballModel = *AssetMgr->GetModel(m_BasicShader, "res/models/sphere/ball.obj");
+	Model ballModel = *AssetMgr->GetModel(*AssetMgr->BasicShader, "res/models/sphere/ball.obj");
 	m_Ball1.AddComponent<Model>(ballModel);
 
 	m_LightSourceObject = GameObject();
-	Model lightModel = *AssetMgr->GetModel(m_LightSourceShader, "res/models/sphere/ball.obj");
+	Model lightModel = *AssetMgr->GetModel(*AssetMgr->LightSourceShader, "res/models/sphere/ball.obj");
 	m_LightSourceObject.AddComponent<Model>(lightModel);
 	
 	m_LightSource = GameObject();
@@ -343,25 +347,11 @@ void SceneManager::LoadModels()
 	LoadSceneModels();
 }
 
-void SceneManager::init_shader()
+void SceneManager::InitializeUI()
 {
-	m_BasicShader = *AssetMgr->GetShader("res/shaders/basic.vert", "res/shaders/basic.frag");
-	m_UIShader = *AssetMgr->GetShader("res/shaders/UIShader.vert", "res/shaders/UIShader.frag");
-	m_SliderShader = *AssetMgr->GetShader("res/shaders/UIShader.vert", "res/shaders/UISlider.frag");
-	m_SkyboxShader = *AssetMgr->GetShader("res/shaders/cubemap.vert", "res/shaders/cubemap.frag");
-	m_LineShader = *AssetMgr->GetShader("res/shaders/line.vert", "res/shaders/line.frag");
-	m_LightSourceShader = *AssetMgr->GetShader("res/shaders/lightsource.vert", "res/shaders/lightsource.frag");
-
-	m_UIDuckTex = *AssetMgr->GetTexture("res/textures/duck.png");
-	m_FloorTex = *AssetMgr->GetTexture("res/models/scena_v1/floor/floor_textures/Stylized_Stone_Floor_010_basecolor.png");
-	m_WallTex = *AssetMgr->GetTexture("res/models/scena_v1/walls/walls_textures/Stylized_Wall_002_basecolor.png");
-	m_SliderTex = *AssetMgr->GetTexture("res/textures/white.png");
-    
-	m_TextShader = *AssetMgr->GetShader("res/shaders/text.vert", "res/shaders/text.frag");
-
 	glm::mat4 textProjection = glm::ortho(0.0f, static_cast<float>(WindowMgr->WINDOW_WIDTH), 0.0f, static_cast<float>(WindowMgr->WINDOW_HEIGHT));
-	m_TextShader.Use();
-	m_TextShader.SetMat4("projection", textProjection);
+	AssetMgr->TextShader->Use();
+	AssetMgr->TextShader->SetMat4("projection", textProjection);
 
 	m_TextRenderer.Init((Loader::RelativePath()+ "res/fonts/Berylium.ttf").c_str(), 48);
 }

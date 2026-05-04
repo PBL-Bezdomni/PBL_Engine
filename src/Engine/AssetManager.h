@@ -17,6 +17,14 @@ private:
 
 	string GetPathWithRelativePrefix(const char* cPath);
 public:
+	shared_ptr<Shader> BasicShader;
+	shared_ptr<Shader> SkyboxShader;
+	shared_ptr<Shader> UIShader;
+	shared_ptr<Shader> TextShader;
+	shared_ptr<Shader> SliderShader;
+	shared_ptr<Shader> LineShader;
+	shared_ptr<Shader> LightSourceShader;
+	
 	AssetManager() = default;
 	~AssetManager();
 	void Initialize();

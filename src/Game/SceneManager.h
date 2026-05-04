@@ -32,7 +32,7 @@ private:
 	void AssignSceneModelsGraph();
 	void LoadSceneModels();
 	void LoadModels();
-	void init_shader();
+	void InitializeUI();
 	void input(GLFWwindow* window);
 	
 	void MouseCallback(GLFWwindow* window, double xpos, double ypos);
@@ -49,14 +49,6 @@ private:
 	float m_MouseLastX; // = WINDOW_WIDTH / 2; 
 	float m_MouseLastY; // = WINDOW_HEIGHT / 2;
 	bool  m_IsFirstMouse = true;
-
-	Shader m_BasicShader;
-	Shader m_SkyboxShader;
-	Shader m_UIShader;
-	Shader m_TextShader;
-	Shader m_SliderShader;
-	Shader m_LineShader;
-	Shader m_LightSourceShader;
 
 	FreeType m_TextRenderer;
 
