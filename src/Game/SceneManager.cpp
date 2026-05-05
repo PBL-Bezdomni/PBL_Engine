@@ -58,6 +58,9 @@ int SceneManager::Initialize()
 
 	LoadModels();
 	AssignSceneGraph();
+	
+	// UI Init
+	m_UIManager.Init(AssetMgr, WindowMgr);
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -116,23 +119,8 @@ void SceneManager::RenderScene()
 	
     UpdateShaderLight(&m_WorldParent, *AssetMgr->BasicShader);
 
-    AssetMgr->UIShader->Use();
-    AssetMgr->UIShader->SetMat4("projection", projection);
-    
-    AssetMgr->SliderShader->Use();
-    AssetMgr->SliderShader->SetMat4("projection", projection);
-    AssetMgr->SliderShader->SetFloat("slider_load", m_CurrentRotationDegrees / 360.0f);
-
     m_WorldParent.transform->Position = glm::vec3(0.f, 0.f, -30.f);
     m_WorldParent.transform->Scale = glm::vec3(0.7f);
-
-    duckTransparent.transform->Scale = glm::vec3(0.1f, 0.1f, 0.1f);
-    duckTransparent.transform->Position = glm::vec3(16.4f, 13.5f, 0.f);
-    duckTransparent.transform->EulerAngles.x = 90.f;
-
-    slider.transform->Scale = glm::vec3(0.2f, 0.1f, 0.02f);
-    slider.transform->Position = glm::vec3(-10.4f, 13.5f, 0.f);
-    slider.transform->EulerAngles.x = 90.f;
     
     m_CurrentRotationDegrees += Time::GetDeltaTime() * 60.0f;
 
@@ -192,6 +180,13 @@ void SceneManager::RenderScene()
     m_TextRenderer.RenderText(*AssetMgr->TextShader, monkeyText, 10.0f, 1700.0f, 2.0f, glm::vec3(0.3f, 0.3f, 0.3f));
     glEnable(GL_DEPTH_TEST);
 
+	// Draw UI
+	m_UIManager.DrawSprite(*AssetMgr->UIShader, m_UIDuckTex.ID, glm::vec2(WindowMgr->WINDOW_WIDTH - 400.0f, 0.0f), glm::vec2(400.0f, 400.0f));
+	AssetMgr->UISliderShader->Use();
+	float spawnPrecent = m_SpawnCounter / m_SpawnTime;
+	AssetMgr->UISliderShader->SetFloat("slider_load", m_CurrentRotationDegrees / 360.0f);
+	m_UIManager.DrawSprite(*AssetMgr->UISliderShader, m_UISliderTex.ID, glm::vec2(50.0f, 150.0f), glm::vec2(300.0f, 50.0f));
+
 	// Draw ImGui
 	if (isDebugDraw)
 	{
@@ -237,8 +232,6 @@ void SceneManager::AssignSceneGraph()
 	m_WorldParent.AddChild(&m_LightSource);
 	// m_LightSource.AddChild(&m_LightSourceObject);
 
-	objectsTransform.AddChild(&duckTransparent);
-	objectsTransform.AddChild(&slider);
 	objectsTransform.AddChild(&monkey);
 	objectsTransform.AddChild(&m_Ball1);
 
@@ -316,17 +309,6 @@ void SceneManager::LoadModels()
 	m_WorldParent = GameObject();
 	objectsTransform = GameObject();
 	// objectsTransform.AddComponent<Model>(m_BasicShader);
-
-	duckTransparent = GameObject();
-	Model UISprite = *AssetMgr->GetModel(*AssetMgr->UIShader, "res/models/house/floor.obj");
-	duckTransparent.AddComponent<Model>(UISprite);
-	m_UIDuckTex = *AssetMgr->GetTexture("res/textures/duck.png");
-	duckTransparent.GetComponent<Model>()->AssignTexture(m_UIDuckTex);
-	slider = GameObject();
-	slider.AddComponent<Model>(UISprite);
-	slider.GetComponent<Model>()->ReassignShader(*AssetMgr->SliderShader);
-	m_SliderTex = *AssetMgr->GetTexture("res/textures/white.png");
-	slider.GetComponent<Model>()->AssignTexture(m_SliderTex);
 	//house_floor.ScaleTexture(FLOOR_TEX_SCALE * FLOOR_SCALE);
 	monkey = GameObject();
 	Model monkeyModel = *AssetMgr->GetModel(*AssetMgr->BasicShader, "res/models/monkey/Monkey.obj");
@@ -343,6 +325,10 @@ void SceneManager::LoadModels()
 	m_LightSource = GameObject();
 	m_LightSource.AddComponent<PointLight>(MainCamera, m_LightSource.transform, glm::vec3(1));
 	m_LightSource.transform->Position = glm::vec3(0.f, 15.0f, -30.0f);
+
+	// UI textures
+	m_UIDuckTex = *AssetMgr->GetTexture("res/textures/duck.png");
+	m_UISliderTex = *AssetMgr->GetTexture("res/textures/white.png");
 
 	LoadSceneModels();
 }

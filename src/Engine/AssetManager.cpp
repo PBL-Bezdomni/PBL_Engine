@@ -15,7 +15,7 @@ void AssetManager::Initialize()
 {
 	BasicShader = GetShader("res/shaders/basic.vert", "res/shaders/basic.frag");
 	UIShader = GetShader("res/shaders/UIShader.vert", "res/shaders/UIShader.frag");
-	SliderShader = GetShader("res/shaders/UIShader.vert", "res/shaders/UISlider.frag");
+	UISliderShader = GetShader("res/shaders/UIShader.vert", "res/shaders/UISlider.frag");
 	SkyboxShader = GetShader("res/shaders/cubemap.vert", "res/shaders/cubemap.frag");
 	LineShader = GetShader("res/shaders/line.vert", "res/shaders/line.frag");
 	LightSourceShader = GetShader("res/shaders/lightsource.vert", "res/shaders/lightsource.frag");

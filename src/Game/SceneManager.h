@@ -7,6 +7,7 @@
 #include "Skybox.h"
 #include "SpawnManager.h"
 #include "Engine/InputManager.h"
+#include "UIManager.h"
 
 class AssetManager;
 class PhysicsEngine;
@@ -19,7 +20,8 @@ class SceneManager
 private:
 	GameObject m_WorldParent;
 	GameObject m_UIParent;
-	
+	UIManager m_UIManager;
+
 public:
 	int Initialize();
 	void UpdateScene();
@@ -50,6 +52,7 @@ private:
 	float m_MouseLastY; // = WINDOW_HEIGHT / 2;
 	bool  m_IsFirstMouse = true;
 
+
 	FreeType m_TextRenderer;
 
 	Texture m_FloorTex;
@@ -57,14 +60,12 @@ private:
 	Texture m_TableTex;
 	Texture m_WaterpoolTex;
 	Texture m_TowelsTex;
-	Texture m_SliderTex;
+	Texture m_UISliderTex;
 	Texture m_UIDuckTex;
 	
 	GameObject skybox;
 
 	GameObject monkey;
-	GameObject duckTransparent;
-	GameObject slider;
 	GameObject objectsTransform;
 
 	GameObject m_Scene;
