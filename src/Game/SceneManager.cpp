@@ -171,7 +171,8 @@ void SceneManager::RenderScene()
         Physics->DrawHitboxes(*AssetMgr->LineShader, view, projection);
     }
 
-
+	// IMPORTANT: Do not write things below Freetype/UI, if you do not know what you are doing, thanks :)
+	// Draw Freetype 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
