@@ -1,5 +1,19 @@
 #include "Transform.h"
 
+void Transform::Awake()
+{
+	Component::Awake();
+}
+void Transform::Start()
+{
+	// int i = 0;
+	Component::Start();
+}
+void Transform::Update()
+{
+	Component::Update();
+}
+
 glm::mat4 Transform::GetLocalModelMatrix()
 {
 	glm::mat4 rotationMatrix = glm::mat4(1.0f);

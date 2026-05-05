@@ -23,11 +23,11 @@ glm::vec3 GameObject::GetWorldPosition()
 
 void GameObject::StartSelfAndChild()
 {
-    for (auto it = m_Components.begin(); it != m_Components.end(); it++)
+    for (auto& [type, vec] : m_Components)
     {
-        for (auto i = it->second.begin(); i != it->second.end(); i++)
+        for (auto& comp : vec)
         {
-            i->get()->Start();
+            comp->Start();
         }
     }
 
@@ -41,11 +41,11 @@ void GameObject::UpdateSelfAndChild()
 {    
     RigidBody* rb = GetComponent<RigidBody>();
 
-    for (auto it = m_Components.begin(); it != m_Components.end(); it++)
+    for (auto& [type, vec] : m_Components)
     {
-        for (auto i = it->second.begin(); i != it->second.end(); i++)
+        for (auto& comp : vec)
         {
-            i->get()->Update();
+            comp->Update();
         }
     }
 

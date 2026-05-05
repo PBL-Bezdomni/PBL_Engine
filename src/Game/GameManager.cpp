@@ -15,6 +15,11 @@ InputManager& GameManager::GetInputManager()
 	return *m_InputMgr;
 }
 
+SceneManager& GameManager::GetSceneManager()
+{
+	return *m_SceneMgr;
+}
+
 void GameManager::StartGame()
 {
 	Engine& engine = Engine::GetInstance();

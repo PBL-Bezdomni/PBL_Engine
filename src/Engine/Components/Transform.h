@@ -14,4 +14,8 @@ public:
 	glm::mat4 ModelMatrix = glm::mat4(1.0f);
 
 	glm::mat4 GetLocalModelMatrix();
+
+	void Awake() override;
+	void Start() override;
+	void Update() override;
 };
