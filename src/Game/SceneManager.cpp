@@ -262,6 +262,7 @@ void SceneManager::AssignSceneModelsGraph()
 	m_Scene.AddChild(&m_Floor);
 	m_Scene.AddChild(&m_WallDir);
 	m_Scene.AddChild(&m_OnsenObjects);
+	m_OnsenObjects.AddChild(&m_TablesDir);
 
 	m_WallDir.AddChild(&m_WallBack);
 	m_WallDir.AddChild(&m_WallFrontLeft);
@@ -269,7 +270,25 @@ void SceneManager::AssignSceneModelsGraph()
 	m_WallDir.AddChild(&m_WallRight);
 	m_WallDir.AddChild(&m_WallLeft);
 
+	m_TablesDir.AddChild(&m_Table1);
+	m_Table1.transform->Position = glm::vec3(-80, 0, 0);
+	m_TablesDir.AddChild(&m_Table2);
+	m_Table2.transform->Position = glm::vec3(-40, 0, 0);
+	m_TablesDir.AddChild(&m_Table3);
+	m_TablesDir.AddChild(&m_Table4);
+	m_Table4.transform->Position = glm::vec3(40, 0, 0);
+	m_TablesDir.AddChild(&m_Table5);
+	m_Table5.transform->Position = glm::vec3(80, 0, 0);
+	// m_Table5.AddComponent<RigidBody>()->Init(glm::vec3(5, 1.15f, 5), true);
+
+	m_TablesDir.transform->Position = glm::vec3(0, 15, -1);
+	m_TablesDir.transform->Scale = glm::vec3(0.3f);
+
 	m_OnsenObjects.AddChild(&m_TowelsBed);
+	m_TowelsBed.transform->Position = glm::vec3(0, -20, 1.65f);
+	m_TowelsBed.transform->Scale = glm::vec3(20);
+	m_TowelsBed.transform->EulerAngles.x = 90;
+	m_TowelsBed.AddComponent<RigidBody>()->Init(glm::vec3(5, 1.15f, 5), true);
 
 	m_Scene.transform->EulerAngles.x = -90.f;
 	m_Floor.transform->EulerAngles.z = 90.f;
@@ -308,9 +327,21 @@ void SceneManager::LoadSceneModels()
 	m_WallLeft.AddComponent<Model>(wallModel);
 	m_WallRight = GameObject();
 	m_WallRight.AddComponent<Model>(wallModel);
-	Model towelBedModel = *AssetMgr->GetModel(*AssetMgr->BasicShader, "res/models/scena_v1/for_towels/for_towels.fbx");
+	Model towelBedModel = *AssetMgr->GetModel(*AssetMgr->BasicShader, "res/models/scena_v1/for_towels/towels2.obj");
 	m_TowelsBed = GameObject();
 	m_TowelsBed.AddComponent<Model>(towelBedModel);
+
+	Model table = *AssetMgr->GetModel(*AssetMgr->BasicShader, "res/models/scena_v1/table/table2.fbx");
+	m_Table1 = GameObject();
+	m_Table1.AddComponent<Model>(table);
+	m_Table2 = GameObject();
+	m_Table2.AddComponent<Model>(table);
+	m_Table3 = GameObject();
+	m_Table3.AddComponent<Model>(table);
+	m_Table4 = GameObject();
+	m_Table4.AddComponent<Model>(table);
+	m_Table5 = GameObject();
+	m_Table5.AddComponent<Model>(table);
 
 	m_WallTex = *AssetMgr->GetTexture("res/models/scena_v1/walls/walls_textures/Stylized_Wall_002_basecolor.png");
 	m_WallBack.GetComponent<Model>()->AssignTexture(m_WallTex);
