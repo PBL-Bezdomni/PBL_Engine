@@ -25,12 +25,27 @@ void Player::Update(float deltaTime)
 {
 	if (!body) return;
 
+    RigidBody* rb = body->GetComponent<RigidBody>();
 
 	glm::vec3 direction = glm::vec3(moveInput.x, 0.0f, moveInput.y);
 
 
-	if (glm::length(direction) > 0.01f) {
-		body->transform->Position += direction * speed * deltaTime;
-	}
+    if (rb != nullptr)
+    {
+        if (glm::length(direction) > 1.0f) {
+            direction = glm::normalize(direction);
+        }
+
+        glm::vec3 currentVel = rb->GetLinearVelocity();
+        glm::vec3 targetVel = direction * speed;
+
+        rb->SetLinearVelocity(glm::vec3(targetVel.x, currentVel.y, targetVel.z));
+    }
+    else
+    {
+        if (glm::length(direction) > 0.01f) {
+            body->transform->Position += direction * speed * deltaTime;
+        }
+    }
 }
 

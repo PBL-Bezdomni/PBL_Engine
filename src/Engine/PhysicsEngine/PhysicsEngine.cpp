@@ -17,6 +17,8 @@ void PhysicsEngine::Init() {
     m_PhysicsSystem = new JPH::PhysicsSystem();
     m_PhysicsSystem->Init(1024, 0, 1024, 1024, m_BPLayerInterface, m_ObjVsBPFilter, m_ObjVsObjFilter);
 
+    //m_PhysicsSystem->SetContactListener(&m_ContactListener);
+
     m_DebugRenderer = new PhysicsDebugRenderer();
 }
 
@@ -69,8 +71,9 @@ void PhysicsEngine::DrawHitboxes(Shader& lineShader, const glm::mat4& view, cons
     m_DebugRenderer->Setup(lineShader, view, projection);
 
     JPH::BodyManager::DrawSettings drawSettings;
-    drawSettings.mDrawBoundingBox = true;
+    drawSettings.mDrawBoundingBox = false;
     drawSettings.mDrawShape = true;
+    drawSettings.mDrawShapeWireframe = true;
 
     m_PhysicsSystem->DrawBodies(drawSettings, m_DebugRenderer, nullptr);
 }

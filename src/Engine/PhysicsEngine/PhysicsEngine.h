@@ -24,6 +24,8 @@ public:
     glm::mat4 GetMatrix(JPH::BodyID bodyID);
     void DrawHitboxes(Shader& lineShader, const glm::mat4& view, const glm::mat4& projection);
 
+    JPH::PhysicsSystem* GetSystem() const { return m_PhysicsSystem; }
+
 private:
     JPH::PhysicsSystem* m_PhysicsSystem = nullptr;
     JPH::TempAllocatorImpl* m_TempAllocator = nullptr;
@@ -33,4 +35,5 @@ private:
     BPLayerInterfaceImpl m_BPLayerInterface;
     ObjectVsBroadPhaseLayerFilterImpl m_ObjVsBPFilter;
     ObjectLayerPairFilterImpl m_ObjVsObjFilter;
+    //PhysicsContactListener m_ContactListener;
 };

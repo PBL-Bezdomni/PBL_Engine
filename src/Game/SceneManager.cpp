@@ -92,6 +92,15 @@ int SceneManager::Initialize()
 	objectsTransform.AddChild(p2->body.get());
 	p1->body->transform->Position = glm::vec3(0.0f, 5.0f, 0.0f);
 	p2->body->transform->Position = glm::vec3(5.0f, 5.0f, 0.0f);
+
+	p1->body->UpdateSelfAndChild();
+	p2->body->UpdateSelfAndChild();
+
+	p1->body->AddComponent<RigidBody>();
+	p1->body->GetComponent<RigidBody>()->Init(glm::vec3(1.0f, 1.0f, 1.0f), false);
+
+	p2->body->AddComponent<RigidBody>();
+	p2->body->GetComponent<RigidBody>()->Init(glm::vec3(1.0f, 1.0f, 1.0f), false);
 }
 
 void SceneManager::UpdateScene()
@@ -160,6 +169,12 @@ void SceneManager::RenderScene()
 	// inputManager.update();
 	p1->Update(Time::GetDeltaTime());
 	p2->Update(Time::GetDeltaTime());
+
+	if (p1->body->GetComponent<RigidBody>())
+		p1->body->GetComponent<RigidBody>()->Update();
+
+	if (p2->body->GetComponent<RigidBody>())
+		p2->body->GetComponent<RigidBody>()->Update();
 
     m_WorldParent.UpdateSelfAndChild();
     m_WorldParent.DrawSelfAndChild();
