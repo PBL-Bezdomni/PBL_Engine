@@ -16,7 +16,7 @@ LightSource::LightSource(shared_ptr<Camera> camera, Transform* transform,  glm::
 
 void LightSource::SetLightValues(Shader& shader)
 {
-	shader.SetVec3("viewPos", m_ViewPosition);
+	shader.SetVec3("viewPos", m_Camera.lock()->Position);
 }
 
 void LightSource::Update()
