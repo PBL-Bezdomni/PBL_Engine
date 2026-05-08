@@ -17,6 +17,8 @@
 #include "Engine/Light/SpotLight.h"
 #include "Engine/Loader.h"
 
+#include "Engine/JSONImporter.h"
+
 #define _USE_MATH_DEFINES
 
 int SceneManager::Initialize()
@@ -74,6 +76,9 @@ int SceneManager::Initialize()
 	m_Floor.AddComponent<RigidBody>();
 	m_Floor.GetComponent<RigidBody>()->Init(floorHalfExtents, true);
 
+
+	JSONImporter* importer = new JSONImporter();
+	importer->ImportScene();
 
 	//GAMEPAD
 
