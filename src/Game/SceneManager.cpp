@@ -15,6 +15,7 @@
 #include "Engine/Light/LightSource.h"
 #include "Engine/Light/PointLight.h"
 #include "Engine/Light/SpotLight.h"
+#include "Engine/Loader.h"
 
 #define _USE_MATH_DEFINES
 
@@ -25,8 +26,6 @@ int SceneManager::Initialize()
 
 	WindowMgr = &engine.GetWindowManager();
 	AssetMgr = &engine.GetAssetManager();
-
-	m_SpawnManager.Initialize();
 	
 	// engine.Start();
 	if (!engine.GetWindowManager().GetIsInitialized())
@@ -69,6 +68,7 @@ int SceneManager::Initialize()
 	//m_SkyboxShader.setInt("skybox", 0);
 
 	m_WorldParent.UpdateSelfAndChild();
+	m_WorldParent.StartSelfAndChild();
 
 	glm::vec3 floorHalfExtents = glm::vec3(FLOOR_SCALE / 2.0f, FLOOR_SCALE / 2.0f, 1.0f);
 	m_Floor.AddComponent<RigidBody>();
@@ -85,8 +85,8 @@ int SceneManager::Initialize()
 	inputManager->addBinding("MoveForward", {BindingType::Axis, GLFW_GAMEPAD_AXIS_LEFT_Y });
 	inputManager->addBinding("MoveStrafe", {BindingType::Axis, GLFW_GAMEPAD_AXIS_LEFT_X });
 
-	p1 = new Player(*inputManager, m_SpawnManager, *AssetMgr->BasicShader, 0);
-	p2 = new Player(*inputManager, m_SpawnManager, *AssetMgr->BasicShader, 1);
+	p1 = new Player(*inputManager, *m_SpawnManager, *AssetMgr->BasicShader, 0);
+	p2 = new Player(*inputManager, *m_SpawnManager, *AssetMgr->BasicShader, 1);
 
 	objectsTransform.AddChild(p1->body.get());
 	objectsTransform.AddChild(p2->body.get());
@@ -137,27 +137,6 @@ void SceneManager::RenderScene()
     {
         m_CurrentRotationDegrees = 0;
         m_RotationCount++;
-    }
-
-    m_SpawnCounter += Time::GetDeltaTime();
-    if (m_SpawnCounter >= m_SpawnTime)
-    {
-        m_SpawnCounter = 0;
-        GameObject* spawnedEntity = m_SpawnManager.SpawnEntity(*AssetMgr->BasicShader);
-        if (spawnedEntity != nullptr)
-        {
-            float posX = Random::GetRandomInt(-WALL_X_BORDER, WALL_X_BORDER);
-            float posY = Random::GetRandomInt(-WALL_Y_BORDER, WALL_Y_BORDER);
-			//spawnedEntity->transform->Scale = glm::vec3(2, 2, 2);
-            spawnedEntity->transform->Position = glm::vec3(posX, 5, posY);
-			
-
-            spawnedEntity->UpdateSelfAndChild();
-            spawnedEntity->AddComponent<RigidBody>();
-            spawnedEntity->GetComponent<RigidBody>()->Init();
-
-            objectsTransform.AddChild(spawnedEntity);
-        }
     }
 
     monkey.transform->Position = glm::vec3(-5.f, 0.f, 0.f);
@@ -212,6 +191,28 @@ void SceneManager::RenderScene()
 	}
 }
 
+void SceneManager::AddAnimal(shared_ptr<GameObject> spawnedEntity)
+{
+	if (spawnedEntity != nullptr)
+	{
+		objectsTransform.AddChild(spawnedEntity.get());
+	}
+}
+
+shared_ptr<GameObject> SceneManager::Instantiate(string path, shared_ptr<Shader> shader)
+{
+	// TODO make load components data from prefab path instead of passing model path
+	shared_ptr<GameObject> go = make_shared<GameObject>();
+	if (shader == nullptr)
+	{
+		shader = AssetMgr->BasicShader;
+	}
+	Model model = *AssetMgr->GetModel(*shader, path.c_str());
+	go->AddComponent<Model>(model);
+	m_GameObjects.push_back(go);
+	return m_GameObjects.back();
+}
+
 void SceneManager::UpdateShaderLight(GameObject* gameObject, Shader& shader)
 {
 	if (gameObject == nullptr)
@@ -248,11 +249,13 @@ void SceneManager::AssignSceneGraph()
 	m_WorldParent.AddChild(&m_LightSource);
 	// m_LightSource.AddChild(&m_LightSourceObject);
 
+	objectsTransform.AddChild(&spawnManagerObject);
 	objectsTransform.AddChild(&monkey);
 	objectsTransform.AddChild(&m_Ball1);
 
 	AssignSceneModelsGraph();
 
+	m_WorldParent.UpdateSelfAndChild();
 	m_WorldParent.UpdateSelfAndChild();
 }
 
@@ -355,6 +358,9 @@ void SceneManager::LoadModels()
 {
 	m_WorldParent = GameObject();
 	objectsTransform = GameObject();
+	spawnManagerObject = GameObject();
+	spawnManagerObject.AddComponent<SpawnManager>();
+	m_SpawnManager = spawnManagerObject.GetComponent<SpawnManager>();
 	// objectsTransform.AddComponent<Model>(m_BasicShader);
 	//house_floor.ScaleTexture(FLOOR_TEX_SCALE * FLOOR_SCALE);
 	monkey = GameObject();

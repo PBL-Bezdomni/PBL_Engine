@@ -15,16 +15,21 @@ class GameObject
 private:
 	unordered_map<type_index, vector<unique_ptr<Component>>> m_Components;
 	bool m_IsActive = true;
-	string m_Name;
+	vector<GameObject*> m_PendingChildren;
+
+	void AddPendingChildren();
 public:
 	Transform* transform;
+	string Name;
 	GameObject();
 	vector<GameObject*> Children;
+	
 	GameObject* Parent = nullptr;
 
 	void UpdateSelfAndChild();
 	void UpdateSelfAndChildInstanceMatrix(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale, int index, Shader& shader, bool saveNew);
 	void AddChild(GameObject* child);
+	void RemoveChild(GameObject* child);
 	void DrawSelfAndChild();
 	void DrawSelf();
 	glm::vec3 GetWorldPosition();

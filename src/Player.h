@@ -5,7 +5,7 @@
 
 #include "GameObject.h"
 #include "Engine/InputManager.h"
-#include "SpawnManager.h"
+#include "Game/Scripts/SpawnManager.h"
 #include "Engine/Components/RigidBody.h"
 
 class Player {

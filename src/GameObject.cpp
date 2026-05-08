@@ -12,8 +12,32 @@ GameObject::GameObject()
 
 void GameObject::AddChild(GameObject* child) 
 {
-	Children.push_back(child);
-	Children.back()->Parent = this;
+	m_PendingChildren.push_back(child);
+	// Children.back()->Parent = this;
+}
+
+void GameObject::AddPendingChildren()
+{
+    for (auto&& child : m_PendingChildren)
+    {
+        child->Parent = this;
+    }
+    Children.insert(Children.end(), m_PendingChildren.begin(), m_PendingChildren.end());
+    m_PendingChildren.clear();
+}
+
+
+void GameObject::RemoveChild(GameObject* child)
+{
+    for (int i = 0; i < Children.size(); i++)
+    {
+        if (Children[i] == child)
+        {
+            child->Parent = nullptr;
+            Children.erase(remove(Children.begin(), Children.end(), child), Children.end());
+            return;
+        }
+    }
 }
 
 glm::vec3 GameObject::GetWorldPosition()
@@ -65,6 +89,8 @@ void GameObject::UpdateSelfAndChild()
     {
         child->UpdateSelfAndChild();
     }
+
+    AddPendingChildren();
 }
 
 void GameObject::UpdateSelfAndChildInstanceMatrix(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale, int index, Shader& shader, bool saveNew)

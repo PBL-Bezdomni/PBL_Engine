@@ -5,7 +5,7 @@
 #include "FreeType.h"
 #include "GameObject.h"
 #include "Skybox.h"
-#include "SpawnManager.h"
+#include "Game/Scripts/SpawnManager.h"
 #include "Engine/InputManager.h"
 #include "UIManager.h"
 
@@ -26,6 +26,9 @@ public:
 	int Initialize();
 	void UpdateScene();
 	void RenderScene();
+	void AddAnimal(shared_ptr<GameObject> spawnedEntity);
+	shared_ptr<GameObject> Instantiate(string path, shared_ptr<Shader> shader = nullptr);
+
 
 private:
 	//TODO move those functions elsewhere or remove them completely
@@ -62,11 +65,14 @@ private:
 	Texture m_TowelsTex;
 	Texture m_UISliderTex;
 	Texture m_UIDuckTex;
+
+	vector<shared_ptr<GameObject>> m_GameObjects;
 	
 	GameObject skybox;
 
 	GameObject monkey;
 	GameObject objectsTransform;
+	GameObject spawnManagerObject;
 
 	GameObject m_Scene;
 	GameObject m_Floor;
@@ -100,7 +106,7 @@ private:
 	float m_Posz = 0;
 
 	// Loader LoadManager = Loader();
-	SpawnManager m_SpawnManager;
+	SpawnManager* m_SpawnManager;
 	Skybox       m_Skybox;
 
 	WindowManager* WindowMgr = nullptr;
