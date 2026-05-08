@@ -40,6 +40,11 @@ CPMAddPackage(
 		VERSION 5.5.0
 		SOURCE_SUBDIR Build
 )
+CPMAddPackage(
+		NAME nlohmann_json
+		GITHUB_REPOSITORY nlohmann/json
+		VERSION 3.12.0
+)
 
 if(MSVC AND TARGET Jolt)
 	set_property(TARGET Jolt PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
