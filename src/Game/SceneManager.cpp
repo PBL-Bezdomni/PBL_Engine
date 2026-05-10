@@ -261,7 +261,16 @@ void SceneManager::AssignSceneGraph()
 	AssignSceneModelsGraph();
 
 	m_WorldParent.UpdateSelfAndChild();
-	m_WorldParent.UpdateSelfAndChild();
+
+	m_Table5.transform->Position = glm::vec3(60, 15, 10);	 //i'm
+	m_Table5.transform->Scale = glm::vec3(0.2f);			//sorry
+	m_Table5.transform->EulerAngles.x = -90;			   //working on it
+
+	m_Table5.UpdateSelfAndChild();
+
+	m_Table5.AddComponent<RigidBody>();
+	m_Table5.GetComponent<RigidBody>()->Init(glm::vec3(2.0f, 2.0f, 2.0f), true, true);
+
 }
 
 void SceneManager::AssignSceneModelsGraph()
@@ -287,6 +296,7 @@ void SceneManager::AssignSceneModelsGraph()
 	m_Table4.transform->Position = glm::vec3(40, 0, 0);
 	m_TablesDir.AddChild(&m_Table5);
 	m_Table5.transform->Position = glm::vec3(80, 0, 0);
+
 	// m_Table5.AddComponent<RigidBody>()->Init(glm::vec3(5, 1.15f, 5), true);
 
 	m_TablesDir.transform->Position = glm::vec3(0, 15, -1);
@@ -296,7 +306,6 @@ void SceneManager::AssignSceneModelsGraph()
 	m_TowelsBed.transform->Position = glm::vec3(0, -20, 1.65f);
 	m_TowelsBed.transform->Scale = glm::vec3(20);
 	m_TowelsBed.transform->EulerAngles.x = 90;
-	m_TowelsBed.AddComponent<RigidBody>()->Init(glm::vec3(5, 1.15f, 5), true);
 
 	m_Scene.transform->EulerAngles.x = -90.f;
 	m_Floor.transform->EulerAngles.z = 90.f;

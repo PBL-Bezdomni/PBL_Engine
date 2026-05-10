@@ -6,6 +6,7 @@
 #include "PhysicsLayers.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
+#include "PhysicsContactListener.h"
 
 class Shader;
 class PhysicsDebugRenderer;
@@ -35,5 +36,5 @@ private:
     BPLayerInterfaceImpl m_BPLayerInterface;
     ObjectVsBroadPhaseLayerFilterImpl m_ObjVsBPFilter;
     ObjectLayerPairFilterImpl m_ObjVsObjFilter;
-    //PhysicsContactListener m_ContactListener;
+    PhysicsContactListener m_ContactListener;
 };

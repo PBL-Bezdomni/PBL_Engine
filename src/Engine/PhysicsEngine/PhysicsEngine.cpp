@@ -17,7 +17,7 @@ void PhysicsEngine::Init() {
     m_PhysicsSystem = new JPH::PhysicsSystem();
     m_PhysicsSystem->Init(1024, 0, 1024, 1024, m_BPLayerInterface, m_ObjVsBPFilter, m_ObjVsObjFilter);
 
-    //m_PhysicsSystem->SetContactListener(&m_ContactListener);
+    m_PhysicsSystem->SetContactListener(&m_ContactListener);
 
     m_DebugRenderer = new PhysicsDebugRenderer();
 }

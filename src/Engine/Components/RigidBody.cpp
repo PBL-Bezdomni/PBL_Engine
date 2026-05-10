@@ -13,6 +13,8 @@ void RigidBody::Init(const glm::vec3& halfExtents, bool isStatic, bool isTrigger
     glm::vec3 worldPos = glm::vec3(currentMatrix[3]);
     glm::quat worldRot = glm::quat_cast(currentMatrix);
 
+    worldRot = glm::normalize(worldRot);
+
     JPH::BodyInterface& bodyInterface = m_PhysicsEngine->GetSystem()->GetBodyInterface();
 
     JPH::BodyID id = m_PhysicsEngine->CreateBox(worldPos, worldRot, halfExtents, isStatic);
@@ -20,8 +22,10 @@ void RigidBody::Init(const glm::vec3& halfExtents, bool isStatic, bool isTrigger
 
     if (isTrigger)
     {
-        //bodyInterface.SetIsSensor(id, true);
+        bodyInterface.SetIsSensor(id, true);
     }
+
+    bodyInterface.SetUserData(id, reinterpret_cast<uint64_t>(m_Owner));
 
     m_Initialized = true;
 }

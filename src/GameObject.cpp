@@ -63,6 +63,16 @@ void GameObject::StartSelfAndChild()
 
 void GameObject::UpdateSelfAndChild()
 {    
+
+    if (Parent != nullptr)
+    {
+        transform->ModelMatrix = Parent->transform->ModelMatrix * transform->GetLocalModelMatrix();
+    }
+    else
+    {
+        transform->ModelMatrix = transform->GetLocalModelMatrix();
+    }
+
     RigidBody* rb = GetComponent<RigidBody>();
 
     for (auto& [type, vec] : m_Components)
@@ -85,12 +95,12 @@ void GameObject::UpdateSelfAndChild()
         }
     }
 
+    AddPendingChildren();
+
     for (auto&& child : Children)
     {
         child->UpdateSelfAndChild();
     }
-
-    AddPendingChildren();
 }
 
 void GameObject::UpdateSelfAndChildInstanceMatrix(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale, int index, Shader& shader, bool saveNew)
