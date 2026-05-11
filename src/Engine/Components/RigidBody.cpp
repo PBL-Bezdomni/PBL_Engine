@@ -11,8 +11,13 @@ void RigidBody::Init(const glm::vec3& halfExtents, bool isStatic, bool isTrigger
 
     glm::mat4 currentMatrix = m_Owner->transform->ModelMatrix;
     glm::vec3 worldPos = glm::vec3(currentMatrix[3]);
-    glm::quat worldRot = glm::quat_cast(currentMatrix);
 
+    glm::mat4 rotMatrix = currentMatrix;
+    rotMatrix[0] = glm::normalize(rotMatrix[0]);
+    rotMatrix[1] = glm::normalize(rotMatrix[1]);
+    rotMatrix[2] = glm::normalize(rotMatrix[2]);
+
+    glm::quat worldRot = glm::quat_cast(rotMatrix);
     worldRot = glm::normalize(worldRot);
 
     JPH::BodyInterface& bodyInterface = m_PhysicsEngine->GetSystem()->GetBodyInterface();
@@ -38,9 +43,6 @@ void RigidBody::Update()
 
     glm::mat4 physicsMatrix = m_PhysicsEngine->GetMatrix(realID);
 
-    m_Owner->transform->ModelMatrix = physicsMatrix * glm::scale(glm::mat4(1.0f), m_Owner->transform->Scale);
-
-
     glm::mat4 localMatrix = physicsMatrix;
 
     if (m_Owner->Parent != nullptr)
@@ -49,6 +51,10 @@ void RigidBody::Update()
     }
 
     m_Owner->transform->Position = glm::vec3(localMatrix[3]);
+
+    localMatrix[0] = glm::normalize(localMatrix[0]);
+    localMatrix[1] = glm::normalize(localMatrix[1]);
+    localMatrix[2] = glm::normalize(localMatrix[2]);
 
     glm::quat localRot = glm::quat_cast(localMatrix);
     m_Owner->transform->EulerAngles = glm::degrees(glm::eulerAngles(localRot));

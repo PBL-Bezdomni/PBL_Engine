@@ -132,9 +132,6 @@ void SceneManager::RenderScene()
 	AssetMgr->BasicShader->SetBool("useSpotLight1", false);
 	
     UpdateShaderLight(&m_WorldParent, *AssetMgr->BasicShader);
-
-    m_WorldParent.transform->Position = glm::vec3(0.f, 0.f, -30.f);
-    m_WorldParent.transform->Scale = glm::vec3(0.7f);
     
     m_CurrentRotationDegrees += Time::GetDeltaTime() * 60.0f;
 
@@ -260,16 +257,20 @@ void SceneManager::AssignSceneGraph()
 
 	AssignSceneModelsGraph();
 
+	m_WorldParent.transform->Position = glm::vec3(0.f, 0.f, -30.f);
+	m_WorldParent.transform->Scale = glm::vec3(0.7f);
+
 	m_WorldParent.UpdateSelfAndChild();
 
-	m_Table5.transform->Position = glm::vec3(60, 15, 10);	 //i'm
-	m_Table5.transform->Scale = glm::vec3(0.2f);			//sorry
-	m_Table5.transform->EulerAngles.x = -90;			   //working on it
+	float tableX = 2.0f;
+	float tableY = 4.0f;
+	float tableZ = 6.0f;
 
-	m_Table5.UpdateSelfAndChild();
-
-	m_Table5.AddComponent<RigidBody>();
-	m_Table5.GetComponent<RigidBody>()->Init(glm::vec3(2.0f, 2.0f, 2.0f), true, true);
+	for (int i = 0; i < m_TablesDir.Children.size(); i++)
+	{
+		m_TablesDir.Children[i]->AddComponent<RigidBody>();
+		m_TablesDir.Children[i]->GetComponent<RigidBody>()->Init(glm::vec3(tableX, tableY, tableZ), true, true);
+	}
 
 }
 
@@ -296,8 +297,6 @@ void SceneManager::AssignSceneModelsGraph()
 	m_Table4.transform->Position = glm::vec3(40, 0, 0);
 	m_TablesDir.AddChild(&m_Table5);
 	m_Table5.transform->Position = glm::vec3(80, 0, 0);
-
-	// m_Table5.AddComponent<RigidBody>()->Init(glm::vec3(5, 1.15f, 5), true);
 
 	m_TablesDir.transform->Position = glm::vec3(0, 15, -1);
 	m_TablesDir.transform->Scale = glm::vec3(0.3f);
