@@ -19,6 +19,10 @@
 
 #include "Engine/JSONImporter.h"
 
+#include "Engine/Components/MassageTable.h"
+#include "Engine/Components/Animal.h"
+
+
 #define _USE_MATH_DEFINES
 
 int SceneManager::Initialize()
@@ -278,6 +282,7 @@ void SceneManager::AssignSceneGraph()
 	{
 		m_TablesDir.Children[i]->AddComponent<RigidBody>();
 		m_TablesDir.Children[i]->GetComponent<RigidBody>()->Init(glm::vec3(tableX, tableY, tableZ), true, true);
+		m_TablesDir.Children[i]->AddComponent<MassageTable>();
 	}
 
 }

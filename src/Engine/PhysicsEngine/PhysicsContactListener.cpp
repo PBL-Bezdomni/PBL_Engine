@@ -1,7 +1,8 @@
 #include "PhysicsContactListener.h"
 #include "GameObject.h"
 #include <spdlog/spdlog.h>
-//#include "..\Components\Behaviour.cpp"
+#include "../Components/Behaviour.h"
+#include "../Components/MassageTable.h"
 
 void PhysicsContactListener::OnContactAdded(const JPH::Body& inBody1, const JPH::Body& inBody2, const JPH::ContactManifold& inManifold, JPH::ContactSettings& ioSettings)
 {
@@ -15,12 +16,20 @@ void PhysicsContactListener::OnContactAdded(const JPH::Body& inBody1, const JPH:
 
     if (isSensor1)
     {
-        spdlog::info("Hello:)");
+        Behaviour* script = obj1->GetDerivedComponent<Behaviour>();
+        if (script != nullptr)
+        {
+            script->OnTriggerEnter(obj2);
+        }
     }
 
     if (isSensor2)
     {
-        spdlog::info("Hello:(");
+        Behaviour* script = obj2->GetDerivedComponent<Behaviour>();
+        if (script != nullptr)
+        {
+            script->OnTriggerEnter(obj1);
+        }
     }
 }
 

@@ -9,6 +9,7 @@
 #include "Engine/Time.h"
 #include "Game/SceneManager.h"
 #include "Engine/Components/RigidBody.h"
+#include "Engine/Components/Animal.h"
 
 void SpawnManager::Awake()
 {
@@ -40,10 +41,10 @@ void SpawnManager::Update()
 			entity->transform->Position = glm::vec3(posX, 5, posY);
 			// entity->SetParent(m_SceneMgr->objectsTransform.get());
 
-
 			entity->UpdateSelfAndChild();
 			entity->AddComponent<RigidBody>();
 			entity->GetComponent<RigidBody>()->Init();
+			entity->AddComponent<Animal>();
 			m_SceneMgr->AddAnimal(entity);
 		}
 	}

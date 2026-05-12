@@ -72,3 +72,26 @@ void RigidBody::SetLinearVelocity(const glm::vec3& velocity) {
         JPH::Vec3(velocity.x, velocity.y, velocity.z)
     );
 }
+
+void RigidBody::Teleport(const glm::vec3& newWorldPosition)
+{
+    if (!m_Initialized || !m_PhysicsEngine) return;
+
+    JPH::BodyInterface& bodyInterface = m_PhysicsEngine->GetSystem()->GetBodyInterface();
+
+    bodyInterface.SetPosition(
+        JPH::BodyID(m_BodyID),
+        JPH::Vec3(newWorldPosition.x, newWorldPosition.y, newWorldPosition.z),
+        JPH::EActivation::Activate
+    );
+}
+
+void RigidBody::SetAngularVelocity(const glm::vec3& velocity)
+{
+    if (!m_Initialized || !m_PhysicsEngine) return;
+
+    m_PhysicsEngine->GetSystem()->GetBodyInterface().SetAngularVelocity(
+        JPH::BodyID(m_BodyID),
+        JPH::Vec3(velocity.x, velocity.y, velocity.z)
+    );
+}

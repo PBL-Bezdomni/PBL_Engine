@@ -94,4 +94,21 @@ public:
 		return result;
 	}
 
+	template<typename T>
+	T* GetDerivedComponent()
+	{
+		for (auto& pair : m_Components)
+		{
+			for (auto& componentPtr : pair.second)
+			{
+				T* target = dynamic_cast<T*>(componentPtr.get());
+				if (target != nullptr)
+				{
+					return target;
+				}
+			}
+		}
+		return nullptr;
+	}
+
 };

@@ -19,6 +19,9 @@ public:
     glm::vec3 GetLinearVelocity();
 
     void SetLinearVelocity(const glm::vec3& velocity);
+    void SetAngularVelocity(const glm::vec3& velocity);
+
+    void Teleport(const glm::vec3& newWorldPosition);
 
 private:
     PhysicsEngine* m_PhysicsEngine = nullptr;
