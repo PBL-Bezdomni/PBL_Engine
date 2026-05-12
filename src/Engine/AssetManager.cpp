@@ -50,7 +50,7 @@ shared_ptr<Model> AssetManager::GetModel(Shader& shader, const char* path, unsig
 	return m_LoadedModels[key];
 }
 
-shared_ptr<Texture> AssetManager::GetTexture(const char* path)
+shared_ptr<Texture> AssetManager::GetTexture(const char* path, const char* type)
 {
 	string tPath = GetPathWithRelativePrefix(path);
 
@@ -64,7 +64,7 @@ shared_ptr<Texture> AssetManager::GetTexture(const char* path)
 
 	shared_ptr<Texture> tex = make_shared<Texture>();
 	tex->Path = path;
-	tex->Type = "texture_diffuse";
+	tex->Type = type;
 	glGenTextures(1, &tex->ID);
 	glBindTexture(GL_TEXTURE_2D, tex->ID);
 	// set the texture wrapping/filtering options (on the currently bound texture object)

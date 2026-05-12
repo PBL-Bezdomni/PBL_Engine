@@ -341,7 +341,9 @@ void SceneManager::LoadSceneModels()
 	m_Floor = GameObject();
 	m_Floor.AddComponent<Model>(floorModel);
 	m_FloorTex = *AssetMgr->GetTexture("res/models/scena_v1/floor/floor_textures/Stylized_Stone_Floor_010_basecolor.png");
+	m_FloorNorm = *AssetMgr->GetTexture("res/models/scena_v1/floor/floor_textures/Stylized_Stone_Floor_010_normal.png", "texture_normal");
 	m_Floor.GetComponent<Model>()->AssignTexture(m_FloorTex);
+	m_Floor.GetComponent<Model>()->AssignNormal(m_FloorNorm);
 	// m_Floor.AssignTexture(m_FloorTex);
 	m_WallDir = GameObject();
 	m_WallDir.AddComponent<Model>(*AssetMgr->BasicShader);

@@ -21,6 +21,7 @@ uniform sampler2D texture_specular5;
 uniform sampler2D texture_specular6;
 uniform sampler2D texture_specular7;
 uniform sampler2D texture_specular8;
+uniform sampler2D texture_normal1;
 
 uniform vec3 viewPos;
 uniform float ambientStrength = 0.1;
@@ -54,7 +55,10 @@ vec3 CalcSpotLight(Light light, vec3 norm, vec3 viewDir, vec3 objectColor);
 void main()
 {
     //FragColor = texture(texture_diffuse1, TexCoord);
-
+    
+    vec3 normal = texture(texture_normal1, TexCoord).rgb;
+    // Swap comment to enable normal map
+//    vec3 norm = normalize(normal * 2.0 - 1.0);
     vec3 norm = normalize(Normal);
     vec3 viewDir = normalize(viewPos - FragPos);
 

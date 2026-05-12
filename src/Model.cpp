@@ -63,6 +63,24 @@ void Model::AssignTexture(Texture tex)
     }
 }
 
+void Model::AssignNormal(Texture tex)
+{
+    string typeName = "texture_normal";
+    tex.Type = typeName;
+    for (unsigned int i = 0; i < Meshes.size(); i++)
+    {
+        for (int j = 0; j < Meshes[i].Textures.size(); j++)
+        {
+            if (Meshes[i].Textures[j].Type == typeName)
+            {
+                Meshes[i].Textures[j] = tex;
+                return;
+            }
+        }
+        Meshes[i].Textures.push_back(tex);
+    }
+}
+
 void Model::Draw(glm::mat4 modelMatrix)
 {
     m_Shader.Use();
@@ -170,6 +188,9 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
         vector<Texture> specularMaps = LoadMaterialTextures(material,
             aiTextureType_SPECULAR, "texture_specular");
         textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+        vector<Texture> normalMaps = LoadMaterialTextures(material,
+            aiTextureType_NORMALS, "texture_normal");
+        textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
     }
 
     return Mesh(vertices, indices, textures, Instancing, InstanceMatrix);

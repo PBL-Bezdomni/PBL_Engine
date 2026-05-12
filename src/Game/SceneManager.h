@@ -60,6 +60,7 @@ private:
 	FreeType m_TextRenderer;
 
 	Texture m_FloorTex;
+	Texture m_FloorNorm;
 	Texture m_WallTex;
 	Texture m_TableTex;
 	Texture m_WaterpoolTex;

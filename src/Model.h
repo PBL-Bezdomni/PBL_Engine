@@ -135,6 +135,7 @@ public:
     Model(Shader& shader, const char* path, unsigned int instancing = 1, vector<glm::mat4> instanceMatrix = {});
     void Draw(glm::mat4 modelMatrix);
     void AssignTexture(Texture tex);
+    void AssignNormal(Texture tex);
     void UpdateVertices(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures);
     void UpdateInstanceMatrix(glm::vec3 transform, glm::vec3 rotation, glm::vec3 scale, int index, Shader& shader, bool saveNew);
     vector<Mesh> Meshes;
