@@ -1,6 +1,8 @@
 #include "Model.h"
-#include "stb_image.cpp"
+
+#include "GameObject.h"
 #include "assimp/postprocess.h"
+#include "Engine/Engine.h"
 
 unsigned int TextureFromFile(const char* path, const string& directory, bool gamma = false);
 
@@ -11,6 +13,7 @@ Model::Model()
 Model::Model(Shader& shader)
 {
     this->m_Shader = shader;
+    m_MainCamera = Engine::GetInstance().GetGameManager().GetSceneManager().GetMainCamera();
 }
 
 Model::Model(Shader& shader, vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures, unsigned int instancing, vector<glm::mat4> instanceMatrix)
@@ -19,6 +22,7 @@ Model::Model(Shader& shader, vector<Vertex> vertices, vector<unsigned int> indic
     this->Instancing = instancing;
     this->InstanceMatrix = instanceMatrix;
     Meshes.push_back(Mesh(vertices, indices, textures, instancing, instanceMatrix));
+    m_MainCamera = Engine::GetInstance().GetGameManager().GetSceneManager().GetMainCamera();
 }
 
 Model::Model(Shader& shader, const char* path, unsigned int instancing, vector<glm::mat4> instanceMatrix)
@@ -27,6 +31,7 @@ Model::Model(Shader& shader, const char* path, unsigned int instancing, vector<g
     this->Instancing = instancing;
     this->InstanceMatrix = instanceMatrix;
     LoadModel(path);
+    m_MainCamera = Engine::GetInstance().GetGameManager().GetSceneManager().GetMainCamera();
 }
 
 // Reducted TODO remove
@@ -65,7 +70,17 @@ void Model::Draw(glm::mat4 modelMatrix)
     
     for (unsigned int i = 0; i < Meshes.size(); i++)
     {
-        Meshes[i].Draw(m_Shader);
+        if (m_CheckFrustum)
+        {
+            if (m_FrustumVolume.IsOnFrustrum(m_MainCamera->GetFrustum(), *GetOwner()->transform))
+            {
+                Meshes[i].Draw(m_Shader);
+            }
+        }
+        else
+        {
+            Meshes[i].Draw(m_Shader);
+        }
     }
 }
 

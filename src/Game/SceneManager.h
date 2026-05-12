@@ -29,6 +29,7 @@ public:
 	void AddAnimal(shared_ptr<GameObject> spawnedEntity);
 	shared_ptr<GameObject> Instantiate(string path, shared_ptr<Shader> shader = nullptr);
 
+	shared_ptr<Camera> GetMainCamera();
 
 private:
 	//TODO move those functions elsewhere or remove them completely
@@ -113,9 +114,7 @@ private:
 	DebugManager*  DebugMgr = nullptr;
 	PhysicsEngine* Physics = nullptr;
 	AssetManager*  AssetMgr = nullptr;
-
-	const float CAMERA_NEAR_PLANE = .1f;
-	const float CAMERA_FAR_PLANE = 200.f;
+	
 	const float FLOOR_TEX_SCALE = 8.f;
 	const float FLOOR_SCALE = 100.f;
 	const int HOUSE_NET_DIM = 200;

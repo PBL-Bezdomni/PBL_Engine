@@ -27,3 +27,28 @@ glm::mat4 Transform::GetLocalModelMatrix()
 	// translation * rotation * scale (also know as TRS matrix)
 	return glm::translate(glm::mat4(1.0f), Position) * rotationMatrix * glm::scale(glm::mat4(1.0f), Scale);//glm::translate(glm::mat4(1.0f), transform.pos) * 
 }
+
+glm::vec3 Transform::GetGlobalScale() const
+{
+	return { glm::length(GetRight()), glm::length(GetUp()), glm::length(GetBackward()) };
+}
+
+glm::vec3 Transform::GetRight() const
+{
+	return ModelMatrix[0];
+}
+
+glm::vec3 Transform::GetUp() const
+{
+	return ModelMatrix[1];
+}
+
+glm::vec3 Transform::GetForward() const
+{
+	return -ModelMatrix[2];
+}
+
+glm::vec3 Transform::GetBackward() const
+{
+	return ModelMatrix[2];
+}

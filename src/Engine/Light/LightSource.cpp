@@ -5,7 +5,7 @@ LightSource::LightSource(shared_ptr<Camera> camera, Transform* transform,  glm::
 	m_Camera = camera;
 	m_Transform = transform;
 	m_Direction = dir;
-	m_ViewPosition = m_Camera.lock()->Position;
+	m_ViewPosition = m_Camera.lock()->GetPosition();
 	m_Color = glm::vec3(1.f, 1.f, 1.f);
 
 	m_Linear = 0.f;
@@ -16,7 +16,7 @@ LightSource::LightSource(shared_ptr<Camera> camera, Transform* transform,  glm::
 
 void LightSource::SetLightValues(Shader& shader)
 {
-	shader.SetVec3("viewPos", m_Camera.lock()->Position);
+	shader.SetVec3("viewPos", m_Camera.lock()->GetPosition());
 }
 
 void LightSource::Update()

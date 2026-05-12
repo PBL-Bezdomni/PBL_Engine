@@ -52,6 +52,7 @@ int SceneManager::Initialize()
 	InitializeUI();
 
 	MainCamera = make_shared<Camera>(glm::vec3(0.f, 25.f, 47.f), glm::vec3(0.0, 1.0, 0.0), -90.f, -25.f);
+	MainCamera->SetAspect(float(WindowMgr->WINDOW_WIDTH) / float(WindowMgr->WINDOW_HEIGHT));
 
 	Physics = &engine.GetPhysicsEngine();
 	// physics = new PhysicsEngine();
@@ -106,6 +107,8 @@ int SceneManager::Initialize()
 
 	p2->body->AddComponent<RigidBody>();
 	p2->body->GetComponent<RigidBody>()->Init(glm::vec3(1.0f, 1.0f, 1.0f), false);
+
+	return 0;
 }
 
 void SceneManager::UpdateScene()
@@ -119,7 +122,7 @@ void SceneManager::RenderScene()
     glm::mat4 skyboxView = glm::mat4(glm::mat3(MainCamera->GetViewMatrix()));
     glm::mat4 view = MainCamera->GetViewMatrix();
 	
-    glm::mat4 projection = MainCamera->GetProjectionMatrix(float(WindowMgr->WINDOW_WIDTH) / float(WindowMgr->WINDOW_HEIGHT), CAMERA_NEAR_PLANE, CAMERA_FAR_PLANE);
+    glm::mat4 projection = MainCamera->GetProjectionMatrix();
 
     m_Skybox.DrawSkybox(skyboxView, projection);
 
@@ -213,6 +216,11 @@ shared_ptr<GameObject> SceneManager::Instantiate(string path, shared_ptr<Shader>
 	go->AddComponent<Model>(model);
 	m_GameObjects.push_back(go);
 	return m_GameObjects.back();
+}
+
+shared_ptr<Camera> SceneManager::GetMainCamera()
+{
+	return MainCamera;
 }
 
 void SceneManager::UpdateShaderLight(GameObject* gameObject, Shader& shader)
