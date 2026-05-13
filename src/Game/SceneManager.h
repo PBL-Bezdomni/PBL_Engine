@@ -2,12 +2,11 @@
 #include <GLFW/glfw3.h>
 
 #include "Camera.h"
-#include "FreeType.h"
 #include "GameObject.h"
 #include "Skybox.h"
 #include "Game/Scripts/SpawnManager.h"
 #include "Engine/InputManager.h"
-#include "UIManager.h"
+#include "UI/UIManager.h"
 
 class AssetManager;
 class PhysicsEngine;
@@ -21,7 +20,10 @@ private:
 	GameObject m_WorldParent;
 	GameObject m_UIParent;
 	UIManager m_UIManager;
-
+	UIPanel m_TimerPanel;
+	UIPanel m_MoneyPanel;
+	UIPanel m_FpsPanel;
+	
 public:
 	int Initialize();
 	void UpdateScene();
@@ -67,6 +69,8 @@ private:
 	Texture m_TowelsTex;
 	Texture m_UISliderTex;
 	Texture m_UIDuckTex;
+	Texture m_UIPanelTex;
+	Texture m_UICoinTex;
 
 	vector<shared_ptr<GameObject>> m_GameObjects;
 	
@@ -128,4 +132,5 @@ private:
 	float m_SpawnCounter;
 	float m_SpawnTime = 2.f;
 	bool isDebugDraw;
+	float m_TimeLeft = 300.0f;
 };

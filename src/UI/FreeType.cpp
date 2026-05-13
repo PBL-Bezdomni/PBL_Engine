@@ -82,19 +82,19 @@ void FreeType::RenderText(Shader& shader, std::wstring text, float x, float y, f
 		Character ch = Characters[*c];
 
 		float xpos = x + ch.Bearing.x * scale;
-		float ypos = y - (ch.Size.y - ch.Bearing.y) * scale;
+		float ypos = y - ch.Bearing.y * scale;
 
 		float w = ch.Size.x * scale;
 		float h = ch.Size.y * scale;
 
 		float vertices[6][4] = {
-			{ xpos, ypos + h, 0.0f, 0.0f },
-			{ xpos, ypos, 0.0f, 1.0f },
-			{ xpos + w, ypos, 1.0f, 1.0f },
+			{ xpos,		ypos,	  0.0f, 0.0f },
+			{ xpos,		ypos + h, 0.0f, 1.0f },
+			{ xpos + w, ypos + h, 1.0f, 1.0f },
 
-			{ xpos, ypos + h, 0.0f, 0.0f },
-			{ xpos + w, ypos, 1.0f, 1.0f },
-			{ xpos + w, ypos + h, 1.0f, 0.0f }
+			{ xpos,		ypos,	  0.0f, 0.0f },
+			{ xpos + w, ypos + h, 1.0f, 1.0f },
+			{ xpos + w, ypos,	  1.0f, 0.0f }
 		};
 
 		glBindTexture(GL_TEXTURE_2D, ch.textureID);
@@ -107,4 +107,15 @@ void FreeType::RenderText(Shader& shader, std::wstring text, float x, float y, f
 	}
 	glBindVertexArray(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
+}
+float FreeType::GetTextWidth(std::wstring text, float scale)
+{
+	float width = 0.0f;
+	std::wstring::const_iterator c;
+	for (c = text.begin(); c != text.end(); c++)
+	{
+		Character ch = Characters[*c];
+		width += (ch.Advance >> 6) * scale;
+	}
+	return width;
 }

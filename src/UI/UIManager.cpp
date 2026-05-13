@@ -1,7 +1,7 @@
 #include "UIManager.h"
 #include "spdlog/spdlog.h"
 
-void UIManager::Init(AssetManager* assetManager, WindowManager* windowManager)
+void UIManager::Init(AssetManager* assetManager, WindowManager* windowManager, const char* fontPath)
 {
 	m_AssetManager = assetManager;
 	m_WindowManager = windowManager;
@@ -14,6 +14,10 @@ void UIManager::Init(AssetManager* assetManager, WindowManager* windowManager)
 
 	UpdateProjection();
 	InitRenderData();
+	if (!m_TextRenderer.Init(fontPath, 48))
+	{
+		spdlog::error("Font error");
+	}
 }
 
 void UIManager::SetUIStates()
@@ -87,6 +91,42 @@ void UIManager::DrawSprite(Shader& shader, unsigned int textureID, glm::vec2 pos
 	ResetStates();
 }
 
+void UIManager::DrawPanelWithText(Shader& uiShader, Shader& textShader, const UIPanel& panel)
+{
+	if (panel.HasTexture)
+	{
+		DrawSprite(uiShader, panel.TextureID, panel.Position, panel.Size);
+	}
+
+	if (!panel.Text.empty())
+	{
+		float textWidth = m_TextRenderer.GetTextWidth(panel.Text, panel.TextScale);
+		float totalWidth = textWidth;
+
+		if (panel.HasIcon)
+		{
+			totalWidth += panel.IconMargin + panel.IconSize.x;
+		}
+
+		float textX = panel.Position.x + (panel.Size.x / 2.0f) - (totalWidth / 2.0f);
+		float panelCenterY = panel.Position.y + (panel.Size.y / 2.0f);
+		float visualOffset = 15.0f * panel.TextScale;
+		float textY = panelCenterY + visualOffset;
+
+		SetUIStates();
+		m_TextRenderer.RenderText(textShader, panel.Text, textX, textY, panel.TextScale, panel.TextColor);
+		ResetStates();
+
+		if (panel.HasIcon)
+		{
+			float iconX = textX + textWidth + panel.IconMargin;
+			float iconY = panelCenterY - (panel.IconSize.y / 2.0f);
+
+			DrawSprite(uiShader, panel.InconTextureID, glm::vec2(iconX, iconY), panel.IconSize);
+		}
+	}
+}
+
 void UIManager::UpdateProjection()
 {
 	if (m_WindowManager)
@@ -97,3 +137,4 @@ void UIManager::UpdateProjection()
 		m_Projection = glm::ortho(0.0f, width, height, 0.0f, -1.0f, 1.0f);
 	}
 }
+

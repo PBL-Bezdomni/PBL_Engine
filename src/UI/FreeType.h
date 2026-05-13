@@ -18,4 +18,6 @@ public:
 	FreeType();
 	bool Init(const char* fontPath, unsigned int fontSize);
 	void RenderText(Shader& shader, std::wstring text, float x, float y, float scale, glm::vec3 color);
+	float GetTextWidth(std::wstring text, float scale);
+
 };

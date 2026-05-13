@@ -53,7 +53,9 @@ int SceneManager::Initialize()
 
 	// spdlog::info("Initialized ImGui.");
 
-	InitializeUI();
+	std::string fontPath = Loader::RelativePath() + "res/fonts/Choko Regular_8337.otf";
+	
+	m_UIManager.Init(AssetMgr, WindowMgr, fontPath.c_str());
 
 	MainCamera = make_shared<Camera>(glm::vec3(0.f, 25.f, 47.f), glm::vec3(0.0, 1.0, 0.0), -90.f, -25.f);
 	MainCamera->SetAspect(float(WindowMgr->WINDOW_WIDTH) / float(WindowMgr->WINDOW_HEIGHT));
@@ -64,9 +66,10 @@ int SceneManager::Initialize()
 
 	LoadModels();
 	AssignSceneGraph();
-	
+	InitializeUI();
+
 	// UI Init
-	m_UIManager.Init(AssetMgr, WindowMgr);
+	//m_UIManager.Init(AssetMgr, WindowMgr);
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -123,9 +126,9 @@ void SceneManager::UpdateScene()
 
 void SceneManager::RenderScene()
 {
+	glEnable(GL_DEPTH_TEST);
     glm::mat4 skyboxView = glm::mat4(glm::mat3(MainCamera->GetViewMatrix()));
     glm::mat4 view = MainCamera->GetViewMatrix();
-	
     glm::mat4 projection = MainCamera->GetProjectionMatrix();
 
     m_Skybox.DrawSkybox(skyboxView, projection);
@@ -174,22 +177,29 @@ void SceneManager::RenderScene()
         Physics->DrawHitboxes(*AssetMgr->LineShader, view, projection);
     }
 
+
+
 	// IMPORTANT: Do not write things below Freetype/UI, if you do not know what you are doing, thanks :)
-	// Draw Freetype 
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    std::wstring monkeyText = L"FPS: " + std::to_wstring(Time::GetFPS());
-
-    m_TextRenderer.RenderText(*AssetMgr->TextShader, monkeyText, 10.0f, 1700.0f, 2.0f, glm::vec3(0.3f, 0.3f, 0.3f));
-    glEnable(GL_DEPTH_TEST);
-
 	// Draw UI
-	m_UIManager.DrawSprite(*AssetMgr->UIShader, m_UIDuckTex.ID, glm::vec2(WindowMgr->WINDOW_WIDTH - 400.0f, 0.0f), glm::vec2(400.0f, 400.0f));
-	AssetMgr->UISliderShader->Use();
-	float spawnPrecent = m_SpawnCounter / m_SpawnTime;
-	AssetMgr->UISliderShader->SetFloat("slider_load", m_CurrentRotationDegrees / 360.0f);
-	m_UIManager.DrawSprite(*AssetMgr->UISliderShader, m_UISliderTex.ID, glm::vec2(50.0f, 150.0f), glm::vec2(300.0f, 50.0f));
+	// TIMER move it somewhere else later, if you know where then please move it.
+	if (m_TimeLeft > 0.0f)
+	{
+		m_TimeLeft -= Time::GetDeltaTime();
+		int minutes = static_cast<int>(m_TimeLeft) / 60;
+		int seconds = static_cast<int>(m_TimeLeft) % 60;
+		m_TimerPanel.Text = std::to_wstring(minutes) + L":" + (seconds < 10 ? L"0" : L"") + std::to_wstring(seconds);
+	}
+	else
+	{
+		m_TimerPanel.Text = L"00:00";
+	}
+
+	m_MoneyPanel.Text = L"110";
+	m_FpsPanel.Text = L"FPS: " + std::to_wstring(Time::GetFPS());
+
+	m_UIManager.DrawPanelWithText(*AssetMgr->UIShader, *AssetMgr->TextShader, m_MoneyPanel);
+	m_UIManager.DrawPanelWithText(*AssetMgr->UIShader, *AssetMgr->TextShader, m_TimerPanel);
+	m_UIManager.DrawPanelWithText(*AssetMgr->UIShader, *AssetMgr->TextShader, m_FpsPanel);
 
 	// Draw ImGui
 	if (isDebugDraw)
@@ -408,19 +418,38 @@ void SceneManager::LoadModels()
 	m_LightSource.transform->Position = glm::vec3(0.f, 15.0f, -30.0f);
 
 	// UI textures
-	m_UIDuckTex = *AssetMgr->GetTexture("res/textures/duck.png");
-	m_UISliderTex = *AssetMgr->GetTexture("res/textures/white.png");
+	m_UIDuckTex = *AssetMgr->GetTexture("res/textures/UI/duck.png");
+	m_UISliderTex = *AssetMgr->GetTexture("res/textures/UI/white.png");
+	m_UIPanelTex = *AssetMgr->GetTexture("res/textures/UI/UI_panel.png");
+	m_UICoinTex = *AssetMgr->GetTexture("res/textures/UI/coin.png");
 
 	LoadSceneModels();
 }
 
 void SceneManager::InitializeUI()
 {
-	glm::mat4 textProjection = glm::ortho(0.0f, static_cast<float>(WindowMgr->WINDOW_WIDTH), 0.0f, static_cast<float>(WindowMgr->WINDOW_HEIGHT));
+	glm::mat4 textProjection = glm::ortho(0.0f, static_cast<float>(WindowMgr->WINDOW_WIDTH), static_cast<float>(WindowMgr->WINDOW_HEIGHT), 0.0f);
 	AssetMgr->TextShader->Use();
 	AssetMgr->TextShader->SetMat4("projection", textProjection);
 
-	m_TextRenderer.Init((Loader::RelativePath()+ "res/fonts/Berylium.ttf").c_str(), 48);
+	m_MoneyPanel.TextureID = m_UIPanelTex.ID;
+	m_MoneyPanel.Size = glm::vec2(300.0f, 100.0f);
+	m_MoneyPanel.Position = glm::vec2(10.0f, 10.0f);
+	m_MoneyPanel.TextColor = glm::vec3(0.333f, 0.227f, 0.196f);
+	m_MoneyPanel.HasIcon = true;
+	m_MoneyPanel.InconTextureID = m_UICoinTex.ID;
+	m_MoneyPanel.IconSize = glm::vec2(40.0f, 40.0f);
+
+	m_TimerPanel.TextureID = m_UIPanelTex.ID;
+	m_TimerPanel.Size = glm::vec2(300.0f, 100.0f);
+	m_TimerPanel.Position = glm::vec2((WindowMgr->WINDOW_WIDTH / 2.0f) - 150.0f, 10.0f);
+	m_TimerPanel.TextColor = glm::vec3(0.333f, 0.227f, 0.196f);
+
+	m_FpsPanel.HasTexture = false;
+	m_FpsPanel.Size = glm::vec2(300.0f, 100.0f);
+	m_FpsPanel.Position = glm::vec2((WindowMgr->WINDOW_WIDTH) - 300.0f, 10.0f);
+	m_FpsPanel.TextColor = glm::vec3(0.333f, 0.227f, 0.196f);
+
 }
 
 void SceneManager::input(GLFWwindow* window)
