@@ -1,0 +1,294 @@
+{
+    "objects": [
+        {
+            "prefab": "BearNPC",
+            "name": "BearNPC",
+            "parent": "",
+            "mesh": "unity default resources",
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "collider_pos": [
+                0.0,
+                0.6800000071525574,
+                0.0
+            ],
+            "collider_size": [
+                1.909999966621399,
+                1.0,
+                3.0999999046325685
+            ],
+            "scripts": [
+                "AnimalNeeds",
+                "AnimalSatisfaction",
+                "MothersLittleHelpers",
+                "BearNPC",
+                "AnimalWander",
+                "AnimalScore"
+            ],
+            "saveTime": 639142657101526681
+        },
+        {
+            "prefab": "BunnyNPC",
+            "name": "BunnyNPC",
+            "parent": "",
+            "mesh": "unity default resources",
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "collider_pos": [
+                0.0,
+                0.18000000715255738,
+                0.0
+            ],
+            "collider_size": [
+                1.5,
+                1.0,
+                1.5
+            ],
+            "scripts": [
+                "AnimalNeeds",
+                "AnimalSatisfaction",
+                "MothersLittleHelpers",
+                "BunnyCharacter",
+                "AnimalWander",
+                "AnimalScore"
+            ],
+            "saveTime": 639142657101526681
+        },
+        {
+            "prefab": "HippoNPC",
+            "name": "HippoNPC",
+            "parent": "",
+            "mesh": "unity default resources",
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "collider_pos": [
+                0.0,
+                0.8600000143051148,
+                0.0
+            ],
+            "collider_size": [
+                1.5,
+                3.0,
+                3.0
+            ],
+            "scripts": [
+                "AnimalNeeds",
+                "AnimalSatisfaction",
+                "MothersLittleHelpers",
+                "HippoNPC",
+                "AnimalScore",
+                "AnimalWander"
+            ],
+            "saveTime": 639142657101526681
+        },
+        {
+            "prefab": "NPCCharacter",
+            "name": "NPCCharacter",
+            "parent": "",
+            "mesh": "unity default resources",
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "collider_pos": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "collider_size": [
+                5.0,
+                1.0,
+                5.0
+            ],
+            "scripts": [
+                "AnimalNeeds",
+                "AnimalSatisfaction",
+                "MothersLittleHelpers"
+            ],
+            "saveTime": 639142657101526681
+        },
+        {
+            "prefab": "SkunkNPC",
+            "name": "SkunkNPC",
+            "parent": "",
+            "mesh": "unity default resources",
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "collider_pos": [
+                0.0,
+                0.23999999463558198,
+                0.0
+            ],
+            "collider_size": [
+                1.0,
+                0.5,
+                1.0
+            ],
+            "scripts": [
+                "AnimalNeeds",
+                "AnimalSatisfaction",
+                "MothersLittleHelpers",
+                "SkunkNPC",
+                "AnimalWander",
+                "AnimalScore"
+            ],
+            "saveTime": 639142657101526681
+        },
+        {
+            "prefab": "TickNPC",
+            "name": "TickNPC",
+            "parent": "",
+            "mesh": "unity default resources",
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "collider_pos": [
+                0.0,
+                0.699999988079071,
+                0.0
+            ],
+            "collider_size": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "scripts": [
+                "AnimalNeeds",
+                "AnimalSatisfaction",
+                "MothersLittleHelpers",
+                "TickNPC",
+                "AnimalWander"
+            ],
+            "saveTime": 639142657101526681
+        },
+        {
+            "prefab": "TurtleNPC",
+            "name": "TurtleNPC",
+            "parent": "",
+            "mesh": "unity default resources",
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "collider_pos": [
+                0.0,
+                0.4000000059604645,
+                0.0
+            ],
+            "collider_size": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "scripts": [
+                "AnimalNeeds",
+                "AnimalSatisfaction",
+                "MothersLittleHelpers",
+                "AnimalWander",
+                "TurtleNPC",
+                "AnimalScore"
+            ],
+            "saveTime": 639142657101526681
+        }
+    ]
+}

@@ -1,0 +1,43 @@
+{
+    "objects": [
+        {
+            "prefab": "NPCCharacter",
+            "name": "NPCCharacter",
+            "parent": "",
+            "mesh": "unity default resources",
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "collider_pos": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "collider_size": [
+                5.0,
+                1.0,
+                5.0
+            ],
+            "scripts": [
+                "AnimalNeeds",
+                "AnimalSatisfaction",
+                "MothersLittleHelpers"
+            ],
+            "saveTime": 639142675659811785
+        }
+    ]
+}

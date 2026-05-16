@@ -1,0 +1,46 @@
+{
+    "objects": [
+        {
+            "prefab": "BearNPC",
+            "name": "BearNPC",
+            "parent": "",
+            "mesh": "unity default resources",
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "collider_pos": [
+                0.0,
+                0.6800000071525574,
+                0.0
+            ],
+            "collider_size": [
+                1.909999966621399,
+                1.0,
+                3.0999999046325685
+            ],
+            "scripts": [
+                "AnimalNeeds",
+                "AnimalSatisfaction",
+                "MothersLittleHelpers",
+                "BearNPC",
+                "AnimalWander",
+                "AnimalScore"
+            ],
+            "saveTime": 639142675659715332
+        }
+    ]
+}

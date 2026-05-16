@@ -1,0 +1,46 @@
+{
+    "objects": [
+        {
+            "prefab": "HippoNPC",
+            "name": "HippoNPC",
+            "parent": "",
+            "mesh": "unity default resources",
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "collider_pos": [
+                0.0,
+                0.8600000143051148,
+                0.0
+            ],
+            "collider_size": [
+                1.5,
+                3.0,
+                3.0
+            ],
+            "scripts": [
+                "AnimalNeeds",
+                "AnimalSatisfaction",
+                "MothersLittleHelpers",
+                "HippoNPC",
+                "AnimalScore",
+                "AnimalWander"
+            ],
+            "saveTime": 639142675659763977
+        }
+    ]
+}

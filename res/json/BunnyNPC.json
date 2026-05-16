@@ -1,0 +1,46 @@
+{
+    "objects": [
+        {
+            "prefab": "BunnyNPC",
+            "name": "BunnyNPC",
+            "parent": "",
+            "mesh": "unity default resources",
+            "position": [
+                20.0,
+                20.0,
+                20.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                5.0,
+                5.0,
+                5.0
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "collider_pos": [
+                0.0,
+                0.18000000715255738,
+                0.0
+            ],
+            "collider_size": [
+                1.5,
+                1.0,
+                1.5
+            ],
+            "scripts": [
+                "AnimalNeeds",
+                "AnimalSatisfaction",
+                "MothersLittleHelpers",
+                "BunnyCharacter",
+                "AnimalWander",
+                "AnimalScore"
+            ],
+            "saveTime": 639142675659735797
+        }
+    ]
+}

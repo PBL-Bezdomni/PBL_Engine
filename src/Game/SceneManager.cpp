@@ -84,10 +84,6 @@ int SceneManager::Initialize()
 	m_Floor.AddComponent<RigidBody>();
 	m_Floor.GetComponent<RigidBody>()->Init(floorHalfExtents, true);
 
-
-	JSONImporter* importer = new JSONImporter();
-	importer->ImportScene();
-
 	//GAMEPAD
 
 	inputManager = &engine.GetGameManager().GetInputManager();
@@ -114,6 +110,10 @@ int SceneManager::Initialize()
 
 	p2->body->AddComponent<RigidBody>();
 	p2->body->GetComponent<RigidBody>()->Init(glm::vec3(1.0f, 1.0f, 1.0f), false);
+
+	JSONImporter* importer = new JSONImporter();
+	importer->ImportScene(&m_WorldParent);
+	delete importer;
 
 	return 0;
 }
@@ -284,16 +284,16 @@ void SceneManager::AssignSceneGraph()
 
 	m_WorldParent.UpdateSelfAndChild();
 
-	float tableX = 2.0f;
-	float tableY = 4.0f;
-	float tableZ = 6.0f;
+	//float tableX = 2.0f;
+	//float tableY = 4.0f;
+	//float tableZ = 6.0f;
 
-	for (int i = 0; i < m_TablesDir.Children.size(); i++)
-	{
-		m_TablesDir.Children[i]->AddComponent<RigidBody>();
-		m_TablesDir.Children[i]->GetComponent<RigidBody>()->Init(glm::vec3(tableX, tableY, tableZ), true, true);
-		m_TablesDir.Children[i]->AddComponent<MassageTable>();
-	}
+	//for (int i = 0; i < m_TablesDir.Children.size(); i++)
+	//{
+	//	m_TablesDir.Children[i]->AddComponent<RigidBody>();
+	//	m_TablesDir.Children[i]->GetComponent<RigidBody>()->Init(glm::vec3(tableX, tableY, tableZ), true, true);
+	//	m_TablesDir.Children[i]->AddComponent<MassageTable>();
+	//}
 
 }
 
@@ -302,8 +302,8 @@ void SceneManager::AssignSceneModelsGraph()
 	m_WorldParent.AddChild(&m_Scene);
 	m_Scene.AddChild(&m_Floor);
 	m_Scene.AddChild(&m_WallDir);
-	m_Scene.AddChild(&m_OnsenObjects);
-	m_OnsenObjects.AddChild(&m_TablesDir);
+	//m_Scene.AddChild(&m_OnsenObjects);
+	//m_OnsenObjects.AddChild(&m_TablesDir);
 
 	m_WallDir.AddChild(&m_WallBack);
 	m_WallDir.AddChild(&m_WallFrontLeft);
@@ -311,23 +311,23 @@ void SceneManager::AssignSceneModelsGraph()
 	m_WallDir.AddChild(&m_WallRight);
 	m_WallDir.AddChild(&m_WallLeft);
 
-	m_TablesDir.AddChild(&m_Table1);
-	m_Table1.transform->Position = glm::vec3(-80, 0, 0);
-	m_TablesDir.AddChild(&m_Table2);
-	m_Table2.transform->Position = glm::vec3(-40, 0, 0);
-	m_TablesDir.AddChild(&m_Table3);
-	m_TablesDir.AddChild(&m_Table4);
-	m_Table4.transform->Position = glm::vec3(40, 0, 0);
-	m_TablesDir.AddChild(&m_Table5);
-	m_Table5.transform->Position = glm::vec3(80, 0, 0);
+	//m_TablesDir.AddChild(&m_Table1);
+	//m_Table1.transform->Position = glm::vec3(-80, 0, 0);
+	//m_TablesDir.AddChild(&m_Table2);
+	//m_Table2.transform->Position = glm::vec3(-40, 0, 0);
+	//m_TablesDir.AddChild(&m_Table3);
+	//m_TablesDir.AddChild(&m_Table4);
+	//m_Table4.transform->Position = glm::vec3(40, 0, 0);
+	//m_TablesDir.AddChild(&m_Table5);
+	//m_Table5.transform->Position = glm::vec3(80, 0, 0);
 
-	m_TablesDir.transform->Position = glm::vec3(0, 15, -1);
-	m_TablesDir.transform->Scale = glm::vec3(0.3f);
+	//m_TablesDir.transform->Position = glm::vec3(0, 15, -1);
+	//m_TablesDir.transform->Scale = glm::vec3(0.3f);
 
-	m_OnsenObjects.AddChild(&m_TowelsBed);
-	m_TowelsBed.transform->Position = glm::vec3(0, -20, 1.65f);
-	m_TowelsBed.transform->Scale = glm::vec3(20);
-	m_TowelsBed.transform->EulerAngles.x = 90;
+	//m_OnsenObjects.AddChild(&m_TowelsBed);
+	//m_TowelsBed.transform->Position = glm::vec3(0, -20, 1.65f);
+	//m_TowelsBed.transform->Scale = glm::vec3(20);
+	//m_TowelsBed.transform->EulerAngles.x = 90;
 
 	m_Scene.transform->EulerAngles.x = -90.f;
 	m_Floor.transform->EulerAngles.z = 90.f;
@@ -340,7 +340,7 @@ void SceneManager::AssignSceneModelsGraph()
 	m_WallLeft.transform->Position.x = -WALL_X_BORDER;
 	m_WallRight.transform->Position.x = WALL_X_BORDER;
 
-	m_OnsenObjects.transform->Position.z = 1.f;
+	//m_OnsenObjects.transform->Position.z = 1.f;
 }
 
 void SceneManager::LoadSceneModels()
@@ -354,7 +354,7 @@ void SceneManager::LoadSceneModels()
 	m_FloorNorm = *AssetMgr->GetTexture("res/models/scena_v1/floor/floor_textures/Stylized_Stone_Floor_010_normal.png", "texture_normal");
 	m_Floor.GetComponent<Model>()->AssignTexture(m_FloorTex);
 	m_Floor.GetComponent<Model>()->AssignNormal(m_FloorNorm);
-	// m_Floor.AssignTexture(m_FloorTex);
+
 	m_WallDir = GameObject();
 	m_WallDir.AddComponent<Model>(*AssetMgr->BasicShader);
 	Model wallModel = *AssetMgr->GetModel(*AssetMgr->BasicShader, "res/models/scena_v1/walls/wall1.fbx");
@@ -368,21 +368,22 @@ void SceneManager::LoadSceneModels()
 	m_WallLeft.AddComponent<Model>(wallModel);
 	m_WallRight = GameObject();
 	m_WallRight.AddComponent<Model>(wallModel);
-	Model towelBedModel = *AssetMgr->GetModel(*AssetMgr->BasicShader, "res/models/scena_v1/for_towels/towels2.obj");
-	m_TowelsBed = GameObject();
-	m_TowelsBed.AddComponent<Model>(towelBedModel);
+	//Model towelBedModel = *AssetMgr->GetModel(*AssetMgr->BasicShader, "res/models/scena_v1/for_towels/towels2.obj");
+	//m_TowelsBed = GameObject();
+	//m_TowelsBed.Name = "DryTowels";
+	//m_TowelsBed.AddComponent<Model>(towelBedModel);
 
-	Model table = *AssetMgr->GetModel(*AssetMgr->BasicShader, "res/models/scena_v1/table/table2.fbx");
-	m_Table1 = GameObject();
-	m_Table1.AddComponent<Model>(table);
-	m_Table2 = GameObject();
-	m_Table2.AddComponent<Model>(table);
-	m_Table3 = GameObject();
-	m_Table3.AddComponent<Model>(table);
-	m_Table4 = GameObject();
-	m_Table4.AddComponent<Model>(table);
-	m_Table5 = GameObject();
-	m_Table5.AddComponent<Model>(table);
+	//Model table = *AssetMgr->GetModel(*AssetMgr->BasicShader, "res/models/scena_v1/table/table2.fbx");
+	//m_Table1 = GameObject();
+	//m_Table1.AddComponent<Model>(table);
+	//m_Table2 = GameObject();
+	//m_Table2.AddComponent<Model>(table);
+	//m_Table3 = GameObject();
+	//m_Table3.AddComponent<Model>(table);
+	//m_Table4 = GameObject();
+	//m_Table4.AddComponent<Model>(table);
+	//m_Table5 = GameObject();
+	//m_Table5.AddComponent<Model>(table);
 
 	m_WallTex = *AssetMgr->GetTexture("res/models/scena_v1/walls/walls_textures/Stylized_Wall_002_basecolor.png");
 	m_WallBack.GetComponent<Model>()->AssignTexture(m_WallTex);
@@ -417,11 +418,14 @@ void SceneManager::LoadModels()
 	m_LightSource.AddComponent<PointLight>(MainCamera, m_LightSource.transform, glm::vec3(1));
 	m_LightSource.transform->Position = glm::vec3(0.f, 15.0f, -30.0f);
 
-	// UI textures
 	m_UIDuckTex = *AssetMgr->GetTexture("res/textures/UI/duck.png");
 	m_UISliderTex = *AssetMgr->GetTexture("res/textures/UI/white.png");
 	m_UIPanelTex = *AssetMgr->GetTexture("res/textures/UI/UI_panel.png");
 	m_UICoinTex = *AssetMgr->GetTexture("res/textures/UI/coin.png");
+
+	//JSONImporter* importer = new JSONImporter();
+	//importer->ImportObjectFromFile("BunnyNPC", &objectsTransform);
+	//delete importer;
 
 	LoadSceneModels();
 }
