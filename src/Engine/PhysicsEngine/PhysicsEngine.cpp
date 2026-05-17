@@ -8,6 +8,7 @@
 #include <Jolt/Physics/Collision/RayCast.h>
 #include <Jolt/Physics/Collision/CastResult.h>
 #include "GameObject.h"
+#include <Jolt/Physics/Body/BodyID.h>
 
 void PhysicsEngine::Init() {
     JPH::RegisterDefaultAllocator();
@@ -81,18 +82,19 @@ void PhysicsEngine::DrawHitboxes(Shader& lineShader, const glm::mat4& view, cons
     m_PhysicsSystem->DrawBodies(drawSettings, m_DebugRenderer, nullptr);
 }
 
-GameObject* PhysicsEngine::CastRay(const glm::vec3& startOrigin, const glm::vec3& direction, float distance)
+GameObject* PhysicsEngine::CastRay(const glm::vec3& startOrigin, const glm::vec3& direction, float distance, uint32_t ignoreBodyID)
 {
     if (!m_PhysicsSystem) return nullptr;
 
     JPH::RVec3 origin(startOrigin.x, startOrigin.y, startOrigin.z);
-
     JPH::Vec3 dir(direction.x * distance, direction.y * distance, direction.z * distance);
 
     JPH::RRayCast ray(origin, dir);
     JPH::RayCastResult result;
 
-    if (m_PhysicsSystem->GetNarrowPhaseQuery().CastRay(ray, result))
+    JPH::IgnoreSingleBodyFilter bodyFilter{ JPH::BodyID(ignoreBodyID) };
+
+    if (m_PhysicsSystem->GetNarrowPhaseQuery().CastRay(ray, result, {}, {}, bodyFilter))
     {
         JPH::BodyID hitBodyID = result.mBodyID;
 

@@ -60,7 +60,7 @@ void Player::Update(float deltaTime)
         {   
             glm::vec3 playerPos = body->GetWorldPosition();
 
-            playerPos.y -= 1.95f;
+            playerPos.y += 1.0f;
 
             glm::vec3 playerForward = glm::quat(glm::radians(body->transform->EulerAngles)) * glm::vec3(0.0f, 0.0f, -1.0f);
 
@@ -68,13 +68,16 @@ void Player::Update(float deltaTime)
 
             glm::vec3 endPos = playerPos + (playerForward * rayDistance);
             
-            GameObject* hitObject = Engine::GetInstance().GetPhysicsEngine().CastRay(playerPos, playerForward, rayDistance);
+            GameObject* hitObject = Engine::GetInstance().GetPhysicsEngine().CastRay(playerPos, playerForward, rayDistance, body->GetComponent<RigidBody>()->GetBodyID());
+
             //working on it
-            Engine::GetInstance().GetPhysicsEngine().DrawDebugLine(playerPos, endPos, glm::vec3(0.0f, 1.0f, 0.0f));
-            Engine::GetInstance().GetPhysicsEngine().DrawDebugBox(playerPos, glm::vec3(0.2f, 0.2f, 0.2f), glm::vec3(0.0f, 1.0f, 0.0f));
+            //Engine::GetInstance().GetPhysicsEngine().DrawDebugLine(playerPos, endPos, glm::vec3(0.0f, 1.0f, 0.0f));
+            //Engine::GetInstance().GetPhysicsEngine().DrawDebugBox(playerPos, glm::vec3(0.2f, 0.2f, 0.2f), glm::vec3(0.0f, 1.0f, 0.0f));
 
             if (hitObject != nullptr)
             {
+                //spdlog::info("Check: {} {} {}", hitObject->transform->Position.x, hitObject->transform->Position.y, hitObject->transform->Position.z);
+
                 Animal* animalScript = hitObject->GetDerivedComponent<Animal>();
                 if (animalScript != nullptr)
                 {
