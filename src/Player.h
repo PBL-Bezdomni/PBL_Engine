@@ -8,6 +8,8 @@
 #include "Game/Scripts/SpawnManager.h"
 #include "Engine/Components/RigidBody.h"
 
+class GameObject;
+
 class Player {
 public:
     unique_ptr<GameObject> body = nullptr;
@@ -17,4 +19,6 @@ public:
 
     Player(InputManager& input, SpawnManager& spawner, Shader& shader, int deviceid);
     void Update(float deltaTime);
+
+    GameObject* m_CarriedAnimal = nullptr;
 };

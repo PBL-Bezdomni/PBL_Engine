@@ -103,7 +103,7 @@ int SceneManager::Initialize()
 
 	objectsTransform.AddChild(p1->body.get());
 	objectsTransform.AddChild(p2->body.get());
-	p1->body->transform->Position = glm::vec3(0.0f, 5.0f, 0.0f);
+	p1->body->transform->Position = glm::vec3(0.0f, 1.0f, 0.0f);
 	p2->body->transform->Position = glm::vec3(5.0f, 5.0f, 0.0f);
 
 	p1->body->UpdateSelfAndChild();

@@ -14,4 +14,6 @@ public:
     void EnterTable(GameObject* table);
 
     void Update() override;
+
+    bool m_IsSeated = false;
 };

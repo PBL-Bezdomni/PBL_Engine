@@ -5,6 +5,9 @@
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
 #include <Jolt/Physics/Collision/Shape/BoxShape.h>
 #include "PhysicsDebugRenderer.h"
+#include <Jolt/Physics/Collision/RayCast.h>
+#include <Jolt/Physics/Collision/CastResult.h>
+#include "GameObject.h"
 
 void PhysicsEngine::Init() {
     JPH::RegisterDefaultAllocator();
@@ -76,4 +79,59 @@ void PhysicsEngine::DrawHitboxes(Shader& lineShader, const glm::mat4& view, cons
     drawSettings.mDrawShapeWireframe = true;
 
     m_PhysicsSystem->DrawBodies(drawSettings, m_DebugRenderer, nullptr);
+}
+
+GameObject* PhysicsEngine::CastRay(const glm::vec3& startOrigin, const glm::vec3& direction, float distance)
+{
+    if (!m_PhysicsSystem) return nullptr;
+
+    JPH::RVec3 origin(startOrigin.x, startOrigin.y, startOrigin.z);
+
+    JPH::Vec3 dir(direction.x * distance, direction.y * distance, direction.z * distance);
+
+    JPH::RRayCast ray(origin, dir);
+    JPH::RayCastResult result;
+
+    if (m_PhysicsSystem->GetNarrowPhaseQuery().CastRay(ray, result))
+    {
+        JPH::BodyID hitBodyID = result.mBodyID;
+
+        JPH::BodyInterface& bodyInterface = m_PhysicsSystem->GetBodyInterface();
+
+        if (bodyInterface.IsAdded(hitBodyID))
+        {
+            uint64_t userData = bodyInterface.GetUserData(hitBodyID);
+            if (userData != 0)
+            {
+                return reinterpret_cast<GameObject*>(userData);
+            }
+        }
+    }
+
+    return nullptr;
+}
+
+void PhysicsEngine::DrawDebugLine(const glm::vec3& start, const glm::vec3& end, const glm::vec3& color)
+{
+    if (m_PhysicsSystem == nullptr) return;
+
+    JPH::RVec3 p1(start.x, start.y, start.z);
+    JPH::RVec3 p2(end.x, end.y, end.z);
+    JPH::Color joltColor(color.r, color.g, color.b);
+
+    m_DebugRenderer->DrawLine(p1, p2, joltColor);
+}
+
+void PhysicsEngine::DrawDebugBox(const glm::vec3& center, const glm::vec3& halfExtents, const glm::vec3& color)
+{
+    if (m_DebugRenderer == nullptr) return;
+
+    JPH::RVec3 minBound(center.x - halfExtents.x, center.y - halfExtents.y, center.z - halfExtents.z);
+    JPH::RVec3 maxBound(center.x + halfExtents.x, center.y + halfExtents.y, center.z + halfExtents.z);
+
+    JPH::AABox box(minBound, maxBound);
+
+    JPH::Color joltColor(color.r * 255.0f, color.g * 255.0f, color.b * 255.0f);
+
+    m_DebugRenderer->DrawWireBox(box, joltColor);
 }

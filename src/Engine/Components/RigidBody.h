@@ -23,6 +23,10 @@ public:
 
     void Teleport(const glm::vec3& newWorldPosition);
 
+    void SetRotation(const glm::vec3& eulerAnglesDegrees);
+
+    glm::vec3 GetPosition();
+
 private:
     PhysicsEngine* m_PhysicsEngine = nullptr;
     unsigned int m_BodyID = 0xffffffff;
