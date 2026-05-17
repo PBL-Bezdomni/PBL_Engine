@@ -58,19 +58,19 @@ void Player::Update(float deltaTime)
 
         if (m_CarriedAnimal == nullptr)
         {   
-            glm::vec3 playerPos = body->transform->Position;
+            glm::vec3 playerPos = body->GetWorldPosition();
 
-            //playerPos.y -= 2.0f;
+            playerPos.y -= 1.95f;
 
             glm::vec3 playerForward = glm::quat(glm::radians(body->transform->EulerAngles)) * glm::vec3(0.0f, 0.0f, -1.0f);
 
-            float rayDistance = 2.0f;
+            float rayDistance = 5.0f;
 
             glm::vec3 endPos = playerPos + (playerForward * rayDistance);
             
             GameObject* hitObject = Engine::GetInstance().GetPhysicsEngine().CastRay(playerPos, playerForward, rayDistance);
             //working on it
-            Engine::GetInstance().GetPhysicsEngine().DrawDebugLine(playerPos, endPos, glm::vec3(1, 0, 0));
+            Engine::GetInstance().GetPhysicsEngine().DrawDebugLine(playerPos, endPos, glm::vec3(0.0f, 1.0f, 0.0f));
             Engine::GetInstance().GetPhysicsEngine().DrawDebugBox(playerPos, glm::vec3(0.2f, 0.2f, 0.2f), glm::vec3(0.0f, 1.0f, 0.0f));
 
             if (hitObject != nullptr)
