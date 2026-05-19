@@ -76,8 +76,8 @@ void PhysicsEngine::DrawHitboxes(Shader& lineShader, const glm::mat4& view, cons
 
     JPH::BodyManager::DrawSettings drawSettings;
     drawSettings.mDrawBoundingBox = false;
-    drawSettings.mDrawShape = true;
-    drawSettings.mDrawShapeWireframe = true;
+    drawSettings.mDrawShape = false;
+    drawSettings.mDrawShapeWireframe = false;
 
     m_PhysicsSystem->DrawBodies(drawSettings, m_DebugRenderer, nullptr);
 }
