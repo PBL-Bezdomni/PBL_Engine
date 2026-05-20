@@ -75,8 +75,7 @@ private:
 	vector<shared_ptr<GameObject>> m_GameObjects;
 	
 	GameObject skybox;
-
-	GameObject monkey;
+	
 	GameObject objectsTransform;
 	GameObject spawnManagerObject;
 
@@ -97,8 +96,6 @@ private:
 	GameObject m_Table3;
 	GameObject m_Table4;
 	GameObject m_Table5;
-
-	GameObject m_Ball1;
 
 	GameObject m_LightSource;
 	GameObject m_LightSourceObject;
@@ -126,9 +123,7 @@ private:
 
 	float WALL_X_BORDER = 37.f;
 	float WALL_Y_BORDER = 50.f;
-
-	float m_CurrentRotationDegrees;
-	int m_RotationCount;
+	
 	float m_SpawnCounter;
 	float m_SpawnTime = 2.f;
 	bool isDebugDraw;

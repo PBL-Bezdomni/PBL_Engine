@@ -147,20 +147,6 @@ void SceneManager::RenderScene()
 	AssetMgr->BasicShader->SetBool("useSpotLight1", false);
 	
     UpdateShaderLight(&m_WorldParent, *AssetMgr->BasicShader, *AssetMgr->SimpleDepthShader);
-    
-    m_CurrentRotationDegrees += Time::GetDeltaTime() * 60.0f;
-
-    if (static_cast<int>(m_CurrentRotationDegrees) / 360 >= 1)
-    {
-        m_CurrentRotationDegrees = 0;
-        m_RotationCount++;
-    }
-
-    monkey.transform->Position = glm::vec3(-5.f, 0.f, 0.f);
-    monkey.transform->EulerAngles.x = m_CurrentRotationDegrees;
-    monkey.transform->Scale = glm::vec3(2.f);
-
-    m_Ball1.transform->Position = glm::vec3(0, 30.0f, -20.0f);
 
 	// inputManager.update();
 	p1->Update(Time::GetDeltaTime());
@@ -295,8 +281,6 @@ void SceneManager::AssignSceneGraph()
 	// m_LightSource.AddChild(&m_LightSourceObject);
 
 	objectsTransform.AddChild(&spawnManagerObject);
-	objectsTransform.AddChild(&monkey);
-	objectsTransform.AddChild(&m_Ball1);
 
 	AssignSceneModelsGraph();
 
@@ -422,13 +406,6 @@ void SceneManager::LoadModels()
 	m_SpawnManager = spawnManagerObject.GetComponent<SpawnManager>();
 	// objectsTransform.AddComponent<Model>(m_BasicShader);
 	//house_floor.ScaleTexture(FLOOR_TEX_SCALE * FLOOR_SCALE);
-	monkey = GameObject();
-	Model monkeyModel = *AssetMgr->GetModel(*AssetMgr->BasicShader, "res/models/monkey/Monkey.obj");
-	monkey.AddComponent<Model>(monkeyModel);
-
-	m_Ball1 = GameObject();
-	Model ballModel = *AssetMgr->GetModel(*AssetMgr->BasicShader, "res/models/sphere/ball.obj");
-	m_Ball1.AddComponent<Model>(ballModel);
 
 	m_LightSourceObject = GameObject();
 	Model lightModel = *AssetMgr->GetModel(*AssetMgr->LightSourceShader, "res/models/sphere/ball.obj");
