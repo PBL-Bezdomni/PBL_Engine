@@ -9,7 +9,16 @@ Player::Player(InputManager& input, SpawnManager& spawner, Shader& shader, int d
 
 	body = make_unique<GameObject>();
 	AssetManager* am = &Engine::GetInstance().GetAssetManager();
-	Model bodyModel = *am->GetModel(shader, "res/models/players/druid1/druid1.fbx");
+    string path = "res/models/players/";
+    if (deviceid == 0)
+    {
+        path += "druid1/druid1.fbx";
+    }
+    else
+    {
+        path += "druid2/druid2.fbx";
+    }
+	Model bodyModel = *am->GetModel(shader, path.c_str());
 	body->AddComponent<Model>(bodyModel);
 
 	input.subscribe(deviceID, "MoveForward", [this](float val, InputEventType type, int id) {
