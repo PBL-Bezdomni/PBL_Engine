@@ -112,7 +112,7 @@ void Player::Update(float deltaTime)
             if (animalRb != nullptr)
             {
                 //will fix later
-                glm::vec3 playerForward = glm::quat(glm::radians(body->transform->EulerAngles)) * glm::vec3(0.0f, 0.0f, -1.0f);
+                glm::vec3 playerForward = glm::quat(glm::radians(body->transform->EulerAngles)) * glm::vec3(0.0f, 0.0f, 1.0f);
                 playerForward = glm::normalize(playerForward);
 
                 glm::vec3 throwVelocity = playerForward * m_ThrowCharge;
