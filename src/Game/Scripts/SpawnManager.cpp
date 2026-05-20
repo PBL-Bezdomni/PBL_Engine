@@ -37,16 +37,18 @@ void SpawnManager::Update()
 		//spawnedEntity->transform->Scale = glm::vec3(2, 2, 2);
 		if (entity != nullptr)
 		{
-
-			entity->transform->Position = glm::vec3(posX, 5, posY);
+			//entity->transform->Position = glm::vec3(posX, 5, posY);
+			//entity->GetComponent<RigidBody>()->Teleport(glm::vec3(posX, 5, posY));
 			// entity->SetParent(m_SceneMgr->objectsTransform.get());
 
 			entity->UpdateSelfAndChild();
 			entity->AddComponent<RigidBody>();
 			entity->GetComponent<RigidBody>()->Init();
+			entity->GetComponent<RigidBody>()->Teleport(glm::vec3(posX, 5, posY));
 			entity->AddComponent<Animal>();
 			entity->GetComponent<Animal>()->Init();
 			m_SceneMgr->AddAnimal(entity);
+
 		}
 	}
 }

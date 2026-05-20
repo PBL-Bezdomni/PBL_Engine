@@ -18,7 +18,7 @@ private:
 	float m_SpawnCounter;
 	float m_SpawnTime = 2.f;
 	
-	int m_EntityLimit = 50;
+	int m_EntityLimit = 10;
 
 	int m_BunnyLimit = 15;
 	int m_BearLimit = 5;
