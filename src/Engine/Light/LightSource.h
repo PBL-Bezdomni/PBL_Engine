@@ -2,6 +2,7 @@
 #include "Camera.h"
 #include "GameObject.h"
 #include "glm/glm.hpp"
+#include "ShadowMap.h"
 
 class LightSource: public Component
 {
@@ -15,6 +16,7 @@ protected:
 	// Used for spotlight.
 	float m_InnerCutOff;
 	float m_OuterCutOff;
+	ShadowMap* shadowMap;
 
 	weak_ptr<Camera> m_Camera;
 	Transform* m_Transform;
@@ -34,6 +36,8 @@ public:
 	float GetQuadratic();
 	float GetInnerCutOff();
 	float GetOuterCutOff();
+	unsigned int getShadowMap(GameObject& m_WorldParent, Shader& depthShader);
+	glm::mat4 getLightViewMatrix();
 
 	// Values setters
 	void SetColor(glm::vec3 color);

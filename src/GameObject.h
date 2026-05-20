@@ -30,8 +30,8 @@ public:
 	void UpdateSelfAndChildInstanceMatrix(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale, int index, Shader& shader, bool saveNew);
 	void AddChild(GameObject* child);
 	void RemoveChild(GameObject* child);
-	void DrawSelfAndChild();
-	void DrawSelf();
+	void DrawSelfAndChild(Shader* shader);
+	void DrawSelf(Shader* shader);
 	glm::vec3 GetWorldPosition();
 	void SetActive(bool active);
 	void StartSelfAndChild();

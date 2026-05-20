@@ -4,6 +4,7 @@
 #include "Engine/PhysicsEngine/PhysicsEngine.h"
 #include <Jolt/Jolt.h>
 #include <Jolt/Physics/Body/BodyID.h>
+#include <glm/gtc/quaternion.hpp>
 
 void RigidBody::Init(const glm::vec3& halfExtents, bool isStatic, bool isTrigger)
 {
@@ -94,4 +95,30 @@ void RigidBody::SetAngularVelocity(const glm::vec3& velocity)
         JPH::BodyID(m_BodyID),
         JPH::Vec3(velocity.x, velocity.y, velocity.z)
     );
+}
+
+void RigidBody::SetRotation(const glm::vec3& eulerAnglesDegrees)
+{
+    if (!m_Initialized || !m_PhysicsEngine) return;
+
+    glm::vec3 radians = glm::radians(eulerAnglesDegrees);
+
+    glm::quat q = glm::quat(radians);
+
+    JPH::Quat joltQuat(q.x, q.y, q.z, q.w);
+
+    m_PhysicsEngine->GetSystem()->GetBodyInterface().SetRotation(
+        JPH::BodyID(m_BodyID),
+        joltQuat,
+        JPH::EActivation::Activate
+    );
+}
+
+glm::vec3 RigidBody::GetPosition()
+{
+    if (!m_Initialized || !m_PhysicsEngine) return glm::vec3(0.0f);
+
+    JPH::Vec3 joltPos = m_PhysicsEngine->GetSystem()->GetBodyInterface().GetPosition(JPH::BodyID(m_BodyID));
+
+    return glm::vec3(joltPos.GetX(), joltPos.GetY(), joltPos.GetZ());
 }

@@ -8,8 +8,12 @@
 #include <glm/gtc/quaternion.hpp>
 #include "PhysicsContactListener.h"
 
+#include <Jolt/Renderer/DebugRenderer.h>
+
+
 class Shader;
 class PhysicsDebugRenderer;
+class GameObject;
 
 class PhysicsEngine {
 public:
@@ -26,6 +30,11 @@ public:
     void DrawHitboxes(Shader& lineShader, const glm::mat4& view, const glm::mat4& projection);
 
     JPH::PhysicsSystem* GetSystem() const { return m_PhysicsSystem; }
+
+    GameObject* CastRay(const glm::vec3& startOrigin, const glm::vec3& direction, float distance, uint32_t ignoreBodyID = 0xFFFFFFFF);
+
+    void DrawDebugLine(const glm::vec3& start, const glm::vec3& end, const glm::vec3& color = glm::vec3(1, 0, 0));
+    void DrawDebugBox(const glm::vec3& center, const glm::vec3& halfExtents, const glm::vec3& color);
 
 private:
     JPH::PhysicsSystem* m_PhysicsSystem = nullptr;

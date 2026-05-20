@@ -120,31 +120,31 @@ void GameObject::UpdateSelfAndChildInstanceMatrix(glm::vec3 position, glm::vec3 
     }
 }
 
-void GameObject::DrawSelfAndChild()
+void GameObject::DrawSelfAndChild(Shader* shader)
 {
     if (m_IsActive)
     {
         Model* model = GetComponent<Model>();
         if (model != nullptr && model->IsActive())
         {
-            model->Draw(transform->ModelMatrix);
+            model->Draw(transform->ModelMatrix, shader);
         }
 
         for (auto&& child : Children)
         {
-            child->DrawSelfAndChild();
+            child->DrawSelfAndChild(shader);
         }
     }
 }
 
-void GameObject::DrawSelf()
+void GameObject::DrawSelf(Shader* shader)
 {
     if (m_IsActive)
     {
         Model* model = GetComponent<Model>();
         if (model != nullptr && model->IsActive())
         {
-            model->Draw(transform->ModelMatrix);
+            model->Draw(transform->ModelMatrix, shader);
         }
     }
 }

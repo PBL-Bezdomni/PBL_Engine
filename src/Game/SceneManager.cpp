@@ -99,7 +99,7 @@ int SceneManager::Initialize()
 
 	objectsTransform.AddChild(p1->body.get());
 	objectsTransform.AddChild(p2->body.get());
-	p1->body->transform->Position = glm::vec3(0.0f, 5.0f, 0.0f);
+	p1->body->transform->Position = glm::vec3(0.0f, 1.0f, 0.0f);
 	p2->body->transform->Position = glm::vec3(5.0f, 5.0f, 0.0f);
 
 	p1->body->UpdateSelfAndChild();
@@ -110,6 +110,13 @@ int SceneManager::Initialize()
 
 	p2->body->AddComponent<RigidBody>();
 	p2->body->GetComponent<RigidBody>()->Init(glm::vec3(1.0f, 1.0f, 1.0f), false);
+
+
+	// SHADOW
+
+
+	AssetMgr->BasicShader->Use();
+	AssetMgr->BasicShader->SetInt("shadowMap", 20);
 
 	JSONImporter* importer = new JSONImporter();
 	importer->ImportScene(&m_WorldParent);
@@ -131,8 +138,6 @@ void SceneManager::RenderScene()
     glm::mat4 view = MainCamera->GetViewMatrix();
     glm::mat4 projection = MainCamera->GetProjectionMatrix();
 
-    m_Skybox.DrawSkybox(skyboxView, projection);
-
     AssetMgr->BasicShader->Use();
     AssetMgr->BasicShader->SetMat4("view", view);
     AssetMgr->BasicShader->SetMat4("projection", projection);
@@ -141,21 +146,7 @@ void SceneManager::RenderScene()
 	AssetMgr->BasicShader->SetBool("usePointLight", false);
 	AssetMgr->BasicShader->SetBool("useSpotLight1", false);
 	
-    UpdateShaderLight(&m_WorldParent, *AssetMgr->BasicShader);
-    
-    m_CurrentRotationDegrees += Time::GetDeltaTime() * 60.0f;
-
-    if (static_cast<int>(m_CurrentRotationDegrees) / 360 >= 1)
-    {
-        m_CurrentRotationDegrees = 0;
-        m_RotationCount++;
-    }
-
-    monkey.transform->Position = glm::vec3(-5.f, 0.f, 0.f);
-    monkey.transform->EulerAngles.x = m_CurrentRotationDegrees;
-    monkey.transform->Scale = glm::vec3(2.f);
-
-    m_Ball1.transform->Position = glm::vec3(0, 30.0f, -20.0f);
+    UpdateShaderLight(&m_WorldParent, *AssetMgr->BasicShader, *AssetMgr->SimpleDepthShader);
 
 	// inputManager.update();
 	p1->Update(Time::GetDeltaTime());
@@ -168,7 +159,14 @@ void SceneManager::RenderScene()
 		p2->body->GetComponent<RigidBody>()->Update();
 
     m_WorldParent.UpdateSelfAndChild();
-    m_WorldParent.DrawSelfAndChild();
+
+	int windowH, windowW;
+	glfwGetWindowSize(WindowMgr->GetWindowPointer(), &windowW, &windowH);
+	glViewport(0, 0, windowW, windowH);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    m_WorldParent.DrawSelfAndChild(NULL);
+	m_Skybox.DrawSkybox(skyboxView, projection);
 
     glDisable(GL_DEPTH_TEST);
 
@@ -237,7 +235,7 @@ shared_ptr<Camera> SceneManager::GetMainCamera()
 	return MainCamera;
 }
 
-void SceneManager::UpdateShaderLight(GameObject* gameObject, Shader& shader)
+void SceneManager::UpdateShaderLight(GameObject* gameObject, Shader& shader, Shader& depthShader)
 {
 	if (gameObject == nullptr)
 	{
@@ -248,6 +246,15 @@ void SceneManager::UpdateShaderLight(GameObject* gameObject, Shader& shader)
 	if (dLight != nullptr)
 	{
 		dLight->SetLightValues(shader);
+		glm::mat4 lightSpaceMatrix(0.0f);
+		unsigned int depthMap = 0;
+		depthMap = dLight->getShadowMap(m_WorldParent, depthShader);
+		lightSpaceMatrix = dLight->getLightViewMatrix();
+		AssetMgr->BasicShader->Use();
+
+		AssetMgr->BasicShader->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
+		glActiveTexture(GL_TEXTURE20);
+		glBindTexture(GL_TEXTURE_2D, depthMap);
 	}
 	LightSource* pLight = gameObject->GetComponent<PointLight>();
 	if (pLight != nullptr)
@@ -261,7 +268,7 @@ void SceneManager::UpdateShaderLight(GameObject* gameObject, Shader& shader)
 	}
 	for (int i = 0; i < gameObject->Children.size(); i++)
 	{
-		UpdateShaderLight(gameObject->Children[i], shader);
+		UpdateShaderLight(gameObject->Children[i], shader, depthShader);
 	}
 }
 
@@ -274,8 +281,6 @@ void SceneManager::AssignSceneGraph()
 	// m_LightSource.AddChild(&m_LightSourceObject);
 
 	objectsTransform.AddChild(&spawnManagerObject);
-	objectsTransform.AddChild(&monkey);
-	objectsTransform.AddChild(&m_Ball1);
 
 	AssignSceneModelsGraph();
 
@@ -402,21 +407,16 @@ void SceneManager::LoadModels()
 	m_SpawnManager = spawnManagerObject.GetComponent<SpawnManager>();
 	// objectsTransform.AddComponent<Model>(m_BasicShader);
 	//house_floor.ScaleTexture(FLOOR_TEX_SCALE * FLOOR_SCALE);
-	monkey = GameObject();
-	Model monkeyModel = *AssetMgr->GetModel(*AssetMgr->BasicShader, "res/models/monkey/Monkey.obj");
-	monkey.AddComponent<Model>(monkeyModel);
-
-	m_Ball1 = GameObject();
-	Model ballModel = *AssetMgr->GetModel(*AssetMgr->BasicShader, "res/models/sphere/ball.obj");
-	m_Ball1.AddComponent<Model>(ballModel);
 
 	m_LightSourceObject = GameObject();
 	Model lightModel = *AssetMgr->GetModel(*AssetMgr->LightSourceShader, "res/models/sphere/ball.obj");
 	m_LightSourceObject.AddComponent<Model>(lightModel);
 	
 	m_LightSource = GameObject();
-	m_LightSource.AddComponent<PointLight>(MainCamera, m_LightSource.transform, glm::vec3(1));
-	m_LightSource.transform->Position = glm::vec3(0.f, 15.0f, -30.0f);
+	m_LightSource.AddComponent<DirectionalLight>(MainCamera, m_LightSource.transform, glm::vec3(0.0f, -1.0f, -1.0f));
+
+	m_LightSource.transform->Position = glm::vec3(0.f, 15.0f, 0.0f);
+	//m_LightSource.transform->Position = glm::vec3(0.f, 15.0f, -30.0f);
 
 	m_UIDuckTex = *AssetMgr->GetTexture("res/textures/UI/duck.png");
 	m_UISliderTex = *AssetMgr->GetTexture("res/textures/UI/white.png");
