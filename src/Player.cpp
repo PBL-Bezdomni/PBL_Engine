@@ -53,7 +53,11 @@ void Player::Update(float deltaTime)
         }
     }
 
-    if (deviceID == 0 && glfwGetKey(Engine::GetInstance().GetWindowManager().GetWindowPointer(), GLFW_KEY_F) == GLFW_PRESS)
+
+
+
+
+    if (glfwGetKey(Engine::GetInstance().GetWindowManager().GetWindowPointer(), GLFW_KEY_F) == GLFW_PRESS)
     {
 
         if (m_CarriedAnimal == nullptr)
@@ -88,6 +92,44 @@ void Player::Update(float deltaTime)
                 }
             }
         }
+        else
+        {
+            m_IsChargingThrow = true;
+            m_ThrowCharge += m_ChargeSpeed * deltaTime;
+            if (m_ThrowCharge > m_MaxThrowForce) {
+                m_ThrowCharge = m_MaxThrowForce;
+            }
+        }
+    }
+
+    else
+    {
+        if (m_CarriedAnimal != nullptr && m_IsChargingThrow)
+        {
+            RigidBody* animalRb = m_CarriedAnimal->GetComponent<RigidBody>();
+            Animal* animalScript = m_CarriedAnimal->GetDerivedComponent<Animal>();
+
+            if (animalRb != nullptr)
+            {
+                //will fix later
+                glm::vec3 playerForward = glm::quat(glm::radians(body->transform->EulerAngles)) * glm::vec3(0.0f, 0.0f, 1.0f);
+                playerForward = glm::normalize(playerForward);
+
+                glm::vec3 throwVelocity = playerForward * m_ThrowCharge;
+                throwVelocity.y = m_ThrowCharge * 0.4f;
+
+                animalRb->SetLinearVelocity(throwVelocity);
+            }
+
+            if (animalScript != nullptr)
+            {
+                animalScript->m_IsSeated = false;
+            }
+
+            m_CarriedAnimal = nullptr;
+            m_IsChargingThrow = false;
+            m_ThrowCharge = m_MinThrowForce;
+        }
     }
 
 
@@ -95,7 +137,6 @@ void Player::Update(float deltaTime)
     {
 
         glm::vec3 headPos = body->GetWorldPosition() + glm::vec3(0.0f, 3.0f, 0.0f);
-
 
         m_CarriedAnimal->transform->Position = headPos;
         m_CarriedAnimal->UpdateSelfAndChild();

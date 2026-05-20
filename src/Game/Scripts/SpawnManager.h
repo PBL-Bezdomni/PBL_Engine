@@ -18,22 +18,30 @@ private:
 	float m_SpawnCounter;
 	float m_SpawnTime = 2.f;
 	
-	int m_MainLimit = 10;
-	int m_MonkeyLimit = 3;
-	int m_BallLimit = 13;
-	vector<shared_ptr<GameObject>> m_SpawnedEntities;
-	vector<shared_ptr<GameObject>> m_SpawnedBalls;
-	vector<shared_ptr<GameObject>> m_SpawnedMonkeys;
+	int m_EntityLimit = 10;
 
-	float m_MonkeyProb = 20.f;	
-	float m_BallProb = 70.f;
+	int m_BunnyLimit = 15;
+	int m_BearLimit = 5;
+	int m_SkunkLimit = 7;
+
+	vector<shared_ptr<GameObject>> m_SpawnedEntities;
+	vector<shared_ptr<GameObject>> m_SpawnedBunnies;
+	vector<shared_ptr<GameObject>> m_SpawnedBears;
+	vector<shared_ptr<GameObject>> m_SpawnedSkunks;
+
+	float m_BunnyProb = 50.f;	
+	float m_BearProb = 15.f;
+	float m_SkunkProb = 35.f;
+
 	AssetManager* m_AssetMgr;
 	SceneManager* m_SceneMgr;
 public:
 	SpawnManager() = default;
+	shared_ptr<GameObject> SpawnEntity(shared_ptr<Shader> shader);
 	shared_ptr<GameObject> SpawnBunny(shared_ptr<Shader> shader);
 	shared_ptr<GameObject> SpawnBear(shared_ptr<Shader> shader);
-	shared_ptr<GameObject> SpawnEntity(shared_ptr<Shader> shader);
+	shared_ptr<GameObject> SpawnSkunk(shared_ptr<Shader> shader);
+
 
 	void Awake() override;
 	void Start() override;
