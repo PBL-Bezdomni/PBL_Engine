@@ -133,7 +133,7 @@ public:
     Model(Shader& shader);
     Model(Shader& shader, vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures, unsigned int instancing = 1, vector<glm::mat4> instanceMatrix = {});
     Model(Shader& shader, const char* path, unsigned int instancing = 1, vector<glm::mat4> instanceMatrix = {});
-    void Draw(glm::mat4 modelMatrix);
+    void Draw(glm::mat4 modelMatrix, Shader* shader);
     void AssignTexture(Texture tex);
     void AssignNormal(Texture tex);
     void UpdateVertices(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures);

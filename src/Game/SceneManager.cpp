@@ -115,6 +115,13 @@ int SceneManager::Initialize()
 	p2->body->AddComponent<RigidBody>();
 	p2->body->GetComponent<RigidBody>()->Init(glm::vec3(1.0f, 1.0f, 1.0f), false);
 
+
+	// SHADOW
+
+
+	AssetMgr->BasicShader->Use();
+	AssetMgr->BasicShader->SetInt("shadowMap", 20);
+
 	return 0;
 }
 
@@ -131,8 +138,6 @@ void SceneManager::RenderScene()
     glm::mat4 view = MainCamera->GetViewMatrix();
     glm::mat4 projection = MainCamera->GetProjectionMatrix();
 
-    m_Skybox.DrawSkybox(skyboxView, projection);
-
     AssetMgr->BasicShader->Use();
     AssetMgr->BasicShader->SetMat4("view", view);
     AssetMgr->BasicShader->SetMat4("projection", projection);
@@ -141,7 +146,7 @@ void SceneManager::RenderScene()
 	AssetMgr->BasicShader->SetBool("usePointLight", false);
 	AssetMgr->BasicShader->SetBool("useSpotLight1", false);
 	
-    UpdateShaderLight(&m_WorldParent, *AssetMgr->BasicShader);
+    UpdateShaderLight(&m_WorldParent, *AssetMgr->BasicShader, *AssetMgr->SimpleDepthShader);
     
     m_CurrentRotationDegrees += Time::GetDeltaTime() * 60.0f;
 
@@ -168,7 +173,14 @@ void SceneManager::RenderScene()
 		p2->body->GetComponent<RigidBody>()->Update();
 
     m_WorldParent.UpdateSelfAndChild();
-    m_WorldParent.DrawSelfAndChild();
+
+	int windowH, windowW;
+	glfwGetWindowSize(WindowMgr->GetWindowPointer(), &windowW, &windowH);
+	glViewport(0, 0, windowW, windowH);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    m_WorldParent.DrawSelfAndChild(NULL);
+	m_Skybox.DrawSkybox(skyboxView, projection);
 
     glDisable(GL_DEPTH_TEST);
 
@@ -237,7 +249,7 @@ shared_ptr<Camera> SceneManager::GetMainCamera()
 	return MainCamera;
 }
 
-void SceneManager::UpdateShaderLight(GameObject* gameObject, Shader& shader)
+void SceneManager::UpdateShaderLight(GameObject* gameObject, Shader& shader, Shader& depthShader)
 {
 	if (gameObject == nullptr)
 	{
@@ -248,6 +260,15 @@ void SceneManager::UpdateShaderLight(GameObject* gameObject, Shader& shader)
 	if (dLight != nullptr)
 	{
 		dLight->SetLightValues(shader);
+		glm::mat4 lightSpaceMatrix(0.0f);
+		unsigned int depthMap = 0;
+		depthMap = dLight->getShadowMap(m_WorldParent, depthShader);
+		lightSpaceMatrix = dLight->getLightViewMatrix();
+		AssetMgr->BasicShader->Use();
+
+		AssetMgr->BasicShader->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
+		glActiveTexture(GL_TEXTURE20);
+		glBindTexture(GL_TEXTURE_2D, depthMap);
 	}
 	LightSource* pLight = gameObject->GetComponent<PointLight>();
 	if (pLight != nullptr)
@@ -261,7 +282,7 @@ void SceneManager::UpdateShaderLight(GameObject* gameObject, Shader& shader)
 	}
 	for (int i = 0; i < gameObject->Children.size(); i++)
 	{
-		UpdateShaderLight(gameObject->Children[i], shader);
+		UpdateShaderLight(gameObject->Children[i], shader, depthShader);
 	}
 }
 
@@ -414,8 +435,10 @@ void SceneManager::LoadModels()
 	m_LightSourceObject.AddComponent<Model>(lightModel);
 	
 	m_LightSource = GameObject();
-	m_LightSource.AddComponent<PointLight>(MainCamera, m_LightSource.transform, glm::vec3(1));
-	m_LightSource.transform->Position = glm::vec3(0.f, 15.0f, -30.0f);
+	m_LightSource.AddComponent<DirectionalLight>(MainCamera, m_LightSource.transform, glm::vec3(0.0f, -1.0f, -1.0f));
+
+	m_LightSource.transform->Position = glm::vec3(0.f, 15.0f, 0.0f);
+	//m_LightSource.transform->Position = glm::vec3(0.f, 15.0f, -30.0f);
 
 	// UI textures
 	m_UIDuckTex = *AssetMgr->GetTexture("res/textures/UI/duck.png");

@@ -81,10 +81,17 @@ void Model::AssignNormal(Texture tex)
     }
 }
 
-void Model::Draw(glm::mat4 modelMatrix)
+void Model::Draw(glm::mat4 modelMatrix, Shader* shader)
 {
-    m_Shader.Use();
-    m_Shader.SetMat4("model", modelMatrix);
+    Shader shaderToUse;
+    if (shader) {
+        shaderToUse = *shader;
+    }
+    else {
+        shaderToUse = m_Shader;
+    }
+    shaderToUse.Use();
+    shaderToUse.SetMat4("model", modelMatrix);
     
     for (unsigned int i = 0; i < Meshes.size(); i++)
     {
@@ -92,12 +99,12 @@ void Model::Draw(glm::mat4 modelMatrix)
         {
             if (m_FrustumVolume.IsOnFrustrum(m_MainCamera->GetFrustum(), *GetOwner()->transform))
             {
-                Meshes[i].Draw(m_Shader);
+                Meshes[i].Draw(shaderToUse);
             }
         }
         else
         {
-            Meshes[i].Draw(m_Shader);
+            Meshes[i].Draw(shaderToUse);
         }
     }
 }

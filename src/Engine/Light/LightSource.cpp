@@ -12,6 +12,8 @@ LightSource::LightSource(shared_ptr<Camera> camera, Transform* transform,  glm::
 	m_Quadratic = 0.f;
 	m_InnerCutOff = 0.f;
 	m_OuterCutOff = 0.f;
+
+	shadowMap = new ShadowMap();
 }
 
 void LightSource::SetLightValues(Shader& shader)
@@ -60,6 +62,14 @@ float LightSource::GetOuterCutOff()
 	return m_OuterCutOff;
 }
 
+unsigned int LightSource::getShadowMap(GameObject& m_WorldParent, Shader& depthShader) {
+	return shadowMap->GenerateMap(m_WorldParent, depthShader);
+}
+
+glm::mat4 LightSource::getLightViewMatrix() {
+	return shadowMap->ConfigureShaderAndMatrices();
+}
+
 // Setters
 
 void LightSource::SetColor(glm::vec3 color)
@@ -96,3 +106,5 @@ void LightSource::SetOuterCutOff(float cutOff)
 {
 	m_OuterCutOff = cutOff;
 }
+
+

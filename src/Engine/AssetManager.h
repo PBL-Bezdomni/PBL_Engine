@@ -24,6 +24,7 @@ public:
 	shared_ptr<Shader> UISliderShader;
 	shared_ptr<Shader> LineShader;
 	shared_ptr<Shader> LightSourceShader;
+	shared_ptr<Shader> SimpleDepthShader;
 	
 	AssetManager() = default;
 	~AssetManager();
