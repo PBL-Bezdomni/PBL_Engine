@@ -24,6 +24,21 @@ private:
     bool m_ShouldTeleport = false;
     glm::vec3 m_TeleportTarget;
 
+	// Walking parameters
+	float m_MovingRadius = 10.0f;
+    float m_MoveSpeed = 3.0f;
+
+	glm::vec3 m_TargetPosition;
+    glm::vec3 m_LastPosition;
+
+	bool m_IsInitialized = false;
+	bool m_IsMoving = false;
+	float m_WaitTime = 0.0f;
+	float m_CurrentWaitTime = 0.0f;
+	float m_StuckTimer = 0.0f;
+
+	void PickNewTargetPosition();
+
 public:
     std::vector<AnimalNeeds> m_RequiredServices;
 
