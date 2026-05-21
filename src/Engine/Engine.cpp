@@ -29,6 +29,9 @@ void Engine::Initialize()
 	m_AssetMgr = std::make_unique<AssetManager>();
 	m_AssetMgr->Initialize();
 
+	m_AudioMgr = std::make_unique<AudioManager>();
+	m_AudioMgr->Initialize();
+
 	m_GameMgr = std::make_unique<GameManager>();
 	m_GameMgr->Initialize();
 }
@@ -56,6 +59,11 @@ DebugManager& Engine::GetDebugManager()
 AssetManager& Engine::GetAssetManager()
 {
 	return *m_AssetMgr;
+}
+
+AudioManager& Engine::GetAudioManager()
+{
+	return *m_AudioMgr;
 }
 
 GameManager& Engine::GetGameManager()
