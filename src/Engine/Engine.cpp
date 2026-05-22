@@ -9,6 +9,7 @@ Engine& Engine::GetInstance()
 	{
 		instance.Initialize();
 		instance.m_IsInitialized = true;
+		instance.SecondPassInitialization();
 	}
 	return instance;
 }
@@ -24,13 +25,22 @@ void Engine::Initialize()
 	m_PhysicsEngine->Init();
 
 	m_DebugMgr = std::make_unique<DebugManager>();
-	m_DebugMgr->InitializeImGUI(m_WindowMgr->GetWindowPointer(), GLSL_VERSION);
+	// m_DebugMgr->InitializeImGUI(m_WindowMgr->GetWindowPointer(), GLSL_VERSION);
 	
 	m_AssetMgr = std::make_unique<AssetManager>();
 	m_AssetMgr->Initialize();
 
+	m_AudioMgr = std::make_unique<AudioManager>();
+	m_AudioMgr->Initialize();
+
 	m_GameMgr = std::make_unique<GameManager>();
 	m_GameMgr->Initialize();
+}
+
+void Engine::SecondPassInitialization()
+{
+	// m_GameMgr->LoadScene();
+	m_DebugMgr->InitializeImGUI(m_WindowMgr->GetWindowPointer(), GLSL_VERSION);
 }
 
 bool Engine::GetIsDebugDrawn()
@@ -56,6 +66,11 @@ DebugManager& Engine::GetDebugManager()
 AssetManager& Engine::GetAssetManager()
 {
 	return *m_AssetMgr;
+}
+
+AudioManager& Engine::GetAudioManager()
+{
+	return *m_AudioMgr;
 }
 
 GameManager& Engine::GetGameManager()
@@ -101,6 +116,10 @@ int Engine::MainLoop()
 		// OpenGL rendering code here
 		m_GameMgr->RenderGame();
 
+		if (m_IsDebugDraw)
+		{
+			m_DebugMgr->RenderImgui(m_WindowMgr->GetWindowPointer());
+		}
 
 		// End frame and swap buffers (double buffering)
 		m_WindowMgr->EndFrame();

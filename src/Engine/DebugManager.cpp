@@ -4,12 +4,19 @@
 #include <memory>
 
 
+DebugManager::~DebugManager()
+{
+	// ImGui_ImplOpenGL3_Shutdown();
+	// ImGui_ImplGlfw_Shutdown();
+	// ImGui::DestroyContext();
+}
+
 void DebugManager::InitializeImGUI(GLFWwindow* window, const char* glslVersion)
 {
 	// Setup Dear ImGui binding
+	// glfwMakeContextCurrent(window);
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
-	glfwMakeContextCurrent(window);
 	ImGuiIO& io = ImGui::GetIO();
 	(void)io;
 	// io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;  // Enable Keyboard Controls
@@ -24,12 +31,19 @@ void DebugManager::InitializeImGUI(GLFWwindow* window, const char* glslVersion)
 	spdlog::info("Initialized ImGui.");
 }
 
+void DebugManager::RenderImgui(GLFWwindow* window)
+{
+	ImGUIBegin();
+	ImGUIRender();
+	ImGUIEnd(window);
+}
+
 // TODO For some reason, I couldn't pinpoint ImGui window doesn't react to input. Some dependencies are wrong, idk
 // I'll leave it for now, but at some point, when we will actually need Debug, it will have to be resolve. One possible solution is to
 // move this to WindowManager altogether.
 void DebugManager::ImGUIBegin()
 {
-	glfwPollEvents();
+	// glfwPollEvents();
 	// Start the Dear ImGui frame
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
@@ -49,13 +63,13 @@ void DebugManager::ImGUIRender()
 	ImGui::End();
 }
 
-void DebugManager::ImGUIEnd()
+void DebugManager::ImGUIEnd(GLFWwindow* window)
 {
 	ImGui::Render();
 	int display_w, display_h;
-	WindowManager* windowMgr = &Engine::GetInstance().GetWindowManager();
-	glfwMakeContextCurrent(windowMgr->GetWindowPointer());
-	glfwGetFramebufferSize(windowMgr->GetWindowPointer(), &display_w, &display_h);
+	
+	glfwMakeContextCurrent(window);
+	glfwGetFramebufferSize(window, &display_w, &display_h);
 
 	glViewport(0, 0, display_w, display_h);
 
