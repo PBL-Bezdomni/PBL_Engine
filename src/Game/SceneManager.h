@@ -113,7 +113,6 @@ private:
 	Skybox       m_Skybox;
 
 	WindowManager* WindowMgr = nullptr;
-	DebugManager*  DebugMgr = nullptr;
 	PhysicsEngine* Physics = nullptr;
 	AssetManager*  AssetMgr = nullptr;
 	
@@ -126,6 +125,5 @@ private:
 	
 	float m_SpawnCounter;
 	float m_SpawnTime = 2.f;
-	bool isDebugDraw;
 	float m_TimeLeft = 300.0f;
 };

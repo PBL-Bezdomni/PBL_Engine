@@ -10,9 +10,15 @@ class DebugManager
 {
 public:
 	DebugManager() = default;
+	~DebugManager();
 	void InitializeImGUI(GLFWwindow* window, const char* glslVersion);
+	
+	void RenderImgui(GLFWwindow* window);
+private:
+	float cZ;
+	float cY;
 	
 	void ImGUIBegin();
 	void ImGUIRender();
-	void ImGUIEnd();
+	void ImGUIEnd(GLFWwindow* window);
 };

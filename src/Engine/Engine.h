@@ -33,6 +33,7 @@ private:
 	std::unique_ptr<GameManager> m_GameMgr;
 	
 	void Initialize();
+	void SecondPassInitialization();
 public:
 	const char* GLSL_VERSION = "#version 410";
 	const int32_t GL_VERSION_MAJOR = 4;

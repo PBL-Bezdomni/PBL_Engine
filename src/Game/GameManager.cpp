@@ -25,7 +25,8 @@ void GameManager::StartGame()
 	Engine& engine = Engine::GetInstance();
 	Physics = &engine.GetPhysicsEngine();
 	WindowMgr = &engine.GetWindowManager();
-	
+
+	// TODO Separate load and initialization of Scene Manager
 	LoadScene();
 }
 

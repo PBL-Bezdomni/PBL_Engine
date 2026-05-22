@@ -28,7 +28,6 @@
 int SceneManager::Initialize()
 {
 	Engine& engine = Engine::GetInstance();
-	isDebugDraw = engine.GetIsDebugDrawn();
 
 	WindowMgr = &engine.GetWindowManager();
 	AssetMgr = &engine.GetAssetManager();
@@ -198,14 +197,6 @@ void SceneManager::RenderScene()
 	m_UIManager.DrawPanelWithText(*AssetMgr->UIShader, *AssetMgr->TextShader, m_MoneyPanel);
 	m_UIManager.DrawPanelWithText(*AssetMgr->UIShader, *AssetMgr->TextShader, m_TimerPanel);
 	m_UIManager.DrawPanelWithText(*AssetMgr->UIShader, *AssetMgr->TextShader, m_FpsPanel);
-
-	// Draw ImGui
-	if (isDebugDraw)
-	{
-		DebugMgr->ImGUIBegin();
-		DebugMgr->ImGUIRender(); // edit this function to add your own ImGui controls
-		DebugMgr->ImGUIEnd();    // this call effectively renders ImGui
-	}
 }
 
 void SceneManager::AddAnimal(shared_ptr<GameObject> spawnedEntity)
