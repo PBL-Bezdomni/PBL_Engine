@@ -5,7 +5,7 @@
 #include <random>
 #include <Engine/Time.h>
 
-void Animal::Init() {
+void Animal::Start() {
 
     std::mt19937 rng;
     rng.seed(std::random_device()());

@@ -1,7 +1,7 @@
 #include <Player.h>
 #include "Engine/Engine.h"
 #include <glm/gtc/quaternion.hpp>
-#include <Engine/Components/Animal.h>
+#include <Game/Scripts/Animal.h>
 
 Player::Player(InputManager& input, SpawnManager& spawner, Shader& shader, int deviceid)
 {

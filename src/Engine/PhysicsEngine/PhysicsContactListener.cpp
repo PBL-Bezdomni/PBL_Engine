@@ -2,7 +2,7 @@
 #include "GameObject.h"
 #include <spdlog/spdlog.h>
 #include "../Components/Behaviour.h"
-#include "../Components/MassageTable.h"
+#include "Game/Scripts/MassageTable.h"
 
 void PhysicsContactListener::OnContactAdded(const JPH::Body& inBody1, const JPH::Body& inBody2, const JPH::ContactManifold& inManifold, JPH::ContactSettings& ioSettings)
 {

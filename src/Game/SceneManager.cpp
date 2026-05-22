@@ -19,8 +19,8 @@
 
 #include "Engine/JSONImporter.h"
 
-#include "Engine/Components/MassageTable.h"
-#include "Engine/Components/Animal.h"
+#include "Game/Scripts/MassageTable.h"
+#include "Game/Scripts/Animal.h"
 
 
 #define _USE_MATH_DEFINES

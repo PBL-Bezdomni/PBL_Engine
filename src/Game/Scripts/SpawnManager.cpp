@@ -9,7 +9,7 @@
 #include "Engine/Time.h"
 #include "Game/SceneManager.h"
 #include "Engine/Components/RigidBody.h"
-#include "Engine/Components/Animal.h"
+#include "Game/Scripts/Animal.h"
 
 void SpawnManager::Awake()
 {
