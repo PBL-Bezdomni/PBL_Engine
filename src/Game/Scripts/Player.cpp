@@ -1,16 +1,26 @@
-#include <Player.h>
+#include <Game/Scripts/Player.h>
 #include "Engine/Engine.h"
 #include <glm/gtc/quaternion.hpp>
 #include <Game/Scripts/Animal.h>
+#include <string>
+#include <vector>
+#include "Engine/InputManager.h"
+#include "Engine/Components/RigidBody.h"
+#include "Engine/Time.h"
 
-Player::Player(InputManager& input, SpawnManager& spawner, Shader& shader, int deviceid)
+Player::Player(int deviceid)
 {
 	deviceID = deviceid;
+}
 
-	body = make_unique<GameObject>();
-	AssetManager* am = &Engine::GetInstance().GetAssetManager();
+void Player::Awake()
+{
+    Behaviour::Awake();
+    Engine& engine = Engine::GetInstance();
+    AssetManager* am = &engine.GetAssetManager();
+    InputManager* im = &engine.GetGameManager().GetInputManager();
     string path = "res/models/players/";
-    if (deviceid == 0)
+    if (deviceID == 0)
     {
         path += "druid1/druid1.fbx";
     }
@@ -18,25 +28,27 @@ Player::Player(InputManager& input, SpawnManager& spawner, Shader& shader, int d
     {
         path += "druid2/druid2.fbx";
     }
-	Model bodyModel = *am->GetModel(shader, path.c_str());
-	body->AddComponent<Model>(bodyModel);
+    Model bodyModel = *am->GetModel(*am->BasicShader, path.c_str());
+    m_Owner->AddComponent<Model>(bodyModel);
 
-	input.subscribe(deviceID, "MoveForward", [this](float val, InputEventType type, int id) {
-		if(id == deviceID)
-			this->moveInput.y = val;
-		});
+    im->subscribe(deviceID, "MoveForward", [this](float val, InputEventType type, int id) {
+        if(id == deviceID)
+            this->moveInput.y = val;
+        });
 
-	input.subscribe(deviceID, "MoveStrafe", [this](float val, InputEventType type, int id) {
-		if (id == deviceID)
-			this->moveInput.x = val;
-		});
+    im->subscribe(deviceID, "MoveStrafe", [this](float val, InputEventType type, int id) {
+        if (id == deviceID)
+            this->moveInput.x = val;
+        });
 }
 
-void Player::Update(float deltaTime)
-{
-	if (!body) return;
 
-    RigidBody* rb = body->GetComponent<RigidBody>();
+void Player::Update()
+{
+    float deltaTime = Time::GetDeltaTime();
+	if (!m_Owner) return;
+
+    RigidBody* rb = m_Owner->GetComponent<RigidBody>();
 
 	glm::vec3 direction = glm::vec3(moveInput.x, 0.0f, moveInput.y);
 
@@ -58,7 +70,7 @@ void Player::Update(float deltaTime)
     else
     {
         if (glm::length(direction) > 0.01f) {
-            body->transform->Position += direction * speed * deltaTime;
+            m_Owner->transform->Position += direction * speed * deltaTime;
         }
     }
 
@@ -71,17 +83,17 @@ void Player::Update(float deltaTime)
 
         if (m_CarriedAnimal == nullptr)
         {   
-            glm::vec3 playerPos = body->GetWorldPosition();
+            glm::vec3 playerPos = m_Owner->GetWorldPosition();
 
             playerPos.y += 1.0f;
 
-            glm::vec3 playerForward = glm::quat(glm::radians(body->transform->EulerAngles)) * glm::vec3(0.0f, 0.0f, -1.0f);
+            glm::vec3 playerForward = glm::quat(glm::radians(m_Owner->transform->EulerAngles)) * glm::vec3(0.0f, 0.0f, -1.0f);
 
             float rayDistance = 5.0f;
 
             glm::vec3 endPos = playerPos + (playerForward * rayDistance);
             
-            GameObject* hitObject = Engine::GetInstance().GetPhysicsEngine().CastRay(playerPos, playerForward, rayDistance, body->GetComponent<RigidBody>()->GetBodyID());
+            GameObject* hitObject = Engine::GetInstance().GetPhysicsEngine().CastRay(playerPos, playerForward, rayDistance, m_Owner->GetComponent<RigidBody>()->GetBodyID());
 
             //working on it
             //Engine::GetInstance().GetPhysicsEngine().DrawDebugLine(playerPos, endPos, glm::vec3(0.0f, 1.0f, 0.0f));
@@ -121,7 +133,7 @@ void Player::Update(float deltaTime)
             if (animalRb != nullptr)
             {
                 //will fix later
-                glm::vec3 playerForward = glm::quat(glm::radians(body->transform->EulerAngles)) * glm::vec3(0.0f, 0.0f, 1.0f);
+                glm::vec3 playerForward = glm::quat(glm::radians(m_Owner->transform->EulerAngles)) * glm::vec3(0.0f, 0.0f, 1.0f);
                 playerForward = glm::normalize(playerForward);
 
                 glm::vec3 throwVelocity = playerForward * m_ThrowCharge;
@@ -145,7 +157,7 @@ void Player::Update(float deltaTime)
     if (m_CarriedAnimal != nullptr)
     {
 
-        glm::vec3 headPos = body->GetWorldPosition() + glm::vec3(0.0f, 3.0f, 0.0f);
+        glm::vec3 headPos = m_Owner->GetWorldPosition() + glm::vec3(0.0f, 3.0f, 0.0f);
 
         m_CarriedAnimal->transform->Position = headPos;
         m_CarriedAnimal->UpdateSelfAndChild();
