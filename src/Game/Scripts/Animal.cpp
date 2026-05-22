@@ -5,20 +5,38 @@
 #include <random>
 #include <Engine/Time.h>
 
-void Animal::Start() {
+void Animal::Awake()
+{
+	Behaviour::Awake();
+	std::mt19937 rng;
+	rng.seed(std::random_device()());
+	std::uniform_int_distribution<std::mt19937::result_type> amountDist(1, 3);
+	std::uniform_int_distribution<std::mt19937::result_type> typeDist(0, 3);
 
-    std::mt19937 rng;
-    rng.seed(std::random_device()());
-    std::uniform_int_distribution<std::mt19937::result_type> amountDist(1, 3);
-    std::uniform_int_distribution<std::mt19937::result_type> typeDist(0, 3);
+	m_numberOfNeeds = amountDist(rng);
 
-    m_numberOfNeeds = amountDist(rng);
+	for (int i = 0; i < m_numberOfNeeds; i++)
+	{
+		int randomType = typeDist(rng);
+		m_RequiredServices.push_back(static_cast<AnimalNeeds>(randomType));
+	}
+}
 
-    for (int i = 0; i < m_numberOfNeeds; i++)
-    {
-        int randomType = typeDist(rng);
-        m_RequiredServices.push_back(static_cast<AnimalNeeds>(randomType));
-    }
+void Animal::Start()
+{
+	Behaviour::Start();
+    // std::mt19937 rng;
+    // rng.seed(std::random_device()());
+    // std::uniform_int_distribution<std::mt19937::result_type> amountDist(1, 3);
+    // std::uniform_int_distribution<std::mt19937::result_type> typeDist(0, 3);
+    //
+    // m_numberOfNeeds = amountDist(rng);
+    //
+    // for (int i = 0; i < m_numberOfNeeds; i++)
+    // {
+    //     int randomType = typeDist(rng);
+    //     m_RequiredServices.push_back(static_cast<AnimalNeeds>(randomType));
+    // }
 
 }
 

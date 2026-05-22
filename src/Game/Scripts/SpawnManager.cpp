@@ -46,7 +46,6 @@ void SpawnManager::Update()
 			entity->GetComponent<RigidBody>()->Init();
 			entity->GetComponent<RigidBody>()->Teleport(glm::vec3(posX, 5, posY));
 			entity->AddComponent<Animal>();
-			entity->GetComponent<Animal>()->Init();
 			m_SceneMgr->AddAnimal(entity);
 
 		}

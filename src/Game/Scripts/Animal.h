@@ -44,6 +44,7 @@ public:
 
     bool m_IsSeated = false;
 
+	void Awake() override;
     void Start() override;
 
     void EnterTable(GameObject* table);
