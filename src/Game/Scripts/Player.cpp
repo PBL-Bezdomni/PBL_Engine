@@ -16,6 +16,9 @@ Player::Player(int deviceid)
 void Player::Awake()
 {
     Behaviour::Awake();
+
+    m_Owner->Name = "Player" + std::to_string(deviceID);
+    
     Engine& engine = Engine::GetInstance();
     AssetManager* am = &engine.GetAssetManager();
     InputManager* im = &engine.GetGameManager().GetInputManager();
