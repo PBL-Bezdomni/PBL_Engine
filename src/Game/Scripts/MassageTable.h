@@ -1,5 +1,5 @@
 #pragma once
-#include "Behaviour.h"
+#include "Engine/Components/Behaviour.h"
 
 class Animal;
 class GameObject;

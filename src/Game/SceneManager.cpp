@@ -9,7 +9,7 @@
 #include "Engine/DebugManager.h"
 #include "Engine/Time.h"
 #include "Engine/WindowManager.h"
-#include "Player.h"
+#include "Game/Scripts/Player.h"
 #include "Engine/InputManager.h"
 #include "Engine/Light/DirectionalLight.h"
 #include "Engine/Light/LightSource.h"
@@ -19,8 +19,8 @@
 
 #include "Engine/JSONImporter.h"
 
-#include "Engine/Components/MassageTable.h"
-#include "Engine/Components/Animal.h"
+#include "Game/Scripts/MassageTable.h"
+#include "Game/Scripts/Animal.h"
 
 
 #define _USE_MATH_DEFINES
@@ -93,22 +93,25 @@ int SceneManager::Initialize()
 	inputManager->addBinding("MoveForward", {BindingType::Axis, GLFW_GAMEPAD_AXIS_LEFT_Y });
 	inputManager->addBinding("MoveStrafe", {BindingType::Axis, GLFW_GAMEPAD_AXIS_LEFT_X });
 
-	p1 = new Player(*inputManager, *m_SpawnManager, *AssetMgr->BasicShader, 0);
-	p2 = new Player(*inputManager, *m_SpawnManager, *AssetMgr->BasicShader, 1);
+	m_Player1 = GameObject();
+	m_Player1.AddComponent<Player>(0);
+	m_Player2 = GameObject();
+	m_Player2.AddComponent<Player>(1);
+	p1 = m_Player1.GetComponent<Player>();
+	p2 = m_Player2.GetComponent<Player>();
 
-	objectsTransform.AddChild(p1->body.get());
-	objectsTransform.AddChild(p2->body.get());
-	p1->body->transform->Position = glm::vec3(0.0f, 1.0f, 0.0f);
-	p2->body->transform->Position = glm::vec3(5.0f, 5.0f, 0.0f);
+	objectsTransform.AddChild(&m_Player1);
+	objectsTransform.AddChild(&m_Player2);
+	m_Player1.transform->Position = glm::vec3(0.0f, 1.0f, 0.0f);
+	m_Player2.transform->Position = glm::vec3(5.0f, 5.0f, 0.0f);
 
-	p1->body->UpdateSelfAndChild();
-	p2->body->UpdateSelfAndChild();
+	m_WorldParent.UpdateSelfAndChild();
 
-	p1->body->AddComponent<RigidBody>();
-	p1->body->GetComponent<RigidBody>()->Init(glm::vec3(1.0f, 1.0f, 1.0f), false);
+	m_Player1.AddComponent<RigidBody>();
+	m_Player1.GetComponent<RigidBody>()->Init(glm::vec3(1.0f, 1.0f, 1.0f), false);
 
-	p2->body->AddComponent<RigidBody>();
-	p2->body->GetComponent<RigidBody>()->Init(glm::vec3(1.0f, 1.0f, 1.0f), false);
+	m_Player2.AddComponent<RigidBody>();
+	m_Player2.GetComponent<RigidBody>()->Init(glm::vec3(1.0f, 1.0f, 1.0f), false);
 
 
 	// SHADOW
@@ -146,16 +149,6 @@ void SceneManager::RenderScene()
 	AssetMgr->BasicShader->SetBool("useSpotLight1", false);
 	
     UpdateShaderLight(&m_WorldParent, *AssetMgr->BasicShader, *AssetMgr->SimpleDepthShader);
-
-	// inputManager.update();
-	p1->Update(Time::GetDeltaTime());
-	p2->Update(Time::GetDeltaTime());
-
-	if (p1->body->GetComponent<RigidBody>())
-		p1->body->GetComponent<RigidBody>()->Update();
-
-	if (p2->body->GetComponent<RigidBody>())
-		p2->body->GetComponent<RigidBody>()->Update();
 
     m_WorldParent.UpdateSelfAndChild();
 

@@ -1,5 +1,5 @@
 #pragma once
-#include "Behaviour.h"
+#include "Engine/Components/Behaviour.h"
 #include <glm/glm.hpp>
 #include <vector>
 
@@ -44,7 +44,8 @@ public:
 
     bool m_IsSeated = false;
 
-    void Init();
+	void Awake() override;
+    void Start() override;
 
     void EnterTable(GameObject* table);
 

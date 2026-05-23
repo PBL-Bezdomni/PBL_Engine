@@ -9,7 +9,7 @@
 #include "Engine/Time.h"
 #include "Game/SceneManager.h"
 #include "Engine/Components/RigidBody.h"
-#include "Engine/Components/Animal.h"
+#include "Game/Scripts/Animal.h"
 
 void SpawnManager::Awake()
 {
@@ -46,7 +46,6 @@ void SpawnManager::Update()
 			entity->GetComponent<RigidBody>()->Init();
 			entity->GetComponent<RigidBody>()->Teleport(glm::vec3(posX, 5, posY));
 			entity->AddComponent<Animal>();
-			entity->GetComponent<Animal>()->Init();
 			m_SceneMgr->AddAnimal(entity);
 
 		}
