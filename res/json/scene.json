@@ -1,14 +1,207 @@
 {
     "objects": [
         {
-            "prefab": "MassageTables",
-            "name": "MassageTables",
-            "parent": "Level",
-            "mesh": "unity default resources",
+            "name": "wall_front_right",
+            "prefab": "wall1",
+            "id": 1,
+            "parent": "room",
+            "parentID": 8,
+            "mesh": "wall1.fbx",
+            "base_color_texture": "Stylized_Wall_002_basecolor.png",
+            "normal_texture": "",
             "position": [
-                10.0,
+                -1.2999999523162842,
                 0.0,
-                9.0
+                0.6000000238418579
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                90.0
+            ],
+            "scale": [
+                0.22842299938201905,
+                1.0,
+                0.1671990007162094
+            ],
+            "has_rigid_body": false,
+            "has_collider": true,
+            "collider_pos": [
+                0.0,
+                0.0,
+                0.419068306684494
+            ],
+            "collider_size": [
+                2.5687994956970217,
+                0.04506189003586769,
+                0.838136613368988
+            ],
+            "scripts": [],
+            "saveTime": 639152223774883131
+        },
+        {
+            "name": "Spawner",
+            "prefab": "UNKNOWN",
+            "id": 2,
+            "parent": "Level",
+            "parentID": 6,
+            "mesh": "",
+            "base_color_texture": "",
+            "normal_texture": "",
+            "position": [
+                -1.4500000476837159,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                180.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "has_rigid_body": false,
+            "has_collider": false,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [
+                "SpawnManager"
+            ],
+            "saveTime": 639152223774883131
+        },
+        {
+            "name": "wall_back",
+            "prefab": "wall1",
+            "id": 3,
+            "parent": "room",
+            "parentID": 8,
+            "mesh": "wall1.fbx",
+            "base_color_texture": "Stylized_Wall_002_basecolor.png",
+            "normal_texture": "",
+            "position": [
+                1.2929999828338624,
+                0.0,
+                0.07999999821186066
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                90.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                0.5
+            ],
+            "has_rigid_body": false,
+            "has_collider": true,
+            "collider_pos": [
+                0.0,
+                0.0,
+                0.419068306684494
+            ],
+            "collider_size": [
+                2.5687994956970217,
+                0.04506189003586769,
+                0.838136613368988
+            ],
+            "scripts": [],
+            "saveTime": 639152223774893159
+        },
+        {
+            "name": "wall_front_left",
+            "prefab": "wall1",
+            "id": 4,
+            "parent": "room",
+            "parentID": 8,
+            "mesh": "wall1.fbx",
+            "base_color_texture": "Stylized_Wall_002_basecolor.png",
+            "normal_texture": "",
+            "position": [
+                -1.2999999523162842,
+                0.0,
+                -0.6000000238418579
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                90.0
+            ],
+            "scale": [
+                0.22842299938201905,
+                1.0,
+                0.1671990007162094
+            ],
+            "has_rigid_body": false,
+            "has_collider": true,
+            "collider_pos": [
+                0.0,
+                0.0,
+                0.419068306684494
+            ],
+            "collider_size": [
+                2.5687994956970217,
+                0.04506189003586769,
+                0.838136613368988
+            ],
+            "scripts": [],
+            "saveTime": 639152223774893159
+        },
+        {
+            "name": "floor",
+            "prefab": "floor",
+            "id": 5,
+            "parent": "room",
+            "parentID": 8,
+            "mesh": "floor.fbx",
+            "base_color_texture": "Stylized_Stone_Floor_010_basecolor.png",
+            "normal_texture": "",
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "has_rigid_body": false,
+            "has_collider": true,
+            "collider_pos": [
+                0.19050002098083497,
+                0.0,
+                0.01278652809560299
+            ],
+            "collider_size": [
+                3.0712807178497316,
+                1.8668303489685059,
+                0.02557305619120598
+            ],
+            "scripts": [],
+            "saveTime": 639152223774893159
+        },
+        {
+            "name": "Level",
+            "prefab": "UNKNOWN",
+            "id": 6,
+            "parent": "",
+            "parentID": -1,
+            "mesh": "",
+            "base_color_texture": "",
+            "normal_texture": "",
+            "position": [
+                0.0,
+                0.0,
+                0.0
             ],
             "rotation": [
                 0.0,
@@ -25,221 +218,64 @@
             "collider_pos": [
                 0.0,
                 0.0,
-                0.0
+                0.419068306684494
             ],
             "collider_size": [
-                1.0,
-                1.0,
-                1.0
+                2.5687994956970217,
+                0.04506189003586769,
+                0.838136613368988
             ],
-            "scripts": [
-                "MassageTable",
-                "AnimalInteractions",
-                "NavMeshModifier"
-            ],
-            "saveTime": 639142010355142927
+            "scripts": [],
+            "saveTime": 639152223774893159
         },
         {
-            "prefab": "MassageTables",
-            "name": "MassageTables (1)",
-            "parent": "Level",
-            "mesh": "unity default resources",
+            "name": "wall_left",
+            "prefab": "wall1",
+            "id": 7,
+            "parent": "room",
+            "parentID": 8,
+            "mesh": "wall1.fbx",
+            "base_color_texture": "Stylized_Wall_002_basecolor.png",
+            "normal_texture": "",
             "position": [
-                5.0,
                 0.0,
-                9.0
+                0.0,
+                -0.8999999761581421
             ],
             "rotation": [
+                270.0,
                 0.0,
-                90.0,
                 0.0
             ],
             "scale": [
                 1.0,
                 1.0,
-                1.0
+                0.5
             ],
             "has_rigid_body": false,
             "has_collider": true,
             "collider_pos": [
                 0.0,
                 0.0,
-                0.0
+                0.419068306684494
             ],
             "collider_size": [
-                1.0,
-                1.0,
-                1.0
+                2.5687994956970217,
+                0.04506189003586769,
+                0.838136613368988
             ],
-            "scripts": [
-                "MassageTable",
-                "AnimalInteractions",
-                "NavMeshModifier"
-            ],
-            "saveTime": 639142010355142927
+            "scripts": [],
+            "saveTime": 639152223774893159
         },
         {
-            "prefab": "MassageTables",
-            "name": "MassageTables (4)",
+            "name": "room",
+            "prefab": "UNKNOWN",
+            "id": 8,
             "parent": "Level",
-            "mesh": "unity default resources",
-            "position": [
-                -10.0,
-                0.0,
-                9.0
-            ],
-            "rotation": [
-                0.0,
-                90.0,
-                0.0
-            ],
-            "scale": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "has_rigid_body": false,
-            "has_collider": true,
-            "collider_pos": [
-                0.0,
-                0.0,
-                0.0
-            ],
-            "collider_size": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "scripts": [
-                "MassageTable",
-                "AnimalInteractions",
-                "NavMeshModifier"
-            ],
-            "saveTime": 639142010355142927
-        },
-        {
-            "prefab": "DruidCharacter",
-            "name": "DruidCharacter",
-            "parent": "Level",
-            "mesh": "unity default resources",
-            "position": [
-                4.140361785888672,
-                -9.5367431640625e-7,
-                -6.53000020980835
-            ],
-            "rotation": [
-                0.0,
-                0.0,
-                0.0
-            ],
-            "scale": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "has_rigid_body": true,
-            "has_collider": true,
-            "collider_pos": [
-                0.0,
-                0.3700000047683716,
-                0.0
-            ],
-            "collider_size": [
-                2.0,
-                1.0,
-                2.0
-            ],
-            "scripts": [
-                "PlayerController",
-                "Player",
-                "PlayerInput",
-                "InputAssigner"
-            ],
-            "saveTime": 639142010355148242
-        },
-        {
-            "prefab": "MassageTables",
-            "name": "MassageTables (3)",
-            "parent": "Level",
-            "mesh": "unity default resources",
-            "position": [
-                -5.0,
-                0.0,
-                9.0
-            ],
-            "rotation": [
-                0.0,
-                90.0,
-                0.0
-            ],
-            "scale": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "has_rigid_body": false,
-            "has_collider": true,
-            "collider_pos": [
-                0.0,
-                0.0,
-                0.0
-            ],
-            "collider_size": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "scripts": [
-                "MassageTable",
-                "AnimalInteractions",
-                "NavMeshModifier"
-            ],
-            "saveTime": 639142010355148242
-        },
-        {
-            "prefab": "HotBath",
-            "name": "HotBath",
-            "parent": "Level",
-            "mesh": "unity default resources",
-            "position": [
-                8.0,
-                0.0,
-                -9.0
-            ],
-            "rotation": [
-                0.0,
-                0.0,
-                0.0
-            ],
-            "scale": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "has_rigid_body": false,
-            "has_collider": true,
-            "collider_pos": [
-                0.0,
-                0.0,
-                0.0
-            ],
-            "collider_size": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "scripts": [
-                "Bath",
-                "AnimalInteractions",
-                "NavMeshModifier"
-            ],
-            "saveTime": 639142010355148242
-        },
-        {
-            "prefab": "DryTowels",
-            "name": "DryTowels",
-            "parent": "Level",
-            "mesh": "unity default resources",
+            "parentID": 6,
+            "mesh": "",
+            "base_color_texture": "",
+            "normal_texture": "",
             "position": [
                 0.0,
                 0.0,
@@ -260,136 +296,54 @@
             "collider_pos": [
                 0.0,
                 0.0,
-                0.0
+                0.419068306684494
             ],
             "collider_size": [
-                1.0,
-                1.0,
-                1.0
+                2.5687994956970217,
+                0.04506189003586769,
+                0.838136613368988
             ],
-            "scripts": [
-                "DryTowel",
-                "AnimalInteractions"
-            ],
-            "saveTime": 639142010355148242
+            "scripts": [],
+            "saveTime": 639152223774893159
         },
         {
-            "prefab": "MassageTables",
-            "name": "MassageTables (2)",
-            "parent": "Level",
-            "mesh": "unity default resources",
+            "name": "wall_right",
+            "prefab": "wall1",
+            "id": 9,
+            "parent": "room",
+            "parentID": 8,
+            "mesh": "wall1.fbx",
+            "base_color_texture": "Stylized_Wall_002_basecolor.png",
+            "normal_texture": "",
             "position": [
                 0.0,
                 0.0,
-                9.0
+                0.8999999761581421
             ],
             "rotation": [
+                270.0,
                 0.0,
-                90.0,
                 0.0
             ],
             "scale": [
                 1.0,
                 1.0,
-                1.0
+                0.5
             ],
             "has_rigid_body": false,
             "has_collider": true,
             "collider_pos": [
                 0.0,
                 0.0,
-                0.0
+                0.419068306684494
             ],
             "collider_size": [
-                1.0,
-                1.0,
-                1.0
+                2.5687994956970217,
+                0.04506189003586769,
+                0.838136613368988
             ],
-            "scripts": [
-                "MassageTable",
-                "AnimalInteractions",
-                "NavMeshModifier"
-            ],
-            "saveTime": 639142010355148242
-        },
-        {
-            "prefab": "ConciergeCharacter",
-            "name": "ConciergeCharacter",
-            "parent": "Level",
-            "mesh": "unity default resources",
-            "position": [
-                -0.009999999776482582,
-                0.0,
-                -6.010000228881836
-            ],
-            "rotation": [
-                0.0,
-                0.0,
-                0.0
-            ],
-            "scale": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "has_rigid_body": true,
-            "has_collider": true,
-            "collider_pos": [
-                0.0,
-                0.3700000047683716,
-                0.0
-            ],
-            "collider_size": [
-                2.0,
-                1.0,
-                2.0
-            ],
-            "scripts": [
-                "PlayerController",
-                "Player",
-                "PlayerInput",
-                "InputAssigner"
-            ],
-            "saveTime": 639142010355148242
-        },
-        {
-            "prefab": "Sauna",
-            "name": "Sauna",
-            "parent": "Level",
-            "mesh": "unity default resources",
-            "position": [
-                -8.0,
-                0.0,
-                -9.0
-            ],
-            "rotation": [
-                0.0,
-                0.0,
-                0.0
-            ],
-            "scale": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "has_rigid_body": false,
-            "has_collider": true,
-            "collider_pos": [
-                0.0,
-                0.0,
-                0.0
-            ],
-            "collider_size": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "scripts": [
-                "Sauna",
-                "AnimalInteractions",
-                "NavMeshModifier"
-            ],
-            "saveTime": 639142010355148242
+            "scripts": [],
+            "saveTime": 639152223774893159
         }
     ]
 }
