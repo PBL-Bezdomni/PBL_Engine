@@ -8,6 +8,7 @@ void GameManager::Initialize()
 {
 	m_InputMgr = std::make_unique<InputManager>();
 	m_SceneMgr = std::make_unique<SceneManager>();
+	m_SceneMgr->Initialize();
 }
 
 InputManager& GameManager::GetInputManager()
@@ -44,6 +45,6 @@ void GameManager::RenderGame()
 
 void GameManager::LoadScene()
 {
-	m_SceneMgr->Initialize();
+	m_SceneMgr->LoadScene();
 }
 

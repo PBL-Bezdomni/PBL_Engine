@@ -12,7 +12,7 @@ class Engine
 {
 private:
 	// DEBUG
-	bool m_IsDebugDraw = false;
+	bool m_IsDebugDraw = true;
 	
 	const float FIXED_TIME_STEP = 1.0f / 60.0f;
 	

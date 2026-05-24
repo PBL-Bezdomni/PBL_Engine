@@ -34,12 +34,12 @@ void Engine::Initialize()
 	m_AudioMgr->Initialize();
 
 	m_GameMgr = std::make_unique<GameManager>();
-	m_GameMgr->Initialize();
+	// m_GameMgr->Initialize();
 }
 
 void Engine::SecondPassInitialization()
 {
-	// m_GameMgr->LoadScene();
+	m_GameMgr->Initialize();
 	m_DebugMgr->InitializeImGUI(m_WindowMgr->GetWindowPointer(), GLSL_VERSION);
 }
 

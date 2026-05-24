@@ -27,7 +27,8 @@ private:
 	UIPanel m_FpsPanel;
 	
 public:
-	int Initialize();
+	void Initialize();
+	void LoadScene();
 	void UpdateScene();
 	void RenderScene();
 	void AddAnimal(shared_ptr<GameObject> spawnedEntity);

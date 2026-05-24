@@ -25,26 +25,23 @@
 
 #define _USE_MATH_DEFINES
 
-int SceneManager::Initialize()
+void SceneManager::Initialize()
 {
 	Engine& engine = Engine::GetInstance();
 
+	Physics = &engine.GetPhysicsEngine();
 	WindowMgr = &engine.GetWindowManager();
 	AssetMgr = &engine.GetAssetManager();
-	m_JSONImporter = make_unique<JSONImporter>();
-	// TODO make sure everything imports correctly
-	m_JSONImporter->Initialize();
-	
-	// engine.Start();
+
 	if (!engine.GetWindowManager().GetIsInitialized())
 	{
 		spdlog::error("Failed to initialize project!");
-		return EXIT_FAILURE;
+		return;
 	}
-
-	m_MouseLastX = WindowMgr->WINDOW_WIDTH / 2; 
-	m_MouseLastY = WindowMgr->WINDOW_HEIGHT / 2;
-
+	
+	m_JSONImporter = make_unique<JSONImporter>();
+	m_JSONImporter->Initialize();
+	
 	// glfwSetInputMode(WindowMgr->GetWindowPointer(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetWindowUserPointer(WindowMgr->GetWindowPointer(), this);
 	glfwSetCursorPosCallback(WindowMgr->GetWindowPointer(), SceneManager::MouseCallbackDispatcher);
@@ -53,17 +50,29 @@ int SceneManager::Initialize()
     
 	spdlog::info("Initialized project.");
 
-	// spdlog::info("Initialized ImGui.");
-
 	std::string fontPath = Loader::RelativePath() + "res/fonts/Choko Regular_8337.otf";
 	
 	m_UIManager.Init(AssetMgr, WindowMgr, fontPath.c_str());
+	
+	//GAMEPAD
 
+	inputManager = &engine.GetGameManager().GetInputManager();
+
+	inputManager->createAction("MoveForward");
+	inputManager->createAction("MoveStrafe");
+
+	inputManager->addBinding("MoveForward", {BindingType::Axis, GLFW_GAMEPAD_AXIS_LEFT_Y });
+	inputManager->addBinding("MoveStrafe", {BindingType::Axis, GLFW_GAMEPAD_AXIS_LEFT_X });
+}
+
+void SceneManager::LoadScene()
+{
+	m_MouseLastX = WindowMgr->WINDOW_WIDTH / 2; 
+	m_MouseLastY = WindowMgr->WINDOW_HEIGHT / 2;
+	
 	MainCamera = make_shared<Camera>(glm::vec3(0.f, 25.f, 47.f), glm::vec3(0.0, 1.0, 0.0), -90.f, -25.f);
 	MainCamera->SetAspect(float(WindowMgr->WINDOW_WIDTH) / float(WindowMgr->WINDOW_HEIGHT));
-
-	Physics = &engine.GetPhysicsEngine();
-
+	
 	LoadModels();
 	AssignSceneGraph();
 	InitializeUI();
@@ -77,17 +86,7 @@ int SceneManager::Initialize()
 
 	m_WorldParent.UpdateSelfAndChild();
 	m_WorldParent.StartSelfAndChild();
-
-	//GAMEPAD
-
-	inputManager = &engine.GetGameManager().GetInputManager();
-
-	inputManager->createAction("MoveForward");
-	inputManager->createAction("MoveStrafe");
-
-	inputManager->addBinding("MoveForward", {BindingType::Axis, GLFW_GAMEPAD_AXIS_LEFT_Y });
-	inputManager->addBinding("MoveStrafe", {BindingType::Axis, GLFW_GAMEPAD_AXIS_LEFT_X });
-
+	
 	m_Player1 = GameObject();
 	m_Player1.AddComponent<Player>(0);
 	m_Player2 = GameObject();
@@ -112,8 +111,6 @@ int SceneManager::Initialize()
 
 	AssetMgr->BasicShader->Use();
 	AssetMgr->BasicShader->SetInt("shadowMap", 20);
-
-	return 0;
 }
 
 void SceneManager::UpdateScene()
@@ -243,7 +240,6 @@ void SceneManager::UpdateShaderLight(GameObject* gameObject, Shader& shader, Sha
 	}
 }
 
-// TODO remove those methods or move them elsewhere
 void SceneManager::AssignSceneGraph()
 {
 	m_WorldParent.AddChild(&m_LightSource);
