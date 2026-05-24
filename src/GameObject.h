@@ -21,10 +21,12 @@ private:
 public:
 	Transform* transform;
 	string Name;
+	int ID;
 	GameObject();
 	vector<GameObject*> Children;
 	
 	GameObject* Parent = nullptr;
+	int ParentID;
 
 	void UpdateSelfAndChild();
 	void UpdateSelfAndChildInstanceMatrix(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale, int index, Shader& shader, bool saveNew);

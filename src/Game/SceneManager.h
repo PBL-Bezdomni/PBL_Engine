@@ -6,6 +6,7 @@
 #include "Skybox.h"
 #include "Game/Scripts/SpawnManager.h"
 #include "Engine/InputManager.h"
+#include "Engine/JSONImporter.h"
 #include "UI/UIManager.h"
 
 class AssetManager;
@@ -17,6 +18,7 @@ class Player;
 class SceneManager
 {
 private:
+	unique_ptr<JSONImporter> m_JSONImporter;
 	GameObject m_WorldParent;
 	GameObject m_UIParent;
 	UIManager m_UIManager;
@@ -37,8 +39,8 @@ private:
 	//TODO move those functions elsewhere or remove them completely
 	void UpdateShaderLight(GameObject* gameObject, Shader& shader, Shader& depthShader);
 	void AssignSceneGraph();
-	void AssignSceneModelsGraph();
-	void LoadSceneModels();
+	// void AssignSceneModelsGraph();
+	// void LoadSceneModels();
 	void LoadModels();
 	void InitializeUI();
 	void input(GLFWwindow* window);
@@ -76,26 +78,26 @@ private:
 	
 	GameObject skybox;
 	
-	GameObject objectsTransform;
-	GameObject spawnManagerObject;
+	// GameObject objectsTransform;
+	// GameObject spawnManagerObject;
 
-	GameObject m_Scene;
-	GameObject m_Floor;
-	GameObject m_WallDir;
-	GameObject m_WallLeft;
-	GameObject m_WallRight;
-	GameObject m_WallBack;
-	GameObject m_WallFrontRight;
-	GameObject m_WallFrontLeft;
-	GameObject m_OnsenObjects;
-	GameObject m_TowelsBed;
-	GameObject m_Waterpool;
-	GameObject m_TablesDir;
-	GameObject m_Table1;
-	GameObject m_Table2;
-	GameObject m_Table3;
-	GameObject m_Table4;
-	GameObject m_Table5;
+	// GameObject m_Scene;
+	// GameObject m_Floor;
+	// GameObject m_WallDir;
+	// GameObject m_WallLeft;
+	// GameObject m_WallRight;
+	// GameObject m_WallBack;
+	// GameObject m_WallFrontRight;
+	// GameObject m_WallFrontLeft;
+	// GameObject m_OnsenObjects;
+	// GameObject m_TowelsBed;
+	// GameObject m_Waterpool;
+	// GameObject m_TablesDir;
+	// GameObject m_Table1;
+	// GameObject m_Table2;
+	// GameObject m_Table3;
+	// GameObject m_Table4;
+	// GameObject m_Table5;
 
 	GameObject m_LightSource;
 	GameObject m_LightSourceObject;
