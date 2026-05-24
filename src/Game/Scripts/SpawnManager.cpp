@@ -33,18 +33,18 @@ void SpawnManager::Update()
 		m_SpawnCounter = 0;
 		shared_ptr<GameObject> entity = SpawnEntity(m_AssetMgr->BasicShader);
 		float posX = Random::GetRandomInt(-WALL_X_BORDER, WALL_X_BORDER);
-		float posY = Random::GetRandomInt(-WALL_Y_BORDER, WALL_Y_BORDER);
+		float posY = Random::GetRandomInt(0, WALL_Y_BORDER);
 		//spawnedEntity->transform->Scale = glm::vec3(2, 2, 2);
 		if (entity != nullptr)
 		{
-			//entity->transform->Position = glm::vec3(posX, 5, posY);
+			entity->transform->Position = glm::vec3(posX, 5, posY);
 			//entity->GetComponent<RigidBody>()->Teleport(glm::vec3(posX, 5, posY));
 			// entity->SetParent(m_SceneMgr->objectsTransform.get());
 
 			entity->UpdateSelfAndChild();
 			entity->AddComponent<RigidBody>();
-			entity->GetComponent<RigidBody>()->Init();
-			entity->GetComponent<RigidBody>()->Teleport(glm::vec3(posX, 5, posY));
+			entity->GetComponent<RigidBody>()->PrepareInit();
+			// entity->GetComponent<RigidBody>()->Teleport(glm::vec3(posX, 5, posY));
 			entity->AddComponent<Animal>();
 			m_SceneMgr->AddAnimal(entity);
 

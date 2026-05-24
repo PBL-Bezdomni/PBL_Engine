@@ -13,7 +13,7 @@ class SpawnManager : public Behaviour
 {
 private:
 	float WALL_X_BORDER = 10.f;
-	float WALL_Y_BORDER = 10.f;
+	float WALL_Y_BORDER = 50.f;
 	
 	float m_SpawnCounter;
 	float m_SpawnTime = 2.f;
