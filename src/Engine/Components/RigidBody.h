@@ -8,8 +8,9 @@ class PhysicsEngine;
 class RigidBody : public Component
 {
 public:
-    RigidBody() = default;
+    RigidBody();
 
+    void PrepareInit(const glm::vec3& halfExtents = glm::vec3(1.0, 1.0, 1.0), bool isStatic = false, bool isTrigger = false);
     void Init(const glm::vec3& halfExtents = glm::vec3(1.0, 1.0, 1.0), bool isStatic = false, bool isTrigger = false);
 
     void Update();
@@ -28,6 +29,10 @@ public:
     glm::vec3 GetPosition();
 
 private:
+    glm::vec3 m_HalfExtents;
+    bool m_IsStatic;
+    bool m_IsTrigger;
+    
     PhysicsEngine* m_PhysicsEngine = nullptr;
     unsigned int m_BodyID = 0xffffffff;
     bool m_Initialized = false;

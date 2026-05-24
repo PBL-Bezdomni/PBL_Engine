@@ -83,18 +83,6 @@ void GameObject::UpdateSelfAndChild()
         }
     }
 
-    if (rb == nullptr)
-    {
-        if (Parent != nullptr)
-        {
-            transform->ModelMatrix = Parent->transform->ModelMatrix * transform->GetLocalModelMatrix();
-        }
-        else
-        {
-            transform->ModelMatrix = transform->GetLocalModelMatrix();
-        }
-    }
-
     AddPendingChildren();
 
     for (auto&& child : Children)

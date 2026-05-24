@@ -6,6 +6,20 @@
 #include <Jolt/Physics/Body/BodyID.h>
 #include <glm/gtc/quaternion.hpp>
 
+RigidBody::RigidBody()
+{
+    m_HalfExtents = glm::vec3(1);
+    m_IsStatic = false;
+    m_IsTrigger = false;
+}
+
+void RigidBody::PrepareInit(const glm::vec3& halfExtents, bool isStatic, bool isTrigger)
+{
+    m_HalfExtents = halfExtents;
+    m_IsStatic = isStatic;
+    m_IsTrigger = isTrigger;
+}
+
 void RigidBody::Init(const glm::vec3& halfExtents, bool isStatic, bool isTrigger)
 {
     m_PhysicsEngine = &Engine::GetInstance().GetPhysicsEngine();
@@ -38,6 +52,11 @@ void RigidBody::Init(const glm::vec3& halfExtents, bool isStatic, bool isTrigger
 
 void RigidBody::Update()
 {
+    if (!m_Initialized)
+    {
+        Init(m_HalfExtents, m_IsStatic, m_IsTrigger);
+    }
+    
     if (!m_Initialized || !m_PhysicsEngine) return;
 
     JPH::BodyID realID(m_BodyID);

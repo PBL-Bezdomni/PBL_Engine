@@ -9,8 +9,6 @@
 #include <iostream>
 #include <fstream>
 
-#include "Quaternion.h"
-
 void JSONImporter::Initialize()
 {
     m_AssetMgr = &Engine::GetInstance().GetAssetManager();
@@ -51,42 +49,24 @@ shared_ptr<GameObject> JSONImporter::ImportObjectFromData(nlohmann::basic_json<>
     gameObject->transform->Position = glm::vec3(pos[0], pos[1], pos[2]);
     gameObject->transform->Position *= TRANSFORM_MOD;
     gameObject->transform->Scale = glm::vec3(sca[0], sca[1], sca[2]);
-
-    // Do rotation
-    // glm::vec3 eulerAngles = glm::vec3(rot[0], rot[1], rot[2]);
-    // Quaternion quat = Quaternion();
-    // for (int i = 0; i < 3; i++)
-    // {
-    //     glm::vec3 axis = glm::vec3(0);
-    //     axis[i] = 1;
-    //     float angle = eulerAngles[i];
-    //     gameObject->transform->EulerAngles += quat.RotateQuaternion(glm::vec3(1.0f), axis, angle);
-    // }
     gameObject->transform->EulerAngles = glm::vec3(rot[0], rot[1], rot[2]);
 
     bool hasRB = obj.value("has_rigid_body", false);
     bool hasColl = obj.value("has_collider", false);
     if (hasRB || hasColl)
     {
-        // gameObject->AddComponent<RigidBody>();
-        // RigidBody* rb = gameObject->GetComponent<RigidBody>();
-        //
-        // auto size = obj.value("collider_size", std::vector<float>{1.0f, 1.0f, 1.0f});
-        // auto cPos = obj.value("collider_pos", std::vector<float>{0.0f, 0.0f, 0.0f});
-        //
-        // glm::vec3 colliderSize = glm::vec3(size[0], size[1], size[2]);
-        // glm::vec3 colliderOffset = glm::vec3(cPos[0], cPos[1], cPos[2]);
-        //
-        // // TODO collider offset is not used now
-        // rb->Init(colliderSize, !hasRB);
-        // // rb->Init(colliderSize, hasRB);
-        //
-        // // glm::vec3 worldPos = glm::vec3(gameObject->transform->Position);
-        // rb->Teleport(gameObject->transform->Position);
-        // rb->SetRotation(gameObject->transform->EulerAngles);
-        // // rb->Teleport(worldPos + colliderOffset);
-
+        gameObject->AddComponent<RigidBody>();
+        RigidBody* rb = gameObject->GetComponent<RigidBody>();
         
+        auto size = obj.value("collider_size", std::vector<float>{1.0f, 1.0f, 1.0f});
+        auto cPos = obj.value("collider_pos", std::vector<float>{0.0f, 0.0f, 0.0f});
+        
+        glm::vec3 colliderSize = glm::vec3(size[0], size[1], size[2]);
+        colliderSize *= COLLIDER_MOD;
+        glm::vec3 colliderOffset = glm::vec3(cPos[0], cPos[1], cPos[2]);
+        
+        // TODO collider offset is not used now
+        rb->PrepareInit(colliderSize, !hasRB);        
     }
     
     if (obj.contains("scripts"))
@@ -121,7 +101,6 @@ void JSONImporter::AssignGraph(vector<shared_ptr<GameObject>> gameObjects, GameO
     }
 }
 
-
 std::vector<shared_ptr<GameObject>> JSONImporter::ImportScene(const char* fileName, GameObject* root)
 {
     json data = GetData(fileName);
@@ -132,6 +111,14 @@ std::vector<shared_ptr<GameObject>> JSONImporter::ImportScene(const char* fileNa
     }
     AssignGraph(objs, root);
     root->UpdateSelfAndChild();
+    return objs;
+}
+
+std::vector<std::shared_ptr<GameObject>> JSONImporter::ImportPrefab(const char* fileName, GameObject* root)
+{
+    // TODO import prefab and all it's children here, similarly like in import scene.
+    // If process will be exatly the same, maybe remove this method and rename the other
+    vector<shared_ptr<GameObject>> objs;
     return objs;
 }
 
@@ -168,10 +155,10 @@ void JSONImporter::AssignScript(GameObject* go, nlohmann::basic_json<>& scriptNa
     {
         go->AddComponent<SpawnManager>();
     }
-    // else if (scriptName == "MassageTable" || scriptName == "DryTowel")
-    // {
-    //     if (!go->GetComponent<MassageTable>()) go->AddComponent<MassageTable>();
-    // }
+    else if (scriptName == "MassageTable")
+    {
+        if (!go->GetComponent<MassageTable>()) go->AddComponent<MassageTable>();
+    }
 }
 
 
