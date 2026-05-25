@@ -133,6 +133,15 @@ void SceneManager::RenderScene()
 	AssetMgr->BasicShader->SetBool("useDirLight", false);
 	AssetMgr->BasicShader->SetBool("usePointLight", false);
 	AssetMgr->BasicShader->SetBool("useSpotLight1", false);
+
+	if (AssetMgr->PieChartShader != nullptr)
+	{
+		AssetMgr->PieChartShader->Use();
+		AssetMgr->PieChartShader->SetMat4("view", view);
+		AssetMgr->PieChartShader->SetMat4("projection", projection);
+
+		AssetMgr->BasicShader->Use();
+	}
 	
     UpdateShaderLight(&m_WorldParent, *AssetMgr->BasicShader, *AssetMgr->SimpleDepthShader);
 
@@ -144,6 +153,37 @@ void SceneManager::RenderScene()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     m_WorldParent.DrawSelfAndChild(NULL);
+
+	if (AssetMgr->PieChartShader != nullptr)
+	{
+		AssetMgr->PieChartShader->Use();
+		AssetMgr->PieChartShader->SetMat4("view", view);
+		AssetMgr->PieChartShader->SetMat4("projection", projection);
+
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		glDepthMask(GL_FALSE);
+
+		for (Animal* animal : m_AnimalsList)
+		{
+			if (animal != nullptr && animal->GetIndicatorObject() != nullptr)
+			{
+				glm::vec3 worldPos = glm::vec3(animal->GetOwner()->transform->ModelMatrix[3]);
+				animal->GetIndicatorObject()->transform->Position = worldPos + glm::vec3(0.0f, -0.5f, 0.0f);
+				animal->GetIndicatorObject()->UpdateSelfAndChild();
+
+				animal->UpdateIndicatorColors();
+				animal->GetIndicatorObject()->DrawSelfAndChild(NULL);
+			}
+		}
+
+		glDepthMask(GL_TRUE);
+		glDisable(GL_BLEND);
+
+		AssetMgr->BasicShader->Use();
+	}
+
 	m_Skybox.DrawSkybox(skyboxView, projection);
 
     glDisable(GL_DEPTH_TEST);
@@ -181,6 +221,12 @@ void SceneManager::AddAnimal(shared_ptr<GameObject> spawnedEntity)
 	if (spawnedEntity != nullptr)
 	{
 		m_WorldParent.AddChild(spawnedEntity.get());
+
+		Animal* animal = spawnedEntity->GetComponent<Animal>();
+		if (animal != nullptr)
+		{
+			m_AnimalsList.push_back(animal);
+		}
 	}
 }
 

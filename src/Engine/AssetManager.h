@@ -25,6 +25,7 @@ public:
 	shared_ptr<Shader> LineShader;
 	shared_ptr<Shader> LightSourceShader;
 	shared_ptr<Shader> SimpleDepthShader;
+	shared_ptr<Shader> PieChartShader;
 	
 	AssetManager() = default;
 	~AssetManager();

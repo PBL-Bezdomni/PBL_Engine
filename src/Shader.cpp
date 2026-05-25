@@ -113,7 +113,16 @@ void Shader::SetVec4(const std::string& name, glm::vec4 vector)
         glUniform4fv(vectorLoc, 1, glm::value_ptr(vector));
     }
 }
-
+// ------------------------------------------------------------------------
+void Shader::SetIVec4(const std::string& name, int x, int y, int z, int w) const
+{
+    unsigned int vectorLoc = glGetUniformLocation(ID, name.c_str());
+    if (vectorLoc != -1)
+    {
+        glUniform4i(vectorLoc, x, y, z, w);
+    }
+}
+// ------------------------------------------------------------------------
 void Shader::CheckCompileErrors(unsigned int shader, std::string type)
 {
     int success;

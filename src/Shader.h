@@ -38,6 +38,8 @@ public:
     void SetVec3(const std::string& name, glm::vec3 vector);
     // ------------------------------------------------------------------------
     void SetVec4(const std::string& name, glm::vec4 vector);
+    // ------------------------------------------------------------------------
+    void SetIVec4(const std::string& name, int x, int y, int z, int w) const;
 private:
     // utility function for checking shader compilation/linking errors.
     // ------------------------------------------------------------------------

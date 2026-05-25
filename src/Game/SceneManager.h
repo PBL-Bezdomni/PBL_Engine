@@ -8,6 +8,7 @@
 #include "Engine/InputManager.h"
 #include "Engine/JSONImporter.h"
 #include "UI/UIManager.h"
+#include "Game/Scripts/Animal.h"
 
 class AssetManager;
 class PhysicsEngine;
@@ -25,6 +26,8 @@ private:
 	UIPanel m_TimerPanel;
 	UIPanel m_MoneyPanel;
 	UIPanel m_FpsPanel;
+
+	std::vector<Animal*> m_AnimalsList;
 	
 public:
 	void Initialize();

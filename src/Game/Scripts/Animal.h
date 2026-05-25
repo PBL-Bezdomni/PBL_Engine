@@ -2,6 +2,8 @@
 #include "Engine/Components/Behaviour.h"
 #include <glm/glm.hpp>
 #include <vector>
+#include "Shader.h"
+#include <memory>
 
 class GameObject;
 
@@ -39,6 +41,9 @@ private:
 
 	void PickNewTargetPosition();
 
+    std::shared_ptr<Shader> m_PieShader;
+    std::shared_ptr<GameObject> m_Indicator;
+
 public:
     std::vector<AnimalNeeds> m_RequiredServices;
 
@@ -50,4 +55,9 @@ public:
     void EnterTable(GameObject* table);
 
     void Update() override;
+
+    void SetIndicatorShader(std::shared_ptr<Shader> pieShader);
+    void UpdateIndicatorColors();
+    void SetIndicatorObject(std::shared_ptr<GameObject> indicator) { m_Indicator = indicator; }
+    std::shared_ptr<GameObject> GetIndicatorObject() { return m_Indicator; }
 };

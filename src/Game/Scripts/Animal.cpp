@@ -7,19 +7,21 @@
 
 void Animal::Awake()
 {
-	Behaviour::Awake();
-	std::mt19937 rng;
-	rng.seed(std::random_device()());
-	std::uniform_int_distribution<std::mt19937::result_type> amountDist(1, 3);
-	std::uniform_int_distribution<std::mt19937::result_type> typeDist(0, 3);
+    Behaviour::Awake();
+    std::mt19937 rng;
+    rng.seed(std::random_device()());
 
-	m_numberOfNeeds = amountDist(rng);
+    std::uniform_int_distribution<std::mt19937::result_type> amountDist(1, 4);
+    m_numberOfNeeds = amountDist(rng);
+    std::vector<int> possibleNeeds = { 0, 1, 2, 3 };
 
-	for (int i = 0; i < m_numberOfNeeds; i++)
-	{
-		int randomType = typeDist(rng);
-		m_RequiredServices.push_back(static_cast<AnimalNeeds>(randomType));
-	}
+    std::shuffle(possibleNeeds.begin(), possibleNeeds.end(), rng);
+
+    for (int i = 0; i < m_numberOfNeeds; i++)
+    {
+        int randomType = possibleNeeds[i];
+        m_RequiredServices.push_back(static_cast<AnimalNeeds>(randomType));
+    }
 }
 
 void Animal::Start()
@@ -147,4 +149,40 @@ void Animal::Update()
 			PickNewTargetPosition();
 		}
 	}
+
+    if (m_Indicator != nullptr)
+    {
+        m_Indicator->transform->Position = m_Owner->transform->Position;
+        m_Indicator->UpdateSelfAndChild();
+    }
+}
+
+void Animal::SetIndicatorShader(std::shared_ptr<Shader> pieShader)
+{
+    m_PieShader = pieShader;
+    UpdateIndicatorColors();
+}
+
+void Animal::UpdateIndicatorColors()
+{
+    if (m_PieShader == nullptr) return;
+
+    m_PieShader->Use();
+
+    int numNeeds = m_RequiredServices.size();
+    m_PieShader->SetInt("u_NumNeeds", numNeeds);
+
+    glm::ivec4 shaderNeeds(-1, -1, -1, -1);
+
+    for (int i = 0; i < numNeeds; i++)
+    {
+        int needValue = static_cast<int>(m_RequiredServices[i]);
+
+        if (i == 0) shaderNeeds.x = needValue;
+        if (i == 1) shaderNeeds.y = needValue;
+        if (i == 2) shaderNeeds.z = needValue;
+        if (i == 3) shaderNeeds.w = needValue;
+    }
+
+    m_PieShader->SetIVec4("u_Needs", shaderNeeds.x, shaderNeeds.y, shaderNeeds.z, shaderNeeds.w);
 }

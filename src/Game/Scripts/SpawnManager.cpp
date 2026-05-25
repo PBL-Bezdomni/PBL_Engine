@@ -45,9 +45,22 @@ void SpawnManager::Update()
 			entity->AddComponent<RigidBody>();
 			entity->GetComponent<RigidBody>()->PrepareInit();
 			// entity->GetComponent<RigidBody>()->Teleport(glm::vec3(posX, 5, posY));
-			entity->AddComponent<Animal>();
-			m_SceneMgr->AddAnimal(entity);
 
+			entity->AddComponent<Animal>();
+			Animal* animalScript = entity->GetComponent<Animal>();
+
+			shared_ptr<GameObject> indicator = m_SceneMgr->Instantiate("res/models/plane.obj", m_AssetMgr->PieChartShader);
+			indicator->Name = "NeedsIndicator";
+
+			indicator->transform->Scale = glm::vec3(2.0f, 2.0f, 2.0f);
+
+			if (animalScript != nullptr)
+			{
+				animalScript->SetIndicatorShader(m_AssetMgr->PieChartShader);
+				animalScript->SetIndicatorObject(indicator);
+			}
+
+			m_SceneMgr->AddAnimal(entity);
 		}
 	}
 }
