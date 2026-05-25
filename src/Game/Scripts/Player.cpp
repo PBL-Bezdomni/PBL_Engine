@@ -90,7 +90,7 @@ void Player::Update()
 
             playerPos.y += 1.0f;
 
-            glm::vec3 playerForward = glm::quat(glm::radians(m_Owner->transform->EulerAngles)) * glm::vec3(0.0f, 0.0f, -1.0f);
+            glm::vec3 playerForward = glm::quat(glm::radians(m_Owner->transform->EulerAngles)) * glm::vec3(0.0f, 0.0f, 1.0f);
 
             float rayDistance = 5.0f;
 
@@ -136,7 +136,7 @@ void Player::Update()
             if (animalRb != nullptr)
             {
                 //will fix later
-                glm::vec3 playerForward = glm::quat(glm::radians(m_Owner->transform->EulerAngles)) * glm::vec3(0.0f, 0.0f, 1.0f);
+                glm::vec3 playerForward = glm::quat(glm::radians(m_Owner->transform->EulerAngles)) * glm::vec3(0.0f, 0.0f, -1.0f);
                 playerForward = glm::normalize(playerForward);
 
                 glm::vec3 throwVelocity = playerForward * m_ThrowCharge;
