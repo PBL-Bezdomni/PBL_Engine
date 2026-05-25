@@ -1,11 +1,18 @@
 #include <glm/glm.hpp>
 #include "GameObject.h"
+#include "Engine/InputManager.h"
 #include "Game/Scripts/SpawnManager.h"
 
 class GameObject;
 
 class Player : public Behaviour
 {
+private:
+    InputName m_InputName;
+
+    void HandleActionPressed();
+    void HandleThrowPressed();
+    void HandleThrowReleased();
 public:
     glm::vec2 moveInput{ 0.0f };
     float speed = 10.0f;

@@ -10,7 +10,7 @@ void InputManager::Initialize()
     addBinding(InputName.MOVE_FORWARD, {BindingType::Axis, GLFW_GAMEPAD_AXIS_LEFT_Y });
     addBinding(InputName.MOVE_STRAFE, {BindingType::Axis, GLFW_GAMEPAD_AXIS_LEFT_X });
     addBinding(InputName.ACTION, {BindingType::Button, GLFW_GAMEPAD_BUTTON_A});
-    addBinding(InputName.THROW, {BindingType::Button, GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER});
+    addBinding(InputName.THROW, {BindingType::Button, GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER});
 }
 
 void InputManager::createAction(const std::string& name) {
@@ -54,7 +54,10 @@ void InputManager::update() {
                 if (deviceID != -1) {
                     if (glfwGetGamepadState(deviceID, &state)) {
                         if (bind.type == BindingType::Button) {
-                            if (state.buttons[bind.code]) maxValue = 1.0f;
+                            if (state.buttons[bind.code])
+                            {
+                                maxValue = 1.0f;
+                            }
                         }
                         else {
                             float axisVal = state.axes[bind.code];
@@ -77,7 +80,7 @@ void InputManager::processStateTransition(InputAction& action, float currentValu
         trigger(action, currentValue, InputEventType::Started, deviceID);
     }
     else if (!currentlyPressed && action.isPressed) {
-        trigger(action, 0.0f, InputEventType::Canceled, deviceID);
+        trigger(action, 0.0f, InputEventType::Ended, deviceID);
     }
     else if (std::abs(currentValue - action.lastValue) > 0.001f && currentlyPressed) {
         trigger(action, currentValue, InputEventType::Performed, deviceID);

@@ -14,7 +14,7 @@ struct Binding {
     float threshold; 
 };
 
-enum class InputEventType { Started, Performed, Canceled };
+enum class InputEventType { Started, Performed, Ended };
 using ActionCallback = std::function<void(float value, InputEventType type, int deviceID)>;
 
 struct InputAction {

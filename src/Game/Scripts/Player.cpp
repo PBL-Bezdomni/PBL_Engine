@@ -34,15 +34,37 @@ void Player::Awake()
     Model bodyModel = *am->GetModel(*am->BasicShader, path.c_str());
     m_Owner->AddComponent<Model>(bodyModel);
 
-    im->subscribe(deviceID, "MoveForward", [this](float val, InputEventType type, int id) {
+    im->subscribe(deviceID, m_InputName.MOVE_FORWARD, [this](float val, InputEventType type, int id) {
         if(id == deviceID)
             this->moveInput.y = val;
         });
 
-    im->subscribe(deviceID, "MoveStrafe", [this](float val, InputEventType type, int id) {
+    im->subscribe(deviceID, m_InputName.MOVE_STRAFE, [this](float val, InputEventType type, int id) {
         if (id == deviceID)
             this->moveInput.x = val;
         });
+
+    im->subscribe(deviceID, m_InputName.ACTION, [this](float val, InputEventType type, int id)
+    {
+        if (id == deviceID && type == InputEventType::Started)
+            this->HandleActionPressed();
+    });
+
+    im->subscribe(deviceID, m_InputName.THROW, [this](float val, InputEventType type, int id)
+    {
+        if (id == deviceID && type == InputEventType::Started)
+        {
+            this->HandleThrowPressed();
+        }
+    });
+
+    im->subscribe(deviceID, m_InputName.THROW, [this](float val, InputEventType type, int id)
+    {
+        if (id == deviceID && type == InputEventType::Ended)
+        {
+            this->HandleThrowReleased();
+        }
+    });
 }
 
 
@@ -77,86 +99,14 @@ void Player::Update()
         }
     }
 
-
-
-
-
-    if (glfwGetKey(Engine::GetInstance().GetWindowManager().GetWindowPointer(), GLFW_KEY_F) == GLFW_PRESS)
+    if (m_IsChargingThrow)
     {
-
-        if (m_CarriedAnimal == nullptr)
-        {   
-            glm::vec3 playerPos = m_Owner->GetWorldPosition();
-
-            playerPos.y += 1.0f;
-
-            glm::vec3 playerForward = glm::quat(glm::radians(m_Owner->transform->EulerAngles)) * glm::vec3(0.0f, 0.0f, 1.0f);
-
-            float rayDistance = 5.0f;
-
-            glm::vec3 endPos = playerPos + (playerForward * rayDistance);
-            
-            GameObject* hitObject = Engine::GetInstance().GetPhysicsEngine().CastRay(playerPos, playerForward, rayDistance, m_Owner->GetComponent<RigidBody>()->GetBodyID());
-
-            //working on it
-            //Engine::GetInstance().GetPhysicsEngine().DrawDebugLine(playerPos, endPos, glm::vec3(0.0f, 1.0f, 0.0f));
-            //Engine::GetInstance().GetPhysicsEngine().DrawDebugBox(playerPos, glm::vec3(0.2f, 0.2f, 0.2f), glm::vec3(0.0f, 1.0f, 0.0f));
-
-            if (hitObject != nullptr)
-            {
-                //spdlog::info("Check: {} {} {}", hitObject->transform->Position.x, hitObject->transform->Position.y, hitObject->transform->Position.z);
-
-                Animal* animalScript = hitObject->GetDerivedComponent<Animal>();
-                if (animalScript != nullptr)
-                {
-
-                    m_CarriedAnimal = hitObject;
-
-                    animalScript->m_IsSeated = true;
-                }
-            }
-        }
-        else
-        {
-            m_IsChargingThrow = true;
-            m_ThrowCharge += m_ChargeSpeed * deltaTime;
-            if (m_ThrowCharge > m_MaxThrowForce) {
-                m_ThrowCharge = m_MaxThrowForce;
-            }
+        m_ThrowCharge += m_ChargeSpeed * deltaTime;
+        if (m_ThrowCharge > m_MaxThrowForce) {
+            m_ThrowCharge = m_MaxThrowForce;
         }
     }
-
-    else
-    {
-        if (m_CarriedAnimal != nullptr && m_IsChargingThrow)
-        {
-            RigidBody* animalRb = m_CarriedAnimal->GetComponent<RigidBody>();
-            Animal* animalScript = m_CarriedAnimal->GetDerivedComponent<Animal>();
-
-            if (animalRb != nullptr)
-            {
-                //will fix later
-                glm::vec3 playerForward = glm::quat(glm::radians(m_Owner->transform->EulerAngles)) * glm::vec3(0.0f, 0.0f, -1.0f);
-                playerForward = glm::normalize(playerForward);
-
-                glm::vec3 throwVelocity = playerForward * m_ThrowCharge;
-                throwVelocity.y = m_ThrowCharge * 0.4f;
-
-                animalRb->SetLinearVelocity(throwVelocity);
-            }
-
-            if (animalScript != nullptr)
-            {
-                animalScript->m_IsSeated = false;
-            }
-
-            m_CarriedAnimal = nullptr;
-            m_IsChargingThrow = false;
-            m_ThrowCharge = m_MinThrowForce;
-        }
-    }
-
-
+    
     if (m_CarriedAnimal != nullptr)
     {
 
@@ -175,4 +125,77 @@ void Player::Update()
     }
 }
 
+void Player::HandleActionPressed()
+{
+    if (m_CarriedAnimal == nullptr)
+    {   
+        glm::vec3 playerPos = m_Owner->GetWorldPosition();
+
+        playerPos.y += 1.0f;
+
+        glm::vec3 playerForward = glm::quat(glm::radians(m_Owner->transform->EulerAngles)) * glm::vec3(0.0f, 0.0f, 1.0f);
+
+        float rayDistance = 5.0f;
+
+        glm::vec3 endPos = playerPos + (playerForward * rayDistance);
+            
+        GameObject* hitObject = Engine::GetInstance().GetPhysicsEngine().CastRay(playerPos, playerForward, rayDistance, m_Owner->GetComponent<RigidBody>()->GetBodyID());
+
+        //working on it
+        //Engine::GetInstance().GetPhysicsEngine().DrawDebugLine(playerPos, endPos, glm::vec3(0.0f, 1.0f, 0.0f));
+        //Engine::GetInstance().GetPhysicsEngine().DrawDebugBox(playerPos, glm::vec3(0.2f, 0.2f, 0.2f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+        if (hitObject != nullptr)
+        {
+            //spdlog::info("Check: {} {} {}", hitObject->transform->Position.x, hitObject->transform->Position.y, hitObject->transform->Position.z);
+
+            Animal* animalScript = hitObject->GetDerivedComponent<Animal>();
+            if (animalScript != nullptr)
+            {
+
+                m_CarriedAnimal = hitObject;
+
+                animalScript->m_IsSeated = true;
+            }
+        }
+    }
+}
+
+void Player::HandleThrowPressed()
+{
+    if (m_CarriedAnimal != nullptr)
+    {
+        m_IsChargingThrow = true;
+    }
+}
+
+void Player::HandleThrowReleased()
+{
+    if (m_CarriedAnimal != nullptr && m_IsChargingThrow)
+    {
+        RigidBody* animalRb = m_CarriedAnimal->GetComponent<RigidBody>();
+        Animal* animalScript = m_CarriedAnimal->GetDerivedComponent<Animal>();
+
+        if (animalRb != nullptr)
+        {
+            //will fix later
+            glm::vec3 playerForward = glm::quat(glm::radians(m_Owner->transform->EulerAngles)) * glm::vec3(0.0f, 0.0f, 1.0f);
+            playerForward = glm::normalize(playerForward);
+
+            glm::vec3 throwVelocity = playerForward * m_ThrowCharge;
+            throwVelocity.y = m_ThrowCharge * 0.4f;
+
+            animalRb->SetLinearVelocity(throwVelocity);
+        }
+
+        if (animalScript != nullptr)
+        {
+            animalScript->m_IsSeated = false;
+        }
+
+        m_CarriedAnimal = nullptr;
+        m_IsChargingThrow = false;
+        m_ThrowCharge = m_MinThrowForce;
+    }
+}
 
