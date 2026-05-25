@@ -71,8 +71,7 @@ private:
 
 	GameObject m_LightSource;
 	GameObject m_LightSourceObject;
-
-	InputManager* inputManager;
+	
 	GameObject m_Player1;
 	GameObject m_Player2;
 	

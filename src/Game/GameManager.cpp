@@ -7,6 +7,7 @@
 void GameManager::Initialize()
 {
 	m_InputMgr = std::make_unique<InputManager>();
+	m_InputMgr->Initialize();
 	m_SceneMgr = std::make_unique<SceneManager>();
 	m_SceneMgr->Initialize();
 }

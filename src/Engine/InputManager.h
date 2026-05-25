@@ -26,6 +26,14 @@ struct InputAction {
     bool isPressed = false;
 };
 
+struct InputName
+{
+    const char* MOVE_FORWARD = "MoveForward";
+    const char* MOVE_STRAFE = "MoveStrafe";
+    const char* ACTION = "Action";
+    const char* THROW = "Throw";
+};
+
 class InputManager {
 private:
     std::map<std::string, InputAction> actions;
@@ -33,6 +41,10 @@ private:
     float deadzone = 0.1f;
 
 public:
+    InputName InputName;
+
+    void Initialize();
+    
     void createAction(const std::string& name);
 
     void removeAction(const std::string& name);

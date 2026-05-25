@@ -53,16 +53,6 @@ void SceneManager::Initialize()
 	std::string fontPath = Loader::RelativePath() + "res/fonts/Choko Regular_8337.otf";
 	
 	m_UIManager.Init(AssetMgr, WindowMgr, fontPath.c_str());
-	
-	//GAMEPAD
-
-	inputManager = &engine.GetGameManager().GetInputManager();
-
-	inputManager->createAction("MoveForward");
-	inputManager->createAction("MoveStrafe");
-
-	inputManager->addBinding("MoveForward", {BindingType::Axis, GLFW_GAMEPAD_AXIS_LEFT_Y });
-	inputManager->addBinding("MoveStrafe", {BindingType::Axis, GLFW_GAMEPAD_AXIS_LEFT_X });
 }
 
 void SceneManager::LoadScene()
@@ -104,11 +94,8 @@ void SceneManager::LoadScene()
 
 	m_Player2.AddComponent<RigidBody>();
 	m_Player2.GetComponent<RigidBody>()->Init(glm::vec3(1.0f, 1.0f, 1.0f), false);
-
-
+	
 	// SHADOW
-
-
 	AssetMgr->BasicShader->Use();
 	AssetMgr->BasicShader->SetInt("shadowMap", 20);
 }
