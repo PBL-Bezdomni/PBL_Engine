@@ -17,26 +17,27 @@ void JSONImporter::Initialize()
 
 shared_ptr<GameObject> JSONImporter::ImportObjectFromData(nlohmann::basic_json<>& obj, GameObject* root)
 {
+    GameObjectNames gn;
     shared_ptr<GameObject> gameObject = make_shared<GameObject>();
     if (!gameObject)
     {
-        std::cerr << "Failed to create GameObject for: " << obj.value("name", "Unnamed") << std::endl;
+        spdlog::error("Failed to create GameObject for: " + obj.value("name", "Unnamed"));
         return nullptr;
     }
     else
     {
-        std::cerr << "Created GameObject for: " << obj.value("name", "Unnamed") << std::endl;
+        spdlog::info("Created GameObject for: " + obj.value("name", "Unnamed"));
     }
-    gameObject->Name = obj.value("name", "NewObject");
-    gameObject->ID = obj.value("id", 0);
-    gameObject->ParentID = obj.value("parentID", -1);
+    gameObject->Name = obj.value(gn.NAME, "NewObject");
+    gameObject->ID = obj.value(gn.ID, 0);
+    gameObject->ParentID = obj.value(gn.PARENT_ID, -1);
 
-    std::string modelPath = obj.value("mesh", "");
+    std::string modelPath = obj.value(gn.MESH, "");
     if (modelPath != "")
     {
         Model model = *m_AssetMgr->GetModel(*m_AssetMgr->BasicShader, (SCENE_MODELS_PATH + modelPath).c_str());
         gameObject->AddComponent<Model>(model);
-        string baseTexPath = obj.value("base_color_texture", "");
+        string baseTexPath = obj.value(gn.DIFFUSE, "");
         if (baseTexPath != "")
         {
             Texture baseTex = *m_AssetMgr->GetTexture((SCENE_TEXTURE_PATH + baseTexPath).c_str());
@@ -44,35 +45,33 @@ shared_ptr<GameObject> JSONImporter::ImportObjectFromData(nlohmann::basic_json<>
         }
     }
 
-    auto pos = obj["position"];
-    auto rot = obj["rotation"];
-    auto sca = obj["scale"];
+    auto pos = obj[gn.POSITION];
+    auto rot = obj[gn.ROTATION];
+    auto sca = obj[gn.SCALE];
     gameObject->transform->Position = glm::vec3(pos[0], pos[1], pos[2]);
     gameObject->transform->Position *= TRANSFORM_MOD;
     gameObject->transform->Scale = glm::vec3(sca[0], sca[1], sca[2]);
     gameObject->transform->EulerAngles = glm::vec3(rot[0], rot[1], rot[2]);
 
-    bool hasRB = obj.value("has_rigid_body", false);
-    bool hasColl = obj.value("has_collider", false);
+    bool hasRB = obj.value(gn.HAS_RB, false);
+    bool hasColl = obj.value(gn.HAS_COLLIDER, false);
     if (hasRB || hasColl)
     {
         gameObject->AddComponent<RigidBody>();
         RigidBody* rb = gameObject->GetComponent<RigidBody>();
         
-        auto size = obj.value("collider_size", std::vector<float>{1.0f, 1.0f, 1.0f});
-        auto cPos = obj.value("collider_pos", std::vector<float>{0.0f, 0.0f, 0.0f});
+        auto size = obj.value(gn.COLLIDER_SIZE, std::vector<float>{1.0f, 1.0f, 1.0f});
         
         glm::vec3 colliderSize = glm::vec3(size[0], size[1], size[2]);
         colliderSize *= COLLIDER_MOD;
-        glm::vec3 colliderOffset = glm::vec3(cPos[0], cPos[1], cPos[2]);
         
         // TODO collider offset is not used now
         rb->PrepareInit(colliderSize, !hasRB);        
     }
     
-    if (obj.contains("scripts"))
+    if (obj.contains(gn.SCRIPTS))
     {
-        for (nlohmann::basic_json<>& scriptName : obj["scripts"])
+        for (nlohmann::basic_json<>& scriptName : obj[gn.SCRIPTS])
         {
             AssignScript(gameObject.get(), scriptName);
         }
@@ -106,7 +105,8 @@ std::vector<shared_ptr<GameObject>> JSONImporter::ImportScene(const char* fileNa
 {
     json data = GetData(fileName);
     std::vector<shared_ptr<GameObject>> objs;
-    for (nlohmann::basic_json<>& obj : data["objects"])
+    GameObjectNames gn;
+    for (nlohmann::basic_json<>& obj : data[gn.OBJECT])
     {
         objs.push_back(ImportObjectFromData(obj, root));
     }
@@ -179,28 +179,30 @@ void JSONImporter::AssignScript(GameObject* go, nlohmann::basic_json<>& scriptNa
 
 void JSONImporter::SaveCameraData(const char*  fileName, Camera* camera)
 {
+    CameraNames camNames;
     json data;
     glm::vec3 pos = camera->GetPosition();
-    data["position"] = json::array({pos.x, pos.y, pos.z});
-    data["pitch"] = camera->GetPitch();
-    data["yaw"] = camera->GetYaw();
-    data["fov"] = camera->GetZoom();
+    data[camNames.POS] = json::array({pos.x, pos.y, pos.z});
+    data[camNames.PITCH] = camera->GetPitch();
+    data[camNames.YAW] = camera->GetYaw();
+    data[camNames.FOV] = camera->GetZoom();
 
     SaveData(fileName, data);
 }
 
 void JSONImporter::LoadCameraData(const char*  filename, Camera* camera)
 {
+    CameraNames camNames;
     json data = GetData(filename);
     if (data == NULL)
     {
         return;
     }
-    auto pos = data["position"];
+    auto pos = data[camNames.POS];
     glm::vec3 posVec = glm::vec3(pos[0], pos[1], pos[2]);
-    float pitch = data["pitch"];
-    float yaw = data["yaw"];
-    float fov = data["fov"];
+    float pitch = data[camNames.PITCH];
+    float yaw = data[camNames.YAW];
+    float fov = data[camNames.FOV];
 
     camera->SetPosition(posVec);
     camera->SetPitch(pitch);

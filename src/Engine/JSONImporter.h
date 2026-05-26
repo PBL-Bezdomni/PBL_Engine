@@ -10,6 +10,35 @@ using json = nlohmann::json;
 
 class GameObject;
 
+struct CameraNames
+{
+    const char* POS = "position";
+    const char* PITCH = "pitch";
+    const char* YAW = "yaw";
+    const char* FOV = "fov";
+};
+
+struct GameObjectNames
+{
+    const char* OBJECT = "objects";
+    const char* NAME = "name";
+    const char* PREFAB = "prefab";
+    const char* ID = "id";
+    const char* PARENT = "parent";
+    const char* PARENT_ID = "parentID";
+    const char* MESH = "mesh";
+    const char* DIFFUSE = "base_color_texture";
+    const char* NORMAL = "normal_texture";
+    const char* POSITION = "position";
+    const char* ROTATION = "rotation";
+    const char* SCALE = "scale";
+    const char* HAS_RB = "has_rigid_body";
+    const char* HAS_COLLIDER = "has_collider";
+    const char* HAS_TRIGGER = "has_trigger";
+    const char* COLLIDER_SIZE = "collider_size";
+    const char* SCRIPTS = "scripts";
+};
+
 class JSONImporter
 {
 public:
