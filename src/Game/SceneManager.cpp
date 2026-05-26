@@ -20,6 +20,7 @@
 #include "Engine/JSONImporter.h"
 
 #include "Game/Scripts/MassageTable.h"
+#include "Game/Scripts/Bath.h"
 #include "Game/Scripts/Animal.h"
 
 
@@ -88,6 +89,12 @@ void SceneManager::LoadScene()
 	m_Player1.transform->Position = glm::vec3(0.0f, 1.0f, 0.0f);
 	m_Player2.transform->Position = glm::vec3(5.0f, 5.0f, 0.0f);
 
+	//delete
+	m_WorldParent.AddChild(&bath);
+	bath.transform->Position = glm::vec3(10.0f, 2.0f, 70.0f);
+	bath.transform->Scale = glm::vec3(5.0f, 5.0f, 5.0f);
+	//
+
 	m_WorldParent.UpdateSelfAndChild();
 
 	m_Player1.AddComponent<RigidBody>();
@@ -99,6 +106,12 @@ void SceneManager::LoadScene()
 	// SHADOW
 	AssetMgr->BasicShader->Use();
 	AssetMgr->BasicShader->SetInt("shadowMap", 20);
+
+
+	//delete
+	bath.AddComponent<RigidBody>();
+	bath.GetComponent<RigidBody>()->Init(glm::vec3(3.0f, 3.0f, 3.0f), true, true);
+	bath.AddComponent<Bath>();
 }
 
 void SceneManager::UpdateScene()
@@ -302,6 +315,15 @@ void SceneManager::LoadModels()
 	
 	m_UIPanelTex = *AssetMgr->GetTexture("res/textures/UI/UI_panel.png");
 	m_UICoinTex = *AssetMgr->GetTexture("res/textures/UI/coin.png");
+
+
+	//you can delete that just checking
+	bath = GameObject();
+	Model bathModel = *AssetMgr->GetModel(*AssetMgr->BasicShader, "res/models/PLACEHOLDER_BATH.obj");
+	bath.AddComponent<Model>(bathModel);
+	bath.GetComponent<Model>()->AssignTexture(*AssetMgr->GetTexture("res/textures/UI/coin.png"));
+
+
 }
 
 void SceneManager::InitializeUI()

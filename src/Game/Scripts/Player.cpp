@@ -116,10 +116,12 @@ void Player::Update()
         m_CarriedAnimal->UpdateSelfAndChild();
 
         RigidBody* rb = m_CarriedAnimal->GetComponent<RigidBody>();
+        Animal* a = m_CarriedAnimal->GetComponent<Animal>();
         if (rb != nullptr)
         {
             rb->SetLinearVelocity(glm::vec3(0.0f));
             rb->SetAngularVelocity(glm::vec3(0.0f));
+            a->m_IsMoving = false;
             rb->Teleport(headPos);
         }
     }
@@ -131,7 +133,7 @@ void Player::HandleActionPressed()
     {   
         glm::vec3 playerPos = m_Owner->GetWorldPosition();
 
-        playerPos.y += 1.0f;
+        playerPos.y += 0.5f;
 
         glm::vec3 playerForward = glm::quat(glm::radians(m_Owner->transform->EulerAngles)) * glm::vec3(0.0f, 0.0f, 1.0f);
 
@@ -191,6 +193,7 @@ void Player::HandleThrowReleased()
         if (animalScript != nullptr)
         {
             animalScript->m_IsSeated = false;
+            animalScript->m_IsMoving = true;
         }
 
         m_CarriedAnimal = nullptr;

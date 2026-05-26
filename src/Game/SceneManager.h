@@ -82,4 +82,6 @@ private:
 	AssetManager*  AssetMgr = nullptr;
 	
 	float m_TimeLeft = 300.0f;
+
+	GameObject bath;
 };

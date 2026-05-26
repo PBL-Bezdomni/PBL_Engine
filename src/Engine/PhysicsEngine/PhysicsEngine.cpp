@@ -75,7 +75,7 @@ void PhysicsEngine::DrawHitboxes(Shader& lineShader, const glm::mat4& view, cons
     m_DebugRenderer->Setup(lineShader, view, projection);
 
     JPH::BodyManager::DrawSettings drawSettings;
-    drawSettings.mDrawBoundingBox = false;
+    drawSettings.mDrawBoundingBox = true;
     drawSettings.mDrawShape = true;
     drawSettings.mDrawShapeWireframe = true;
 

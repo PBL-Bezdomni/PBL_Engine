@@ -186,3 +186,33 @@ void Animal::UpdateIndicatorColors()
 
     m_PieShader->SetIVec4("u_Needs", shaderNeeds.x, shaderNeeds.y, shaderNeeds.z, shaderNeeds.w);
 }
+
+void Animal::FulfillNeed(AnimalNeeds need) {
+    auto it = std::find(m_RequiredServices.begin(), m_RequiredServices.end(), need);
+
+    if (it != m_RequiredServices.end())
+    {
+        m_RequiredServices.erase(it);
+
+        UpdateIndicatorColors();
+
+        if (m_RequiredServices.empty())
+        {
+            spdlog::info("Zwierzak zaspokoil wszystkie potrzeby");
+
+            if (m_Indicator != nullptr)
+            {
+                m_Indicator->transform->Scale = glm::vec3(0.0f);
+            }
+        }
+    }
+}
+
+void Animal::EnterPosition(glm::vec3 exactWorldPosition)
+{
+    m_TeleportTarget = exactWorldPosition;
+    m_ShouldTeleport = true;
+    m_IsSeated = true;
+    m_IsMoving = false;
+    //spdlog::info("I am here -> x:{} y:{} z:{}", m_Owner->transform->Position.x, m_Owner->transform->Position.y, m_Owner->transform->Position.z);
+}

@@ -34,7 +34,6 @@ private:
     glm::vec3 m_LastPosition;
 
 	bool m_IsInitialized = false;
-	bool m_IsMoving = false;
 	float m_WaitTime = 0.0f;
 	float m_CurrentWaitTime = 0.0f;
 	float m_StuckTimer = 0.0f;
@@ -48,11 +47,13 @@ public:
     std::vector<AnimalNeeds> m_RequiredServices;
 
     bool m_IsSeated = false;
+    bool m_IsMoving = false;
 
 	void Awake() override;
     void Start() override;
 
-    void EnterTable(GameObject* table);
+    void EnterTable(GameObject* table);                // probably will
+    void EnterPosition(glm::vec3 exactWorldPosition); // merge them
 
     void Update() override;
 
@@ -60,4 +61,6 @@ public:
     void UpdateIndicatorColors();
     void SetIndicatorObject(std::shared_ptr<GameObject> indicator) { m_Indicator = indicator; }
     std::shared_ptr<GameObject> GetIndicatorObject() { return m_Indicator; }
+
+    void FulfillNeed(AnimalNeeds need);
 };
