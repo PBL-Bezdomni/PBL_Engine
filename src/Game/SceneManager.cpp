@@ -99,6 +99,9 @@ void SceneManager::LoadScene()
 	// SHADOW
 	AssetMgr->BasicShader->Use();
 	AssetMgr->BasicShader->SetInt("shadowMap", 20);
+
+	// TODO create event here
+	Engine::GetInstance().GetDebugManager().RefreshGameObjectData();
 }
 
 void SceneManager::UpdateScene()
@@ -235,6 +238,23 @@ shared_ptr<GameObject> SceneManager::Instantiate(string path, shared_ptr<Shader>
 shared_ptr<Camera> SceneManager::GetMainCamera()
 {
 	return MainCamera;
+}
+
+GameObject* SceneManager::GetLevelObject()
+{
+	// TODO return Level
+	if (m_WorldParent.Children.size() > 0)
+	{
+		for (GameObject* child : m_WorldParent.Children)
+		{
+			if (child->Name == "Level")
+			{
+				return child;
+			}
+		}
+		return m_WorldParent.Children[0];
+	}
+	return &m_WorldParent;
 }
 
 void SceneManager::UpdateShaderLight(GameObject* gameObject, Shader& shader, Shader& depthShader)

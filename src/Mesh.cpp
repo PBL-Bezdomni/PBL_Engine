@@ -1,5 +1,7 @@
 #include "Mesh.h"
 
+#include "Model.h"
+
 
 Mesh::Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures, unsigned int instancing, vector<glm::mat4> instanceMatrix)
 {
@@ -97,11 +99,12 @@ void Mesh::Draw(Shader& shader)
         // retrieve texture number (the N in diffuse_textureN)
         string number;
         string name = Textures[i].Type;
-        if (name == "texture_diffuse")
+        TextureTypeNames tn;
+        if (name == tn.DIFFUSE)
             number = std::to_string(diffuseNr++);
-        else if (name == "texture_specular")
+        else if (name == tn.SPECULAR)
             number = std::to_string(specularNr++);
-        else if (name == "texture_normal")
+        else if (name == tn.NORMAL)
             number = std::to_string(normalNr++);
 
         // shader.SetInt(("material." + name + number).c_str(), i);

@@ -7,12 +7,49 @@
 #include "WindowManager.h"
 #include "Game/SceneManager.h"
 
+struct GameObjectData
+{
+	GameObject* gameObject;
+	string Name;
+	int ID;
+	string ParentName;
+	int ParentID;
+
+	string Mesh;
+	string DiffuseTex;
+	bool HasNormal;
+	string NormalTex;
+	
+	float PosX;
+	float PosY;
+	float PosZ;
+
+	float RotX;
+	float RotY;
+	float RotZ;
+
+	float ScaX;
+	float ScaY;
+	float ScaZ;
+
+	bool HasRigidBody;
+	bool HasCollider;
+	bool HasTrigger;
+
+	float ColliderSizeX;
+	float ColliderSizeY;
+	float ColliderSizeZ;
+
+	vector<string> Scripts;
+};
+
 class DebugManager
 {
 public:
 	DebugManager() = default;
 	~DebugManager();
 	void InitializeImGUI(GLFWwindow* window, const char* glslVersion);
+	void RefreshGameObjectData();
 	
 	void RenderImgui(GLFWwindow* window);
 private:
@@ -28,6 +65,14 @@ private:
 	bool HasCameraUpdated();
 	void UpdateCamera();
 	void SaveCameraData();
+
+	void LoadGameObjectsData();
+	void InitializeGameObjectData(GameObject* obj);
+	void LoadObjectChildren(GameObject* obj);
+	void RenderGameObjectsImgui();
+	bool HasGameObjectsUpdated();
+	void UpdateGameObjects();
+	void SaveGameObjectsData();
 
 	// Setting fields
 	char m_CameraSaveName[255] = "camera";
@@ -50,5 +95,5 @@ private:
 	float m_CameraZoom = 0;
 	float m_PrevCameraZoom = 0;
 
-	
+	vector<GameObjectData> m_GameObjectDatas;
 };

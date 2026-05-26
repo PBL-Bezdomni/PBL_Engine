@@ -126,6 +126,13 @@ struct AABB : Volume
     }
 };
 
+struct TextureTypeNames
+{
+    const char* DIFFUSE = "texture_diffuse";
+    const char* SPECULAR = "texture_specular";
+    const char* NORMAL = "texture_normal";
+};
+
 class Model : public Component
 {
 public:
@@ -143,9 +150,11 @@ public:
     vector<glm::mat4> InstanceMatrix;
     void ScaleTexture(float scale);
     void ReassignShader(Shader& shader);
+    string GetFileName();
 private:
     // model data
     string m_FileDirectory;
+    string m_FileName;
     vector<Texture> m_TexturesLoaded;
     Shader m_Shader = Shader();
     AABB m_FrustumVolume;

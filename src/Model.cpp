@@ -120,7 +120,10 @@ void Model::LoadModel(string path)
         spdlog::error(importer.GetErrorString());
         return;
     }
+
+    filesystem::path filePath(path);
     m_FileDirectory = path.substr(0, path.find_last_of('/'));
+    m_FileName = filePath.filename().string();
 
     ProcessNode(scene->mRootNode, scene);
 }
@@ -188,15 +191,16 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
     // process material
     if(mesh->mMaterialIndex >= 0)
     {
+        TextureTypeNames tn;
         aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
         vector<Texture> diffuseMaps = LoadMaterialTextures(material,
-            aiTextureType_DIFFUSE, "texture_diffuse");
+            aiTextureType_DIFFUSE, tn.DIFFUSE);
         textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
         vector<Texture> specularMaps = LoadMaterialTextures(material,
-            aiTextureType_SPECULAR, "texture_specular");
+            aiTextureType_SPECULAR, tn.SPECULAR);
         textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
         vector<Texture> normalMaps = LoadMaterialTextures(material,
-            aiTextureType_NORMALS, "texture_normal");
+            aiTextureType_NORMALS, tn.NORMAL);
         textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
     }
 
@@ -226,6 +230,10 @@ vector<Texture> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type,
             texture.ID = TextureFromFile(str.C_Str(), m_FileDirectory);
             texture.Type = typeName;
             texture.Path = str.C_Str();
+            // filesystem::path filePath(str.C_Str());
+            // texture.FileName = filePath.filename().string();
+            // Don't override path, so debug want save texture as separate load.
+            texture.FileName = "";
             textures.push_back(texture);
             m_TexturesLoaded.push_back(texture); // add to loaded textures
         }
@@ -312,4 +320,9 @@ void Model::UpdateInstanceMatrix(glm::vec3 transform, glm::vec3 rotation, glm::v
             Meshes[i].RefreshInstanceMatrix(shader, newInstanceMatrix);
         }
     }
+}
+
+string Model::GetFileName()
+{
+    return m_FileName;
 }

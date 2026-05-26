@@ -1,5 +1,7 @@
 #include "AssetManager.h"
 
+#include <filesystem>
+
 #include "Loader.h"
 #include "Model.h"
 
@@ -67,6 +69,8 @@ shared_ptr<Texture> AssetManager::GetTexture(const char* path, const char* type)
 	shared_ptr<Texture> tex = make_shared<Texture>();
 	tex->Path = path;
 	tex->Type = type;
+	filesystem::path filePath(path);
+	tex->FileName = filePath.filename().string();
 	glGenTextures(1, &tex->ID);
 	glBindTexture(GL_TEXTURE_2D, tex->ID);
 	// set the texture wrapping/filtering options (on the currently bound texture object)

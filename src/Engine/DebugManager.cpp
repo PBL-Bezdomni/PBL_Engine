@@ -34,6 +34,12 @@ void DebugManager::InitializeImGUI(GLFWwindow* window, const char* glslVersion)
 	m_SceneMgr = &engine->GetGameManager().GetSceneManager();
 	m_MainCamera = m_SceneMgr->GetMainCamera().get();
 	LoadCameraData();
+	LoadGameObjectsData();
+}
+
+void DebugManager::RefreshGameObjectData()
+{
+	LoadGameObjectsData();
 }
 
 void DebugManager::RenderImgui(GLFWwindow* window)
@@ -58,6 +64,7 @@ void DebugManager::ImGUIBegin()
 void DebugManager::ImGUIRender()
 {
 	RenderCameraImgui();
+	RenderGameObjectsImgui();
 }
 
 void DebugManager::ImGUIEnd(GLFWwindow* window)
@@ -152,6 +159,76 @@ void DebugManager::SaveCameraData()
 {
 	JSONImporter importer = JSONImporter();
 	importer.SaveCameraData(m_CameraSaveName, m_MainCamera);
+}
+
+void DebugManager::LoadGameObjectsData()
+{
+	GameObject* level = m_SceneMgr->GetLevelObject();
+	LoadObjectChildren(level);	
+}
+	
+void DebugManager::InitializeGameObjectData(GameObject* obj)
+{
+	GameObjectData data;
+	data.gameObject = obj;
+	data.Name = obj->Name;
+	data.ID = obj->ID;
+	data.ParentName = obj->Parent->ID;
+	data.ParentID = obj->Parent->ID;
+
+	Model* model = obj->GetComponent<Model>();
+	TextureTypeNames texTypeName;
+	if (model != nullptr)
+	{
+		bool hasDiffuse = false;
+		bool hasNormal = false;
+		data.Mesh = model->GetFileName();
+		for (Mesh mesh : model->Meshes)
+		{
+			for (Texture tex : mesh.Textures)
+			{
+				if (tex.Type == texTypeName.DIFFUSE && !hasDiffuse)
+				{
+					data.DiffuseTex = tex.FileName;
+					hasDiffuse = true;
+				}
+				if (tex.Type == texTypeName.NORMAL && !hasNormal)
+				{
+					data.NormalTex = tex.FileName;
+					hasNormal = true;
+				}
+			}
+		}
+	}
+
+	Transform* transform = obj->transform;
+	
+}
+
+void DebugManager::LoadObjectChildren(GameObject* obj)
+{
+	for (GameObject* child : obj->Children)
+	{
+		InitializeGameObjectData(child);
+		LoadObjectChildren(child);
+	}
+}
+
+void DebugManager::RenderGameObjectsImgui()
+{
+}
+
+bool DebugManager::HasGameObjectsUpdated()
+{
+	return false;
+}
+
+void DebugManager::UpdateGameObjects()
+{
+}
+
+void DebugManager::SaveGameObjectsData()
+{
 }
 
 

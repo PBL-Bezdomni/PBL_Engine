@@ -7,4 +7,5 @@ struct Texture
 	unsigned int ID;
 	string Type;
 	string Path;
+	string FileName;
 };

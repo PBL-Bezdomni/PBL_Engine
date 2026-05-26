@@ -35,6 +35,7 @@ public:
 	void UpdateScene();
 	void RenderScene();
 	void AddAnimal(shared_ptr<GameObject> spawnedEntity);
+	GameObject* GetLevelObject();
 	shared_ptr<GameObject> Instantiate(string path, shared_ptr<Shader> shader = nullptr);
 
 	shared_ptr<Camera> GetMainCamera();
