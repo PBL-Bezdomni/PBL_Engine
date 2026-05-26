@@ -72,12 +72,15 @@ public:
 	void UpdateCameraVectors();
 	float GetFovY();
 	glm::vec3 GetPosition();
+	void SetPosition(glm::vec3 pos);
 	glm::vec3 GetFront();
 	glm::vec3 GetUp();
 	glm::vec3 GetRight();
 	glm::vec3 GetWorldUp();
 	float GetYaw();
+	void SetYaw(float yaw);
 	float GetPitch();
+	void SetPitch(float pitch);
 	float GetZoom();
 	void SetZoom(float zoom);
 	float GetNearPlane();

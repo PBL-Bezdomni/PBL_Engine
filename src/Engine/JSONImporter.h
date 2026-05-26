@@ -17,8 +17,12 @@ public:
     std::vector<std::shared_ptr<GameObject>> ImportScene(const char* fileName, GameObject* root);
     std::vector<std::shared_ptr<GameObject>> ImportPrefab(const char* fileName, GameObject* root);
     static GameObject* FindByName(GameObject* root, const std::string& name);
+    void SaveCameraData(const char* fileName, Camera* camera);
+    void LoadCameraData(const char* filename, Camera* camera);
 
 private:
+    const char* BASE_PATH = "res/json/";
+    const char* JSON_SUFFIX = ".json";
     const char* SCENE_MODELS_PATH = "res/models/scene_models/";
     const char* SCENE_TEXTURE_PATH = "res/textures/scene_textures/";
     // HACK
@@ -31,4 +35,5 @@ private:
     void AssignGraph(vector<shared_ptr<GameObject>> gameObjects, GameObject* root);
     json GetData(const char* fileName);
     void AssignScript(GameObject* go, nlohmann::basic_json<>& scriptName);
+    void SaveData(string fileName, json data);
 };

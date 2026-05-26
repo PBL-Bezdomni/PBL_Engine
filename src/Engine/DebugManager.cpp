@@ -1,5 +1,5 @@
 #include "DebugManager.h"
-
+#include "Engine/JSONImporter.h"
 #include "Engine.h"
 #include <memory>
 
@@ -29,6 +29,11 @@ void DebugManager::InitializeImGUI(GLFWwindow* window, const char* glslVersion)
 	ImGui::StyleColorsDark();
 	// ImGui::StyleColorsClassic();
 	spdlog::info("Initialized ImGui.");
+
+	Engine* engine = &Engine::GetInstance();
+	m_SceneMgr = &engine->GetGameManager().GetSceneManager();
+	m_MainCamera = m_SceneMgr->GetMainCamera().get();
+	LoadCameraData();
 }
 
 void DebugManager::RenderImgui(GLFWwindow* window)
@@ -52,15 +57,7 @@ void DebugManager::ImGUIBegin()
 
 void DebugManager::ImGUIRender()
 {
-	ImGui::Begin("Camera");
-	ImGui::Text("Text");
-	ImGui::Button("Button");
-	// ImGui::InputFloat("Camera Pos.y", &MainCamera.Position.y);
-	// ImGui::InputFloat("Camera Pos.z", &MainCamera.Position.z);
-	//
-	// ImGui::InputFloat("Camera Yaw", &MainCamera.Yaw);
-	// ImGui::InputFloat("Camera Pitch", &MainCamera.Pitch);
-	ImGui::End();
+	RenderCameraImgui();
 }
 
 void DebugManager::ImGUIEnd(GLFWwindow* window)
@@ -75,4 +72,86 @@ void DebugManager::ImGUIEnd(GLFWwindow* window)
 
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
+
+void DebugManager::LoadCameraData()
+{
+	if (m_MainCamera != nullptr)
+	{
+		m_CameraPosX = m_MainCamera->GetPosition().x;
+		m_PrevCameraPosX = m_CameraPosX;
+		m_CameraPosY = m_MainCamera->GetPosition().y;
+		m_PrevCameraPosY = m_CameraPosY;
+		m_CameraPosZ = m_MainCamera->GetPosition().z;
+		m_PrevCameraPosZ = m_CameraPosZ;
+
+		m_CameraPitch = m_MainCamera->GetPitch();
+		m_PrevCameraPitch = m_CameraPitch;
+		m_CameraYaw = m_MainCamera->GetYaw();
+		m_PrevCameraYaw = m_CameraYaw;
+
+		m_CameraZoom = m_MainCamera->GetZoom();
+		m_PrevCameraZoom = m_CameraZoom;
+	}
+}
+
+
+void DebugManager::RenderCameraImgui()
+{
+	ImGui::Begin("Camera");
+	ImGui::Text("Camera Settings");
+	if (ImGui::Button("Save"))
+	{
+		SaveCameraData();
+	}
+	if (ImGui::Button("Refresh"))
+	{
+		LoadCameraData();
+	}
+
+	ImGui::InputText("Save Name", m_CameraSaveName, sizeof(m_CameraSaveName));
+	ImGui::Spacing();
+	ImGui::Text("Camera Position");
+	ImGui::DragFloat("Camera Pos.x", &m_CameraPosX, 1, -m_CamPositionBorder, m_CamPositionBorder);
+	ImGui::DragFloat("Camera Pos.y", &m_CameraPosY, 1, -m_CamPositionBorder, m_CamPositionBorder);
+	ImGui::DragFloat("Camera Pos.z", &m_CameraPosZ, 1, -m_CamPositionBorder, m_CamPositionBorder);
+	ImGui::Spacing();
+	ImGui::Text("Camera Camera Angles");
+	ImGui::DragFloat("Camera Yaw", &m_CameraYaw, 1,-m_CamYawBorder, m_CamYawBorder );
+	ImGui::DragFloat("Camera Pitch", &m_CameraPitch, 1, -m_CamPitchBorder, m_CamPitchBorder);
+	ImGui::Spacing();
+	ImGui::Text("Camera FOV");
+	ImGui::DragFloat("Camera Zoom", &m_CameraZoom, 1, m_CamZoomBorderMin, m_CamZoomBorderMax);
+	
+	ImGui::End();
+
+	UpdateCamera();
+}
+
+bool DebugManager::HasCameraUpdated()
+{
+	glm::vec3 prevCamPosVec = glm::vec3(m_PrevCameraPosX, m_PrevCameraPosY, m_PrevCameraPosZ);
+	glm::vec3 currCamPosVec = glm::vec3(m_CameraPosX, m_CameraPosY, m_CameraPosZ);
+	return prevCamPosVec != currCamPosVec || m_PrevCameraPitch != m_CameraPitch || m_PrevCameraYaw != m_CameraYaw || m_PrevCameraZoom != m_CameraZoom;
+}
+
+void DebugManager::UpdateCamera()
+{
+	if (m_MainCamera != nullptr && HasCameraUpdated())
+	{
+		m_MainCamera->SetPosition(glm::vec3(m_CameraPosX, m_CameraPosY, m_CameraPosZ));
+		m_MainCamera->SetPitch(m_CameraPitch);
+		m_MainCamera->SetYaw(m_CameraYaw);
+		m_MainCamera->SetZoom(m_CameraZoom);
+
+		LoadCameraData();
+	}
+}
+
+
+void DebugManager::SaveCameraData()
+{
+	JSONImporter importer = JSONImporter();
+	importer.SaveCameraData(m_CameraSaveName, m_MainCamera);
+}
+
 

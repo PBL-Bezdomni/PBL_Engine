@@ -145,6 +145,10 @@ glm::vec3 Camera::GetPosition()
 {
 	return Position;
 }
+void Camera::SetPosition(glm::vec3 pos)
+{
+	Position = pos;
+}
 
 glm::vec3 Camera::GetFront()
 {
@@ -171,9 +175,21 @@ float Camera::GetYaw()
 	return Yaw;
 }
 
+void Camera::SetYaw(float yaw)
+{
+	Yaw = yaw;
+	UpdateCameraVectors();
+}
+
 float Camera::GetPitch()
 {
 	return Pitch;
+}
+
+void Camera::SetPitch(float pitch)
+{
+	Pitch = pitch;
+	UpdateCameraVectors();
 }
 
 float Camera::GetZoom()

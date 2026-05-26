@@ -6,6 +6,7 @@
 #include "Engine.h"
 #include "GameObject.h"
 #include "Model.h"
+#include "Camera.h"
 #include <iostream>
 #include <fstream>
 
@@ -135,18 +136,33 @@ GameObject* JSONImporter::FindByName(GameObject* root, const std::string& name)
 
 json JSONImporter::GetData(const char* fileName)
 {
-    std::string basePath = "res/json/";
-    std::string fullPath = Loader::RelativePath() + basePath + fileName + ".json";
+    std::string fullPath = Loader::RelativePath() + BASE_PATH + fileName + JSON_SUFFIX;
 
     std::ifstream file(fullPath);
     if (!file.is_open()) {
-        std::cerr << "Failed to open JSON: " << fullPath << std::endl;
+        spdlog::error("Failed to open JSON: " + fullPath);
         return NULL;
     }
 
     json data;
     file >> data;
     return data;
+}
+
+void JSONImporter::SaveData(string fileName, json data)
+{
+    string fullPath = Loader::RelativePath() + BASE_PATH + fileName + JSON_SUFFIX;
+
+    std::ofstream file(fullPath);
+    if (!file.is_open())
+    {
+        spdlog::error("Failed to create JSON: " + fullPath);
+        return;
+    }
+
+    file << data;
+    file.close();
+    spdlog::info("Crated file: " + fullPath);
 }
 
 void JSONImporter::AssignScript(GameObject* go, nlohmann::basic_json<>& scriptName)
@@ -161,4 +177,34 @@ void JSONImporter::AssignScript(GameObject* go, nlohmann::basic_json<>& scriptNa
     }
 }
 
+void JSONImporter::SaveCameraData(const char*  fileName, Camera* camera)
+{
+    json data;
+    glm::vec3 pos = camera->GetPosition();
+    data["position"] = json::array({pos.x, pos.y, pos.z});
+    data["pitch"] = camera->GetPitch();
+    data["yaw"] = camera->GetYaw();
+    data["fov"] = camera->GetZoom();
 
+    SaveData(fileName, data);
+}
+
+void JSONImporter::LoadCameraData(const char*  filename, Camera* camera)
+{
+    json data = GetData(filename);
+    if (data == NULL)
+    {
+        return;
+    }
+    auto pos = data["position"];
+    glm::vec3 posVec = glm::vec3(pos[0], pos[1], pos[2]);
+    float pitch = data["pitch"];
+    float yaw = data["yaw"];
+    float fov = data["fov"];
+
+    camera->SetPosition(posVec);
+    camera->SetPitch(pitch);
+    camera->SetYaw(yaw);
+    camera->SetZoom(fov);
+    
+}
