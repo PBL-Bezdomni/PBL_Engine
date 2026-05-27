@@ -67,6 +67,8 @@ public:
 
     void Update() override;
 
+    void ForceNewTartetPosition();
+
     void SetIndicatorShader(std::shared_ptr<Shader> pieShader);
     void UpdateIndicatorColors();
     void SetIndicatorObject(std::shared_ptr<GameObject> indicator) { m_Indicator = indicator; }

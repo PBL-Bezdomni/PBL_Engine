@@ -38,6 +38,23 @@ void Animal::PickNewTargetPosition()
 	m_IsMoving = true;
 }
 
+void Animal::ForceNewTartetPosition()
+{
+    if (m_Owner && m_Owner->transform)
+    {
+		m_LastPosition = m_Owner->transform->Position;
+		m_CurrentAngle = m_Owner->transform->EulerAngles.y;
+    }
+
+	m_StuckTimer = 0.0f;
+	m_CurrentWaitTime = 0.0f;
+	m_JumpTimer = 0.0f;
+	m_IsSeated = false;
+	m_ShouldTeleport = false;
+
+	PickNewTargetPosition();
+}
+
 void Animal::EnterTable(GameObject* table)
 {
     if (table == nullptr) return;
