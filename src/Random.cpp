@@ -6,11 +6,26 @@ Random Random::m_Instance;
 
 int Random::GetRandomInt(int min, int max)
 {
-	max = abs(min) + abs(max);
-	std::mt19937 rng;
-	rng.seed(std::random_device()());
-	std::uniform_int_distribution<std::mt19937::result_type> dist(0,max);
-	int r = dist(rng);
-	r -= abs(min);
-	return r;
+	std::random_device rd;
+	std::mt19937 rng(rd());
+
+	std::uniform_int_distribution<int> dist(min, max);
+	return dist(rng);
+}
+
+float Random::GetRandomFloat(float min, float max)
+{
+	std::random_device rd;
+	std::mt19937 rng(rd());
+
+	std::uniform_real_distribution<float> dist(min, max);
+	return dist(rng);
+}
+
+void Random::Shuffle(std::vector<int>& vec)
+{
+	std::random_device rd;
+	std::mt19937 rng(rd());
+
+	std::shuffle(vec.begin(), vec.end(), rng);
 }

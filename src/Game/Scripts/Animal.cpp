@@ -3,19 +3,18 @@
 #include "Engine/Components/RigidBody.h"
 #include <spdlog/spdlog.h>
 #include <random>
+#include <Random.h>
 #include <Engine/Time.h>
+#include <Engine/Engine.h>
 
 void Animal::Awake()
 {
     Behaviour::Awake();
-    std::mt19937 rng;
-    rng.seed(std::random_device()());
-
-    std::uniform_int_distribution<std::mt19937::result_type> amountDist(1, 4);
-    m_numberOfNeeds = amountDist(rng);
+    
+	m_numberOfNeeds = Random::GetRandomInt(m_minNeeds, m_maxNeeds);
     std::vector<int> possibleNeeds = { 0, 1, 2, 3 };
 
-    std::shuffle(possibleNeeds.begin(), possibleNeeds.end(), rng);
+    Random::Shuffle(possibleNeeds);
 
     for (int i = 0; i < m_numberOfNeeds; i++)
     {
@@ -31,12 +30,8 @@ void Animal::Start()
 
 void Animal::PickNewTargetPosition()
 {
-    std::mt19937 rng(std::random_device{}());
-    std::uniform_real_distribution<float> angleDist(0.0f, 2.0f * glm::pi<float>());
-	std::uniform_real_distribution<float> radiusDist(0.0f, m_MovingRadius);
-
-	float angle = angleDist(rng);
-	float radius = radiusDist(rng);
+	float angle = Random::GetRandomFloat(0.0f, 2.0f * glm::pi<float>());
+	float radius = Random::GetRandomFloat(0.0f, m_MovingRadius);
 
 	glm::vec3 currentPos = m_Owner->transform->Position;
 	m_TargetPosition = currentPos + glm::vec3(radius * cos(angle), 0.0f, radius * sin(angle));
@@ -62,6 +57,7 @@ void Animal::Update()
     if (!m_IsInitialized)
     {
 		m_LastPosition = m_Owner->transform->Position;
+		m_CurrentAngle = m_Owner->transform->EulerAngles.y;
 		PickNewTargetPosition();
 		m_IsInitialized = true;
     }
@@ -109,7 +105,7 @@ void Animal::Update()
         glm::vec3 currentPos = m_Owner->transform->Position;
 
         float distanceMoved = glm::length(currentPos - m_LastPosition);
-        if (distanceMoved < 0.2f * Time::GetDeltaTime() * m_MoveSpeed)
+        if (distanceMoved < 0.1f * Time::GetDeltaTime() * m_MoveSpeed)
         {
             m_StuckTimer += Time::GetDeltaTime();
         }
@@ -119,13 +115,14 @@ void Animal::Update()
         }
 
         m_LastPosition = currentPos;
-        if (m_StuckTimer > 0.2f)
+        if (m_StuckTimer > 1.0f)
         {
             m_IsMoving = false;
             rb->SetLinearVelocity(glm::vec3(0.0f, rb->GetLinearVelocity().y, 0.0f));
             m_WaitTime = 1.0f;
             m_CurrentWaitTime = 0.0f;
             m_StuckTimer = 0.0f;
+			m_JumpTimer = 0.0f;
             return;
         }
         glm::vec3 diff = m_TargetPosition - currentPos;
@@ -137,22 +134,83 @@ void Animal::Update()
             glm::vec3 direction = glm::normalize(diff);
 
             float targetAngle = glm::degrees(atan2(direction.x, direction.z));
-            rb->SetRotation(glm::vec3(0.0f, targetAngle, 0.0f));
+            float deltaAngle = targetAngle - m_CurrentAngle;
+
+			while (deltaAngle > 180.0f) deltaAngle -= 360.0f;
+			while (deltaAngle < -180.0f) deltaAngle += 360.0f;
+
+			m_CurrentAngle += deltaAngle * m_RotationSpeed * Time::GetDeltaTime();
+
+			while (m_CurrentAngle > 360.0f) m_CurrentAngle -= 360.0f;
+			while (m_CurrentAngle < -360.0f) m_CurrentAngle += 360.0f;
+
+            rb->SetRotation(glm::vec3(0.0f, m_CurrentAngle, 0.0f));
+
+			glm::vec3 rayStart = currentPos + glm::vec3(0.0f, 0.5f, 0.0f);
+			float lookAheadDistance = 1.5f;
+
+			GameObject* obstacle = Engine::GetInstance().GetPhysicsEngine().CastRay(rayStart, direction, lookAheadDistance, rb->GetBodyID());
+
+            if (obstacle != nullptr)
+            {
+				m_IsMoving = false;
+				rb->SetLinearVelocity(glm::vec3(0.0f, rb->GetLinearVelocity().y, 0.0f));
+
+				m_WaitTime = Random::GetRandomFloat(1.0f, 3.0f);
+				m_CurrentWaitTime = 0.0f;
+				m_StuckTimer = 0.0f;
+                return; 
+            }
+
+            float speedMultiplier = 1.0f;
+			float slowDownDistance = 2.0f;
+
+            if (distance < slowDownDistance)
+            {
+				speedMultiplier = std::max(0.3f, distance / slowDownDistance);
+            }
 
             glm::vec3 currentVelocity = rb->GetLinearVelocity();
-            glm::vec3 targetVelocity = direction * m_MoveSpeed;
-            rb->SetLinearVelocity(glm::vec3(targetVelocity.x, currentVelocity.y, targetVelocity.z));
+			float currentMoveSpeed = m_MoveSpeed * speedMultiplier;
+			float newVelY = currentVelocity.y;
+
+            bool isOnGround = (currentPos.y <= 2.6f);
+
+            if (m_Owner->Name == "bunny")
+            {
+				m_JumpTimer += Time::GetDeltaTime();
+
+                if (isOnGround)
+                {
+                    currentMoveSpeed *= 0.1f;
+                    if (m_JumpTimer >= 0.6f && distance > 1.5f)
+                    {
+                        newVelY = m_JumpForce;
+                        m_JumpTimer = 0.0f;
+                    }
+                }
+                else
+                {
+					currentMoveSpeed *= 1.5f;
+                }
+            }
+            glm::vec3 targetVelocity = direction * (m_MoveSpeed * speedMultiplier);
+
+			float accel = (m_Owner->Name == "bunny") ? m_Acceleration * 4.0f : m_Acceleration;
+            float newVelX = glm::mix(currentVelocity.x, targetVelocity.x, accel *Time::GetDeltaTime());
+            float newVelZ = glm::mix(currentVelocity.z, targetVelocity.z, accel * Time::GetDeltaTime());
+
+            rb->SetLinearVelocity(glm::vec3(newVelX, newVelY, newVelZ));
         }
         else
         {
             m_IsMoving = false;
             rb->SetLinearVelocity(glm::vec3(0.0f, rb->GetLinearVelocity().y, 0.0f));
-
-            std::mt19937 rng(std::random_device{}());
-            std::uniform_real_distribution<float> waitDist(1.0f, 3.0f);
-            m_WaitTime = waitDist(rng);
+        
+			m_WaitTime = Random::GetRandomFloat(1.0f, 3.0f);
             m_CurrentWaitTime = 0.0f;
             m_StuckTimer = 0.0f;
+			m_JumpTimer = 0.0f;
         }
 	}
 	else

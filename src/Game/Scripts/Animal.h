@@ -34,6 +34,11 @@ private:
 	// Walking parameters
 	float m_MovingRadius = 10.0f;
     float m_MoveSpeed = 3.0f;
+	float m_RotationSpeed = 2.0f;
+	float m_CurrentAngle = 0.0f;
+	float m_Acceleration = 2.0f;
+	float m_JumpForce = 4.0f;
+	float m_JumpTimer = 0.0f;
 
 	glm::vec3 m_TargetPosition;
     glm::vec3 m_LastPosition;
