@@ -9,6 +9,7 @@ class Player : public Behaviour
 {
 private:
     InputName m_InputName;
+    glm::vec2 m_LastMoveDir = glm::vec2(0);
 
     void HandleActionPressed();
     void HandleThrowPressed();
