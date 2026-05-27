@@ -38,9 +38,15 @@ void Bath::OnTriggerEnter(GameObject* other)
         glm::vec3 targetPos = tubWorldPos + m_Slots[freeSlotIndex].LocalOffset;
 
         animal->EnterPosition(targetPos);
+        animal->StartFulfillingNeed(AnimalNeeds::Bath);
     }
     else
     {
         //bath full
     }
+}
+
+void Bath::OnTriggerExit(GameObject* other)
+{
+
 }

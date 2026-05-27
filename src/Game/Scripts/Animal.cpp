@@ -82,7 +82,23 @@ void Animal::Update()
             rb->Teleport(m_TeleportTarget);
         }
     }
-	if (m_IsSeated) return;
+
+    if (m_IsFulfillingNeed)
+    {
+        m_CurrentNeedProgress += m_SatisfactionSpeed * Time::GetDeltaTime();
+
+        if (m_CurrentNeedProgress >= 1.0f)
+        {
+            m_IsFulfillingNeed = false;
+            m_CurrentNeedProgress = 0.0f;
+
+            FulfillNeed(m_CurrentNeedBeingFulfilled);
+        }
+
+        return;
+    }
+
+    if (m_IsSeated) return;
 
 	RigidBody* rb = m_Owner->GetComponent<RigidBody>();
 
@@ -214,5 +230,17 @@ void Animal::EnterPosition(glm::vec3 exactWorldPosition)
     m_ShouldTeleport = true;
     m_IsSeated = true;
     m_IsMoving = false;
-    //spdlog::info("I am here -> x:{} y:{} z:{}", m_Owner->transform->Position.x, m_Owner->transform->Position.y, m_Owner->transform->Position.z);
+}
+
+void Animal::StartFulfillingNeed(AnimalNeeds need)
+{
+    m_IsFulfillingNeed = true;
+    m_CurrentNeedBeingFulfilled = need;
+    m_CurrentNeedProgress = 0.0f;
+}
+
+void Animal::StopFulfillingNeed()
+{
+    m_IsFulfillingNeed = false;
+    m_CurrentNeedProgress = 0.0f;
 }

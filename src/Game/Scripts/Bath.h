@@ -26,4 +26,5 @@ public:
     void Awake() override;
 
     void OnTriggerEnter(GameObject* other) override;
+    void OnTriggerExit(GameObject* other) override;
 };

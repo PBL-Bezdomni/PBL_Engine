@@ -23,6 +23,11 @@ private:
 
     int m_numberOfNeeds = 1;
 
+    float m_SatisfactionSpeed = 1.0f;
+    bool m_IsFulfillingNeed = false;
+    AnimalNeeds m_CurrentNeedBeingFulfilled;
+    float m_CurrentNeedProgress = 0.0f;
+
     bool m_ShouldTeleport = false;
     glm::vec3 m_TeleportTarget;
 
@@ -62,5 +67,7 @@ public:
     void SetIndicatorObject(std::shared_ptr<GameObject> indicator) { m_Indicator = indicator; }
     std::shared_ptr<GameObject> GetIndicatorObject() { return m_Indicator; }
 
+    void StartFulfillingNeed(AnimalNeeds need);
+    void StopFulfillingNeed();
     void FulfillNeed(AnimalNeeds need);
 };
