@@ -15,6 +15,7 @@ public:
 
 	glm::mat4 GetLocalModelMatrix();
 	glm::vec3 GetGlobalScale() const;
+	glm::vec3 GetGlobalPosition() const;
 
 	glm::vec3 GetRight() const;
 	glm::vec3 GetUp() const;
