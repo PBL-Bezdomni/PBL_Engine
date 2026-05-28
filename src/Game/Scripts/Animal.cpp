@@ -16,6 +16,8 @@ void Animal::Awake()
     
     m_AssetMgr = &Engine::GetInstance().GetAssetManager();
     m_SceneMgr = &Engine::GetInstance().GetGameManager().GetSceneManager();
+	m_TimeLimit = m_SceneMgr->GetTimeLimit();
+	m_CurrTime = m_SceneMgr->GetTimeLeft();
 
 	m_Indicator = m_SceneMgr->Instantiate(m_Owner, "res/models/plane.obj", m_AssetMgr->PieChartShader);
 	m_Indicator->Name = "NeedsIndicator";
@@ -79,7 +81,7 @@ void Animal::EnterTable(GameObject* table)
 void Animal::Update()
 {
     Behaviour::Update();
-	// UpdateIndicatorColors();
+	m_CurrTime = m_SceneMgr->GetTimeLeft();
 
     if (!m_IsInitialized)
     {
@@ -320,7 +322,10 @@ void Animal::EnterPosition(glm::vec3 exactWorldPosition)
 void Animal::DrawRandomNeeds()
 {
 	m_RequiredServices.clear();
-	m_numberOfNeeds = Random::GetRandomInt(m_minNeeds, m_maxNeeds);
+	float progress = (m_TimeLimit - m_CurrTime) / m_TimeLimit;
+	int min = lerp(m_minNeeds, m_maxNeeds - 1, progress);
+	int max = lerp(m_minNeeds, m_maxNeeds, progress * 1.3f);
+	m_numberOfNeeds = Random::GetRandomInt(min, max);
 	std::vector<int> possibleNeeds = { 0, 1, 2, 3 };
 
 	Random::Shuffle(possibleNeeds);

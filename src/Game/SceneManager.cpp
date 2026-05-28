@@ -267,6 +267,16 @@ shared_ptr<Camera> SceneManager::GetMainCamera()
 	return MainCamera;
 }
 
+float SceneManager::GetTimeLimit()
+{
+	return TIME_LIMIT;
+}
+
+float SceneManager::GetTimeLeft()
+{
+	return m_TimeLeft;
+}
+
 void SceneManager::UpdateShaderLight(GameObject* gameObject, Shader& shader, Shader& depthShader)
 {
 	if (gameObject == nullptr)

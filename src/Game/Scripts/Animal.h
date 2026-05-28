@@ -23,7 +23,9 @@ class Animal : public Behaviour
 private:
 	AssetManager* m_AssetMgr;
 	SceneManager* m_SceneMgr;
-	
+
+	float m_TimeLimit;
+	float m_CurrTime;
     int m_minNeeds = 1;
     int m_maxNeeds = 4;
 
