@@ -117,9 +117,8 @@ void Player::Update()
     {
 
         glm::vec3 headPos = m_Owner->GetWorldPosition() + glm::vec3(0.0f, 3.0f, 0.0f);
-
-        m_CarriedAnimal->transform->Position = headPos;
-        m_CarriedAnimal->UpdateSelfAndChild();
+        // m_CarriedAnimal->transform->Position = headPos;
+        // m_CarriedAnimal->UpdateSelfAndChild();
 
         RigidBody* rb = m_CarriedAnimal->GetComponent<RigidBody>();
         Animal* a = m_CarriedAnimal->GetComponent<Animal>();
