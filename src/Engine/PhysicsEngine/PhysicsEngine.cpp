@@ -10,6 +10,8 @@
 #include "GameObject.h"
 #include <Jolt/Physics/Body/BodyID.h>
 
+#include "Engine/Components/RigidBody.h"
+
 void PhysicsEngine::Init() {
     JPH::RegisterDefaultAllocator();
     JPH::Factory::sInstance = new JPH::Factory();
@@ -30,6 +32,7 @@ void PhysicsEngine::Update(float deltaTime) {
     if (m_PhysicsSystem) {
         m_PhysicsSystem->Update(deltaTime, 1, m_TempAllocator, m_JobSystem);
     }
+    CompleteTeleportQueue();
 }
 
 JPH::BodyID PhysicsEngine::CreateBox(const glm::vec3& position, const glm::quat& rotation, const glm::vec3& halfExtents, bool isStatic) {
@@ -137,3 +140,27 @@ void PhysicsEngine::DrawDebugBox(const glm::vec3& center, const glm::vec3& halfE
 
     m_DebugRenderer->DrawWireBox(box, joltColor);
 }
+
+void PhysicsEngine::QueueTeleport(GameObject* go, glm::vec3 pos)
+{
+    RigidBody* rb = go->GetComponent<RigidBody>();
+    if (rb != nullptr)
+    {
+        JPH::BodyID body = JPH::BodyID(rb->GetBodyID());
+        JPH::RVec3 p(pos.x, pos.y, pos.z);
+
+        m_TeleportQueue.push_back(TeleportRequest(body, p));
+    }
+}
+
+void PhysicsEngine::CompleteTeleportQueue()
+{
+    for (TeleportRequest req : m_TeleportQueue)
+    {
+        JPH::BodyInterface& bodyInterface = m_PhysicsSystem->GetBodyInterface();
+        bodyInterface.SetPosition(req.body, req.position, JPH::EActivation::Activate);
+    }
+    m_TeleportQueue.clear();
+}
+
+

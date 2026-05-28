@@ -21,6 +21,7 @@ private:
 	int m_BunnyLimit = 7;
 	int m_BearLimit = 3;
 	int m_SkunkLimit = 4;
+	int m_SpawnedLimit = 5;
 
 	GameObject* m_AnimalParent;
 	AssetManager* m_AssetMgr;
@@ -40,8 +41,11 @@ public:
 	shared_ptr<GameObject> PickAnimal();
 	void SetSpawnValue(GameObject* animal);
 	void SpawnAnimal(GameObject* animal);
+	void DespawnAnimal(GameObject* animal);
 	
 	void Awake() override;
 	void Start() override;
 	void Update() override;
+
+	void OnTriggerEnter(GameObject* other) override;
 };

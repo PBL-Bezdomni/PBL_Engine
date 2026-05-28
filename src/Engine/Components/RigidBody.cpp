@@ -107,6 +107,13 @@ void RigidBody::Teleport(const glm::vec3& newWorldPosition)
     );
 }
 
+void RigidBody::RequestTeleport(const glm::vec3& newWorldPosition)
+{
+    if (!m_Initialized || !m_PhysicsEngine) return;
+    
+    m_PhysicsEngine->QueueTeleport(m_Owner, newWorldPosition);
+}
+
 void RigidBody::SetAngularVelocity(const glm::vec3& velocity)
 {
     if (!m_Initialized || !m_PhysicsEngine) return;

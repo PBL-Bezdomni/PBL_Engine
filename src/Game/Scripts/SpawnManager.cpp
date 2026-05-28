@@ -33,12 +33,23 @@ void SpawnManager::Update()
 	if (m_SpawnCounter >= m_SpawnTime)
 	{
 		m_SpawnCounter = 0;
-		if (m_AnimalsPool.size() > 0)
+		if (m_AnimalsPool.size() > 0 && m_SpawnedAnimalsPool.size() < m_SpawnedLimit)
 		{
 			shared_ptr<GameObject> animal = PickAnimal();
 			SetSpawnValue(animal.get());
 			SpawnAnimal(animal.get());
 		}
+	}
+}
+
+void SpawnManager::OnTriggerEnter(GameObject* other)
+{
+	Behaviour::OnTriggerEnter(other);
+
+	Animal* animal = other->GetComponent<Animal>();
+	if (animal != nullptr)
+	{
+		DespawnAnimal(other);
 	}
 }
 
@@ -61,7 +72,7 @@ shared_ptr<GameObject> SpawnManager::PickAnimal()
 void SpawnManager::SetSpawnValue(GameObject* animal)
 {
 	glm::vec3 spawnPosition = m_Owner->transform->GetGlobalPosition();
-	spawnPosition.z -= 2;
+	spawnPosition.z -= 4;
 	//spawnedEntity->transform->Scale = glm::vec3(2, 2, 2);
 	if (animal != nullptr)
 	{
@@ -79,6 +90,31 @@ void SpawnManager::SpawnAnimal(GameObject* animal)
 	RigidBody* animalRB = animal->GetComponent<RigidBody>();
 	glm::vec3 throwVelocity = glm::vec3(0, 0, -1) * 100.f;
 	animalRB->SetLinearVelocity(throwVelocity);
+}
+
+void SpawnManager::DespawnAnimal(GameObject* animal)
+{
+	if (animal != nullptr)
+	{
+		for (int i = 0; i < m_SpawnedAnimalsPool.size(); i++)
+		{
+			shared_ptr<GameObject> spawnedAnimal = m_SpawnedAnimalsPool[i];
+			if (spawnedAnimal.get() == animal)
+			{
+				swap(m_SpawnedAnimalsPool[i], m_SpawnedAnimalsPool.back());
+				m_SpawnedAnimalsPool.pop_back();
+				m_AnimalsPool.push_back(spawnedAnimal);
+				// spawnedAnimal->transform->Position = m_ExiledPos;
+				// spawnedAnimal->GetComponent<Animal>()->m_IsMoving = false;
+				RigidBody* rb = spawnedAnimal->GetComponent<RigidBody>();
+				if (rb != nullptr)
+				{
+					rb->RequestTeleport(m_ExiledPos);
+				}
+				return;
+			}
+		}
+	}
 }
 
 shared_ptr<GameObject> SpawnManager::CreateAnimal(shared_ptr<Shader> shader, const char* path, const char* name, int index)

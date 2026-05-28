@@ -23,6 +23,7 @@ public:
     void SetAngularVelocity(const glm::vec3& velocity);
 
     void Teleport(const glm::vec3& newWorldPosition);
+    void RequestTeleport(const glm::vec3& newWorldPosition);
 
     void SetRotation(const glm::vec3& eulerAnglesDegrees);
 
