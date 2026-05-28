@@ -22,6 +22,8 @@ void SpawnManager::Start()
 	Engine* engine = &Engine::GetInstance();
 	m_AssetMgr = &engine->GetAssetManager();
 	m_SceneMgr = &engine->GetGameManager().GetSceneManager();
+	m_AnimalParent = m_SceneMgr->GetLevelParent();
+	SpawnEntities(m_AssetMgr->BasicShader);
 }
 
 void SpawnManager::Update()
@@ -31,98 +33,76 @@ void SpawnManager::Update()
 	if (m_SpawnCounter >= m_SpawnTime)
 	{
 		m_SpawnCounter = 0;
-		shared_ptr<GameObject> entity = SpawnEntity(m_AssetMgr->BasicShader);
-		float posX = Random::GetRandomInt(-WALL_X_BORDER, WALL_X_BORDER);
-		float posY = Random::GetRandomInt(0, WALL_Y_BORDER);
-		//spawnedEntity->transform->Scale = glm::vec3(2, 2, 2);
-		if (entity != nullptr)
+		if (m_AnimalsPool.size() > 0)
 		{
-			entity->transform->Position = glm::vec3(posX, 5, posY);
-			//entity->GetComponent<RigidBody>()->Teleport(glm::vec3(posX, 5, posY));
-			// entity->SetParent(m_SceneMgr->objectsTransform.get());
-
-			entity->UpdateSelfAndChild();
-			entity->AddComponent<RigidBody>();
-			entity->GetComponent<RigidBody>()->PrepareInit();
-			// entity->GetComponent<RigidBody>()->Teleport(glm::vec3(posX, 5, posY));
-
-			entity->AddComponent<Animal>();
-			Animal* animalScript = entity->GetComponent<Animal>();
-
-			shared_ptr<GameObject> indicator = m_SceneMgr->Instantiate("res/models/plane.obj", m_AssetMgr->PieChartShader);
-			indicator->Name = "NeedsIndicator";
-
-			indicator->transform->Scale = glm::vec3(2.0f, 2.0f, 2.0f);
-
-			if (animalScript != nullptr)
+			int index = Random::GetRandomInt(0, m_AnimalsPool.size() - 1);
+			if (index >= m_AnimalsPool.size())
 			{
-				animalScript->SetIndicatorShader(m_AssetMgr->PieChartShader);
-				animalScript->SetIndicatorObject(indicator);
+				spdlog::error("Animal spawner wanted bigger index, tweak random calculator");
+				return;
 			}
-
-			m_SceneMgr->AddAnimal(entity);
+			
+			GameObject* animal = m_AnimalsPool[index].get();
+			swap(m_AnimalsPool[index], m_AnimalsPool.back());
+			m_AnimalsPool.pop_back();
+			
+			float posX = Random::GetRandomInt(-WALL_X_BORDER, WALL_X_BORDER);
+			float posY = Random::GetRandomInt(-WALL_Y_BORDER, WALL_Y_BORDER);
+			//spawnedEntity->transform->Scale = glm::vec3(2, 2, 2);
+			if (animal != nullptr)
+			{
+				animal->transform->Position = glm::vec3(posX, 5, posY);
+				animal->GetComponent<RigidBody>()->Teleport(animal->transform->Position);
+				Animal* anScrpt = animal->GetComponent<Animal>(); 
+				anScrpt->ForceNewTartetPosition();
+				anScrpt->DrawRandomNeeds();
+			}
 		}
 	}
 }
 
-shared_ptr<GameObject> SpawnManager::SpawnBunny(shared_ptr<Shader> shader)
+shared_ptr<GameObject> SpawnManager::SpawnAnimal(shared_ptr<Shader> shader, const char* path, const char* name, int index)
 {
-	if (m_SpawnedBunnies.size() < m_BunnyLimit)
-	{
-		shared_ptr<GameObject> bunny = m_SceneMgr->Instantiate("res/models/animals/bunny/bunny.obj", shader);
-		bunny->Name = "bunny";
-		m_SpawnedEntities.push_back(bunny);
-		m_SpawnedBunnies.push_back(bunny);
-		return bunny;
-	}
-	return nullptr;
+	shared_ptr<GameObject> animal = m_SceneMgr->Instantiate(m_AnimalParent, path, shader);
+	animal->Name = name + std::to_string(index);
+	animal->AddComponent<RigidBody>();
+	animal->GetComponent<RigidBody>()->PrepareInit();
+	animal->AddComponent<Animal>();
+	animal->transform->Position = glm::vec3(1000, 5, 1000);
+	animal->UpdateSelfAndChild();
+	m_SceneMgr->AddAnimal(animal);
+	return animal;
 }
 
-shared_ptr<GameObject> SpawnManager::SpawnBear(shared_ptr<Shader> shader)
+shared_ptr<GameObject> SpawnManager::SpawnBunny(shared_ptr<Shader> shader, int index)
 {
-	if (m_SpawnedBears.size() < m_BearLimit)
-	{
-		shared_ptr<GameObject> bear = m_SceneMgr->Instantiate("res/models/animals/bear/bear_1500.fbx", shader);
-		bear->Name = "bear";
-		m_SpawnedEntities.push_back(bear);
-		m_SpawnedBears.push_back(bear);
-		return bear;
-	}
-	return nullptr;
+	return SpawnAnimal(shader, "res/models/animals/bunny/bunny.obj", "bunny", index);
 }
 
-shared_ptr<GameObject> SpawnManager::SpawnSkunk(shared_ptr<Shader> shader)
+shared_ptr<GameObject> SpawnManager::SpawnBear(shared_ptr<Shader> shader, int index)
 {
-	if (m_SpawnedSkunks.size() < m_SkunkLimit)
-	{
-		shared_ptr<GameObject> skunk = m_SceneMgr->Instantiate("res/models/animals/skunks/skunks.fbx", shader);
-		skunk->Name = "skunk";
-		m_SpawnedEntities.push_back(skunk);
-		m_SpawnedSkunks.push_back(skunk);
-		return skunk;
-	}
-	return nullptr;
+	return SpawnAnimal(shader, "res/models/animals/bear/bear_1500.fbx", "bear", index);
 }
 
-shared_ptr<GameObject> SpawnManager::SpawnEntity(shared_ptr<Shader> shader)
+shared_ptr<GameObject> SpawnManager::SpawnSkunk(shared_ptr<Shader> shader, int index)
 {
-	if (m_SpawnedEntities.size() >= m_EntityLimit) return nullptr;
+	return SpawnAnimal(shader, "res/models/animals/skunks/skunks.fbx", "skunk", index);
+}
 
+void SpawnManager::SpawnEntities(shared_ptr<Shader> shader)
+{
+	int r = Random::GetRandomInt(0, 99);
 
-	std::mt19937 rng;
-	rng.seed(std::random_device()());
-	std::uniform_int_distribution<std::mt19937::result_type> dist(0, 99);
-	int r = dist(rng);
-	shared_ptr<GameObject> go;
-
-	if (r < m_BunnyProb && m_SpawnedBunnies.size() < m_BunnyLimit) {
-		return SpawnBunny(shader);
+	for (int i = 0; i < m_BunnyLimit; i++)
+	{
+		m_AnimalsPool.push_back(SpawnBunny(shader, i + 1));
 	}
-	else if (r < (m_BunnyProb + m_BearProb) && m_SpawnedBears.size() < m_BearLimit) {
-		return SpawnBear(shader);
+	for (int i = 0; i < m_BearLimit; i++)
+	{
+		m_AnimalsPool.push_back(SpawnBear(shader, i + 1));
 	}
-	else if (r < (m_BunnyProb + m_BearProb + m_SkunkProb) && m_SpawnedSkunks.size() < m_SkunkLimit) {
-		return SpawnSkunk(shader);
+	for (int i = 0; i < m_SkunkLimit; i++)
+	{
+		m_AnimalsPool.push_back(SpawnSkunk(shader, i + 1));
 	}
-
 }

@@ -112,6 +112,14 @@ void GameObject::DrawSelfAndChild(Shader* shader)
 {
     if (m_IsActive)
     {
+        for (auto& [type, vec] : m_Components)
+        {
+            for (auto& comp : vec)
+            {
+                comp->DrawUpdate();
+            }
+        }
+        
         Model* model = GetComponent<Model>();
         if (model != nullptr && model->IsActive())
         {
@@ -129,6 +137,14 @@ void GameObject::DrawSelf(Shader* shader)
 {
     if (m_IsActive)
     {
+        for (auto& [type, vec] : m_Components)
+        {
+            for (auto& comp : vec)
+            {
+                comp->DrawUpdate();
+            }
+        }
+        
         Model* model = GetComponent<Model>();
         if (model != nullptr && model->IsActive())
         {

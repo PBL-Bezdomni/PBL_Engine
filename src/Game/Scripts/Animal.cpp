@@ -7,25 +7,34 @@
 #include <Engine/Time.h>
 #include <Engine/Engine.h>
 
+#include "Engine/AssetManager.h"
+#include "Engine/Engine.h"
+
 void Animal::Awake()
 {
     Behaviour::Awake();
     
-	m_numberOfNeeds = Random::GetRandomInt(m_minNeeds, m_maxNeeds);
-    std::vector<int> possibleNeeds = { 0, 1, 2, 3 };
+    m_AssetMgr = &Engine::GetInstance().GetAssetManager();
+    m_SceneMgr = &Engine::GetInstance().GetGameManager().GetSceneManager();
 
-    Random::Shuffle(possibleNeeds);
-
-    for (int i = 0; i < m_numberOfNeeds; i++)
-    {
-        int randomType = possibleNeeds[i];
-        m_RequiredServices.push_back(static_cast<AnimalNeeds>(randomType));
-    }
+	m_Indicator = m_SceneMgr->Instantiate(m_Owner, "res/models/plane.obj", m_AssetMgr->PieChartShader);
+	m_Indicator->Name = "NeedsIndicator";
+	m_Indicator->transform->Position = glm::vec3(0.f, -0.8f, 0.f);
+	m_Indicator->transform->Scale = glm::vec3(2.0f, 2.0f, 2.0f);
+	
+    SetIndicatorShader(m_AssetMgr->PieChartShader);
+	DrawRandomNeeds();
 }
 
 void Animal::Start()
 {
 	Behaviour::Start();
+}
+
+void Animal::DrawUpdate()
+{
+	Behaviour::DrawUpdate();
+	UpdateIndicatorColors();
 }
 
 void Animal::PickNewTargetPosition()
@@ -70,6 +79,7 @@ void Animal::EnterTable(GameObject* table)
 void Animal::Update()
 {
     Behaviour::Update();
+	// UpdateIndicatorColors();
 
     if (!m_IsInitialized)
     {
@@ -243,7 +253,8 @@ void Animal::Update()
 
     if (m_Indicator != nullptr)
     {
-        m_Indicator->transform->Position = m_Owner->transform->Position;
+    	glm::vec3 worldPos = glm::vec3(m_Owner->transform->ModelMatrix[3]);
+        // m_Indicator->transform->Position = worldPos + glm::vec3(0.0f, -0.5f, 0.0f);
         m_Indicator->UpdateSelfAndChild();
     }
 }
@@ -251,7 +262,6 @@ void Animal::Update()
 void Animal::SetIndicatorShader(std::shared_ptr<Shader> pieShader)
 {
     m_PieShader = pieShader;
-    UpdateIndicatorColors();
 }
 
 void Animal::UpdateIndicatorColors()
@@ -305,6 +315,23 @@ void Animal::EnterPosition(glm::vec3 exactWorldPosition)
     m_ShouldTeleport = true;
     m_IsSeated = true;
     m_IsMoving = false;
+}
+
+void Animal::DrawRandomNeeds()
+{
+	m_RequiredServices.clear();
+	m_numberOfNeeds = Random::GetRandomInt(m_minNeeds, m_maxNeeds);
+	std::vector<int> possibleNeeds = { 0, 1, 2, 3 };
+
+	Random::Shuffle(possibleNeeds);
+
+	for (int i = 0; i < m_numberOfNeeds; i++)
+	{
+		int randomType = possibleNeeds[i];
+		m_RequiredServices.push_back(static_cast<AnimalNeeds>(randomType));
+	}
+
+	UpdateIndicatorColors();
 }
 
 void Animal::StartFulfillingNeed(AnimalNeeds need)

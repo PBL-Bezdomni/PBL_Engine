@@ -5,6 +5,9 @@
 #include "Shader.h"
 #include <memory>
 
+#include "Engine/AssetManager.h"
+#include "Game/SceneManager.h"
+
 class GameObject;
 
 enum class AnimalNeeds
@@ -18,6 +21,9 @@ enum class AnimalNeeds
 class Animal : public Behaviour
 {
 private:
+	AssetManager* m_AssetMgr;
+	SceneManager* m_SceneMgr;
+	
     int m_minNeeds = 1;
     int m_maxNeeds = 4;
 
@@ -61,6 +67,7 @@ public:
 
 	void Awake() override;
     void Start() override;
+	void DrawUpdate() override;
 
     void EnterTable(GameObject* table);                // probably will
     void EnterPosition(glm::vec3 exactWorldPosition); // merge them
@@ -73,7 +80,8 @@ public:
     void UpdateIndicatorColors();
     void SetIndicatorObject(std::shared_ptr<GameObject> indicator) { m_Indicator = indicator; }
     std::shared_ptr<GameObject> GetIndicatorObject() { return m_Indicator; }
-
+	
+	void DrawRandomNeeds();
     void StartFulfillingNeed(AnimalNeeds need);
     void StopFulfillingNeed();
     void FulfillNeed(AnimalNeeds need);
