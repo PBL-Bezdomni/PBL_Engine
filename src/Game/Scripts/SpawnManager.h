@@ -26,15 +26,19 @@ private:
 	AssetManager* m_AssetMgr;
 	SceneManager* m_SceneMgr;
 	vector<shared_ptr<GameObject>> m_AnimalsPool;
+	shared_ptr<GameObject> ball;
 public:
 	SpawnManager() = default;
-	void SpawnEntities(shared_ptr<Shader> shader);
-	shared_ptr<GameObject> SpawnAnimal(shared_ptr<Shader> shader, const char* path, const char* name, int index = 0);
-	shared_ptr<GameObject> SpawnBunny(shared_ptr<Shader> shader, int index = 0);
-	shared_ptr<GameObject> SpawnBear(shared_ptr<Shader> shader, int index = 0);
-	shared_ptr<GameObject> SpawnSkunk(shared_ptr<Shader> shader, int index = 0);
-	
+	void CreateEntities(shared_ptr<Shader> shader);
+	shared_ptr<GameObject> CreateAnimal(shared_ptr<Shader> shader, const char* path, const char* name, int index = 0);
+	shared_ptr<GameObject> CreateBunny(shared_ptr<Shader> shader, int index = 0);
+	shared_ptr<GameObject> CreateBear(shared_ptr<Shader> shader, int index = 0);
+	shared_ptr<GameObject> CreateSkunk(shared_ptr<Shader> shader, int index = 0);
 
+	shared_ptr<GameObject> PickAnimal();
+	void SetSpawnValue(GameObject* animal);
+	void SpawnAnimal(GameObject* animal);
+	
 	void Awake() override;
 	void Start() override;
 	void Update() override;
