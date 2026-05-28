@@ -10,8 +10,6 @@
 #include "GameObject.h"
 #include <Jolt/Physics/Body/BodyID.h>
 
-#include "Engine/Components/RigidBody.h"
-
 void PhysicsEngine::Init() {
     JPH::RegisterDefaultAllocator();
     JPH::Factory::sInstance = new JPH::Factory();
@@ -141,9 +139,8 @@ void PhysicsEngine::DrawDebugBox(const glm::vec3& center, const glm::vec3& halfE
     m_DebugRenderer->DrawWireBox(box, joltColor);
 }
 
-void PhysicsEngine::QueueTeleport(GameObject* go, glm::vec3 pos)
+void PhysicsEngine::QueueTeleport(RigidBody* rb, glm::vec3 pos)
 {
-    RigidBody* rb = go->GetComponent<RigidBody>();
     if (rb != nullptr)
     {
         JPH::BodyID body = JPH::BodyID(rb->GetBodyID());

@@ -7,7 +7,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include "PhysicsContactListener.h"
-
+#include "Engine/Components/RigidBody.h"
 #include <Jolt/Renderer/DebugRenderer.h>
 
 
@@ -48,7 +48,7 @@ public:
     void DrawDebugLine(const glm::vec3& start, const glm::vec3& end, const glm::vec3& color = glm::vec3(1, 0, 0));
     void DrawDebugBox(const glm::vec3& center, const glm::vec3& halfExtents, const glm::vec3& color);
 
-    void QueueTeleport(GameObject* go, glm::vec3 pos);
+    void QueueTeleport(RigidBody* rb, glm::vec3 pos);
     void CompleteTeleportQueue();
 private:
     JPH::PhysicsSystem* m_PhysicsSystem = nullptr;
