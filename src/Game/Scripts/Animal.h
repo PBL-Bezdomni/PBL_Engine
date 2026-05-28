@@ -74,7 +74,7 @@ public:
 
     void Update() override;
 
-    void ForceNewTartetPosition();
+    void ForceNewTargetPosition();
 
     void SetIndicatorShader(std::shared_ptr<Shader> pieShader);
     void UpdateIndicatorColors();

@@ -47,7 +47,7 @@ void Animal::PickNewTargetPosition()
 	m_IsMoving = true;
 }
 
-void Animal::ForceNewTartetPosition()
+void Animal::ForceNewTargetPosition()
 {
     if (m_Owner && m_Owner->transform)
     {
