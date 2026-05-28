@@ -55,7 +55,8 @@ shared_ptr<GameObject> JSONImporter::ImportObjectFromData(nlohmann::basic_json<>
 
     bool hasRB = obj.value(gn.HAS_RB, false);
     bool hasColl = obj.value(gn.HAS_COLLIDER, false);
-    if (hasRB || hasColl)
+    bool hasTr = obj.value(gn.HAS_TRIGGER, false);
+    if (hasRB || hasColl || hasTr)
     {
         gameObject->AddComponent<RigidBody>();
         RigidBody* rb = gameObject->GetComponent<RigidBody>();
@@ -66,7 +67,7 @@ shared_ptr<GameObject> JSONImporter::ImportObjectFromData(nlohmann::basic_json<>
         colliderSize *= COLLIDER_MOD;
         
         // TODO collider offset is not used now
-        rb->PrepareInit(colliderSize, !hasRB);        
+        rb->PrepareInit(colliderSize, !hasRB, hasTr);        
     }
     
     if (obj.contains(gn.SCRIPTS))

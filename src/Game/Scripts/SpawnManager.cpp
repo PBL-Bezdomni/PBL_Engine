@@ -24,12 +24,6 @@ void SpawnManager::Start()
 	m_SceneMgr = &engine->GetGameManager().GetSceneManager();
 	m_AnimalParent = m_SceneMgr->GetLevelParent();
 	CreateEntities(m_AssetMgr->BasicShader);
-
-	ball = make_shared<GameObject>();
-	Model ballModel = *m_AssetMgr->GetModel(*m_AssetMgr->BasicShader, "res/models/sphere/sphere.obj");
-	ball->AddComponent<Model>(ballModel);
-	ball->transform->Position = glm::vec3(0, 0, 0);
-	m_Owner->AddChild(ball.get());
 }
 
 void SpawnManager::Update()
@@ -60,12 +54,14 @@ shared_ptr<GameObject> SpawnManager::PickAnimal()
 	shared_ptr<GameObject> animal = m_AnimalsPool[index];
 	swap(m_AnimalsPool[index], m_AnimalsPool.back());
 	m_AnimalsPool.pop_back();
+	m_SpawnedAnimalsPool.push_back(animal);
 	return animal;
 }
 
 void SpawnManager::SetSpawnValue(GameObject* animal)
 {
 	glm::vec3 spawnPosition = m_Owner->transform->GetGlobalPosition();
+	spawnPosition.z -= 2;
 	//spawnedEntity->transform->Scale = glm::vec3(2, 2, 2);
 	if (animal != nullptr)
 	{
@@ -92,7 +88,7 @@ shared_ptr<GameObject> SpawnManager::CreateAnimal(shared_ptr<Shader> shader, con
 	animal->AddComponent<RigidBody>();
 	animal->GetComponent<RigidBody>()->PrepareInit();
 	animal->AddComponent<Animal>();
-	animal->transform->Position = glm::vec3(1000, 5, -1000);
+	animal->transform->Position = m_ExiledPos;
 	animal->UpdateSelfAndChild();
 	m_SceneMgr->AddAnimal(animal);
 	return animal;

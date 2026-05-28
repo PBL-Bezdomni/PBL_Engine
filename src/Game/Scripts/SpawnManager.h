@@ -26,7 +26,9 @@ private:
 	AssetManager* m_AssetMgr;
 	SceneManager* m_SceneMgr;
 	vector<shared_ptr<GameObject>> m_AnimalsPool;
-	shared_ptr<GameObject> ball;
+	vector<shared_ptr<GameObject>> m_SpawnedAnimalsPool;
+
+	glm::vec3 m_ExiledPos = glm::vec3(1000, 5, -1000);
 public:
 	SpawnManager() = default;
 	void CreateEntities(shared_ptr<Shader> shader);
