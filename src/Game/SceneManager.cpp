@@ -191,7 +191,7 @@ void SceneManager::RenderScene()
 
     if (Physics != nullptr)
     {
-        // Physics->DrawHitboxes(*AssetMgr->LineShader, view, projection);
+        Physics->DrawHitboxes(*AssetMgr->LineShader, view, projection);
     }
 
 	// IMPORTANT: Do not write things below Freetype/UI, if you do not know what you are doing, thanks :)
