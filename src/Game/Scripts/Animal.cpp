@@ -19,13 +19,20 @@ void Animal::Awake()
 	m_TimeLimit = m_SceneMgr->GetTimeLimit();
 	m_CurrTime = m_SceneMgr->GetTimeLeft();
 
-	m_Indicator = m_SceneMgr->Instantiate(m_Owner, "res/models/plane.obj", m_AssetMgr->PieChartShader);
+	m_Indicator = m_SceneMgr->Instantiate(m_Owner, "res/models/PieChartPlane.obj", m_AssetMgr->PieChartShader);
 	m_Indicator->Name = "NeedsIndicator";
 	m_Indicator->transform->Position = glm::vec3(0.f, -0.8f, 0.f);
-	m_Indicator->transform->Scale = glm::vec3(2.0f, 2.0f, 2.0f);
-	
+	m_Indicator->transform->Scale = glm::vec3(2.0f, 2.0f, 2.0f);	
     SetIndicatorShader(m_AssetMgr->PieChartShader);
-	DrawRandomNeeds();
+
+    m_ProgressBar = m_SceneMgr->Instantiate(m_Owner, "res/models/ProgressBarPlane.obj", m_AssetMgr->ProgressBarShader);
+    m_ProgressBar->Name = "ProgressBar";
+    m_ProgressBar->transform->Position = glm::vec3(0.f, 5.0f, 0.f);
+    m_ProgressBar->transform->EulerAngles = glm::vec3(90.0f, 0.0f, 0.0f);
+    m_ProgressBar->transform->Scale = glm::vec3(0.0f);
+    SetProgressBarShader(m_AssetMgr->ProgressBarShader);
+
+    DrawRandomNeeds();
 }
 
 void Animal::Start()
@@ -37,6 +44,7 @@ void Animal::DrawUpdate()
 {
 	Behaviour::DrawUpdate();
 	UpdateIndicatorColors();
+    UpdateProgressBar();
 }
 
 void Animal::PickNewTargetPosition()
@@ -111,6 +119,10 @@ void Animal::Update()
     if (m_IsFulfillingNeed)
     {
         m_CurrentNeedProgress += m_SatisfactionSpeed * Time::GetDeltaTime();
+
+        m_ProgressBar->transform->Scale = glm::vec3(1.5f, 1.0f, 0.3f);
+
+        UpdateProgressBar();
 
         if (m_CurrentNeedProgress >= 1.0f)
         {
@@ -266,6 +278,11 @@ void Animal::SetIndicatorShader(std::shared_ptr<Shader> pieShader)
     m_PieShader = pieShader;
 }
 
+void Animal::SetProgressBarShader(std::shared_ptr<Shader> barShader)
+{
+    m_ProgressBarShader = barShader;
+}
+
 void Animal::UpdateIndicatorColors()
 {
     if (m_PieShader == nullptr) return;
@@ -350,4 +367,13 @@ void Animal::StopFulfillingNeed()
 {
     m_IsFulfillingNeed = false;
     m_CurrentNeedProgress = 0.0f;
+}
+
+void Animal::UpdateProgressBar()
+{
+    if (m_ProgressBarShader != nullptr && m_ProgressBar != nullptr)
+    {
+        m_ProgressBarShader->Use();
+        m_ProgressBarShader->SetFloat("u_Progress", m_CurrentNeedProgress);
+    }
 }

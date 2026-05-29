@@ -31,7 +31,7 @@ private:
 
     int m_numberOfNeeds = 1;
 
-    float m_SatisfactionSpeed = 1.0f;
+    float m_SatisfactionSpeed = 0.1f;
     bool m_IsFulfillingNeed = false;
     AnimalNeeds m_CurrentNeedBeingFulfilled;
     float m_CurrentNeedProgress = 0.0f;
@@ -61,6 +61,10 @@ private:
     std::shared_ptr<Shader> m_PieShader;
     std::shared_ptr<GameObject> m_Indicator;
 
+    std::shared_ptr<Shader> m_ProgressBarShader;
+    std::shared_ptr<GameObject> m_ProgressBar;
+    void UpdateProgressBar();
+
 public:
     std::vector<AnimalNeeds> m_RequiredServices;
 
@@ -78,6 +82,7 @@ public:
 
     void ForceNewTargetPosition();
 
+    void SetProgressBarShader(std::shared_ptr<Shader> barShader);
     void SetIndicatorShader(std::shared_ptr<Shader> pieShader);
     void UpdateIndicatorColors();
     void SetIndicatorObject(std::shared_ptr<GameObject> indicator) { m_Indicator = indicator; }
