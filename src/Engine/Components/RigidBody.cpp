@@ -5,6 +5,7 @@
 #include <Jolt/Jolt.h>
 #include <Jolt/Physics/Body/BodyID.h>
 #include <glm/gtc/quaternion.hpp>
+#include <Jolt/Physics/Collision/Shape/BoxShape.h>
 
 RigidBody::RigidBody()
 {
@@ -106,6 +107,13 @@ void RigidBody::Teleport(const glm::vec3& newWorldPosition)
     );
 }
 
+void RigidBody::RequestTeleport(const glm::vec3& newWorldPosition)
+{
+    if (!m_Initialized || !m_PhysicsEngine) return;
+    
+    m_PhysicsEngine->QueueTeleport(this, newWorldPosition);
+}
+
 void RigidBody::SetAngularVelocity(const glm::vec3& velocity)
 {
     if (!m_Initialized || !m_PhysicsEngine) return;
@@ -140,4 +148,24 @@ glm::vec3 RigidBody::GetPosition()
     JPH::Vec3 joltPos = m_PhysicsEngine->GetSystem()->GetBodyInterface().GetPosition(JPH::BodyID(m_BodyID));
 
     return glm::vec3(joltPos.GetX(), joltPos.GetY(), joltPos.GetZ());
+}
+
+
+void RigidBody::SetHitboxSize(const glm::vec3& newHalfExtents)
+{
+    if (!m_Initialized || !m_PhysicsEngine) return;
+
+    m_HalfExtents = newHalfExtents;
+
+    JPH::BoxShapeSettings shapeSettings(JPH::Vec3(newHalfExtents.x, newHalfExtents.y, newHalfExtents.z));
+    JPH::ShapeSettings::ShapeResult shapeResult = shapeSettings.Create();
+
+    if (shapeResult.IsValid())
+    {
+        JPH::BodyInterface& bodyInterface = m_PhysicsEngine->GetSystem()->GetBodyInterface();
+
+        bool updateMassProperties = !m_IsStatic && !m_IsTrigger;
+
+        bodyInterface.SetShape(JPH::BodyID(m_BodyID), shapeResult.Get(), updateMassProperties, JPH::EActivation::Activate);
+    }
 }

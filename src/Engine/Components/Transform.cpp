@@ -33,6 +33,11 @@ glm::vec3 Transform::GetGlobalScale() const
 	return { glm::length(GetRight()), glm::length(GetUp()), glm::length(GetBackward()) };
 }
 
+glm::vec3 Transform::GetGlobalPosition() const
+{
+	return ModelMatrix[3];
+}
+
 glm::vec3 Transform::GetRight() const
 {
 	return ModelMatrix[0];

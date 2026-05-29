@@ -7,13 +7,25 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include "PhysicsContactListener.h"
-
+#include "Engine/Components/RigidBody.h"
 #include <Jolt/Renderer/DebugRenderer.h>
 
 
 class Shader;
 class PhysicsDebugRenderer;
 class GameObject;
+
+struct TeleportRequest
+{
+    JPH::BodyID body;
+    JPH::RVec3 position;
+
+    TeleportRequest(JPH::BodyID b, JPH::RVec3 p)
+    {
+        body = b;
+        position = p;
+    }
+};
 
 class PhysicsEngine {
 public:
@@ -36,6 +48,8 @@ public:
     void DrawDebugLine(const glm::vec3& start, const glm::vec3& end, const glm::vec3& color = glm::vec3(1, 0, 0));
     void DrawDebugBox(const glm::vec3& center, const glm::vec3& halfExtents, const glm::vec3& color);
 
+    void QueueTeleport(RigidBody* rb, glm::vec3 pos);
+    void CompleteTeleportQueue();
 private:
     JPH::PhysicsSystem* m_PhysicsSystem = nullptr;
     JPH::TempAllocatorImpl* m_TempAllocator = nullptr;
@@ -46,4 +60,6 @@ private:
     ObjectVsBroadPhaseLayerFilterImpl m_ObjVsBPFilter;
     ObjectLayerPairFilterImpl m_ObjVsObjFilter;
     PhysicsContactListener m_ContactListener;
+
+    std::vector<TeleportRequest> m_TeleportQueue;
 };

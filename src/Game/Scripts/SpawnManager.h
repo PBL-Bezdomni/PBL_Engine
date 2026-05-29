@@ -13,37 +13,39 @@ class SpawnManager : public Behaviour
 {
 private:
 	float WALL_X_BORDER = 10.f;
-	float WALL_Y_BORDER = 50.f;
+	float WALL_Y_BORDER = 30.f;
 	
 	float m_SpawnCounter;
 	float m_SpawnTime = 2.f;
-	
-	int m_EntityLimit = 10;
 
-	int m_BunnyLimit = 15;
-	int m_BearLimit = 5;
-	int m_SkunkLimit = 7;
+	int m_BunnyLimit = 7;
+	int m_BearLimit = 3;
+	int m_SkunkLimit = 4;
+	int m_SpawnedLimit = 5;
 
-	vector<shared_ptr<GameObject>> m_SpawnedEntities;
-	vector<shared_ptr<GameObject>> m_SpawnedBunnies;
-	vector<shared_ptr<GameObject>> m_SpawnedBears;
-	vector<shared_ptr<GameObject>> m_SpawnedSkunks;
-
-	float m_BunnyProb = 50.f;	
-	float m_BearProb = 15.f;
-	float m_SkunkProb = 35.f;
-
+	GameObject* m_AnimalParent;
 	AssetManager* m_AssetMgr;
 	SceneManager* m_SceneMgr;
+	vector<shared_ptr<GameObject>> m_AnimalsPool;
+	vector<shared_ptr<GameObject>> m_SpawnedAnimalsPool;
+
+	glm::vec3 m_ExiledPos = glm::vec3(1000, 5, -1000);
 public:
 	SpawnManager() = default;
-	shared_ptr<GameObject> SpawnEntity(shared_ptr<Shader> shader);
-	shared_ptr<GameObject> SpawnBunny(shared_ptr<Shader> shader);
-	shared_ptr<GameObject> SpawnBear(shared_ptr<Shader> shader);
-	shared_ptr<GameObject> SpawnSkunk(shared_ptr<Shader> shader);
+	void CreateEntities(shared_ptr<Shader> shader);
+	shared_ptr<GameObject> CreateAnimal(shared_ptr<Shader> shader, const char* path, const char* name, int index = 0);
+	shared_ptr<GameObject> CreateBunny(shared_ptr<Shader> shader, int index = 0);
+	shared_ptr<GameObject> CreateBear(shared_ptr<Shader> shader, int index = 0);
+	shared_ptr<GameObject> CreateSkunk(shared_ptr<Shader> shader, int index = 0);
 
-
+	shared_ptr<GameObject> PickAnimal();
+	void SetSpawnValue(GameObject* animal);
+	void SpawnAnimal(GameObject* animal);
+	void DespawnAnimal(GameObject* animal);
+	
 	void Awake() override;
 	void Start() override;
 	void Update() override;
+
+	void OnTriggerEnter(GameObject* other) override;
 };

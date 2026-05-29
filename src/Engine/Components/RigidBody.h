@@ -23,10 +23,13 @@ public:
     void SetAngularVelocity(const glm::vec3& velocity);
 
     void Teleport(const glm::vec3& newWorldPosition);
+    void RequestTeleport(const glm::vec3& newWorldPosition);
 
     void SetRotation(const glm::vec3& eulerAnglesDegrees);
 
     glm::vec3 GetPosition();
+
+    void SetHitboxSize(const glm::vec3& newHalfExtents);
 
 private:
     glm::vec3 m_HalfExtents;

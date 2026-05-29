@@ -85,6 +85,12 @@ void Player::Update()
             float targetAngle = glm::degrees(atan2(direction.x, direction.z));
 
             rb->SetRotation(glm::vec3(0.0f, targetAngle, 0.0f));
+
+            if (glm::length(direction) > 0.01f)
+            {
+                // Save last input that moved player
+                m_LastMoveDir = moveInput;
+            }
         }
 
         glm::vec3 currentVel = rb->GetLinearVelocity();
@@ -111,15 +117,16 @@ void Player::Update()
     {
 
         glm::vec3 headPos = m_Owner->GetWorldPosition() + glm::vec3(0.0f, 3.0f, 0.0f);
-
-        m_CarriedAnimal->transform->Position = headPos;
-        m_CarriedAnimal->UpdateSelfAndChild();
+        // m_CarriedAnimal->transform->Position = headPos;
+        // m_CarriedAnimal->UpdateSelfAndChild();
 
         RigidBody* rb = m_CarriedAnimal->GetComponent<RigidBody>();
+        Animal* a = m_CarriedAnimal->GetComponent<Animal>();
         if (rb != nullptr)
         {
             rb->SetLinearVelocity(glm::vec3(0.0f));
             rb->SetAngularVelocity(glm::vec3(0.0f));
+            a->m_IsMoving = false;
             rb->Teleport(headPos);
         }
     }
@@ -131,9 +138,11 @@ void Player::HandleActionPressed()
     {   
         glm::vec3 playerPos = m_Owner->GetWorldPosition();
 
-        playerPos.y += 1.0f;
+        playerPos.y += 0.5f;
 
-        glm::vec3 playerForward = glm::quat(glm::radians(m_Owner->transform->EulerAngles)) * glm::vec3(0.0f, 0.0f, 1.0f);
+        glm::vec3 rot = glm::vec3(m_LastMoveDir.x, 0, m_LastMoveDir.y);
+        glm::vec3 playerForward = glm::normalize(rot);
+        // glm::vec3 playerForward = glm::quat(glm::radians(m_Owner->transform->EulerAngles)) * glm::vec3(0.0f, 0.0f, 1.0f);
 
         float rayDistance = 5.0f;
 
@@ -178,9 +187,9 @@ void Player::HandleThrowReleased()
 
         if (animalRb != nullptr)
         {
-            //will fix later
-            glm::vec3 playerForward = glm::quat(glm::radians(m_Owner->transform->EulerAngles)) * glm::vec3(0.0f, 0.0f, 1.0f);
-            playerForward = glm::normalize(playerForward);
+            glm::vec3 rot = glm::vec3(m_LastMoveDir.x, 0, m_LastMoveDir.y);
+            glm::vec3 playerForward = glm::normalize(rot);
+            // glm::vec3 playerForward = glm::quat(glm::radians(m_Owner->transform->EulerAngles)) * glm::vec3(0.0f, 0.0f, 1.0f);
 
             glm::vec3 throwVelocity = playerForward * m_ThrowCharge;
             throwVelocity.y = m_ThrowCharge * 0.4f;
@@ -191,6 +200,7 @@ void Player::HandleThrowReleased()
         if (animalScript != nullptr)
         {
             animalScript->m_IsSeated = false;
+            animalScript->m_IsMoving = false;
         }
 
         m_CarriedAnimal = nullptr;

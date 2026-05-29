@@ -20,6 +20,7 @@
 #include "Engine/JSONImporter.h"
 
 #include "Game/Scripts/MassageTable.h"
+#include "Game/Scripts/Bath.h"
 #include "Game/Scripts/Animal.h"
 
 
@@ -88,6 +89,12 @@ void SceneManager::LoadScene()
 	m_Player1.transform->Position = glm::vec3(0.0f, 1.0f, 0.0f);
 	m_Player2.transform->Position = glm::vec3(5.0f, 5.0f, 0.0f);
 
+	//delete
+	m_WorldParent.AddChild(&bath);
+	bath.transform->Position = glm::vec3(10.0f, 2.0f, 70.0f);
+	bath.transform->Scale = glm::vec3(5.0f, 5.0f, 5.0f);
+	//
+
 	m_WorldParent.UpdateSelfAndChild();
 
 	m_Player1.AddComponent<RigidBody>();
@@ -99,6 +106,12 @@ void SceneManager::LoadScene()
 	// SHADOW
 	AssetMgr->BasicShader->Use();
 	AssetMgr->BasicShader->SetInt("shadowMap", 20);
+
+
+	//delete
+	bath.AddComponent<RigidBody>();
+	bath.GetComponent<RigidBody>()->Init(glm::vec3(3.0f, 3.0f, 3.0f), true, true);
+	bath.AddComponent<Bath>();
 
 	// TODO create event here
 	Engine::GetInstance().GetDebugManager().RefreshGameObjectData();
@@ -145,35 +158,35 @@ void SceneManager::RenderScene()
 
     m_WorldParent.DrawSelfAndChild(NULL);
 
-	if (AssetMgr->PieChartShader != nullptr)
-	{
-		AssetMgr->PieChartShader->Use();
-		AssetMgr->PieChartShader->SetMat4("view", view);
-		AssetMgr->PieChartShader->SetMat4("projection", projection);
-
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		glDepthMask(GL_FALSE);
-
-		for (Animal* animal : m_AnimalsList)
-		{
-			if (animal != nullptr && animal->GetIndicatorObject() != nullptr)
-			{
-				glm::vec3 worldPos = glm::vec3(animal->GetOwner()->transform->ModelMatrix[3]);
-				animal->GetIndicatorObject()->transform->Position = worldPos + glm::vec3(0.0f, -0.5f, 0.0f);
-				animal->GetIndicatorObject()->UpdateSelfAndChild();
-
-				animal->UpdateIndicatorColors();
-				animal->GetIndicatorObject()->DrawSelfAndChild(NULL);
-			}
-		}
-
-		glDepthMask(GL_TRUE);
-		glDisable(GL_BLEND);
-
-		AssetMgr->BasicShader->Use();
-	}
+	// if (AssetMgr->PieChartShader != nullptr)
+	// {
+	// 	// AssetMgr->PieChartShader->Use();
+	// 	// AssetMgr->PieChartShader->SetMat4("view", view);
+	// 	// AssetMgr->PieChartShader->SetMat4("projection", projection);
+	//
+	// 	// glEnable(GL_BLEND);
+	// 	// glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	// 	//
+	// 	// glDepthMask(GL_FALSE);
+	//
+	// 	// for (shared_ptr<GameObject> animalObject : m_AnimalsList)
+	// 	// {
+	// 	// 	Animal* animal = animalObject->GetComponent<Animal>();
+	// 	// 	if (animal != nullptr && animal->GetIndicatorObject() != nullptr)
+	// 	// 	{
+	// 	// 		
+	// 	// 		// animal->GetIndicatorObject()->UpdateSelfAndChild();
+	// 	//
+	// 	// 		// animal->UpdateIndicatorColors();
+	// 	// 		// animal->GetIndicatorObject()->DrawSelfAndChild(NULL);
+	// 	// 	}
+	// 	// }
+	//
+	// 	// glDepthMask(GL_TRUE);
+	// 	// glDisable(GL_BLEND);
+	//
+	// 	// AssetMgr->BasicShader->Use();
+	// }
 
 	m_Skybox.DrawSkybox(skyboxView, projection);
 
@@ -211,26 +224,43 @@ void SceneManager::AddAnimal(shared_ptr<GameObject> spawnedEntity)
 {
 	if (spawnedEntity != nullptr)
 	{
-		m_WorldParent.AddChild(spawnedEntity.get());
-
-		Animal* animal = spawnedEntity->GetComponent<Animal>();
-		if (animal != nullptr)
-		{
-			m_AnimalsList.push_back(animal);
-		}
+		m_AnimalsList.push_back(spawnedEntity);
 	}
 }
 
-shared_ptr<GameObject> SceneManager::Instantiate(string path, shared_ptr<Shader> shader)
+GameObject* SceneManager::GetLevelParent()
+{
+	if (m_WorldParent.Children.size() > 0)
+	{
+		for (GameObject* child: m_WorldParent.Children)
+		{
+			if (child != nullptr && child->Name == "Level")
+			{
+				return child;
+			}
+		}
+	}
+	return &m_WorldParent;
+}
+
+shared_ptr<GameObject> SceneManager::Instantiate(GameObject* parent, string path, shared_ptr<Shader> shader)
 {
 	// TODO make load components data from prefab path instead of passing model path
 	shared_ptr<GameObject> go = make_shared<GameObject>();
-	if (shader == nullptr)
+	if (path != "")
 	{
-		shader = AssetMgr->BasicShader;
+		if (shader == nullptr)
+		{
+			shader = AssetMgr->BasicShader;
+		}
+		Model model = *AssetMgr->GetModel(*shader, path.c_str());
+		go->AddComponent<Model>(model);
 	}
-	Model model = *AssetMgr->GetModel(*shader, path.c_str());
-	go->AddComponent<Model>(model);
+	if (parent == nullptr)
+	{
+		parent = &m_WorldParent;
+	}
+	parent->AddChild(go.get());
 	m_GameObjects.push_back(go);
 	return m_GameObjects.back();
 }
@@ -238,6 +268,16 @@ shared_ptr<GameObject> SceneManager::Instantiate(string path, shared_ptr<Shader>
 shared_ptr<Camera> SceneManager::GetMainCamera()
 {
 	return MainCamera;
+}
+
+float SceneManager::GetTimeLimit()
+{
+	return TIME_LIMIT;
+}
+
+float SceneManager::GetTimeLeft()
+{
+	return m_TimeLeft;
 }
 
 GameObject* SceneManager::GetLevelObject()
@@ -322,6 +362,15 @@ void SceneManager::LoadModels()
 	
 	m_UIPanelTex = *AssetMgr->GetTexture("res/textures/UI/UI_panel.png");
 	m_UICoinTex = *AssetMgr->GetTexture("res/textures/UI/coin.png");
+
+
+	//you can delete that just checking
+	bath = GameObject();
+	Model bathModel = *AssetMgr->GetModel(*AssetMgr->BasicShader, "res/models/PLACEHOLDER_BATH.obj");
+	bath.AddComponent<Model>(bathModel);
+	bath.GetComponent<Model>()->AssignTexture(*AssetMgr->GetTexture("res/textures/UI/coin.png"));
+
+
 }
 
 void SceneManager::InitializeUI()

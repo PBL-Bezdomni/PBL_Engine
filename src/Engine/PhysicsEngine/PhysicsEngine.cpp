@@ -30,6 +30,7 @@ void PhysicsEngine::Update(float deltaTime) {
     if (m_PhysicsSystem) {
         m_PhysicsSystem->Update(deltaTime, 1, m_TempAllocator, m_JobSystem);
     }
+    CompleteTeleportQueue();
 }
 
 JPH::BodyID PhysicsEngine::CreateBox(const glm::vec3& position, const glm::quat& rotation, const glm::vec3& halfExtents, bool isStatic) {
@@ -75,7 +76,7 @@ void PhysicsEngine::DrawHitboxes(Shader& lineShader, const glm::mat4& view, cons
     m_DebugRenderer->Setup(lineShader, view, projection);
 
     JPH::BodyManager::DrawSettings drawSettings;
-    drawSettings.mDrawBoundingBox = false;
+    drawSettings.mDrawBoundingBox = true;
     drawSettings.mDrawShape = true;
     drawSettings.mDrawShapeWireframe = true;
 
@@ -137,3 +138,26 @@ void PhysicsEngine::DrawDebugBox(const glm::vec3& center, const glm::vec3& halfE
 
     m_DebugRenderer->DrawWireBox(box, joltColor);
 }
+
+void PhysicsEngine::QueueTeleport(RigidBody* rb, glm::vec3 pos)
+{
+    if (rb != nullptr)
+    {
+        JPH::BodyID body = JPH::BodyID(rb->GetBodyID());
+        JPH::RVec3 p(pos.x, pos.y, pos.z);
+
+        m_TeleportQueue.push_back(TeleportRequest(body, p));
+    }
+}
+
+void PhysicsEngine::CompleteTeleportQueue()
+{
+    for (TeleportRequest req : m_TeleportQueue)
+    {
+        JPH::BodyInterface& bodyInterface = m_PhysicsSystem->GetBodyInterface();
+        bodyInterface.SetPosition(req.body, req.position, JPH::EActivation::Activate);
+    }
+    m_TeleportQueue.clear();
+}
+
+

@@ -19,6 +19,7 @@ class Player;
 class SceneManager
 {
 private:
+	const float TIME_LIMIT = 60.f;
 	unique_ptr<JSONImporter> m_JSONImporter;
 	GameObject m_WorldParent;
 	GameObject m_UIParent;
@@ -27,7 +28,7 @@ private:
 	UIPanel m_MoneyPanel;
 	UIPanel m_FpsPanel;
 
-	std::vector<Animal*> m_AnimalsList;
+	std::vector<shared_ptr<GameObject>> m_AnimalsList;
 	
 public:
 	void Initialize();
@@ -35,10 +36,13 @@ public:
 	void UpdateScene();
 	void RenderScene();
 	void AddAnimal(shared_ptr<GameObject> spawnedEntity);
+	GameObject* GetLevelParent();
+	shared_ptr<GameObject> Instantiate(GameObject* parent = nullptr, string path = "", shared_ptr<Shader> shader = nullptr);
 	GameObject* GetLevelObject();
-	shared_ptr<GameObject> Instantiate(string path, shared_ptr<Shader> shader = nullptr);
 
 	shared_ptr<Camera> GetMainCamera();
+	float GetTimeLimit();
+	float GetTimeLeft();
 
 private:
 	//TODO move those functions elsewhere or remove them completely
@@ -82,5 +86,7 @@ private:
 	PhysicsEngine* Physics = nullptr;
 	AssetManager*  AssetMgr = nullptr;
 	
-	float m_TimeLeft = 300.0f;
+	float m_TimeLeft = TIME_LIMIT;
+
+	GameObject bath;
 };
