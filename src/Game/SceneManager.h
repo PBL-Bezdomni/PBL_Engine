@@ -38,7 +38,6 @@ public:
 	void AddAnimal(shared_ptr<GameObject> spawnedEntity);
 	GameObject* GetLevelParent();
 	shared_ptr<GameObject> Instantiate(GameObject* parent = nullptr, string path = "", shared_ptr<Shader> shader = nullptr);
-	GameObject* GetLevelObject();
 
 	shared_ptr<Camera> GetMainCamera();
 	float GetTimeLimit();

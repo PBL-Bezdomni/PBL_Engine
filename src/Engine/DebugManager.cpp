@@ -2,6 +2,7 @@
 #include "Engine/JSONImporter.h"
 #include "Engine.h"
 #include <memory>
+#include "misc/cpp/imgui_stdlib.h"
 
 
 DebugManager::~DebugManager()
@@ -34,12 +35,12 @@ void DebugManager::InitializeImGUI(GLFWwindow* window, const char* glslVersion)
 	m_SceneMgr = &engine->GetGameManager().GetSceneManager();
 	m_MainCamera = m_SceneMgr->GetMainCamera().get();
 	LoadCameraData();
-	LoadGameObjectsData();
+	RefreshGameObjectData();
 }
 
 void DebugManager::RefreshGameObjectData()
 {
-	LoadGameObjectsData();
+	m_SceneObjectData = LoadSceneData(m_SceneMgr->GetLevelParent(), true);
 }
 
 void DebugManager::RenderImgui(GLFWwindow* window)
@@ -160,21 +161,23 @@ void DebugManager::SaveCameraData()
 	JSONImporter importer = JSONImporter();
 	importer.SaveCameraData(m_CameraSaveName, m_MainCamera);
 }
-
-void DebugManager::LoadGameObjectsData()
-{
-	GameObject* level = m_SceneMgr->GetLevelObject();
-	LoadObjectChildren(level);	
-}
 	
-void DebugManager::InitializeGameObjectData(GameObject* obj)
-{
+GameObjectData DebugManager::InitializeGameObjectData(GameObject* obj, bool isFirstCall)
+{	
 	GameObjectData data;
 	data.gameObject = obj;
 	data.Name = obj->Name;
 	data.ID = obj->ID;
-	data.ParentName = obj->Parent->ID;
-	data.ParentID = obj->Parent->ID;
+	if (obj->Parent != nullptr && !isFirstCall)
+	{
+		data.ParentName = obj->Parent->Name;
+		data.ParentID = obj->Parent->ID;
+	}
+	else if (isFirstCall)
+	{
+		data.ParentName = "";
+		data.ParentID = -1;
+	}
 
 	Model* model = obj->GetComponent<Model>();
 	TextureTypeNames texTypeName;
@@ -189,7 +192,7 @@ void DebugManager::InitializeGameObjectData(GameObject* obj)
 			{
 				if (tex.Type == texTypeName.DIFFUSE && !hasDiffuse)
 				{
-					data.DiffuseTex = tex.FileName;
+					data.DiffuseTex = tex.FileName.c_str();
 					hasDiffuse = true;
 				}
 				if (tex.Type == texTypeName.NORMAL && !hasNormal)
@@ -202,21 +205,57 @@ void DebugManager::InitializeGameObjectData(GameObject* obj)
 	}
 
 	Transform* transform = obj->transform;
+
 	
+	return data;
 }
 
-void DebugManager::LoadObjectChildren(GameObject* obj)
+GameObjectData DebugManager::LoadSceneData(GameObject* obj, bool isFirstCall)
 {
+	GameObjectData data = InitializeGameObjectData(obj, isFirstCall);
 	for (GameObject* child : obj->Children)
 	{
-		InitializeGameObjectData(child);
-		LoadObjectChildren(child);
+		// Skip animals. TODO may require tweak in the future
+		if (child->GetComponent<Animal>() != nullptr) continue;
+		// GameObjectData chidlData = InitializeGameObjectData(child);
+		GameObjectData childData = LoadSceneData(child);
+		data.Children.push_back(childData);
 	}
+	return data;
 }
 
 void DebugManager::RenderGameObjectsImgui()
 {
+	ImGui::Begin("Scene");
+	RenderGameObjectTree(m_SceneObjectData);
+	ImGui::End();
 }
+
+void DebugManager::RenderGameObjectTree(GameObjectData& data)
+{
+	ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow;
+
+	if (data.Children.empty())
+	{
+		flags |= ImGuiTreeNodeFlags_Leaf;
+	}
+
+	bool opened = ImGui::TreeNodeEx((void*)(intptr_t)data.ID, flags, "%s (ID: %d)", data.Name.c_str(), data.ID);
+
+	if (opened)
+	{
+		ImGui::InputText("Name: %s", &data.Name);
+		ImGui::InputInt("ID: ", &data.ID);
+
+		for (GameObjectData& childData : data.Children)
+		{
+			RenderGameObjectTree(childData);
+		}
+
+		ImGui::TreePop();
+	}
+}
+
 
 bool DebugManager::HasGameObjectsUpdated()
 {

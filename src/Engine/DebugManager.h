@@ -41,6 +41,8 @@ struct GameObjectData
 	float ColliderSizeZ;
 
 	vector<string> Scripts;
+
+	vector<GameObjectData> Children;
 };
 
 class DebugManager
@@ -65,11 +67,11 @@ private:
 	bool HasCameraUpdated();
 	void UpdateCamera();
 	void SaveCameraData();
-
-	void LoadGameObjectsData();
-	void InitializeGameObjectData(GameObject* obj);
-	void LoadObjectChildren(GameObject* obj);
+	
+	GameObjectData InitializeGameObjectData(GameObject* obj, bool isFirstCall);
+	GameObjectData LoadSceneData(GameObject* obj, bool isFirstCall = false);
 	void RenderGameObjectsImgui();
+	void RenderGameObjectTree(GameObjectData& data);
 	bool HasGameObjectsUpdated();
 	void UpdateGameObjects();
 	void SaveGameObjectsData();
@@ -95,5 +97,5 @@ private:
 	float m_CameraZoom = 0;
 	float m_PrevCameraZoom = 0;
 
-	vector<GameObjectData> m_GameObjectDatas;
+	GameObjectData m_SceneObjectData;
 };

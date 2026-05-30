@@ -280,23 +280,6 @@ float SceneManager::GetTimeLeft()
 	return m_TimeLeft;
 }
 
-GameObject* SceneManager::GetLevelObject()
-{
-	// TODO return Level
-	if (m_WorldParent.Children.size() > 0)
-	{
-		for (GameObject* child : m_WorldParent.Children)
-		{
-			if (child->Name == "Level")
-			{
-				return child;
-			}
-		}
-		return m_WorldParent.Children[0];
-	}
-	return &m_WorldParent;
-}
-
 void SceneManager::UpdateShaderLight(GameObject* gameObject, Shader& shader, Shader& depthShader)
 {
 	if (gameObject == nullptr)
