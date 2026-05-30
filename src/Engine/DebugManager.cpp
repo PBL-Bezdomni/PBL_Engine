@@ -272,6 +272,11 @@ void DebugManager::RenderGameObjectsImgui()
 	}
 	RenderGameObjectTree(m_SceneObjectData);
 	ImGui::End();
+
+	if (m_RefreshObjects)
+	{
+		RefreshGameObjectData();
+	}
 }
 
 void DebugManager::RenderGameObjectTree(GameObjectData& data)
@@ -330,7 +335,7 @@ void DebugManager::RenderGameObjectTree(GameObjectData& data)
 		{
 			if (ImGui::Button("Add Model"))
 			{
-				// TODO add model to object;
+				AddModel(data.gameObject);
 			}
 		}
 
@@ -357,7 +362,7 @@ void DebugManager::RenderGameObjectTree(GameObjectData& data)
 		{
 			if (ImGui::Button("Add RigidBody"))
 			{
-				// TODO add rigidbody component
+				AddRigidBody(data.gameObject);
 			}
 		}
 
@@ -405,7 +410,7 @@ void DebugManager::RenderGameObjectTree(GameObjectData& data)
 
 			if (ImGui::Button("Add Child"))
 			{
-				// TODO add new gameobject
+				AddChild(data.gameObject);
 			}
 
 			ImGui::TreePop();
@@ -432,8 +437,8 @@ void DebugManager::UpdateGameObjects(GameObjectData& data)
 	if (rb != nullptr)
 	{
 		rb->SetHitboxSize(glm::vec3(data.ColliderSizeX, data.ColliderSizeY, data.ColliderSizeZ));
-		rb->SetRotation(gameObject->transform->EulerAngles);
-		rb->Teleport(gameObject->transform->Position);
+		// rb->SetRotation(gameObject->transform->EulerAngles);
+		// rb->Teleport(gameObject->transform->Position);
 	}
 }
 
@@ -443,4 +448,25 @@ void DebugManager::SaveGameObjectsData()
 	importer.SaveSceneData(m_SceneSaveName, m_SceneObjectData);
 }
 
+void DebugManager::AddChild(GameObject* root)
+{
+	shared_ptr<GameObject> gameObject = m_SceneMgr->Instantiate(root);
+	m_RefreshObjects = true;
+	// RefreshGameObjectData();
+}
 
+void DebugManager::AddRigidBody(GameObject* go)
+{
+	go->AddComponent<RigidBody>();
+	go->GetComponent<RigidBody>()->Init(glm::vec3(1), true);
+	m_RefreshObjects = true;
+	// RefreshGameObjectData();
+}
+
+void DebugManager::AddModel(GameObject* go)
+{
+	Model model = *Engine::GetInstance().GetAssetManager().GetSphereModel();
+	go->AddComponent<Model>(model);
+	m_RefreshObjects = true;
+	// RefreshGameObjectData();
+}

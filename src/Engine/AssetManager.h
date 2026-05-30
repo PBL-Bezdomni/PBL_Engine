@@ -35,4 +35,5 @@ public:
 	shared_ptr<Shader> GetShader(const char* vertexPath, const char* fragmentPath);
 	shared_ptr<Model> GetModel(Shader& shader, const char* path, unsigned int instancing = 1, vector<glm::mat4> instanceMatrix = {});
 	shared_ptr<Texture> GetTexture(const char* path, const char* type = "texture_diffuse");
+	shared_ptr<Model> GetSphereModel();
 };

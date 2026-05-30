@@ -75,7 +75,12 @@ private:
 	bool HasGameObjectUpdated();
 	void UpdateGameObjects(GameObjectData& data);
 	void SaveGameObjectsData();
+	void AddChild(GameObject* root);
+	void AddRigidBody(GameObject* go);
+	void AddModel(GameObject* go);
 
+	bool m_RefreshObjects = false;
+	
 	// Setting fields
 	char m_CameraSaveName[255] = "camera";
 	float m_CamPositionBorder = 100;

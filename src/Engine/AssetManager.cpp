@@ -105,6 +105,11 @@ shared_ptr<Texture> AssetManager::GetTexture(const char* path, const char* type)
 	return m_LoadedTextures[key];
 }
 
+shared_ptr<Model> AssetManager::GetSphereModel()
+{
+	return GetModel(*BasicShader, "res/models/sphere/sphere.obj");
+}
+
 
 string AssetManager::GetPathWithRelativePrefix(const char* cPath)
 {
