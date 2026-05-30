@@ -169,3 +169,18 @@ void RigidBody::SetHitboxSize(const glm::vec3& newHalfExtents)
         bodyInterface.SetShape(JPH::BodyID(m_BodyID), shapeResult.Get(), updateMassProperties, JPH::EActivation::Activate);
     }
 }
+
+glm::vec3 RigidBody::GetHitBoxSize()
+{
+    return m_HalfExtents;
+}
+
+bool RigidBody::GetIsStatic()
+{
+    return m_IsStatic;
+}
+
+bool RigidBody::GetIsTrigger()
+{
+    return m_IsTrigger;
+}

@@ -30,6 +30,9 @@ public:
     glm::vec3 GetPosition();
 
     void SetHitboxSize(const glm::vec3& newHalfExtents);
+    glm::vec3 GetHitBoxSize();
+    bool GetIsStatic();
+    bool GetIsTrigger();
 
 private:
     glm::vec3 m_HalfExtents;
