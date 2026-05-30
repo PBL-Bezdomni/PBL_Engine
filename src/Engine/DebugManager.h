@@ -33,8 +33,8 @@ struct GameObjectData
 	float ScaZ;
 
 	bool HasRigidBody;
-	bool HasCollider;
-	bool HasTrigger;
+	bool IsStatic;
+	bool IsTrigger;
 
 	float ColliderSizeX;
 	float ColliderSizeY;

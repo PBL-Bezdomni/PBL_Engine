@@ -219,14 +219,14 @@ GameObjectData DebugManager::InitializeGameObjectData(GameObject* obj, bool isFi
 
 	RigidBody* rb = obj->GetComponent<RigidBody>();
 	data.HasRigidBody = false;
-	data.HasTrigger = false;
-	data.HasCollider = false;
+	data.IsTrigger = false;
+	data.IsStatic = false;
 	if (rb != nullptr)
 	{
-		data.HasRigidBody = !rb->GetIsStatic();
-		data.HasTrigger = rb->GetIsTrigger();
+		data.HasRigidBody = true;
+		data.IsTrigger = rb->GetIsTrigger();
 		// TODO rework has collider na is static in json
-		data.HasCollider = data.HasRigidBody;
+		data.IsStatic = rb->GetIsStatic();
 		glm::vec3 hitboxSize = rb->GetHitBoxSize(); 
 		data.ColliderSizeX = hitboxSize.x;
 		data.ColliderSizeY = hitboxSize.y;
@@ -263,11 +263,6 @@ void DebugManager::RenderGameObjectTree(GameObjectData& data)
 {
 	ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow;
 
-	if (data.Children.empty())
-	{
-		flags |= ImGuiTreeNodeFlags_Leaf;
-	}
-
 	bool opened = ImGui::TreeNodeEx((void*)(intptr_t)data.ID, flags, "%s (ID: %d)", data.Name.c_str(), data.ID);
 
 	if (opened)
@@ -302,15 +297,25 @@ void DebugManager::RenderGameObjectTree(GameObjectData& data)
 			}
 		}
 
-		if (data.HasRigidBody || data.HasCollider || data.HasTrigger)
+		if (data.HasRigidBody)
 		{
 			ImGui::Spacing();
 			ImGui::Text("Collider");
-			ImGui::Checkbox("Has Rigid Body", &data.HasRigidBody);
-			ImGui::Checkbox("Has Collider", &data.HasCollider);
-			ImGui::Checkbox("Has Trigger", &data.HasTrigger);
+			ImGui::Checkbox("Is static", &data.IsStatic);
+			ImGui::Checkbox("Is trigger", &data.IsTrigger);
 			float size[3] = {data.ColliderSizeX, data.ColliderSizeY, data.ColliderSizeZ};
 			ImGui::InputFloat3("Collider Size", size);
+			if (ImGui::Button("Remove Rigid Body"))
+			{
+				// TODO remove rigidbody component
+			}
+		}
+		else
+		{
+			if (ImGui::Button("Add RigidBody"))
+			{
+				// TODO add rigidbody component
+			}
 		}
 
 		if (ImGui::TreeNode("Scripts"))
@@ -321,7 +326,10 @@ void DebugManager::RenderGameObjectTree(GameObjectData& data)
 
 				ImGui::Text("Script %zu", i);
 				ImGui::SameLine();
-				ImGui::InputText("##Script", &data.Scripts[i]);
+				if (ImGui::InputText("##Script", &data.Scripts[i]))
+				{
+					//TODO check name of script and add it to gameobject
+				}
 				ImGui::SameLine();
 				if (ImGui::Button("Remove"))
 				{
@@ -340,9 +348,19 @@ void DebugManager::RenderGameObjectTree(GameObjectData& data)
 			ImGui::TreePop();
 		}
 
-		for (GameObjectData& childData : data.Children)
+		if (ImGui::TreeNode("Children"))
 		{
-			RenderGameObjectTree(childData);
+			for (GameObjectData& childData : data.Children)
+			{
+				RenderGameObjectTree(childData);
+			}
+
+			if (ImGui::Button("Add Child"))
+			{
+				// TODO add new gameobject
+			}
+
+			ImGui::TreePop();
 		}
 
 		ImGui::TreePop();
