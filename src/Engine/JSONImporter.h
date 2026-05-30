@@ -64,8 +64,8 @@ private:
     const char* SCENE_MODELS_PATH = "res/models/scene_models/";
     const char* SCENE_TEXTURE_PATH = "res/textures/scene_textures/";
     // HACK
-    const float TRANSFORM_MOD = 27;
-    const float COLLIDER_MOD = 12;
+    // const float TRANSFORM_MOD = 27;
+    // const float COLLIDER_MOD = 12;
     int m_GameObjectID = 0;
     
     AssetManager* m_AssetMgr;

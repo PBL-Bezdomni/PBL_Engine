@@ -10,6 +10,7 @@
 #include <iostream>
 #include <fstream>
 #include "DebugManager.h"
+#include "Game/Scripts/Bath.h"
 
 void JSONImporter::Initialize()
 {
@@ -44,20 +45,29 @@ shared_ptr<GameObject> JSONImporter::ImportObjectFromData(nlohmann::basic_json<>
             Texture baseTex = *m_AssetMgr->GetTexture((SCENE_TEXTURE_PATH + baseTexPath).c_str());
             gameObject->GetComponent<Model>()->AssignTexture(baseTex);
         }
+        string normalPath = obj.value(gn.NORMAL, "");
+        bool hasNormal = obj.value(gn.HAS_NORMAL, false);
+        TextureTypeNames tn;
+        if (hasNormal && normalPath != "")
+        {
+            // TODO assign to model info that it has normal
+            Texture normal = *m_AssetMgr->GetTexture(normalPath.c_str(), tn.NORMAL);
+            gameObject->GetComponent<Model>()->AssignNormal(normal);
+        }
     }
 
     auto pos = obj[gn.POSITION];
     auto rot = obj[gn.ROTATION];
     auto sca = obj[gn.SCALE];
     gameObject->transform->Position = glm::vec3(pos[0], pos[1], pos[2]);
-    gameObject->transform->Position *= TRANSFORM_MOD;
+    // gameObject->transform->Position *= TRANSFORM_MOD;
     gameObject->transform->Scale = glm::vec3(sca[0], sca[1], sca[2]);
     gameObject->transform->EulerAngles = glm::vec3(rot[0], rot[1], rot[2]);
 
     bool hasRB = obj.value(gn.HAS_RB, false);
-    bool hasColl = obj.value(gn.HAS_COLLIDER, false);
-    bool hasTr = obj.value(gn.HAS_TRIGGER, false);
-    if (hasRB || hasColl || hasTr)
+    bool isStatic = obj.value(gn.IS_STATIC, false);
+    bool isTrigger = obj.value(gn.IS_TRIGGER, false);
+    if (hasRB)
     {
         gameObject->AddComponent<RigidBody>();
         RigidBody* rb = gameObject->GetComponent<RigidBody>();
@@ -65,10 +75,10 @@ shared_ptr<GameObject> JSONImporter::ImportObjectFromData(nlohmann::basic_json<>
         auto size = obj.value(gn.COLLIDER_SIZE, std::vector<float>{1.0f, 1.0f, 1.0f});
         
         glm::vec3 colliderSize = glm::vec3(size[0], size[1], size[2]);
-        colliderSize *= COLLIDER_MOD;
+        // colliderSize *= COLLIDER_MOD;
         
         // TODO collider offset is not used now
-        rb->PrepareInit(colliderSize, !hasRB, hasTr);        
+        rb->PrepareInit(colliderSize, isStatic, isTrigger);        
     }
     
     if (obj.contains(gn.SCRIPTS))
@@ -176,6 +186,10 @@ void JSONImporter::AssignScript(GameObject* go, nlohmann::basic_json<>& scriptNa
     else if (scriptName == "MassageTable")
     {
         if (!go->GetComponent<MassageTable>()) go->AddComponent<MassageTable>();
+    }
+    else if (scriptName == "Bath")
+    {
+        if (!go->GetComponent<Bath>()) go->AddComponent<Bath>();
     }
 }
 
