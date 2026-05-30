@@ -185,6 +185,7 @@ GameObjectData DebugManager::InitializeGameObjectData(GameObject* obj, bool isFi
 	{
 		bool hasDiffuse = false;
 		bool hasNormal = false;
+		data.HasNormal = false;
 		data.Mesh = model->GetFileName();
 		for (Mesh mesh : model->Meshes)
 		{
@@ -199,13 +200,40 @@ GameObjectData DebugManager::InitializeGameObjectData(GameObject* obj, bool isFi
 				{
 					data.NormalTex = tex.FileName;
 					hasNormal = true;
+					data.HasNormal = data.NormalTex != "";
 				}
 			}
 		}
 	}
 
 	Transform* transform = obj->transform;
+	data.PosX = transform->Position.x;
+	data.PosY = transform->Position.y;
+	data.PosZ = transform->Position.z;
+	data.RotX = transform->EulerAngles.x;
+	data.RotY = transform->EulerAngles.y;
+	data.RotZ = transform->EulerAngles.z;
+	data.ScaX = transform->Scale.x;
+	data.ScaY = transform->Scale.y;
+	data.ScaZ = transform->Scale.z;
 
+	RigidBody* rb = obj->GetComponent<RigidBody>();
+	data.HasRigidBody = false;
+	data.HasTrigger = false;
+	data.HasCollider = false;
+	if (rb != nullptr)
+	{
+		data.HasRigidBody = !rb->GetIsStatic();
+		data.HasTrigger = rb->GetIsTrigger();
+		// TODO rework has collider na is static in json
+		data.HasCollider = data.HasRigidBody;
+		glm::vec3 hitboxSize = rb->GetHitBoxSize(); 
+		data.ColliderSizeX = hitboxSize.x;
+		data.ColliderSizeY = hitboxSize.y;
+		data.ColliderSizeZ = hitboxSize.z;
+	}
+
+	// TODO get scripts
 	
 	return data;
 }
@@ -244,8 +272,73 @@ void DebugManager::RenderGameObjectTree(GameObjectData& data)
 
 	if (opened)
 	{
-		ImGui::InputText("Name: %s", &data.Name);
-		ImGui::InputInt("ID: ", &data.ID);
+		ImGui::InputText("Name", &data.Name);
+		float position[3] = {data.PosX, data.PosY, data.PosZ};
+		float rotation[3] = {data.RotX, data.RotY, data.RotZ};
+		float scale[3] = {data.ScaX, data.ScaY, data.ScaZ};
+		ImGui::Spacing();
+		ImGui::Text("Transform");
+		ImGui::InputFloat3("Position", position);
+		ImGui::InputFloat3("Rotation", rotation);
+		ImGui::InputFloat3("Scale", scale);
+
+		if (data.Mesh != "")
+		{
+			ImGui::Spacing();
+			ImGui::Text("Model");
+			ImGui::InputText("Model name", &data.Mesh);
+			ImGui::InputText("Texture Path", &data.DiffuseTex);
+			ImGui::Checkbox("Use Normal", &data.HasNormal);
+			if (data.HasNormal)
+			{
+				ImGui::InputText("Normal Texture Path", &data.NormalTex);
+			}
+		}
+		else
+		{
+			if (ImGui::Button("Add Model"))
+			{
+				// TODO add model to object;
+			}
+		}
+
+		if (data.HasRigidBody || data.HasCollider || data.HasTrigger)
+		{
+			ImGui::Spacing();
+			ImGui::Text("Collider");
+			ImGui::Checkbox("Has Rigid Body", &data.HasRigidBody);
+			ImGui::Checkbox("Has Collider", &data.HasCollider);
+			ImGui::Checkbox("Has Trigger", &data.HasTrigger);
+			float size[3] = {data.ColliderSizeX, data.ColliderSizeY, data.ColliderSizeZ};
+			ImGui::InputFloat3("Collider Size", size);
+		}
+
+		if (ImGui::TreeNode("Scripts"))
+		{
+			for (size_t i = 0; i < data.Scripts.size(); i++)
+			{
+				ImGui::PushID(static_cast<int>(i));
+
+				ImGui::Text("Script %zu", i);
+				ImGui::SameLine();
+				ImGui::InputText("##Script", &data.Scripts[i]);
+				ImGui::SameLine();
+				if (ImGui::Button("Remove"))
+				{
+					data.Scripts.erase(data.Scripts.begin() + i);
+					ImGui::PopID();
+					break;
+				}
+				ImGui::PopID();
+			}
+
+			if (ImGui::Button("Add Script"))
+			{
+				data.Scripts.emplace_back("");
+			}
+
+			ImGui::TreePop();
+		}
 
 		for (GameObjectData& childData : data.Children)
 		{
