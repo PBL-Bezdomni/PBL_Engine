@@ -264,6 +264,7 @@ void DebugManager::RenderGameObjectTree(GameObjectData& data)
 	ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow;
 
 	bool opened = ImGui::TreeNodeEx((void*)(intptr_t)data.ID, flags, "%s (ID: %d)", data.Name.c_str(), data.ID);
+	m_UpdatedGameObject = false;
 
 	if (opened)
 	{
@@ -273,9 +274,27 @@ void DebugManager::RenderGameObjectTree(GameObjectData& data)
 		float scale[3] = {data.ScaX, data.ScaY, data.ScaZ};
 		ImGui::Spacing();
 		ImGui::Text("Transform");
-		ImGui::InputFloat3("Position", position);
-		ImGui::InputFloat3("Rotation", rotation);
-		ImGui::InputFloat3("Scale", scale);
+		if (ImGui::InputFloat3("Position", position))
+		{
+			data.PosX = position[0];
+			data.PosY = position[1];
+			data.PosZ = position[2];
+			m_UpdatedGameObject = true;
+		}
+		if (ImGui::InputFloat3("Rotation", rotation))
+		{
+			data.RotX = rotation[0];
+			data.RotY = rotation[1];
+			data.RotZ = rotation[2];
+			m_UpdatedGameObject = true;
+		}
+		if (ImGui::InputFloat3("Scale", scale))
+		{
+			data.ScaX = scale[0];
+			data.ScaY = scale[1];
+			data.ScaZ = scale[2];
+			m_UpdatedGameObject = true;
+		}
 
 		if (data.Mesh != "")
 		{
@@ -304,7 +323,13 @@ void DebugManager::RenderGameObjectTree(GameObjectData& data)
 			ImGui::Checkbox("Is static", &data.IsStatic);
 			ImGui::Checkbox("Is trigger", &data.IsTrigger);
 			float size[3] = {data.ColliderSizeX, data.ColliderSizeY, data.ColliderSizeZ};
-			ImGui::InputFloat3("Collider Size", size);
+			if (ImGui::InputFloat3("Collider Size", size))
+			{
+				data.ColliderSizeX = size[0];
+				data.ColliderSizeY = size[1];
+				data.ColliderSizeZ = size[2];
+				m_UpdatedGameObject = true;
+			}
 			if (ImGui::Button("Remove Rigid Body"))
 			{
 				// TODO remove rigidbody component
@@ -316,6 +341,11 @@ void DebugManager::RenderGameObjectTree(GameObjectData& data)
 			{
 				// TODO add rigidbody component
 			}
+		}
+
+		if (HasGameObjectUpdated())
+		{
+			UpdateGameObjects(data);
 		}
 
 		if (ImGui::TreeNode("Scripts"))
@@ -368,13 +398,25 @@ void DebugManager::RenderGameObjectTree(GameObjectData& data)
 }
 
 
-bool DebugManager::HasGameObjectsUpdated()
+bool DebugManager::HasGameObjectUpdated()
 {
-	return false;
+	return m_UpdatedGameObject;
 }
 
-void DebugManager::UpdateGameObjects()
+void DebugManager::UpdateGameObjects(GameObjectData& data)
 {
+	GameObject* gameObject = data.gameObject;
+	gameObject->transform->Position = glm::vec3(data.PosX, data.PosY, data.PosZ);
+	gameObject->transform->EulerAngles = glm::vec3(data.RotX, data.RotY, data.RotZ);
+	gameObject->transform->Scale = glm::vec3(data.ScaX, data.ScaY, data.ScaZ);
+	gameObject->UpdateSelfAndChild();
+	RigidBody* rb = gameObject->GetComponent<RigidBody>();
+	if (rb != nullptr)
+	{
+		rb->SetHitboxSize(glm::vec3(data.ColliderSizeX, data.ColliderSizeY, data.ColliderSizeZ));
+		rb->SetRotation(gameObject->transform->EulerAngles);
+		rb->Teleport(gameObject->transform->Position);
+	}
 }
 
 void DebugManager::SaveGameObjectsData()

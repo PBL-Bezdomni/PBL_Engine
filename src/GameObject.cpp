@@ -73,8 +73,6 @@ void GameObject::UpdateSelfAndChild()
         transform->ModelMatrix = transform->GetLocalModelMatrix();
     }
 
-    RigidBody* rb = GetComponent<RigidBody>();
-
     for (auto& [type, vec] : m_Components)
     {
         for (auto& comp : vec)

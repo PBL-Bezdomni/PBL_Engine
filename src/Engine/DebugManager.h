@@ -72,8 +72,8 @@ private:
 	GameObjectData LoadSceneData(GameObject* obj, bool isFirstCall = false);
 	void RenderGameObjectsImgui();
 	void RenderGameObjectTree(GameObjectData& data);
-	bool HasGameObjectsUpdated();
-	void UpdateGameObjects();
+	bool HasGameObjectUpdated();
+	void UpdateGameObjects(GameObjectData& data);
 	void SaveGameObjectsData();
 
 	// Setting fields
@@ -96,6 +96,9 @@ private:
 	float m_PrevCameraPitch = 0;
 	float m_CameraZoom = 0;
 	float m_PrevCameraZoom = 0;
+
+	bool m_UpdatedGameObject;
+	
 
 	GameObjectData m_SceneObjectData;
 };
