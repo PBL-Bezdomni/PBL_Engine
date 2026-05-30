@@ -330,8 +330,8 @@ void SceneManager::AssignSceneGraph()
 {
 	m_WorldParent.AddChild(&m_LightSource);
 
-	m_WorldParent.transform->Position = glm::vec3(0.f, 0.f, -30.f);
-	m_WorldParent.transform->Scale = glm::vec3(0.7f);
+	// m_WorldParent.transform->Position = glm::vec3(0.f, 0.f, -30.f);
+	// m_WorldParent.transform->Scale = glm::vec3(0.7f);
 
 	m_WorldParent.UpdateSelfAndChild();
 }
