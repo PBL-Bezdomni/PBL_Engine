@@ -236,7 +236,14 @@ GameObjectData DebugManager::InitializeGameObjectData(GameObject* obj, bool isFi
 		data.ColliderSizeZ = hitboxSize.z;
 	}
 
-	// TODO get scripts
+	vector<Behaviour*> scripts = obj->GetVectorOfComponents<Behaviour>();
+	if (scripts.size() > 0)
+	{
+		for (int i = 0; i < scripts.size(); i++)
+		{
+			data.Scripts.emplace_back(scripts[i]->GetScriptName());
+		}
+	}
 	
 	return data;
 }

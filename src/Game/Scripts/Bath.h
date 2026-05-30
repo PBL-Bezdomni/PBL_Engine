@@ -27,4 +27,6 @@ public:
 
     void OnTriggerEnter(GameObject* other) override;
     void OnTriggerExit(GameObject* other) override;
+
+    const char* GetScriptName() const override { return "Bath"; }
 };

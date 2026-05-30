@@ -82,15 +82,15 @@ public:
 	{
 		vector<T*> result;
 
-		auto it = m_Components.find(typeid(T));
-		if (it == m_Components.end())
+		for (auto& [type, components] : m_Components)
 		{
-			return result;
-		}
-
-		for (auto& c : it->second)
-		{
-			result.push_back(static_cast<T*>(c.get()));
+			for (auto& component : components)
+			{
+				if (auto* casted = dynamic_cast<T*>(component.get()))
+				{
+					result.push_back(casted);
+				}
+			}
 		}
 
 		return result;

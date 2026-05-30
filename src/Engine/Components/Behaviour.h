@@ -18,4 +18,6 @@ public:
 	virtual void OnCollisionEnter(GameObject* other) {}
 	virtual void OnCollisionStay(GameObject* other) {}
 	virtual void OnCollisionExit(GameObject* other) {}
+
+	virtual const char* GetScriptName() const { return "Behaviour"; }
 };

@@ -12,4 +12,6 @@ private:
 
 public:
     void OnTriggerEnter(GameObject* other) override;
+
+    const char* GetScriptName() const override { return "MassageTable"; }
 };

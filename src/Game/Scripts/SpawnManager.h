@@ -48,4 +48,6 @@ public:
 	void Update() override;
 
 	void OnTriggerEnter(GameObject* other) override;
+
+	const char* GetScriptName() const override { return "SpawnManager"; }
 };

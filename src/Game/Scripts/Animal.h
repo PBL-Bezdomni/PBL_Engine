@@ -92,4 +92,6 @@ public:
     void StartFulfillingNeed(AnimalNeeds need);
     void StopFulfillingNeed();
     void FulfillNeed(AnimalNeeds need);
+
+	const char* GetScriptName() const override { return "Animal"; }
 };
