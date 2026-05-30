@@ -161,7 +161,7 @@ void JSONImporter::SaveData(string fileName, json data)
         return;
     }
 
-    file << data;
+    file << data.dump(4);
     file.close();
     spdlog::info("Crated file: " + fullPath);
 }
