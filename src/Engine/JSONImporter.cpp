@@ -9,6 +9,7 @@
 #include "Camera.h"
 #include <iostream>
 #include <fstream>
+#include "DebugManager.h"
 
 void JSONImporter::Initialize()
 {
@@ -210,4 +211,72 @@ void JSONImporter::LoadCameraData(const char*  filename, Camera* camera)
     camera->SetYaw(yaw);
     camera->SetZoom(fov);
     
+}
+
+void JSONImporter::SaveSceneData(const char* fileName, GameObjectData& objData)
+{
+    json data;
+    GameObjectNames name;
+    m_GameObjectID = 0;
+    SetGameObjectsID(objData);
+    data[name.OBJECT].push_back(SaveGameObjectData(objData));
+    SaveChildrenObjectData(data, objData);
+
+    SaveData(fileName, data);
+}
+
+void JSONImporter::SaveChildrenObjectData(json& data, GameObjectData& objData)
+{
+    GameObjectNames name;
+    for (GameObjectData childData : objData.Children)
+    {
+        data[name.OBJECT].push_back(SaveGameObjectData(childData));
+        SaveChildrenObjectData(data, childData);
+    }
+}
+
+nlohmann::basic_json<> JSONImporter::SaveGameObjectData(GameObjectData& objData)
+{
+    GameObjectNames n;
+    json data;
+
+    data[n.NAME] = objData.gameObject->Name;
+    data[n.ID] = objData.gameObject->ID;
+    if (objData.ParentID != -1)
+    {
+        data[n.PARENT_ID] = objData.gameObject->Parent->ID;
+        data[n.PARENT] = objData.gameObject->Parent->Name;
+    }
+    else
+    {
+        data[n.PARENT_ID] = -1;
+        data[n.PARENT] = "";
+    }
+
+    data[n.POSITION] = { objData.PosX, objData.PosY, objData.PosZ };
+    data[n.ROTATION] = { objData.RotX, objData.RotY, objData.RotZ };
+    data[n.SCALE] = { objData.ScaX, objData.ScaY, objData.ScaZ };
+    
+    data[n.MESH] = objData.Mesh;
+    data[n.DIFFUSE] = objData.DiffuseTex;
+    data[n.HAS_NORMAL] = objData.HasNormal;
+    data[n.NORMAL] = objData.NormalTex;
+
+    data[n.HAS_RB] = objData.HasRigidBody;
+    data[n.IS_STATIC] = objData.IsStatic;
+    data[n.IS_TRIGGER] = objData.IsTrigger;
+    data[n.COLLIDER_SIZE] = { objData.ColliderSizeX, objData.ColliderSizeY, objData.ColliderSizeZ };
+
+    data[n.SCRIPTS] = objData.Scripts;
+
+    return data;
+}
+
+void JSONImporter::SetGameObjectsID(GameObjectData& objData)
+{
+    objData.gameObject->ID = ++m_GameObjectID;
+    for (GameObjectData& child : objData.Children)
+    {
+        SetGameObjectsID(child);
+    }
 }

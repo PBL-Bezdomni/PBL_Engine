@@ -4,6 +4,7 @@
 #include <string>
 
 #include "AssetManager.h"
+// #include "DebugManager.h"
 #include "GameObject.h"
 
 using json = nlohmann::json;
@@ -28,16 +29,23 @@ struct GameObjectNames
     const char* PARENT_ID = "parentID";
     const char* MESH = "mesh";
     const char* DIFFUSE = "base_color_texture";
+    const char* HAS_NORMAL = "has_normal";
     const char* NORMAL = "normal_texture";
     const char* POSITION = "position";
     const char* ROTATION = "rotation";
     const char* SCALE = "scale";
     const char* HAS_RB = "has_rigid_body";
-    const char* HAS_COLLIDER = "has_collider";
-    const char* HAS_TRIGGER = "has_trigger";
+    const char* IS_STATIC = "is_static";
+    const char* IS_TRIGGER = "is_trigger";
     const char* COLLIDER_SIZE = "collider_size";
     const char* SCRIPTS = "scripts";
+
+    // TODO remove later
+    const char* HAS_COLLIDER = "has_collider";
+    const char* HAS_TRIGGER = "has_trigger";
 };
+
+struct GameObjectData;
 
 class JSONImporter
 {
@@ -47,6 +55,7 @@ public:
     std::vector<std::shared_ptr<GameObject>> ImportPrefab(const char* fileName, GameObject* root);
     static GameObject* FindByName(GameObject* root, const std::string& name);
     void SaveCameraData(const char* fileName, Camera* camera);
+    void SaveSceneData(const char* fileName, GameObjectData& objData);
     void LoadCameraData(const char* filename, Camera* camera);
 
 private:
@@ -57,6 +66,7 @@ private:
     // HACK
     const float TRANSFORM_MOD = 27;
     const float COLLIDER_MOD = 12;
+    int m_GameObjectID = 0;
     
     AssetManager* m_AssetMgr;
     
@@ -65,4 +75,7 @@ private:
     json GetData(const char* fileName);
     void AssignScript(GameObject* go, nlohmann::basic_json<>& scriptName);
     void SaveData(string fileName, json data);
+    void SaveChildrenObjectData(json& data, GameObjectData& objData);
+    nlohmann::basic_json<> SaveGameObjectData(GameObjectData& objData);
+    void SetGameObjectsID(GameObjectData& objData);
 };

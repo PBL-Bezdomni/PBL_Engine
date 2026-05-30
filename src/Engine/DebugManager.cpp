@@ -181,11 +181,11 @@ GameObjectData DebugManager::InitializeGameObjectData(GameObject* obj, bool isFi
 
 	Model* model = obj->GetComponent<Model>();
 	TextureTypeNames texTypeName;
+	data.HasNormal = false;
 	if (model != nullptr)
 	{
 		bool hasDiffuse = false;
 		bool hasNormal = false;
-		data.HasNormal = false;
 		data.Mesh = model->GetFileName();
 		for (Mesh mesh : model->Meshes)
 		{
@@ -221,6 +221,9 @@ GameObjectData DebugManager::InitializeGameObjectData(GameObject* obj, bool isFi
 	data.HasRigidBody = false;
 	data.IsTrigger = false;
 	data.IsStatic = false;
+	data.ColliderSizeX = 0;
+	data.ColliderSizeY = 0;
+	data.ColliderSizeZ = 0;
 	if (rb != nullptr)
 	{
 		data.HasRigidBody = true;
@@ -255,6 +258,11 @@ GameObjectData DebugManager::LoadSceneData(GameObject* obj, bool isFirstCall)
 void DebugManager::RenderGameObjectsImgui()
 {
 	ImGui::Begin("Scene");
+	ImGui::InputText("Scene name", m_SceneSaveName, sizeof(m_SceneSaveName));
+	if (ImGui::Button("Save Scene"))
+	{
+		SaveGameObjectsData();
+	}
 	RenderGameObjectTree(m_SceneObjectData);
 	ImGui::End();
 }
@@ -268,7 +276,10 @@ void DebugManager::RenderGameObjectTree(GameObjectData& data)
 
 	if (opened)
 	{
-		ImGui::InputText("Name", &data.Name);
+		if (ImGui::InputText("Name", &data.Name))
+		{
+			data.gameObject->Name = data.Name;
+		}
 		float position[3] = {data.PosX, data.PosY, data.PosZ};
 		float rotation[3] = {data.RotX, data.RotY, data.RotZ};
 		float scale[3] = {data.ScaX, data.ScaY, data.ScaZ};
@@ -421,6 +432,8 @@ void DebugManager::UpdateGameObjects(GameObjectData& data)
 
 void DebugManager::SaveGameObjectsData()
 {
+	JSONImporter importer = JSONImporter();
+	importer.SaveSceneData(m_SceneSaveName, m_SceneObjectData);
 }
 
 

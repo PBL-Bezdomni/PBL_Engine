@@ -98,7 +98,7 @@ private:
 	float m_PrevCameraZoom = 0;
 
 	bool m_UpdatedGameObject;
-	
+	char m_SceneSaveName[255] = "scene";
 
 	GameObjectData m_SceneObjectData;
 };
