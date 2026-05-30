@@ -24,6 +24,7 @@ void AssetManager::Initialize()
 	TextShader = GetShader("res/shaders/text.vert", "res/shaders/text.frag");
 	SimpleDepthShader = GetShader("res/shaders/simpleDepthShader.vert", "res/shaders/simpleDepthShader.frag");
 	PieChartShader = GetShader("res/shaders/PieChart.vert", "res/shaders/PieChart.frag");
+	ProgressBarShader = GetShader("res/shaders/ProgressBar.vert", "res/shaders/ProgressBar.frag");
 }
 
 shared_ptr<Shader> AssetManager::GetShader(const char* vertexPath, const char* fragmentPath)

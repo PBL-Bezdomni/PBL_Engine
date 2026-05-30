@@ -146,6 +146,15 @@ void SceneManager::RenderScene()
 
 		AssetMgr->BasicShader->Use();
 	}
+
+	if (AssetMgr->ProgressBarShader != nullptr)
+	{
+		AssetMgr->ProgressBarShader->Use();
+		AssetMgr->ProgressBarShader->SetMat4("view", view);
+		AssetMgr->ProgressBarShader->SetMat4("projection", projection);
+
+		AssetMgr->BasicShader->Use();
+	}
 	
     UpdateShaderLight(&m_WorldParent, *AssetMgr->BasicShader, *AssetMgr->SimpleDepthShader);
 

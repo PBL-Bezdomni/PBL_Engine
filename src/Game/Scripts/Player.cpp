@@ -147,12 +147,8 @@ void Player::HandleActionPressed()
         float rayDistance = 5.0f;
 
         glm::vec3 endPos = playerPos + (playerForward * rayDistance);
-            
-        GameObject* hitObject = Engine::GetInstance().GetPhysicsEngine().CastRay(playerPos, playerForward, rayDistance, m_Owner->GetComponent<RigidBody>()->GetBodyID());
 
-        //working on it
-        //Engine::GetInstance().GetPhysicsEngine().DrawDebugLine(playerPos, endPos, glm::vec3(0.0f, 1.0f, 0.0f));
-        //Engine::GetInstance().GetPhysicsEngine().DrawDebugBox(playerPos, glm::vec3(0.2f, 0.2f, 0.2f), glm::vec3(0.0f, 1.0f, 0.0f));
+        GameObject* hitObject = Engine::GetInstance().GetPhysicsEngine().CastRay(playerPos, playerForward, rayDistance, m_Owner->GetComponent<RigidBody>()->GetBodyID());
 
         if (hitObject != nullptr)
         {

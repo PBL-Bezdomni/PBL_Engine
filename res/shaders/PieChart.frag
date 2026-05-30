@@ -16,6 +16,10 @@ void main()
     float angle = atan(centerUV.y, centerUV.x); 
     float normalizedAngle = (angle + 3.14159265) / (2.0 * 3.14159265);
 
+    float scaledAngle = normalizedAngle * float(u_NumNeeds);
+    
+    float fraction = fract(scaledAngle);
+
     int currentSlice = int(floor(normalizedAngle * float(u_NumNeeds)));
     currentSlice = clamp(currentSlice, 0, u_NumNeeds - 1);
 
@@ -32,6 +36,23 @@ void main()
     else if (currentNeed == 1) sliceColor = vec3(1.0, 0.2, 0.2);
     else if (currentNeed == 2) sliceColor = vec3(1.0, 0.75, 0.2);
     else if (currentNeed == 3) sliceColor = vec3(0.5, 0.5, 0.5);
+
+    
+    if (u_NumNeeds > 1) 
+    {
+        float distToBorderFraction = min(fraction, 1.0 - fraction);
+        
+        float angleToBorder = distToBorderFraction * (2.0 * 3.14159265 / float(u_NumNeeds));
+        float physicalDistance = radius * angleToBorder;
+
+        float lineThickness = 0.01; 
+
+        if (physicalDistance < lineThickness) 
+        {
+            sliceColor = vec3(0.0);
+        }
+    }
+    
 
     FragColor = vec4(sliceColor, 0.45); 
 }
