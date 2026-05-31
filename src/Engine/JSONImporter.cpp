@@ -85,7 +85,8 @@ shared_ptr<GameObject> JSONImporter::ImportObjectFromData(nlohmann::basic_json<>
     {
         for (nlohmann::basic_json<>& scriptName : obj[gn.SCRIPTS])
         {
-            AssignScript(gameObject.get(), scriptName);
+            string sn = scriptName;
+            gameObject->AssignScript(sn);
         }
     }
 
@@ -175,22 +176,6 @@ void JSONImporter::SaveData(string fileName, json data)
     file << data.dump(4);
     file.close();
     spdlog::info("Crated file: " + fullPath);
-}
-
-void JSONImporter::AssignScript(GameObject* go, nlohmann::basic_json<>& scriptName)
-{
-    if (scriptName == "SpawnManager")
-    {
-        go->AddComponent<SpawnManager>();
-    }
-    else if (scriptName == "MassageTable")
-    {
-        if (!go->GetComponent<MassageTable>()) go->AddComponent<MassageTable>();
-    }
-    else if (scriptName == "Bath")
-    {
-        if (!go->GetComponent<Bath>()) go->AddComponent<Bath>();
-    }
 }
 
 void JSONImporter::SaveCameraData(const char*  fileName, Camera* camera)

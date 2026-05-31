@@ -2,6 +2,9 @@
 
 #include "Engine/Components/RigidBody.h"
 #include "Engine/Light/PointLight.h"
+#include "Game/Scripts/Bath.h"
+#include "Game/Scripts/MassageTable.h"
+#include "Game/Scripts/SpawnManager.h"
 
 GameObject::GameObject()
 {
@@ -58,6 +61,22 @@ void GameObject::StartSelfAndChild()
     for (auto&& child : Children)
     {
         child->StartSelfAndChild();
+    }
+}
+
+void GameObject::AssignScript(string scriptName)
+{
+    if (scriptName == "SpawnManager")
+    {
+        if (!GetComponent<SpawnManager>()) AddComponent<SpawnManager>();
+    }
+    else if (scriptName == "MassageTable")
+    {
+        if (!GetComponent<MassageTable>()) AddComponent<MassageTable>();
+    }
+    else if (scriptName == "Bath")
+    {
+        if (!GetComponent<Bath>()) AddComponent<Bath>();
     }
 }
 

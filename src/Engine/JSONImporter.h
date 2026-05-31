@@ -65,7 +65,6 @@ private:
     shared_ptr<GameObject> ImportObjectFromData(nlohmann::basic_json<>& obj, GameObject* root);
     void AssignGraph(vector<shared_ptr<GameObject>> gameObjects, GameObject* root);
     json GetData(const char* fileName);
-    void AssignScript(GameObject* go, nlohmann::basic_json<>& scriptName);
     void SaveData(string fileName, json data);
     void SaveChildrenObjectData(json& data, GameObjectData& objData);
     nlohmann::basic_json<> SaveGameObjectData(GameObjectData& objData);

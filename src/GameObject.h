@@ -37,6 +37,7 @@ public:
 	glm::vec3 GetWorldPosition();
 	void SetActive(bool active);
 	void StartSelfAndChild();
+	void AssignScript(string scriptName);
 
 	// template methods, must be in header apparently
 	template<typename T, typename... Args>
