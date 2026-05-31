@@ -80,6 +80,22 @@ void GameObject::AssignScript(string scriptName)
     }
 }
 
+void GameObject::RemoveScript(string scriptName)
+{
+    if (scriptName == "SpawnManager")
+    {
+        RemoveComponent<SpawnManager>();
+    }
+    else if (scriptName == "MassageTable")
+    {
+        RemoveComponent<MassageTable>();
+    }
+    else if (scriptName == "Bath")
+    {
+        RemoveComponent<Bath>();
+    }
+}
+
 void GameObject::UpdateSelfAndChild()
 {    
 

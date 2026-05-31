@@ -38,6 +38,7 @@ public:
 	void SetActive(bool active);
 	void StartSelfAndChild();
 	void AssignScript(string scriptName);
+	void RemoveScript(string scriptName);
 
 	// template methods, must be in header apparently
 	template<typename T, typename... Args>

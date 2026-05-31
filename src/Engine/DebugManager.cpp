@@ -421,13 +421,15 @@ void DebugManager::RenderGameObjectTree(GameObjectData& data)
 				ImGui::SameLine();
 				if (ImGui::InputText("##Script", &data.Scripts[i]))
 				{
-					//TODO check name of script and add it to gameobject
+					data.gameObject->AssignScript(data.Scripts[i]);
 				}
 				ImGui::SameLine();
 				if (ImGui::Button("Remove"))
 				{
+					data.gameObject->RemoveScript(data.Scripts[i]);
 					data.Scripts.erase(data.Scripts.begin() + i);
 					ImGui::PopID();
+					m_RefreshObjects = true;
 					break;
 				}
 				ImGui::PopID();
