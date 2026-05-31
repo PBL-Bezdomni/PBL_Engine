@@ -311,7 +311,7 @@ void Animal::FulfillNeed(AnimalNeeds need) {
     auto it = std::find(m_RequiredServices.begin(), m_RequiredServices.end(), need);
 
     if (it != m_RequiredServices.end())
-    {
+    {       
         m_RequiredServices.erase(it);
 
         UpdateIndicatorColors();

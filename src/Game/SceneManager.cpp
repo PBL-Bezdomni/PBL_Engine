@@ -3,7 +3,7 @@
 #include "Random.h"
 #include "Engine/Engine.h"
 #include "Engine/Components/RigidBody.h"
-
+#include "Game/Scripts/SpawnManager.h"
 #include "Engine/AssetManager.h"
 #include "Engine/PhysicsEngine/PhysicsEngine.h"
 #include "Engine/DebugManager.h"
@@ -184,8 +184,15 @@ void SceneManager::RenderScene()
 	{
 		m_TimerPanel.Text = L"00:00";
 	}
-
-	m_MoneyPanel.Text = L"110";
+	if (SpawnManager::Instance != nullptr)
+	{
+		m_MoneyPanel.Text = std::to_wstring(SpawnManager::Instance->GetMoney());
+	}
+	else
+	{
+		m_MoneyPanel.Text = L"Kasa: ERROR (nullptr)";
+		spdlog::error("SpawnManager::Instance is Null. Logic does not work.");
+	}
 	m_FpsPanel.Text = L"FPS: " + std::to_wstring(Time::GetFPS());
 
 	m_UIManager.DrawPanelWithText(*AssetMgr->UIShader, *AssetMgr->TextShader, m_MoneyPanel);

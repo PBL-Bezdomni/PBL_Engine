@@ -22,6 +22,8 @@ private:
 	int m_BearLimit = 3;
 	int m_SkunkLimit = 4;
 	int m_SpawnedLimit = 5;
+	int m_EarnedMoney = 0;
+	
 
 	GameObject* m_AnimalParent;
 	AssetManager* m_AssetMgr;
@@ -31,6 +33,10 @@ private:
 
 	glm::vec3 m_ExiledPos = glm::vec3(1000, 5, -1000);
 public:
+	static SpawnManager* Instance;
+
+	void AddMoney(int money);
+	int GetMoney() const { return m_EarnedMoney; }
 	SpawnManager() = default;
 	void CreateEntities(shared_ptr<Shader> shader);
 	shared_ptr<GameObject> CreateAnimal(shared_ptr<Shader> shader, const char* path, const char* name, int index = 0);
