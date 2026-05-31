@@ -6,6 +6,7 @@ class Behaviour: public Component
 public:
 	Behaviour() = default;
 	~Behaviour() override = default;
+	bool AllowMultiple() const override { return true; }
 
 	void Awake() override;
 	void Start() override;
