@@ -172,6 +172,10 @@ GameObjectData DebugManager::InitializeGameObjectData(GameObject* obj, bool isFi
 	data.gameObject = obj;
 	data.Name = obj->Name;
 	data.ID = obj->ID;
+	if (data.ID > m_HighestID)
+	{
+		m_HighestID = data.ID;
+	}
 	if (obj->Parent != nullptr && !isFirstCall)
 	{
 		data.ParentName = obj->Parent->Name;
@@ -282,7 +286,7 @@ void DebugManager::RenderGameObjectsImgui()
 	}
 }
 
-void DebugManager::RenderGameObjectTree(GameObjectData& data)
+bool DebugManager::RenderGameObjectTree(GameObjectData& data)
 {
 	ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow;
 
@@ -445,9 +449,23 @@ void DebugManager::RenderGameObjectTree(GameObjectData& data)
 
 		if (ImGui::TreeNode("Children"))
 		{
-			for (GameObjectData& childData : data.Children)
+			for (size_t i = 0; i < data.Children.size(); i++)
 			{
-				RenderGameObjectTree(childData);
+				GameObjectData& childData = data.Children[i];
+				bool isOpened = RenderGameObjectTree(childData);
+				if (!isOpened)
+				{
+					ImGui::SameLine();
+				}
+				ImGui::PushID(static_cast<int>(i));
+				if (ImGui::Button("Remove Child"))
+				{
+					data.gameObject->RemoveChild(childData.gameObject);
+					m_RefreshObjects = true;
+					ImGui::PopID();
+					break;
+				}
+				ImGui::PopID();
 			}
 
 			if (ImGui::Button("Add Child"))
@@ -460,6 +478,8 @@ void DebugManager::RenderGameObjectTree(GameObjectData& data)
 
 		ImGui::TreePop();
 	}
+
+	return opened;
 }
 
 
@@ -493,6 +513,9 @@ void DebugManager::SaveGameObjectsData()
 void DebugManager::AddChild(GameObject* root)
 {
 	shared_ptr<GameObject> gameObject = m_SceneMgr->Instantiate(root);
+	root->UpdateSelfAndChild();
+	gameObject->ID = ++m_HighestID;
+	gameObject->Name = "New Object";
 	m_RefreshObjects = true;
 	// RefreshGameObjectData();
 }

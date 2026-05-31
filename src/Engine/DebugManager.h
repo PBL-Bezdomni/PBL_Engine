@@ -58,6 +58,7 @@ private:
 	SceneManager*  m_SceneMgr;
 	AssetManager* m_AssetMgr;
 	Camera* m_MainCamera;
+	int m_HighestID = 0;
 	
 	void ImGUIBegin();
 	void ImGUIRender();
@@ -72,7 +73,7 @@ private:
 	GameObjectData InitializeGameObjectData(GameObject* obj, bool isFirstCall);
 	GameObjectData LoadSceneData(GameObject* obj, bool isFirstCall = false);
 	void RenderGameObjectsImgui();
-	void RenderGameObjectTree(GameObjectData& data);
+	bool RenderGameObjectTree(GameObjectData& data);
 	bool HasGameObjectUpdated();
 	void UpdateGameObjects(GameObjectData& data);
 	void SaveGameObjectsData();
