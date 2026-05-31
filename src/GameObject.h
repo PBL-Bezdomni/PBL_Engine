@@ -42,27 +42,33 @@ public:
 	template<typename T, typename... Args>
 	T* AddComponent(Args&&... args)
 	{
+		type_index type = typeid(T);
+
+		auto& vec = m_Components[type];
+
+		auto component = make_unique<T>(forward<Args>(args)...);
+
+		if (!component->AllowMultiple() && !vec.empty())
 		{
-			type_index type = typeid(T);
-
-			auto& vec = m_Components[type];
-
-			auto component = make_unique<T>(forward<Args>(args)...);
-
-			if (!component->AllowMultiple() && !vec.empty())
-			{
-				// Component already exist and only one is allowed
-				return static_cast<T*>(vec.front().get());
-			}
-
-			component->SetOwner(this);
-			component->Awake();
-
-			T* ptr = component.get();
-			vec.push_back(move(component));
-
-			return ptr;
+			// Component already exist and only one is allowed
+			return static_cast<T*>(vec.front().get());
 		}
+
+		component->SetOwner(this);
+		component->Awake();
+
+		T* ptr = component.get();
+		vec.push_back(move(component));
+
+		return ptr;
+	}
+
+	template<typename T, typename... Args>
+	void RemoveComponent(Args&&... args)
+	{
+		type_index type = typeid(T);
+		// auto& vec = m_Components[type];
+		m_Components.erase(type);
 	}
 	
 	template<typename T>

@@ -56,6 +56,7 @@ public:
 	void RenderImgui(GLFWwindow* window);
 private:
 	SceneManager*  m_SceneMgr;
+	AssetManager* m_AssetMgr;
 	Camera* m_MainCamera;
 	
 	void ImGUIBegin();

@@ -34,6 +34,7 @@ void DebugManager::InitializeImGUI(GLFWwindow* window, const char* glslVersion)
 	spdlog::info("Initialized ImGui.");
 
 	Engine* engine = &Engine::GetInstance();
+	m_AssetMgr = &engine->GetAssetManager();
 	m_SceneMgr = &engine->GetGameManager().GetSceneManager();
 	m_MainCamera = m_SceneMgr->GetMainCamera().get();
 	LoadCameraData();
@@ -42,6 +43,7 @@ void DebugManager::InitializeImGUI(GLFWwindow* window, const char* glslVersion)
 
 void DebugManager::RefreshGameObjectData()
 {
+	m_RefreshObjects = false;
 	m_SceneObjectData = LoadSceneData(m_SceneMgr->GetLevelParent(), true);
 }
 
@@ -331,6 +333,37 @@ void DebugManager::RenderGameObjectTree(GameObjectData& data)
 			{
 				ImGui::InputText("Normal Texture Path", &data.NormalTex);
 			}
+			if (ImGui::Button("Refresh model"))
+			{
+				if (data.gameObject->GetComponent<Model>()->GetFileName() != data.Mesh)
+				{
+					data.gameObject->RemoveComponent<Model>();
+					Model model = *m_AssetMgr->GetModel(*m_AssetMgr->BasicShader, (EngineConsts::SCENE_MODELS_PATH + data.Mesh).c_str());
+					data.gameObject->AddComponent<Model>(model);
+				}
+				if (data.DiffuseTex != "")
+				{
+					Texture diff = *m_AssetMgr->GetTexture((EngineConsts::SCENE_TEXTURE_PATH + data.DiffuseTex).c_str());
+					data.gameObject->GetComponent<Model>()->AssignTexture(diff);
+				}
+				if (data.HasNormal && data.NormalTex != "")
+				{
+					// TODO flag to model to use normals
+					Texture norm = *m_AssetMgr->GetTexture((EngineConsts::SCENE_TEXTURE_PATH + data.NormalTex).c_str(), EngineConsts::NORMAL);
+					data.gameObject->GetComponent<Model>()->AssignNormal(norm);
+				}
+				m_RefreshObjects = true;
+			}
+			if (ImGui::Button("Remove model"))
+			{
+				data.gameObject->RemoveComponent<Model>();
+				Model* model = data.gameObject->GetComponent<Model>();
+				if (model == nullptr)
+				{
+					spdlog::info("Remove Model component successful");
+				}
+				m_RefreshObjects = true;
+			}
 		}
 		else
 		{
@@ -356,7 +389,13 @@ void DebugManager::RenderGameObjectTree(GameObjectData& data)
 			}
 			if (ImGui::Button("Remove Rigid Body"))
 			{
-				// TODO remove rigidbody component
+				data.gameObject->RemoveComponent<RigidBody>();
+				RigidBody* rb = data.gameObject->GetComponent<RigidBody>();
+				if (rb == nullptr)
+				{
+					spdlog::info("Remove component successful");
+				}
+				m_RefreshObjects = true;
 			}
 		}
 		else
@@ -466,7 +505,7 @@ void DebugManager::AddRigidBody(GameObject* go)
 
 void DebugManager::AddModel(GameObject* go)
 {
-	Model model = *Engine::GetInstance().GetAssetManager().GetSphereModel();
+	Model model = *m_AssetMgr->GetSphereModel();
 	go->AddComponent<Model>(model);
 	m_RefreshObjects = true;
 	// RefreshGameObjectData();
