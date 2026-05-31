@@ -71,14 +71,17 @@ void RigidBody::Update()
         localMatrix = glm::inverse(m_Owner->Parent->transform->ModelMatrix) * physicsMatrix;
     }
 
-    m_Owner->transform->Position = glm::vec3(localMatrix[3]);
+    if (!m_IsStatic && !m_IsTrigger)
+    {
+        m_Owner->transform->Position = glm::vec3(localMatrix[3]);
 
-    localMatrix[0] = glm::normalize(localMatrix[0]);
-    localMatrix[1] = glm::normalize(localMatrix[1]);
-    localMatrix[2] = glm::normalize(localMatrix[2]);
+        localMatrix[0] = glm::normalize(localMatrix[0]);
+        localMatrix[1] = glm::normalize(localMatrix[1]);
+        localMatrix[2] = glm::normalize(localMatrix[2]);
 
-    glm::quat localRot = glm::quat_cast(localMatrix);
-    m_Owner->transform->EulerAngles = glm::degrees(glm::eulerAngles(localRot));
+        glm::quat localRot = glm::quat_cast(localMatrix);
+        m_Owner->transform->EulerAngles = glm::degrees(glm::eulerAngles(localRot));
+    }
 }
 
 glm::vec3 RigidBody::GetLinearVelocity() {

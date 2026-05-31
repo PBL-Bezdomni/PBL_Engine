@@ -69,18 +69,18 @@
             "scripts": []
         },
         {
-            "base_color_texture": "Stylized_Wall_002_basecolor.png",
+            "base_color_texture": "",
             "collider_size": [
-                0.0,
-                0.0,
-                0.0
+                1.0,
+                10.0,
+                30.0
             ],
             "has_normal": false,
-            "has_rigid_body": false,
+            "has_rigid_body": true,
             "id": 3,
-            "is_static": false,
+            "is_static": true,
             "is_trigger": false,
-            "mesh": "wall1.fbx",
+            "mesh": "",
             "name": "wall_back",
             "normal_texture": "",
             "parent": "room",
@@ -91,12 +91,46 @@
                 0.0
             ],
             "rotation": [
-                -90.0,
-                3.4150946248701075e-06,
-                -90.0
+                0.0,
+                4.325711870478699e-06,
+                0.0
             ],
             "scale": [
                 1.0,
+                1.0,
+                0.5
+            ],
+            "scripts": []
+        },
+        {
+            "base_color_texture": "Stylized_Wall_002_basecolor.png",
+            "collider_size": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "has_normal": false,
+            "has_rigid_body": false,
+            "id": 4,
+            "is_static": false,
+            "is_trigger": false,
+            "mesh": "wall1.fbx",
+            "name": "wall_model",
+            "normal_texture": "",
+            "parent": "wall_back",
+            "parentID": 3,
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                -90.0,
+                0.0,
+                90.0
+            ],
+            "scale": [
+                1.5,
                 1.0,
                 0.5
             ],
@@ -111,7 +145,7 @@
             ],
             "has_normal": false,
             "has_rigid_body": true,
-            "id": 4,
+            "id": 5,
             "is_static": true,
             "is_trigger": false,
             "mesh": "floor.fbx",
@@ -137,18 +171,18 @@
             "scripts": []
         },
         {
-            "base_color_texture": "Stylized_Wall_002_basecolor.png",
+            "base_color_texture": "",
             "collider_size": [
-                0.0,
-                0.0,
-                0.0
+                1.0,
+                5.0,
+                10.0
             ],
             "has_normal": false,
-            "has_rigid_body": false,
-            "id": 5,
-            "is_static": false,
+            "has_rigid_body": true,
+            "id": 6,
+            "is_static": true,
             "is_trigger": false,
-            "mesh": "wall1.fbx",
+            "mesh": "",
             "name": "wall_front_right",
             "normal_texture": "",
             "parent": "room",
@@ -156,51 +190,17 @@
             "position": [
                 -50.0,
                 0.0,
-                25.0
+                25.000003814697266
             ],
             "rotation": [
-                -90.0,
-                3.4150946248701075e-06,
-                -90.0
+                0.0,
+                4.325711870478699e-06,
+                0.0
             ],
             "scale": [
                 0.30000001192092896,
                 1.0,
                 0.20000000298023224
-            ],
-            "scripts": []
-        },
-        {
-            "base_color_texture": "Stylized_Wall_002_basecolor.png",
-            "collider_size": [
-                0.0,
-                0.0,
-                0.0
-            ],
-            "has_normal": false,
-            "has_rigid_body": false,
-            "id": 6,
-            "is_static": false,
-            "is_trigger": false,
-            "mesh": "wall1.fbx",
-            "name": "wall_left",
-            "normal_texture": "",
-            "parent": "room",
-            "parentID": 2,
-            "position": [
-                0.0,
-                0.0,
-                -35.0
-            ],
-            "rotation": [
-                -90.0,
-                0.0,
-                0.0
-            ],
-            "scale": [
-                1.0,
-                1.0,
-                0.5
             ],
             "scripts": []
         },
@@ -217,18 +217,52 @@
             "is_static": false,
             "is_trigger": false,
             "mesh": "wall1.fbx",
-            "name": "wall_right",
+            "name": "wall_model",
+            "normal_texture": "",
+            "parent": "wall_front_right",
+            "parentID": 6,
+            "position": [
+                0.0,
+                0.0,
+                -5.0
+            ],
+            "rotation": [
+                90.0,
+                180.0,
+                90.0
+            ],
+            "scale": [
+                1.2000000476837158,
+                2.0,
+                0.25
+            ],
+            "scripts": []
+        },
+        {
+            "base_color_texture": "",
+            "collider_size": [
+                35.0,
+                1.0,
+                10.0
+            ],
+            "has_normal": false,
+            "has_rigid_body": true,
+            "id": 8,
+            "is_static": true,
+            "is_trigger": false,
+            "mesh": "",
+            "name": "wall_left",
             "normal_texture": "",
             "parent": "room",
             "parentID": 2,
             "position": [
                 0.0,
                 0.0,
-                35.0
+                -35.0
             ],
             "rotation": [
                 -90.0,
-                0.0,
+                -2.5044780613825424e-06,
                 0.0
             ],
             "scale": [
@@ -247,10 +281,112 @@
             ],
             "has_normal": false,
             "has_rigid_body": false,
-            "id": 8,
+            "id": 9,
             "is_static": false,
             "is_trigger": false,
             "mesh": "wall1.fbx",
+            "name": "wall_model",
+            "normal_texture": "",
+            "parent": "wall_left",
+            "parentID": 8,
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "scripts": []
+        },
+        {
+            "base_color_texture": "",
+            "collider_size": [
+                35.0,
+                1.0,
+                10.0
+            ],
+            "has_normal": false,
+            "has_rigid_body": true,
+            "id": 10,
+            "is_static": true,
+            "is_trigger": false,
+            "mesh": "",
+            "name": "wall_right",
+            "normal_texture": "",
+            "parent": "room",
+            "parentID": 2,
+            "position": [
+                0.0,
+                0.0,
+                35.0
+            ],
+            "rotation": [
+                -90.0,
+                -2.5044780613825424e-06,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                0.5
+            ],
+            "scripts": []
+        },
+        {
+            "base_color_texture": "Stylized_Wall_002_basecolor.png",
+            "collider_size": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "has_normal": false,
+            "has_rigid_body": false,
+            "id": 11,
+            "is_static": false,
+            "is_trigger": false,
+            "mesh": "wall1.fbx",
+            "name": "wall_model",
+            "normal_texture": "",
+            "parent": "wall_right",
+            "parentID": 10,
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "scripts": []
+        },
+        {
+            "base_color_texture": "",
+            "collider_size": [
+                1.0,
+                5.0,
+                10.0
+            ],
+            "has_normal": false,
+            "has_rigid_body": true,
+            "id": 12,
+            "is_static": true,
+            "is_trigger": false,
+            "mesh": "",
             "name": "wall_front_left",
             "normal_texture": "",
             "parent": "room",
@@ -261,14 +397,48 @@
                 -25.0
             ],
             "rotation": [
-                -90.0,
-                3.4150946248701075e-06,
-                -90.0
+                0.0,
+                4.325711870478699e-06,
+                0.0
             ],
             "scale": [
                 0.30000001192092896,
                 1.0,
                 0.20000000298023224
+            ],
+            "scripts": []
+        },
+        {
+            "base_color_texture": "Stylized_Wall_002_basecolor.png",
+            "collider_size": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "has_normal": false,
+            "has_rigid_body": false,
+            "id": 13,
+            "is_static": false,
+            "is_trigger": false,
+            "mesh": "wall1.fbx",
+            "name": "wall_model",
+            "normal_texture": "",
+            "parent": "wall_front_left",
+            "parentID": 12,
+            "position": [
+                0.0,
+                0.0,
+                5.0
+            ],
+            "rotation": [
+                90.0,
+                180.0,
+                90.0
+            ],
+            "scale": [
+                1.2000000476837158,
+                2.0,
+                0.25
             ],
             "scripts": []
         },
@@ -281,7 +451,7 @@
             ],
             "has_normal": false,
             "has_rigid_body": false,
-            "id": 9,
+            "id": 14,
             "is_static": false,
             "is_trigger": false,
             "mesh": "",
@@ -307,31 +477,31 @@
             "scripts": []
         },
         {
-            "base_color_texture": "drewno.jpg",
+            "base_color_texture": "",
             "collider_size": [
-                0.0,
-                0.0,
-                0.0
+                2.0,
+                3.5,
+                3.0
             ],
             "has_normal": false,
-            "has_rigid_body": false,
-            "id": 10,
-            "is_static": false,
-            "is_trigger": false,
-            "mesh": "table3.fbx",
+            "has_rigid_body": true,
+            "id": 15,
+            "is_static": true,
+            "is_trigger": true,
+            "mesh": "",
             "name": "table3",
             "normal_texture": "",
             "parent": "onsenObjects",
-            "parentID": 9,
+            "parentID": 14,
             "position": [
-                21.19500160217285,
-                -0.26999998092651367,
-                -15.173999786376953
+                25.0,
+                0.0,
+                -20.0
             ],
             "rotation": [
+                270.1417236328125,
                 -90.0,
-                3.4150946248701075e-06,
-                -90.0
+                0.0
             ],
             "scale": [
                 0.15000000596046448,
@@ -351,14 +521,48 @@
             ],
             "has_normal": false,
             "has_rigid_body": false,
-            "id": 11,
+            "id": 16,
+            "is_static": false,
+            "is_trigger": false,
+            "mesh": "table3.fbx",
+            "name": "table_model",
+            "normal_texture": "",
+            "parent": "table3",
+            "parentID": 15,
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                -90.0,
+                90.0,
+                0.0
+            ],
+            "scale": [
+                1.5,
+                1.5,
+                1.5
+            ],
+            "scripts": []
+        },
+        {
+            "base_color_texture": "drewno.jpg",
+            "collider_size": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "has_normal": false,
+            "has_rigid_body": false,
+            "id": 17,
             "is_static": false,
             "is_trigger": false,
             "mesh": "towels3.fbx",
             "name": "towels3",
             "normal_texture": "",
             "parent": "onsenObjects",
-            "parentID": 9,
+            "parentID": 14,
             "position": [
                 -0.0,
                 1.2258000373840332,
@@ -385,7 +589,7 @@
             ],
             "has_normal": false,
             "has_rigid_body": false,
-            "id": 12,
+            "id": 18,
             "is_static": false,
             "is_trigger": false,
             "mesh": "",
