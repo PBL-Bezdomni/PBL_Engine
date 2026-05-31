@@ -2,6 +2,8 @@
 #include "Engine/JSONImporter.h"
 #include "Engine.h"
 #include <memory>
+
+#include "EngineConsts.h"
 #include "misc/cpp/imgui_stdlib.h"
 
 
@@ -180,7 +182,6 @@ GameObjectData DebugManager::InitializeGameObjectData(GameObject* obj, bool isFi
 	}
 
 	Model* model = obj->GetComponent<Model>();
-	TextureTypeNames texTypeName;
 	data.HasNormal = false;
 	if (model != nullptr)
 	{
@@ -191,12 +192,12 @@ GameObjectData DebugManager::InitializeGameObjectData(GameObject* obj, bool isFi
 		{
 			for (Texture tex : mesh.Textures)
 			{
-				if (tex.Type == texTypeName.DIFFUSE && !hasDiffuse)
+				if (tex.Type == EngineConsts::DIFFUSE && !hasDiffuse)
 				{
 					data.DiffuseTex = tex.FileName.c_str();
 					hasDiffuse = true;
 				}
-				if (tex.Type == texTypeName.NORMAL && !hasNormal)
+				if (tex.Type == EngineConsts::NORMAL && !hasNormal)
 				{
 					data.NormalTex = tex.FileName;
 					hasNormal = true;

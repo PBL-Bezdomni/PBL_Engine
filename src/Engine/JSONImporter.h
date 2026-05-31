@@ -39,10 +39,6 @@ struct GameObjectNames
     const char* IS_TRIGGER = "is_trigger";
     const char* COLLIDER_SIZE = "collider_size";
     const char* SCRIPTS = "scripts";
-
-    // TODO remove later
-    const char* HAS_COLLIDER = "has_collider";
-    const char* HAS_TRIGGER = "has_trigger";
 };
 
 struct GameObjectData;
@@ -61,11 +57,7 @@ public:
 private:
     const char* BASE_PATH = "res/json/";
     const char* JSON_SUFFIX = ".json";
-    const char* SCENE_MODELS_PATH = "res/models/scene_models/";
-    const char* SCENE_TEXTURE_PATH = "res/textures/scene_textures/";
-    // HACK
-    // const float TRANSFORM_MOD = 27;
-    // const float COLLIDER_MOD = 12;
+  
     int m_GameObjectID = 0;
     
     AssetManager* m_AssetMgr;

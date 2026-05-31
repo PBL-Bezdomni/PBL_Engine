@@ -6,6 +6,7 @@
 //TODO remove beneath include
 #include <GLFW/glfw3.h>
 
+#include "EngineConsts.h"
 #include "Model.h"
 
 Skybox::Skybox(Shader& shader)
@@ -86,10 +87,9 @@ void Skybox::GenerateSkybox()
 
 void Skybox::LoadCubemapTextures(vector<string> faces, Texture* texture)
 {
-	TextureTypeNames tn;
 	texture->Path = "";
 	texture->FileName = "";
-	texture->Type = tn.DIFFUSE;
+	texture->Type = EngineConsts::DIFFUSE;
 	unsigned int textureID;
 	glGenTextures(1, &textureID);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);

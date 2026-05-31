@@ -10,6 +10,7 @@
 #include <iostream>
 #include <fstream>
 #include "DebugManager.h"
+#include "EngineConsts.h"
 #include "Game/Scripts/Bath.h"
 
 void JSONImporter::Initialize()
@@ -37,21 +38,20 @@ shared_ptr<GameObject> JSONImporter::ImportObjectFromData(nlohmann::basic_json<>
     std::string modelPath = obj.value(gn.MESH, "");
     if (modelPath != "")
     {
-        Model model = *m_AssetMgr->GetModel(*m_AssetMgr->BasicShader, (SCENE_MODELS_PATH + modelPath).c_str());
+        Model model = *m_AssetMgr->GetModel(*m_AssetMgr->BasicShader, (EngineConsts::SCENE_MODELS_PATH + modelPath).c_str());
         gameObject->AddComponent<Model>(model);
         string baseTexPath = obj.value(gn.DIFFUSE, "");
         if (baseTexPath != "")
         {
-            Texture baseTex = *m_AssetMgr->GetTexture((SCENE_TEXTURE_PATH + baseTexPath).c_str());
+            Texture baseTex = *m_AssetMgr->GetTexture((EngineConsts::SCENE_TEXTURE_PATH + baseTexPath).c_str());
             gameObject->GetComponent<Model>()->AssignTexture(baseTex);
         }
         string normalPath = obj.value(gn.NORMAL, "");
         bool hasNormal = obj.value(gn.HAS_NORMAL, false);
-        TextureTypeNames tn;
         if (hasNormal && normalPath != "")
         {
             // TODO assign to model info that it has normal
-            Texture normal = *m_AssetMgr->GetTexture(normalPath.c_str(), tn.NORMAL);
+            Texture normal = *m_AssetMgr->GetTexture(normalPath.c_str(), EngineConsts::NORMAL);
             gameObject->GetComponent<Model>()->AssignNormal(normal);
         }
     }

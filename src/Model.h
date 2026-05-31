@@ -126,13 +126,6 @@ struct AABB : Volume
     }
 };
 
-struct TextureTypeNames
-{
-    const char* DIFFUSE = "texture_diffuse";
-    const char* SPECULAR = "texture_specular";
-    const char* NORMAL = "texture_normal";
-};
-
 class Model : public Component
 {
 public:

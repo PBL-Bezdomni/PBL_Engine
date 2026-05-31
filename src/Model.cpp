@@ -1,5 +1,6 @@
 #include "Model.h"
 
+#include "EngineConsts.h"
 #include "GameObject.h"
 #include "assimp/postprocess.h"
 #include "Engine/Engine.h"
@@ -191,16 +192,15 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
     // process material
     if(mesh->mMaterialIndex >= 0)
     {
-        TextureTypeNames tn;
         aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
         vector<Texture> diffuseMaps = LoadMaterialTextures(material,
-            aiTextureType_DIFFUSE, tn.DIFFUSE);
+            aiTextureType_DIFFUSE, EngineConsts::DIFFUSE);
         textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
         vector<Texture> specularMaps = LoadMaterialTextures(material,
-            aiTextureType_SPECULAR, tn.SPECULAR);
+            aiTextureType_SPECULAR, EngineConsts::SPECULAR);
         textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
         vector<Texture> normalMaps = LoadMaterialTextures(material,
-            aiTextureType_NORMALS, tn.NORMAL);
+            aiTextureType_NORMALS, EngineConsts::NORMAL);
         textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
     }
 

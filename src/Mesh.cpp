@@ -1,5 +1,6 @@
 #include "Mesh.h"
 
+#include "EngineConsts.h"
 #include "Model.h"
 
 
@@ -99,12 +100,11 @@ void Mesh::Draw(Shader& shader)
         // retrieve texture number (the N in diffuse_textureN)
         string number;
         string name = Textures[i].Type;
-        TextureTypeNames tn;
-        if (name == tn.DIFFUSE)
+        if (name == EngineConsts::DIFFUSE)
             number = std::to_string(diffuseNr++);
-        else if (name == tn.SPECULAR)
+        else if (name == EngineConsts::SPECULAR)
             number = std::to_string(specularNr++);
-        else if (name == tn.NORMAL)
+        else if (name == EngineConsts::NORMAL)
             number = std::to_string(normalNr++);
 
         // shader.SetInt(("material." + name + number).c_str(), i);
