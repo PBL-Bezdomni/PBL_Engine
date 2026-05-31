@@ -106,13 +106,7 @@ void SceneManager::LoadScene()
 	// SHADOW
 	AssetMgr->BasicShader->Use();
 	AssetMgr->BasicShader->SetInt("shadowMap", 20);
-
-
-	//delete
-	bath.AddComponent<RigidBody>();
-	bath.GetComponent<RigidBody>()->Init(glm::vec3(3.0f, 3.0f, 3.0f), true, true);
-	bath.AddComponent<Bath>();
-
+	
 	// TODO create event here
 	Engine::GetInstance().GetDebugManager().RefreshGameObjectData();
 }
@@ -166,36 +160,6 @@ void SceneManager::RenderScene()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     m_WorldParent.DrawSelfAndChild(NULL);
-
-	// if (AssetMgr->PieChartShader != nullptr)
-	// {
-	// 	// AssetMgr->PieChartShader->Use();
-	// 	// AssetMgr->PieChartShader->SetMat4("view", view);
-	// 	// AssetMgr->PieChartShader->SetMat4("projection", projection);
-	//
-	// 	// glEnable(GL_BLEND);
-	// 	// glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	// 	//
-	// 	// glDepthMask(GL_FALSE);
-	//
-	// 	// for (shared_ptr<GameObject> animalObject : m_AnimalsList)
-	// 	// {
-	// 	// 	Animal* animal = animalObject->GetComponent<Animal>();
-	// 	// 	if (animal != nullptr && animal->GetIndicatorObject() != nullptr)
-	// 	// 	{
-	// 	// 		
-	// 	// 		// animal->GetIndicatorObject()->UpdateSelfAndChild();
-	// 	//
-	// 	// 		// animal->UpdateIndicatorColors();
-	// 	// 		// animal->GetIndicatorObject()->DrawSelfAndChild(NULL);
-	// 	// 	}
-	// 	// }
-	//
-	// 	// glDepthMask(GL_TRUE);
-	// 	// glDisable(GL_BLEND);
-	//
-	// 	// AssetMgr->BasicShader->Use();
-	// }
 
 	m_Skybox.DrawSkybox(skyboxView, projection);
 
@@ -354,15 +318,6 @@ void SceneManager::LoadModels()
 	
 	m_UIPanelTex = *AssetMgr->GetTexture("res/textures/UI/UI_panel.png");
 	m_UICoinTex = *AssetMgr->GetTexture("res/textures/UI/coin.png");
-
-
-	//you can delete that just checking
-	bath = GameObject();
-	Model bathModel = *AssetMgr->GetModel(*AssetMgr->BasicShader, "res/models/PLACEHOLDER_BATH.obj");
-	bath.AddComponent<Model>(bathModel);
-	bath.GetComponent<Model>()->AssignTexture(*AssetMgr->GetTexture("res/textures/UI/coin.png"));
-
-
 }
 
 void SceneManager::InitializeUI()
