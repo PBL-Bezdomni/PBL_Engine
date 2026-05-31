@@ -70,6 +70,8 @@ public:
 
     bool m_IsSeated = false;
     bool m_IsMoving = false;
+	int Earned_money = 0;
+    
 
 	void Awake() override;
     void Start() override;

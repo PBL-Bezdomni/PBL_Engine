@@ -11,9 +11,12 @@
 #include "Engine/Components/RigidBody.h"
 #include "Game/Scripts/Animal.h"
 
+SpawnManager* SpawnManager::Instance = nullptr;
+
 void SpawnManager::Awake()
 {
 	Behaviour::Awake();
+	Instance = this;
 }
 
 void SpawnManager::Start()
@@ -41,6 +44,10 @@ void SpawnManager::Update()
 		}
 	}
 }
+void SpawnManager::AddMoney(int money)
+{
+	m_EarnedMoney += money;
+}
 
 void SpawnManager::OnTriggerEnter(GameObject* other)
 {
@@ -49,10 +56,13 @@ void SpawnManager::OnTriggerEnter(GameObject* other)
 	Animal* animal = other->GetComponent<Animal>();
 	if (animal != nullptr)
 	{
+		if (animal->m_RequiredServices.empty())
+		{
+			AddMoney(10); 
+		}
 		DespawnAnimal(other);
 	}
 }
-
 shared_ptr<GameObject> SpawnManager::PickAnimal()
 {
 	int index = Random::GetRandomInt(0, m_AnimalsPool.size() - 1);
@@ -145,6 +155,7 @@ shared_ptr<GameObject> SpawnManager::CreateSkunk(shared_ptr<Shader> shader, int 
 	return CreateAnimal(shader, "res/models/animals/skunks/skunks.fbx", "skunk", index);
 }
 
+
 void SpawnManager::CreateEntities(shared_ptr<Shader> shader)
 {
 	int r = Random::GetRandomInt(0, 99);
@@ -162,3 +173,4 @@ void SpawnManager::CreateEntities(shared_ptr<Shader> shader)
 		m_AnimalsPool.push_back(CreateSkunk(shader, i + 1));
 	}
 }
+
