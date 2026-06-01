@@ -51,7 +51,7 @@ shared_ptr<GameObject> JSONImporter::ImportObjectFromData(nlohmann::basic_json<>
         if (hasNormal && normalPath != "")
         {
             // TODO assign to model info that it has normal
-            Texture normal = *m_AssetMgr->GetTexture(normalPath.c_str(), EngineConsts::NORMAL);
+            Texture normal = *m_AssetMgr->GetTexture((EngineConsts::SCENE_TEXTURE_PATH + normalPath).c_str(), EngineConsts::NORMAL);
             gameObject->GetComponent<Model>()->AssignNormal(normal);
         }
     }

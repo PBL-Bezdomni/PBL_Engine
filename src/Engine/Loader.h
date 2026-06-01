@@ -12,7 +12,7 @@ private:
 	
 	const char* TEST_PATH = "res/textures/stone.jpg";
 	const string VS_BUILD_RELATIVE_PATH = "../../";
-	const string EXE_BUILD_RELATIVE_PATH = "../../../";
+	const string EXE_BUILD_RELATIVE_PATH = "../";
 
 	string m_RelativePath;
 	

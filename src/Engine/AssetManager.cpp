@@ -47,6 +47,7 @@ shared_ptr<Model> AssetManager::GetModel(Shader& shader, const char* path, unsig
 	auto it = m_LoadedModels.find(key);
 	if (it != m_LoadedModels.end())
 	{
+		spdlog::info("Model from {} already was loaded", mPath);
 		return it->second;
 	}
 	
@@ -82,7 +83,7 @@ shared_ptr<Texture> AssetManager::GetTexture(const char* path, const char* type)
 	//stbi_set_flip_vertically_on_load(1);
 	// load and generate the texture
 	int width, height, nrChannels;
-	unsigned char* data = stbi_load(path, &width, &height, &nrChannels, 0);
+	unsigned char* data = stbi_load(tPath.c_str(), &width, &height, &nrChannels, 0);
 	if (data)
 	{
 		GLenum format = GL_RGB;
@@ -90,13 +91,15 @@ shared_ptr<Texture> AssetManager::GetTexture(const char* path, const char* type)
 		{
 			format = GL_RGBA;
 		}
-		spdlog::info("Loaded Texture: {} with {} channels", path, nrChannels);
+		spdlog::info("Loaded Texture: {} with {} channels", tPath, nrChannels);
 		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else
 	{
-		spdlog::error("Failed to load texture");
+		spdlog::error("Failed to load texture at path {}", tPath);
+		std::filesystem::path p = tPath;
+		spdlog::error("Absolute path: {}", std::filesystem::absolute(p).string());
 		spdlog::error(stbi_failure_reason());
 	}
 	stbi_image_free(data);
@@ -115,6 +118,8 @@ string AssetManager::GetPathWithRelativePrefix(const char* cPath)
 {
 	string relativePath = Loader::RelativePath();
 	string path = cPath;
+
+	return relativePath + cPath;
 	
 	if (path.rfind(relativePath, 0) != 0)
 	{

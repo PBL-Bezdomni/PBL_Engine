@@ -104,10 +104,11 @@ void Skybox::LoadCubemapTextures(vector<string> faces, Texture* texture)
 			stbi_set_flip_vertically_on_load(false);
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 			stbi_image_free(data);
+			spdlog::info("Cubemap texture loaded at path: {}", Loader::RelativePath() + faces[i]);
 		}
 		else
 		{
-			std::cout << "Cubemap texture failed to load at path: " << Loader::RelativePath() + faces[i] << std::endl;
+			spdlog::error("Cubemap texture failed to load at path: {}", Loader::RelativePath() + faces[i]);
 			stbi_image_free(data);
 		}
 	}
