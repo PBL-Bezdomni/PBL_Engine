@@ -44,7 +44,6 @@ public:
 	float GetTimeLeft();
 
 private:
-	//TODO move those functions elsewhere or remove them completely
 	void UpdateShaderLight(GameObject* gameObject, Shader& shader, Shader& depthShader);
 	void AssignSceneGraph();
 	void LoadModels();

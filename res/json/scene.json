@@ -479,8 +479,8 @@
         {
             "base_color_texture": "",
             "collider_size": [
+                10.0,
                 2.0,
-                3.5,
                 3.0
             ],
             "has_normal": false,
@@ -550,7 +550,7 @@
             "base_color_texture": "",
             "collider_size": [
                 6.0,
-                5.0,
+                10.0,
                 6.0
             ],
             "has_normal": false,
@@ -578,7 +578,9 @@
                 1.0,
                 1.0
             ],
-            "scripts": []
+            "scripts": [
+                "Towels"
+            ]
         },
         {
             "base_color_texture": "drewno.jpg",
@@ -618,7 +620,7 @@
             "base_color_texture": "Stylized_Stone_Floor_001_basecolor.jpg",
             "collider_size": [
                 4.0,
-                6.0,
+                10.0,
                 4.0
             ],
             "has_normal": false,
@@ -651,6 +653,42 @@
             ]
         },
         {
+            "base_color_texture": "red.png",
+            "collider_size": [
+                4.0,
+                10.0,
+                4.0
+            ],
+            "has_normal": false,
+            "has_rigid_body": true,
+            "id": 20,
+            "is_static": true,
+            "is_trigger": true,
+            "mesh": "PLACEHOLDER_BATH.obj",
+            "name": "sauna",
+            "normal_texture": "",
+            "parent": "onsenObjects",
+            "parentID": 14,
+            "position": [
+                -35.0,
+                2.0,
+                -20.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                6.0,
+                6.0,
+                6.0
+            ],
+            "scripts": [
+                "Sauna"
+            ]
+        },
+        {
             "base_color_texture": "",
             "collider_size": [
                 1.0,
@@ -659,7 +697,7 @@
             ],
             "has_normal": false,
             "has_rigid_body": true,
-            "id": 20,
+            "id": 21,
             "is_static": true,
             "is_trigger": true,
             "mesh": "",

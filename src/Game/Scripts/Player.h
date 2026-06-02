@@ -28,7 +28,7 @@ public:
     bool m_IsChargingThrow = false;
     float m_ThrowCharge = 0.0f;
     const float m_MinThrowForce = 5.0f;
-    const float m_MaxThrowForce = 15.0f;
+    const float m_MaxThrowForce = 40.0f;
     const float m_ChargeSpeed = 10.0f;
 
     const char* GetScriptName() const override { return "Player"; }

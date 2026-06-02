@@ -13,6 +13,6 @@ void MassageTable::OnTriggerEnter(GameObject* other)
         m_OccupyingAnimal = other;
 
         animal->EnterTable(m_Owner);
-        animal->FulfillNeed(AnimalNeeds::Massage);
+        animal->StartFulfillingNeed(AnimalNeeds::Massage);
     }
 }

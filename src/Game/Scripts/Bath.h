@@ -3,21 +3,16 @@
 #include <glm/glm.hpp>
 #include <vector>
 
+#include "ObjectSlot.h"
+
 class Animal;
 class GameObject;
-
-struct BathSlot
-{
-    bool IsOccupied = false;
-    Animal* OccupyingAnimal = nullptr;
-    glm::vec3 LocalOffset;
-};
 
 class Bath : public Behaviour
 {
 private:
     int m_MaxSlots = 4;
-    std::vector<BathSlot> m_Slots;
+    std::vector<ObjectSlot> m_Slots;
 
     bool m_IsOccupied = false;
     GameObject* m_OccupyingAnimal = nullptr;

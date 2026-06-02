@@ -4,7 +4,9 @@
 #include "Engine/Light/PointLight.h"
 #include "Game/Scripts/Bath.h"
 #include "Game/Scripts/MassageTable.h"
+#include "Game/Scripts/Sauna.h"
 #include "Game/Scripts/SpawnManager.h"
+#include "Game/Scripts/Towels.h"
 
 GameObject::GameObject()
 {
@@ -78,6 +80,14 @@ void GameObject::AssignScript(string scriptName)
     {
         if (!GetComponent<Bath>()) AddComponent<Bath>();
     }
+    else if (scriptName == "Towels")
+    {
+        if (!GetComponent<Towels>()) AddComponent<Towels>();
+    }
+    else if (scriptName == "Sauna")
+    {
+        if (!GetComponent<Sauna>()) AddComponent<Sauna>();
+    }
 }
 
 void GameObject::RemoveScript(string scriptName)
@@ -93,6 +103,14 @@ void GameObject::RemoveScript(string scriptName)
     else if (scriptName == "Bath")
     {
         RemoveComponent<Bath>();
+    }
+    else if (scriptName == "Towels")
+    {
+        RemoveComponent<Towels>();
+    }
+    else if (scriptName == "Sauna")
+    {
+        RemoveComponent<Sauna>();
     }
 }
 
