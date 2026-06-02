@@ -51,7 +51,6 @@ private:
 	glm::vec3 m_TargetPosition;
     glm::vec3 m_LastPosition;
 
-	bool m_IsInitialized = false;
 	float m_WaitTime = 0.0f;
 	float m_CurrentWaitTime = 0.0f;
 	float m_StuckTimer = 0.0f;
@@ -67,11 +66,12 @@ private:
 
 public:
     std::vector<AnimalNeeds> m_RequiredServices;
+    bool m_IsInitialized = false;
 
     bool m_IsSeated = false;
     bool m_IsMoving = false;
 	int Earned_money = 0;
-    
+    void ResetEverythingSpawn(glm::vec3 spawnPosition);
 
 	void Awake() override;
     void Start() override;

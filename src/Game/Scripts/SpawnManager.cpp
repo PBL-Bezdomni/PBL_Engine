@@ -90,7 +90,7 @@ void SpawnManager::SetSpawnValue(GameObject* animal)
 		animal->GetComponent<RigidBody>()->Teleport(spawnPosition);
 		
 		Animal* anScrpt = animal->GetComponent<Animal>(); 
-		anScrpt->ForceNewTargetPosition();
+		anScrpt->ResetEverythingSpawn(spawnPosition);
 		anScrpt->DrawRandomNeeds();
 	}
 }
@@ -98,7 +98,7 @@ void SpawnManager::SetSpawnValue(GameObject* animal)
 void SpawnManager::SpawnAnimal(GameObject* animal)
 {
 	RigidBody* animalRB = animal->GetComponent<RigidBody>();
-	glm::vec3 throwVelocity = glm::vec3(0, 0, -1) * 100.f;
+	glm::vec3 throwVelocity = glm::vec3(0, 0, -1) * 20.f;
 	animalRB->SetLinearVelocity(throwVelocity);
 }
 
@@ -116,6 +116,12 @@ void SpawnManager::DespawnAnimal(GameObject* animal)
 				m_AnimalsPool.push_back(spawnedAnimal);
 				// spawnedAnimal->transform->Position = m_ExiledPos;
 				// spawnedAnimal->GetComponent<Animal>()->m_IsMoving = false;
+				Animal* anScript = spawnedAnimal->GetComponent<Animal>();
+				if (anScript != nullptr)
+				{
+					anScript->m_IsMoving = false;
+					anScript->m_IsInitialized = false;
+				}
 				RigidBody* rb = spawnedAnimal->GetComponent<RigidBody>();
 				if (rb != nullptr)
 				{

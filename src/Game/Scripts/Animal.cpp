@@ -52,7 +52,7 @@ void Animal::PickNewTargetPosition()
 	float angle = Random::GetRandomFloat(0.0f, 2.0f * glm::pi<float>());
 	float radius = Random::GetRandomFloat(0.0f, m_MovingRadius);
 
-	glm::vec3 currentPos = m_Owner->transform->Position;
+	glm::vec3 currentPos = m_Owner->transform->GetGlobalPosition();
 	m_TargetPosition = currentPos + glm::vec3(radius * cos(angle), 0.0f, radius * sin(angle));
 	m_IsMoving = true;
 }
@@ -61,7 +61,7 @@ void Animal::ForceNewTargetPosition()
 {
     if (m_Owner && m_Owner->transform)
     {
-		m_LastPosition = m_Owner->transform->Position;
+		m_LastPosition = m_Owner->transform->GetGlobalPosition();
 		m_CurrentAngle = m_Owner->transform->EulerAngles.y;
     }
 
@@ -93,7 +93,7 @@ void Animal::Update()
 
     if (!m_IsInitialized)
     {
-		m_LastPosition = m_Owner->transform->Position;
+		m_LastPosition = m_Owner->transform->GetGlobalPosition();
 		m_CurrentAngle = m_Owner->transform->EulerAngles.y;
 		PickNewTargetPosition();
 		m_IsInitialized = true;
@@ -143,7 +143,7 @@ void Animal::Update()
 
     if (m_IsMoving)
     {
-        glm::vec3 currentPos = m_Owner->transform->Position;
+        glm::vec3 currentPos = m_Owner->transform->GetGlobalPosition();
 
         float distanceMoved = glm::length(currentPos - m_LastPosition);
         if (distanceMoved < 0.1f * Time::GetDeltaTime() * m_MoveSpeed)
@@ -256,7 +256,7 @@ void Animal::Update()
 	}
 	else
 	{
-		m_LastPosition = m_Owner->transform->Position;
+		m_LastPosition = m_Owner->transform->GetGlobalPosition();
 
 		m_CurrentWaitTime += Time::GetDeltaTime();
 		if (m_CurrentWaitTime >= m_WaitTime)
@@ -376,4 +376,41 @@ void Animal::UpdateProgressBar()
         m_ProgressBarShader->Use();
         m_ProgressBarShader->SetFloat("u_Progress", m_CurrentNeedProgress);
     }
+}
+
+void Animal::ResetEverythingSpawn(glm::vec3 spawnPosition)
+{
+	m_Owner->transform->Position = spawnPosition;
+
+	RigidBody* rb = m_Owner->GetComponent<RigidBody>();
+	if (rb != nullptr)
+	{
+		rb->RequestTeleport(spawnPosition);
+
+		rb->SetLinearVelocity(glm::vec3(0.0f));
+		rb->SetAngularVelocity(glm::vec3(0.0f));
+        rb->SetRotation(glm::vec3(0.0f));
+	}
+
+	m_CurrentAngle = 0.0f;
+	m_LastPosition = spawnPosition;
+
+	float angle = Random::GetRandomFloat(0.0f, 2.0f * glm::pi<float>());
+	float radius = Random::GetRandomFloat(0.0f, m_MovingRadius);
+	m_TargetPosition = spawnPosition + glm::vec3(radius * cos(angle), 0.0f, radius * sin(angle));
+
+	m_IsMoving = false;
+	m_IsInitialized = true;
+
+	m_IsSeated = false;
+	m_IsFulfillingNeed = false;
+
+	m_WaitTime = 1.5f;
+	m_CurrentWaitTime = 0.0f;
+	
+    m_StuckTimer = 0.0f;
+	m_JumpTimer = 0.0f;
+
+    m_ShouldTeleport = false;
+	m_CurrentNeedProgress = 0.0f;
 }
