@@ -1,17 +1,10 @@
 #pragma once
-#include "Engine/Components/Behaviour.h"
+#include "AOnsenObject.h"
 
-class Animal;
-class GameObject;
-
-class MassageTable : public Behaviour
+class MassageTable : public AOnsenObject
 {
-private:
-    bool m_IsOccupied = false;
-    GameObject* m_OccupyingAnimal = nullptr;
-
 public:
-    void OnTriggerEnter(GameObject* other) override;
+    void Awake() override;
 
     const char* GetScriptName() const override { return "MassageTable"; }
 };

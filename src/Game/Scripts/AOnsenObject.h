@@ -1,0 +1,25 @@
+#pragma once
+#include <vector>
+// #include "ObjectSlot.h"
+#include "ObjectSlot.h"
+#include "Engine/Components/Behaviour.h"
+#include "glm/vec3.hpp"
+
+class Animal;
+
+class AOnsenObject : public Behaviour
+{
+protected:
+	int m_MaxSlots = 4;
+	std::vector<ObjectSlot> m_Slots;
+
+	bool m_IsOccupied = false;
+	GameObject* m_OccupyingAnimal = nullptr;
+
+	std::vector<glm::vec3> m_SlotsPos = {glm::vec3(-3.0f, 2.5f, -3.0f), glm::vec3(3.0f, 2.5f, -3.0f), glm::vec3(-3.0f, 2.5f, 3.0f), glm::vec3(3.0f, 2.5f, 3.0f)};
+public:
+	void Awake() override;
+
+	void OnTriggerEnter(GameObject* other) override;
+	void OnTriggerExit(GameObject* other) override;
+};
