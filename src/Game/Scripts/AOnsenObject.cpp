@@ -17,7 +17,8 @@ void AOnsenObject::OnTriggerEnter(GameObject* other)
 {
 	Animal* animal = other->GetComponent<Animal>();
 	if (animal == nullptr) return;
-
+	if (!animal->m_WasDroppedByPlayer) return;
+	animal->m_WasDroppedByPlayer = false;
 	int freeSlotIndex = -1;
 	for (int i = 0; i < m_MaxSlots; i++)
 	{

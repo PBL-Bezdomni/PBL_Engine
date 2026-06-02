@@ -67,7 +67,7 @@ private:
 public:
     std::vector<AnimalNeeds> m_RequiredServices;
     bool m_IsInitialized = false;
-
+    bool m_WasDroppedByPlayer = false;
     bool m_IsSeated = false;
     bool m_IsMoving = false;
 	int Earned_money = 0;

@@ -197,6 +197,7 @@ void Player::HandleThrowReleased()
         {
             animalScript->m_IsSeated = false;
             animalScript->m_IsMoving = false;
+			animalScript->m_WasDroppedByPlayer = true;
         }
 
         m_CarriedAnimal = nullptr;

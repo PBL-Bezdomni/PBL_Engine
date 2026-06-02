@@ -50,11 +50,12 @@ void Animal::DrawUpdate()
 void Animal::PickNewTargetPosition()
 {
 	float angle = Random::GetRandomFloat(0.0f, 2.0f * glm::pi<float>());
-	float radius = Random::GetRandomFloat(0.0f, m_MovingRadius);
+	float radius = Random::GetRandomFloat(2.0f, m_MovingRadius);
 
 	glm::vec3 currentPos = m_Owner->transform->GetGlobalPosition();
 	m_TargetPosition = currentPos + glm::vec3(radius * cos(angle), 0.0f, radius * sin(angle));
 	m_IsMoving = true;
+	m_WasDroppedByPlayer = false;
 }
 
 void Animal::ForceNewTargetPosition()
@@ -217,7 +218,7 @@ void Animal::Update()
 
             bool isOnGround = (currentPos.y <= 2.6f);
 
-            if (m_Owner->Name == "bunny")
+            if (m_Owner->Name.find("bunny") != std::string::npos)
             {
 				m_JumpTimer += Time::GetDeltaTime();
 
@@ -237,7 +238,7 @@ void Animal::Update()
             }
             glm::vec3 targetVelocity = direction * (m_MoveSpeed * speedMultiplier);
 
-			float accel = (m_Owner->Name == "bunny") ? m_Acceleration * 4.0f : m_Acceleration;
+			float accel = (m_Owner->Name.find("bunny") != std::string::npos) ? m_Acceleration * 4.0f : m_Acceleration;
             float newVelX = glm::mix(currentVelocity.x, targetVelocity.x, accel *Time::GetDeltaTime());
             float newVelZ = glm::mix(currentVelocity.z, targetVelocity.z, accel * Time::GetDeltaTime());
 
