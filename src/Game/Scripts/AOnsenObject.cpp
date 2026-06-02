@@ -37,7 +37,7 @@ void AOnsenObject::OnTriggerEnter(GameObject* other)
 		glm::vec3 targetPos = tubWorldPos + m_Slots[freeSlotIndex].LocalOffset;
 
 		animal->EnterPosition(targetPos);
-		animal->StartFulfillingNeed(AnimalNeeds::Bath);
+		animal->StartFulfillingNeed(m_ObjectNeed);
 	}
 	else
 	{

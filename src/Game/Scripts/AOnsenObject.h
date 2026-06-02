@@ -16,7 +16,14 @@ protected:
 	bool m_IsOccupied = false;
 	GameObject* m_OccupyingAnimal = nullptr;
 
-	std::vector<glm::vec3> m_SlotsPos = {glm::vec3(-3.0f, 2.5f, -3.0f), glm::vec3(3.0f, 2.5f, -3.0f), glm::vec3(-3.0f, 2.5f, 3.0f), glm::vec3(3.0f, 2.5f, 3.0f)};
+	std::vector<glm::vec3> m_SlotsPos = {
+		glm::vec3(-3.0f, 2.5f, -3.0f),
+		glm::vec3(3.0f, 2.5f, -3.0f),
+		glm::vec3(-3.0f, 2.5f, 3.0f),
+		glm::vec3(3.0f, 2.5f, 3.0f)
+	};
+
+	AnimalNeeds m_ObjectNeed = AnimalNeeds::Bath;
 public:
 	void Awake() override;
 
