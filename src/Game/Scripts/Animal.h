@@ -7,6 +7,7 @@
 
 #include "Engine/AssetManager.h"
 #include "Game/SceneManager.h"
+#include "AnimalInteractions.h"
 
 class GameObject;
 
@@ -21,8 +22,9 @@ enum class AnimalNeeds
 class Animal : public Behaviour
 {
 private:
-	AssetManager* m_AssetMgr;
-	SceneManager* m_SceneMgr;
+	AssetManager*       m_AssetMgr;
+	SceneManager*       m_SceneMgr;
+	AnimalInteractions m_AnimalInteractions;
 
 	float m_TimeLimit;
 	float m_CurrTime;
@@ -89,11 +91,14 @@ public:
     void UpdateIndicatorColors();
     void SetIndicatorObject(std::shared_ptr<GameObject> indicator) { m_Indicator = indicator; }
     std::shared_ptr<GameObject> GetIndicatorObject() { return m_Indicator; }
-	
+    void SetTartgetPosition(glm::vec3 position) { m_TargetPosition = position; m_IsMoving = true; }
+	void SetSpeed(float speed) { m_MoveSpeed = speed; }
 	void DrawRandomNeeds();
     void StartFulfillingNeed(AnimalNeeds need);
     void StopFulfillingNeed();
     void FulfillNeed(AnimalNeeds need);
+
+	GameObject* GetGameObject() { return m_Owner; }
 
 	const char* GetScriptName() const override { return "Animal"; }
 };

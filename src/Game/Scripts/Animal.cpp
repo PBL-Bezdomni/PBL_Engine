@@ -138,6 +138,8 @@ void Animal::Update()
 
     if (m_IsSeated) return;
 
+	m_AnimalInteractions.Update(this);
+
 	RigidBody* rb = m_Owner->GetComponent<RigidBody>();
 
 	if (rb == nullptr) return;
