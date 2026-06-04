@@ -159,5 +159,3 @@ void PhysicsEngine::CompleteTeleportQueue()
     }
     m_TeleportQueue.clear();
 }
-
-

@@ -49,7 +49,6 @@ public:
     void DrawDebugBox(const glm::vec3& center, const glm::vec3& halfExtents, const glm::vec3& color);
 
     void QueueTeleport(RigidBody* rb, glm::vec3 pos);
-    void CompleteTeleportQueue();
 private:
     JPH::PhysicsSystem* m_PhysicsSystem = nullptr;
     JPH::TempAllocatorImpl* m_TempAllocator = nullptr;
@@ -62,4 +61,6 @@ private:
     PhysicsContactListener m_ContactListener;
 
     std::vector<TeleportRequest> m_TeleportQueue;
+
+    void CompleteTeleportQueue();
 };
