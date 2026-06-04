@@ -71,6 +71,10 @@ private:
 	Texture m_UICoinTex;
 
 	vector<shared_ptr<GameObject>> m_GameObjects;
+
+	unsigned int m_DynamicDepthMap;
+	unsigned int m_StaticDepthMap;
+	bool m_HasStaticMapLoaded = false;
 	
 	GameObject skybox;
 

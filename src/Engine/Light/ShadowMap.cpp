@@ -1,42 +1,72 @@
 #include "ShadowMap.h"
 
 ShadowMap::ShadowMap() {
-	glGenFramebuffers(1, &depthMapFBO);
-
-
-	glGenTextures(1, &depthMap);
-	glBindTexture(GL_TEXTURE_2D, depthMap);
+	glGenFramebuffers(1, &m_DynamicDepthMapFBO);
+	glGenTextures(1, &m_DynamicDepthMap);
+	glBindTexture(GL_TEXTURE_2D, m_DynamicDepthMap);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-	float borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
-	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+	float borderColor1[] = { 1.0, 1.0, 1.0, 1.0 };
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor1);
+	
+	glBindFramebuffer(GL_FRAMEBUFFER, m_DynamicDepthMapFBO);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_DynamicDepthMap, 0);
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
+	// I don't like this bulk of code repeating but I didn't figure out how to move it to function.
+	glGenFramebuffers(1, &m_StaticDepthMapFBO);
+	glGenTextures(1, &m_StaticDepthMap);
+	glBindTexture(GL_TEXTURE_2D, m_StaticDepthMap);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	float borderColor2[] = { 1.0, 1.0, 1.0, 1.0 };
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor2);
+	
+	glBindFramebuffer(GL_FRAMEBUFFER, m_StaticDepthMapFBO);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_StaticDepthMap, 0);
 	glDrawBuffer(GL_NONE);
 	glReadBuffer(GL_NONE);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-unsigned int ShadowMap::GenerateMap(GameObject& m_WorldParent, Shader& depthShader) {
+unsigned int ShadowMap::GenerateMap(GameObject& m_WorldParent, Shader& depthShader, bool isDynamic) {
 	glm::mat4 lightSpaceMatrix = ConfigureShaderAndMatrices();
 	depthShader.Use();
 	depthShader.SetMat4("lightSpaceMatrix", lightSpaceMatrix);
 
 	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+	if (isDynamic)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, m_DynamicDepthMapFBO);
+	}
+	else
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, m_StaticDepthMapFBO);
+	}
 	glClear(GL_DEPTH_BUFFER_BIT);
 	//glEnable(GL_CULL_FACE);
 	//glCullFace(GL_FRONT);
-	m_WorldParent.DrawSelfAndChild(&depthShader);
+	m_WorldParent.DrawSekfAndChildShadow(&depthShader, isDynamic);
 	//glCullFace(GL_BACK);
 	 //glDisable(GL_CULL_FACE);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	return depthMap;
+	if (isDynamic)
+	{
+		return m_DynamicDepthMap;
+	}
+	else
+	{
+		return m_StaticDepthMap;
+	}
 }
 
 glm::mat4 ShadowMap::ConfigureShaderAndMatrices() {

@@ -36,7 +36,8 @@ public:
 	float GetQuadratic();
 	float GetInnerCutOff();
 	float GetOuterCutOff();
-	unsigned int getShadowMap(GameObject& m_WorldParent, Shader& depthShader);
+	unsigned int GetDynamicShadowMap(GameObject& m_WorldParent, Shader& depthShader);
+	unsigned int GetStaticShadowMap(GameObject& m_WorldParent, Shader& depthShader);
 	glm::mat4 getLightViewMatrix();
 
 	// Values setters

@@ -85,7 +85,7 @@ void Model::AssignNormal(Texture tex)
 void Model::Draw(glm::mat4 modelMatrix, Shader* shader)
 {
     Shader shaderToUse;
-    if (shader) {
+    if (shader != nullptr) {
         shaderToUse = *shader;
     }
     else {

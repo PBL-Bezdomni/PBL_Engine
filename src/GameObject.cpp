@@ -159,7 +159,7 @@ void GameObject::UpdateSelfAndChildInstanceMatrix(glm::vec3 position, glm::vec3 
     }
 }
 
-void GameObject::DrawSelfAndChild(Shader* shader)
+void GameObject::DrawSelfAndChild()
 {
     if (m_IsActive)
     {
@@ -174,12 +174,35 @@ void GameObject::DrawSelfAndChild(Shader* shader)
         Model* model = GetComponent<Model>();
         if (model != nullptr && model->IsActive())
         {
-            model->Draw(transform->ModelMatrix, shader);
+            model->Draw(transform->ModelMatrix);
         }
 
         for (auto&& child : Children)
         {
-            child->DrawSelfAndChild(shader);
+            child->DrawSelfAndChild();
+        }
+    }
+}
+
+void GameObject::DrawSekfAndChildShadow(Shader* shader, bool drawOnlyDynamic)
+{
+    if (m_IsActive)
+    {
+        RigidBody* rb = GetComponent<RigidBody>();
+        bool isDynamic = rb != nullptr && !rb->GetIsStatic();
+        if (isDynamic == drawOnlyDynamic)
+        {
+            Model* model = GetComponent<Model>();
+            if (model != nullptr && model->IsActive())
+            {
+                model->Draw(transform->ModelMatrix, shader);
+            }
+        }
+
+        // Always draw children as they can be dynamic
+        for (auto&& child : Children)
+        {
+            child->DrawSekfAndChildShadow(shader, drawOnlyDynamic);
         }
     }
 }

@@ -89,12 +89,6 @@ void SceneManager::LoadScene()
 	m_Player1.transform->Position = glm::vec3(0.0f, 1.0f, 0.0f);
 	m_Player2.transform->Position = glm::vec3(5.0f, 5.0f, 0.0f);
 
-	//delete
-	m_WorldParent.AddChild(&bath);
-	bath.transform->Position = glm::vec3(10.0f, 2.0f, 70.0f);
-	bath.transform->Scale = glm::vec3(5.0f, 5.0f, 5.0f);
-	//
-
 	m_WorldParent.UpdateSelfAndChild();
 
 	m_Player1.AddComponent<RigidBody>();
@@ -106,6 +100,7 @@ void SceneManager::LoadScene()
 	// SHADOW
 	AssetMgr->BasicShader->Use();
 	AssetMgr->BasicShader->SetInt("shadowMap", 20);
+	AssetMgr->BasicShader->SetInt("staticShadowMap", 21);
 	
 	// TODO create event here
 	Engine::GetInstance().GetDebugManager().RefreshGameObjectData();
@@ -159,7 +154,7 @@ void SceneManager::RenderScene()
 	glViewport(0, 0, windowW, windowH);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    m_WorldParent.DrawSelfAndChild(NULL);
+    m_WorldParent.DrawSelfAndChild();
 
 	m_Skybox.DrawSkybox(skyboxView, projection);
 
@@ -272,14 +267,20 @@ void SceneManager::UpdateShaderLight(GameObject* gameObject, Shader& shader, Sha
 	{
 		dLight->SetLightValues(shader);
 		glm::mat4 lightSpaceMatrix(0.0f);
-		unsigned int depthMap = 0;
-		depthMap = dLight->getShadowMap(m_WorldParent, depthShader);
+		m_DynamicDepthMap = dLight->GetDynamicShadowMap(m_WorldParent, depthShader);
+		if (!m_HasStaticMapLoaded)
+		{
+			m_StaticDepthMap = dLight->GetStaticShadowMap(m_WorldParent, depthShader);
+			m_HasStaticMapLoaded = true;
+		}
 		lightSpaceMatrix = dLight->getLightViewMatrix();
 		AssetMgr->BasicShader->Use();
 
 		AssetMgr->BasicShader->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
 		glActiveTexture(GL_TEXTURE20);
-		glBindTexture(GL_TEXTURE_2D, depthMap);
+		glBindTexture(GL_TEXTURE_2D, m_DynamicDepthMap);
+		glActiveTexture(GL_TEXTURE21);
+		glBindTexture(GL_TEXTURE_2D, m_StaticDepthMap);
 	}
 	LightSource* pLight = gameObject->GetComponent<PointLight>();
 	if (pLight != nullptr)

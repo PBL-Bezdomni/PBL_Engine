@@ -62,8 +62,13 @@ float LightSource::GetOuterCutOff()
 	return m_OuterCutOff;
 }
 
-unsigned int LightSource::getShadowMap(GameObject& m_WorldParent, Shader& depthShader) {
-	return shadowMap->GenerateMap(m_WorldParent, depthShader);
+unsigned int LightSource::GetDynamicShadowMap(GameObject& m_WorldParent, Shader& depthShader) {
+	return shadowMap->GenerateMap(m_WorldParent, depthShader, true);
+}
+
+unsigned int LightSource::GetStaticShadowMap(GameObject& m_WorldParent, Shader& depthShader)
+{
+	return shadowMap->GenerateMap(m_WorldParent, depthShader, false);
 }
 
 glm::mat4 LightSource::getLightViewMatrix() {

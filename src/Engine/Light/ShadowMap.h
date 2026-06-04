@@ -14,15 +14,15 @@
 class ShadowMap {
 private:
 	const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
-	unsigned int depthMapFBO;
-	unsigned int depthMap;
-
+	unsigned int m_DynamicDepthMapFBO;
+	unsigned int m_StaticDepthMapFBO;
+	unsigned int m_DynamicDepthMap;
+	unsigned int m_StaticDepthMap;
 	
 public:
 
 	ShadowMap();
-
-	unsigned int GenerateMap(GameObject& m_WorldParent, Shader& depthShader);
+	unsigned int GenerateMap(GameObject& m_WorldParent, Shader& depthShader, bool isDynamic);
 
 	glm::mat4 ConfigureShaderAndMatrices();
 };
