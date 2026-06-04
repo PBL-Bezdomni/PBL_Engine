@@ -116,7 +116,7 @@
             "is_trigger": false,
             "mesh": "wall1.fbx",
             "name": "wall_model",
-            "normal_texture": "",
+            "normal_texture": "Stylized_Stone_Floor_010_normal.png",
             "parent": "wall_back",
             "parentID": 3,
             "position": [
@@ -143,14 +143,14 @@
                 30.0,
                 0.699999988079071
             ],
-            "has_normal": false,
+            "has_normal": true,
             "has_rigid_body": true,
             "id": 5,
             "is_static": true,
             "is_trigger": false,
             "mesh": "floor.fbx",
             "name": "floor",
-            "normal_texture": "",
+            "normal_texture": "Stylized_Stone_Floor_010_normal.png",
             "parent": "room",
             "parentID": 2,
             "position": [

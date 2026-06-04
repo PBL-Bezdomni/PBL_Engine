@@ -152,6 +152,7 @@ private:
     Shader m_Shader = Shader();
     AABB m_FrustumVolume;
     shared_ptr<Camera> m_MainCamera;
+    bool m_HasNormal = false;
 
     void LoadModel(string path);
     void ProcessNode(aiNode* node, const aiScene* scene);

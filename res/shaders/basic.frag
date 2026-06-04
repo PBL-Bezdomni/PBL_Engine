@@ -34,6 +34,8 @@ uniform bool useDirLight;
 uniform bool usePointLight;
 uniform bool useSpotLight;
 
+uniform bool useNormal;
+
 struct Light {
     vec3 direction;
     vec3 position;
@@ -60,11 +62,16 @@ float ShadowCalculation(vec4 fragPosLightSpace);
 void main()
 {
     //FragColor = texture(texture_diffuse1, TexCoord);
-    
-    vec3 normal = texture(texture_normal1, TexCoord).rgb;
-    // Swap comment to enable normal map
-//    vec3 norm = normalize(normal * 2.0 - 1.0);
-    vec3 norm = normalize(Normal);
+    vec3 norm;
+    if (useNormal)
+    {
+        vec3 normal = texture(texture_normal1, TexCoord).rgb;
+        norm = normalize(normal * 2.0 - 1.0);
+    }
+    else
+    {
+        norm = normalize(Normal);
+    }
     vec3 viewDir = normalize(viewPos - FragPos);
 
     vec4 texColor = texture(texture_diffuse1, TexCoord);

@@ -66,13 +66,13 @@ void Model::AssignTexture(Texture tex)
 
 void Model::AssignNormal(Texture tex)
 {
-    string typeName = "texture_normal";
-    tex.Type = typeName;
+    tex.Type = EngineConsts::NORMAL;
+    m_HasNormal = true;
     for (unsigned int i = 0; i < Meshes.size(); i++)
     {
         for (int j = 0; j < Meshes[i].Textures.size(); j++)
         {
-            if (Meshes[i].Textures[j].Type == typeName)
+            if (Meshes[i].Textures[j].Type == EngineConsts::NORMAL)
             {
                 Meshes[i].Textures[j] = tex;
                 return;
@@ -93,6 +93,7 @@ void Model::Draw(glm::mat4 modelMatrix, Shader* shader)
     }
     shaderToUse.Use();
     shaderToUse.SetMat4("model", modelMatrix);
+    shaderToUse.SetBool("useNormal", m_HasNormal);
     
     for (unsigned int i = 0; i < Meshes.size(); i++)
     {
@@ -201,6 +202,10 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
         textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
         vector<Texture> normalMaps = LoadMaterialTextures(material,
             aiTextureType_NORMALS, EngineConsts::NORMAL);
+        if (normalMaps.size() > 0)
+        {
+            m_HasNormal = true;
+        }
         textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
     }
 
