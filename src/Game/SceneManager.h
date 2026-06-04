@@ -62,6 +62,8 @@ private:
 	float m_MouseLastX; // = WINDOW_WIDTH / 2; 
 	float m_MouseLastY; // = WINDOW_HEIGHT / 2;
 	bool  m_IsFirstMouse = true;
+	bool m_RenderHitboxes = false;
+	bool m_HasDebugButtonBeenReleased = true;
 	
 	FreeType m_TextRenderer;
 	

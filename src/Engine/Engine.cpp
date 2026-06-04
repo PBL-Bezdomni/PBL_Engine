@@ -48,6 +48,11 @@ bool Engine::GetIsDebugDrawn()
 	return m_IsDebugDraw;
 }
 
+void Engine::ToggleDebugDraw()
+{
+	m_IsDebugDraw = !m_IsDebugDraw;
+}
+
 PhysicsEngine& Engine::GetPhysicsEngine()
 {
 	return *m_PhysicsEngine;

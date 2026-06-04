@@ -165,7 +165,7 @@ void SceneManager::RenderScene()
 
     glDisable(GL_DEPTH_TEST);
 
-    if (Physics != nullptr)
+    if (m_RenderHitboxes && Physics != nullptr)
     {
         Physics->DrawHitboxes(*AssetMgr->LineShader, view, projection);
     }
@@ -397,6 +397,32 @@ void SceneManager::input(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
 	{
 		MainCamera->ProcessMouseMovement(-1.f, 0);
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+	{
+		if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+		{
+			if (m_HasDebugButtonBeenReleased)
+			{
+				// Shift + E, toggle Editor
+				Engine::GetInstance().ToggleDebugDraw();
+				m_HasDebugButtonBeenReleased = false;
+			}
+		}
+		else if (glfwGetKey(window, GLFW_KEY_H) == GLFW_PRESS)
+		{
+			if (m_HasDebugButtonBeenReleased)
+			{
+				// Shift + H, toggle hitboxes
+				m_RenderHitboxes = !m_RenderHitboxes;
+				m_HasDebugButtonBeenReleased = false;
+			}
+		}
+		else
+		{
+			m_HasDebugButtonBeenReleased = true;
+		}
 	}
 }
 

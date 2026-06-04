@@ -12,7 +12,7 @@ class Engine
 {
 private:
 	// DEBUG
-	bool m_IsDebugDraw = true;
+	bool m_IsDebugDraw = false;
 	
 	const float FIXED_TIME_STEP = 1.0f / 60.0f;
 	
@@ -40,6 +40,7 @@ public:
 	const int32_t GL_VERSION_MINOR = 1;
 
 	bool GetIsDebugDrawn();
+	void ToggleDebugDraw();
 	static Engine& GetInstance();
 	PhysicsEngine& GetPhysicsEngine();
 	WindowManager& GetWindowManager();
