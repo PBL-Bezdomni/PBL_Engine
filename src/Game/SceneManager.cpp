@@ -119,31 +119,12 @@ void SceneManager::RenderScene()
     glm::mat4 view = MainCamera->GetViewMatrix();
     glm::mat4 projection = MainCamera->GetProjectionMatrix();
 
+	AssetMgr->SetShadersViewProjection(view, projection);
+	
     AssetMgr->BasicShader->Use();
-    AssetMgr->BasicShader->SetMat4("view", view);
-    AssetMgr->BasicShader->SetMat4("projection", projection);
-
 	AssetMgr->BasicShader->SetBool("useDirLight", false);
 	AssetMgr->BasicShader->SetBool("usePointLight", false);
 	AssetMgr->BasicShader->SetBool("useSpotLight1", false);
-
-	if (AssetMgr->PieChartShader != nullptr)
-	{
-		AssetMgr->PieChartShader->Use();
-		AssetMgr->PieChartShader->SetMat4("view", view);
-		AssetMgr->PieChartShader->SetMat4("projection", projection);
-
-		AssetMgr->BasicShader->Use();
-	}
-
-	if (AssetMgr->ProgressBarShader != nullptr)
-	{
-		AssetMgr->ProgressBarShader->Use();
-		AssetMgr->ProgressBarShader->SetMat4("view", view);
-		AssetMgr->ProgressBarShader->SetMat4("projection", projection);
-
-		AssetMgr->BasicShader->Use();
-	}
 	
     UpdateShaderLight(&m_WorldParent, *AssetMgr->BasicShader, *AssetMgr->SimpleDepthShader);
 
@@ -167,6 +148,11 @@ void SceneManager::RenderScene()
 
 	// IMPORTANT: Do not write things below Freetype/UI, if you do not know what you are doing, thanks :)
 	// Draw UI
+
+	// Reapply text projection
+	AssetMgr->TextShader->Use();
+	AssetMgr->TextShader->SetMat4("projection", m_TextProjection);
+	
 	// TIMER move it somewhere else later, if you know where then please move it.
 	if (m_TimeLeft > 0.0f)
 	{
@@ -330,9 +316,9 @@ void SceneManager::LoadModels()
 
 void SceneManager::InitializeUI()
 {
-	glm::mat4 textProjection = glm::ortho(0.0f, static_cast<float>(WindowMgr->WINDOW_WIDTH), static_cast<float>(WindowMgr->WINDOW_HEIGHT), 0.0f);
+	m_TextProjection = glm::ortho(0.0f, static_cast<float>(WindowMgr->WINDOW_WIDTH), static_cast<float>(WindowMgr->WINDOW_HEIGHT), 0.0f);
 	AssetMgr->TextShader->Use();
-	AssetMgr->TextShader->SetMat4("projection", textProjection);
+	AssetMgr->TextShader->SetMat4("projection", m_TextProjection);
 
 	m_MoneyPanel.TextureID = m_UIPanelTex.ID;
 	m_MoneyPanel.Size = glm::vec2(300.0f, 100.0f);
