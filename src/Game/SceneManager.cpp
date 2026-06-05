@@ -18,6 +18,7 @@
 #include "Engine/Loader.h"
 
 #include "Engine/JSONImporter.h"
+#include "Engine/Components/ParticleSystem.h"
 
 #include "Game/Scripts/MassageTable.h"
 #include "Game/Scripts/Bath.h"
@@ -78,6 +79,9 @@ void SceneManager::LoadScene()
 
 	m_WorldParent.UpdateSelfAndChild();
 	m_WorldParent.StartSelfAndChild();
+
+	m_ParticleSystem = GameObject();
+	m_ParticleSystem.AddComponent<ParticleSystem>();
 	
 	m_Player1 = GameObject();
 	m_Player1.AddComponent<Player>(0);
@@ -287,6 +291,7 @@ void SceneManager::UpdateShaderLight(GameObject* gameObject, Shader& shader, Sha
 void SceneManager::AssignSceneGraph()
 {
 	m_WorldParent.AddChild(&m_LightSource);
+	m_WorldParent.AddChild(&m_ParticleSystem);
 
 	// m_WorldParent.transform->Position = glm::vec3(0.f, 0.f, -30.f);
 	// m_WorldParent.transform->Scale = glm::vec3(0.7f);

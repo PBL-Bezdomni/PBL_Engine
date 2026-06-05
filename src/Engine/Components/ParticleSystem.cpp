@@ -39,6 +39,12 @@ void ParticleSystem::Awake()
 	m_Owner->GetComponent<Model>()->AssignTexture(tex);
 }
 
+void ParticleSystem::Update()
+{
+	Component::Update();
+	Dispatch();
+}
+
 void ParticleSystem::DrawUpdate()
 {
 	Component::DrawUpdate();

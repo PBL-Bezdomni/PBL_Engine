@@ -79,6 +79,8 @@ private:
 	
 	GameObject skybox;
 
+	GameObject m_ParticleSystem;
+
 	GameObject m_LightSource;
 	GameObject m_LightSourceObject;
 	

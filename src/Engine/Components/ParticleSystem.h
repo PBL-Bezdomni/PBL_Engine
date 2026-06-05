@@ -22,7 +22,7 @@ public:
 	void Awake() override;
 	void Update() override;
 private:
-	constexpr uint32_t MAX_PARTICLES = 10000;
+	const uint32_t MAX_PARTICLES = 10000;
 
 	std::vector<Particle> m_Particles;
 	std::shared_ptr<Shader> m_ParticlesShader;
@@ -30,5 +30,5 @@ private:
 
 	void InitialBuffers();
 	void Dispatch();
-	void DrawUpdate();
+	void DrawUpdate() override;
 };

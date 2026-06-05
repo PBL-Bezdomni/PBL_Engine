@@ -37,7 +37,7 @@ private:
 public:
 	const char* GLSL_VERSION = "#version 430";
 	const int32_t GL_VERSION_MAJOR = 4;
-	const int32_t GL_VERSION_MINOR = 1;
+	const int32_t GL_VERSION_MINOR = 3;
 
 	bool GetIsDebugDrawn();
 	void ToggleDebugDraw();
