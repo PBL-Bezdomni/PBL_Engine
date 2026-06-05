@@ -208,6 +208,11 @@ GameObject* SceneManager::GetLevelParent()
 	return &m_WorldParent;
 }
 
+ParticleSystem* SceneManager::GetParticleSystem()
+{
+	return m_ParticleSystem.GetComponent<ParticleSystem>();
+}
+
 shared_ptr<GameObject> SceneManager::Instantiate(GameObject* parent, string path, shared_ptr<Shader> shader)
 {
 	// TODO make load components data from prefab path instead of passing model path

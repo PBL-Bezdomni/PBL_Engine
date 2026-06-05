@@ -1,7 +1,9 @@
 #pragma once
 #include "Component.h"
 #include <vector>
+#include "ParticleSystem.h"
 #include "glm/glm.hpp"
+
 
 class ParticleEmitter : public Component
 {
@@ -10,14 +12,13 @@ public:
 	void Start() override;
 	void Update() override;
 
-	void StartParticles();
+	void Play();
+	void Stop();
 private:
-	const int MAX_PARTICLES = 10000;
+	bool m_IsEmitting = false;
 
-	int m_NumParticlesX = 100;
-	int m_NumParticlesY = 1;
-	int m_NumParticlesZ = 100;
-	int m_TotalParticles;
+	float spawnRate = 20.0f; // particles per second
+	float accumulator = 0.0f;
 
-	void InitBuffers();
+	ParticleSystem* m_ParticleSystem;
 };

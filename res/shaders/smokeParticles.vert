@@ -16,13 +16,11 @@ struct Particle
 {
     vec4 position;
     vec4 velocity;
-
+    vec4 color;
     float life;
     float maxLife;
     float size;
     uint alive;
-
-    vec4 color;
 };
 
 layout(std430, binding = 0) buffer ParticleBuffer
@@ -33,10 +31,19 @@ layout(std430, binding = 0) buffer ParticleBuffer
 void main()
 {
     Particle p = particles[gl_InstanceID];
+//    Particle p = particles[0];
 
+    if (p.alive == 0)
+    {
+        gl_Position = vec4(-99999.0);
+        return;
+    }
+    
     vec3 pos = p.position.xyz;
-//    mat4 modelMatix = 
+    
+//    vec3 worldPos = aPos + vec3(gl_InstanceID, 0.0f, 0.0f);
+    vec3 worldPos = aPos + pos;
 
-    gl_Position = projection * view * vec4(aPos, 1.0f);
+    gl_Position = projection * view * vec4(worldPos, 1.0f);
     TexCoord = aTexCoord;
 }

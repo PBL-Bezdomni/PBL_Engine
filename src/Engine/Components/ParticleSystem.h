@@ -1,6 +1,5 @@
 #pragma once
 #include <memory>
-
 #include "Component.h"
 #include "Shader.h"
 
@@ -21,14 +20,20 @@ class ParticleSystem : public Component
 public:
 	void Awake() override;
 	void Update() override;
+	void DrawUpdate() override;
+	
+	void Emit(const  glm::vec3& position, uint32_t count);
 private:
-	const uint32_t MAX_PARTICLES = 10000;
+	const uint32_t MAX_PARTICLES = 100;
 
 	std::vector<Particle> m_Particles;
 	std::shared_ptr<Shader> m_ParticlesShader;
 	GLuint m_SSBO;
+	uint32_t m_NextParticle = 0;
+
+	float XVelocity = 0.5f;
+	float YVelocity = 0.2f;
 
 	void InitialBuffers();
 	void Dispatch();
-	void DrawUpdate() override;
 };

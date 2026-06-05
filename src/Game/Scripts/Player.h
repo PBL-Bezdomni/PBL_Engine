@@ -3,6 +3,7 @@
 #include "Engine/InputManager.h"
 #include "Game/Scripts/SpawnManager.h"
 
+class ParticleEmitter;
 class GameObject;
 
 class Player : public Behaviour
@@ -10,6 +11,8 @@ class Player : public Behaviour
 private:
     InputName m_InputName;
     glm::vec2 m_LastMoveDir = glm::vec2(0);
+
+    ParticleEmitter* m_ParticleEmitter;
 
     void HandleActionPressed();
     void HandleThrowPressed();

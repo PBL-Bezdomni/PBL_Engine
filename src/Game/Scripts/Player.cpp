@@ -7,6 +7,7 @@
 #include "Engine/InputManager.h"
 #include "Engine/Components/RigidBody.h"
 #include "Engine/Time.h"
+#include "Engine/Components/ParticleEmitter.h"
 
 Player::Player(int deviceid)
 {
@@ -33,6 +34,9 @@ void Player::Awake()
     }
     Model bodyModel = *am->GetModel(*am->BasicShader, path.c_str());
     m_Owner->AddComponent<Model>(bodyModel);
+
+    m_ParticleEmitter = m_Owner->AddComponent<ParticleEmitter>();
+    m_ParticleEmitter->Play();
 
     im->subscribe(deviceID, m_InputName.MOVE_FORWARD, [this](float val, InputEventType type, int id) {
         if(id == deviceID)

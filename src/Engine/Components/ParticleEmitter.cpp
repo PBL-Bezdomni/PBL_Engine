@@ -1,12 +1,48 @@
 #include "ParticleEmitter.h"
 
+#include "Engine/Engine.h"
+#include "Engine/Time.h"
+
 void ParticleEmitter::Awake()
 {
 	Component::Awake();
-	m_TotalParticles = m_NumParticlesX * m_NumParticlesY * m_NumParticlesZ;
+	m_ParticleSystem = Engine::GetInstance().GetGameManager().GetSceneManager().GetParticleSystem();
 }
 
-void ParticleEmitter::InitBuffers()
+void ParticleEmitter::Start()
 {
-	std::vector<glm::vec4> Positions(m_TotalParticles);
+	Component::Start();
+}
+
+void ParticleEmitter::Update()
+{
+	Component::Update();
+	if (m_IsEmitting)
+	{
+		float deltaTime = Time::GetDeltaTime();
+
+		accumulator += spawnRate * deltaTime;
+		uint32_t count = static_cast<uint32_t>(accumulator);
+
+		accumulator -= count;
+
+		if (m_ParticleSystem != nullptr)
+		{
+			m_ParticleSystem->Emit(m_Owner->transform->GetGlobalPosition(), count);
+		}
+	}
+}
+
+void ParticleEmitter::Play()
+{
+	m_IsEmitting = true;
+	if (m_ParticleSystem == nullptr)
+	{
+		m_ParticleSystem = Engine::GetInstance().GetGameManager().GetSceneManager().GetParticleSystem();
+	}
+}
+
+void ParticleEmitter::Stop()
+{
+	m_IsEmitting = false;
 }

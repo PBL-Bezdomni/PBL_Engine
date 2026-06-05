@@ -10,6 +10,7 @@
 #include "UI/UIManager.h"
 #include "Game/Scripts/Animal.h"
 
+class ParticleSystem;
 class AssetManager;
 class PhysicsEngine;
 class DebugManager;
@@ -37,6 +38,7 @@ public:
 	void RenderScene();
 	void AddAnimal(shared_ptr<GameObject> spawnedEntity);
 	GameObject* GetLevelParent();
+	ParticleSystem* GetParticleSystem();
 	shared_ptr<GameObject> Instantiate(GameObject* parent = nullptr, string path = "", shared_ptr<Shader> shader = nullptr);
 
 	shared_ptr<Camera> GetMainCamera();
