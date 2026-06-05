@@ -1,0 +1,65 @@
+#include "ParticleSystem.h"
+
+#include "Engine/AssetManager.h"
+#include "Engine/Engine.h"
+#include "Engine/Time.h"
+
+void ParticleSystem::Awake()
+{
+	Component::Awake();
+	AssetManager* am = &Engine::GetInstance().GetAssetManager();
+
+	m_ParticlesShader = am->GetShader("res/shaders/smokeParticles.vert", "res/shaders/smokeParticles.frag");
+	am->AddComputeShader(m_ParticlesShader, "res/shaders/smokeParticles.comp");
+
+	m_Particles.resize(MAX_PARTICLES);
+
+	for (auto& particle : m_Particles)
+	{
+		particle.position = glm::vec4(0.0f);
+		particle.velocity = glm::vec4(0.0f);
+
+		particle.color = glm::vec4(0.0f);
+		particle.life = 0.0f;
+		particle.maxLife = 0.0f;
+		particle.size = 0.0f;
+		particle.alive = 0;
+	}
+
+	InitialBuffers();
+
+	// Create Model for shader
+	// not used, but I do it, because I don't know what will happen without it and don't want to test it now
+	vector<glm::mat4> instanceMatrix;
+	Model billboard = *am->GetModel(*m_ParticlesShader, "res/models/PieChartPlane.obj", MAX_PARTICLES, instanceMatrix);
+	m_Owner->AddComponent<Model>(billboard);
+	// Just to be sure
+	m_Owner->GetComponent<Model>()->ReassignShader(*m_ParticlesShader);
+	Texture tex = *am->GetTexture("res/textures/stone.jpg");
+	m_Owner->GetComponent<Model>()->AssignTexture(tex);
+}
+
+void ParticleSystem::DrawUpdate()
+{
+	Component::DrawUpdate();
+	m_ParticlesShader->Use();
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_SSBO);
+}
+
+void ParticleSystem::InitialBuffers()
+{
+	glGenBuffers(1, &m_SSBO);
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_SSBO);
+	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(Particle) * MAX_PARTICLES, m_Particles.data(), GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_SSBO);
+}
+
+void ParticleSystem::Dispatch()
+{
+	m_ParticlesShader->Use();
+	m_ParticlesShader->SetFloat("deltaTime", Time::GetDeltaTime());
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0 , m_SSBO);
+	glDispatchCompute((MAX_PARTICLES + 255) / 256, 1, 1);
+	glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+}

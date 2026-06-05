@@ -35,7 +35,7 @@ private:
 	void Initialize();
 	void SecondPassInitialization();
 public:
-	const char* GLSL_VERSION = "#version 410";
+	const char* GLSL_VERSION = "#version 430";
 	const int32_t GL_VERSION_MAJOR = 4;
 	const int32_t GL_VERSION_MINOR = 1;
 
