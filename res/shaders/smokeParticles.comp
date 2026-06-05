@@ -26,6 +26,10 @@ void main()
 
     Particle p = particles[id];
 
+    p.alive = 0;
+    particles[id] = p;
+    return;
+    
     if(p.alive == 0)
     return;
 

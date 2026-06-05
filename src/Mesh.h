@@ -27,10 +27,11 @@ public:
     void Draw(Shader& shader);
     void RefreshInstanceMatrix(Shader& shader, vector<glm::mat4> newInstance);
     void ScaleTexture(float scale);
+
 private:
     //  render data
     unsigned int m_VAO, m_VBO, m_EBO, m_InstanceVBO;
-
+    
     void SetupMesh();
     void SetupInstanceMatrix(vector<glm::mat4> instanceMatrix);
 };

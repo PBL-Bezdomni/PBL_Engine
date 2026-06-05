@@ -7,6 +7,7 @@ layout (location = 3) in mat4 instanceMatrix;
 out vec2 TexCoord;
 out vec3 Normal;
 out vec3 FragPos;
+out vec3 DebugColor;
 
 uniform mat4 model;
 uniform mat4 view;
@@ -33,11 +34,12 @@ void main()
     Particle p = particles[gl_InstanceID];
 //    Particle p = particles[0];
 
-    if (p.alive == 0)
-    {
-        gl_Position = vec4(-99999.0);
-        return;
-    }
+//    if (p.alive == 0)
+//    {
+//        gl_Position = vec4(-99999.0);
+//        return;
+//    }
+    DebugColor = (p.alive == 0) ? vec3(1, 0, 0) : vec3(0, 1, 0);
     
     vec3 pos = p.position.xyz;
     

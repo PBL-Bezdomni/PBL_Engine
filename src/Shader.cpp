@@ -97,7 +97,7 @@ void Shader::AddComputeShader(const char* computePath)
     CheckCompileErrors(compute, "COMPUTE");
     // shader Program
     glAttachShader(ID, compute);
-    // glLinkProgram(ID);
+    glLinkProgram(ID);
     CheckCompileErrors(ID, "PROGRAM");
     // delete the shaders as they're linked into our program now and no longer necessary
     glDeleteShader(compute);

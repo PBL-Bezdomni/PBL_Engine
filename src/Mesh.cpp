@@ -116,7 +116,7 @@ void Mesh::Draw(Shader& shader)
 
     if (Instancing > 1)
     {
-        glBindBuffer(GL_ARRAY_BUFFER, m_InstanceVBO);
+        // glBindBuffer(GL_ARRAY_BUFFER, m_InstanceVBO);
         glDrawElementsInstanced(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0, Instancing);
     }
     else

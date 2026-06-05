@@ -40,9 +40,6 @@ void ParticleSystem::Awake()
 	m_Owner->GetComponent<Model>()->ReassignShader(*m_ParticlesShader);
 	Texture tex = *am->GetTexture("res/textures/stone.jpg");
 	m_Owner->GetComponent<Model>()->AssignTexture(tex);
-	
-	// Emit(glm::vec4(10, 0, 0, 1), 1);
-	// Emit(glm::vec4(-10, 0, 0, 1), 1);
 }
 
 void ParticleSystem::Update()
@@ -56,16 +53,25 @@ void ParticleSystem::DrawUpdate()
 	Component::DrawUpdate();
 	m_ParticlesShader->Use();
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_SSBO);
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_SSBO);
+
+	Particle* data = (Particle*)glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_WRITE_ONLY);
+
+	data[0].alive = 0;
+	data[1].alive = 0;
+
+	glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 }
 
 void ParticleSystem::Emit(const glm::vec3& position, uint32_t count)
 {
+	// m_ParticlesShader->Use();
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_SSBO);
 
 	Particle* particles = (Particle*)glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(Particle) * MAX_PARTICLES, GL_MAP_WRITE_BIT);
 
 	if (!particles) return;
-
+	
 	for (uint32_t i = 0; i < count; i++)
 	{
 		Particle& p = particles[m_NextParticle];
@@ -101,8 +107,10 @@ void ParticleSystem::InitialBuffers()
 void ParticleSystem::Dispatch()
 {
 	m_ParticlesShader->Use();
-	m_ParticlesShader->SetFloat("deltaTime", Time::GetDeltaTime());
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0 , m_SSBO);
+	m_ParticlesShader->SetFloat("deltaTime", Time::GetDeltaTime());
 	glDispatchCompute((MAX_PARTICLES + 255) / 256, 1, 1);
-	glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+	// glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+	glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT |
+				GL_BUFFER_UPDATE_BARRIER_BIT);
 }
