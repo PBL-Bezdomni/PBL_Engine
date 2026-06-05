@@ -113,6 +113,15 @@ shared_ptr<Model> AssetManager::GetSphereModel()
 	return GetModel(*BasicShader, "res/models/sphere/sphere.obj");
 }
 
+void AssetManager::SetShadersViewProjection(glm::mat4 view, glm::mat4 projection)
+{
+	for (shared_ptr<Shader> shader : m_Shaders)
+	{
+		shader->Use();
+		shader->SetMat4("view", view);
+		shader->SetMat4("projection", projection);
+	}	
+}
 
 string AssetManager::GetPathWithRelativePrefix(const char* cPath)
 {

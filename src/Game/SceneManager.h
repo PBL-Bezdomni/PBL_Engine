@@ -57,6 +57,7 @@ private:
 	static void JoystickCallback(int jid, int event);
 
 	shared_ptr<Camera> MainCamera;
+	glm::mat4 m_TextProjection;
 
 	// Mouse fields
 	float m_MouseLastX; // = WINDOW_WIDTH / 2; 
