@@ -1,9 +1,9 @@
 #pragma once
 #include "Component.h"
 #include <vector>
-#include "ParticleSystem.h"
 #include "glm/glm.hpp"
 
+class ParticleSystem;
 
 class ParticleEmitter : public Component
 {
@@ -14,6 +14,9 @@ public:
 
 	void Play();
 	void Stop();
+	
+	glm::vec3 GetPosition();
+
 private:
 	bool m_IsEmitting = false;
 

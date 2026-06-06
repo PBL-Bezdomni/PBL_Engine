@@ -1,5 +1,5 @@
 #include "ParticleEmitter.h"
-
+#include "ParticleSystem.h"
 #include "Engine/Engine.h"
 #include "Engine/Time.h"
 
@@ -28,7 +28,7 @@ void ParticleEmitter::Update()
 
 		if (m_ParticleSystem != nullptr)
 		{
-			m_ParticleSystem->Emit(m_Owner->transform->GetGlobalPosition(), count);
+			m_ParticleSystem->Emit(*this, count);
 		}
 	}
 }
@@ -45,4 +45,9 @@ void ParticleEmitter::Play()
 void ParticleEmitter::Stop()
 {
 	m_IsEmitting = false;
+}
+
+glm::vec3 ParticleEmitter::GetPosition()
+{
+	return m_Owner->transform->GetGlobalPosition();
 }

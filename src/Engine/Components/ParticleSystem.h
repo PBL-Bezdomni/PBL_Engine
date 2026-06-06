@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include "Component.h"
+#include "ParticleEmitter.h"
 #include "Shader.h"
 
 struct Particle
@@ -22,7 +23,7 @@ public:
 	void Update() override;
 	void DrawUpdate() override;
 	
-	void Emit(const  glm::vec3& position, uint32_t count);
+	void Emit(ParticleEmitter& emitter, uint32_t count);
 private:
 	const uint32_t MAX_PARTICLES = 100;
 

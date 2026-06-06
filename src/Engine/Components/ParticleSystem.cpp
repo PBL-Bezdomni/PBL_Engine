@@ -1,5 +1,6 @@
 #include "ParticleSystem.h"
 
+#include "ParticleEmitter.h"
 #include "Random.h"
 #include "Engine/AssetManager.h"
 #include "Engine/Engine.h"
@@ -63,11 +64,13 @@ void ParticleSystem::DrawUpdate()
 	glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 }
 
-void ParticleSystem::Emit(const glm::vec3& position, uint32_t count)
+void ParticleSystem::Emit(ParticleEmitter& emitter, uint32_t count)
 {
 	// m_ParticlesShader->Use();
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_SSBO);
 
+	glm::vec3 position = emitter.GetPosition();
+	
 	Particle* particles = (Particle*)glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(Particle) * MAX_PARTICLES, GL_MAP_WRITE_BIT);
 
 	if (!particles) return;
