@@ -34,7 +34,7 @@ void ParticleSystem::Awake()
 	// Create Model for shader
 	// not used, but I do it, because I don't know what will happen without it and don't want to test it now
 	vector<glm::mat4> instanceMatrix(MAX_PARTICLES);
-	Model billboard = Model(*m_ParticleGraphicShader, "res/models/PieChartPlane.obj", MAX_PARTICLES, instanceMatrix);
+	Model billboard = Model(*m_ParticleGraphicShader, (Loader::RelativePath() + "res/models/PieChartPlane.obj").c_str(), MAX_PARTICLES, instanceMatrix);
 	m_Owner->AddComponent<Model>(billboard);
 	// Just to be sure
 	m_Owner->GetComponent<Model>()->ReassignShader(*m_ParticleGraphicShader);
