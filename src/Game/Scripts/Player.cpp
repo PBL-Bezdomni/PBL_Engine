@@ -36,7 +36,6 @@ void Player::Awake()
     m_Owner->AddComponent<Model>(bodyModel);
 
     m_ParticleEmitter = m_Owner->AddComponent<ParticleEmitter>();
-    m_ParticleEmitter->Play();
 
     im->subscribe(deviceID, m_InputName.MOVE_FORWARD, [this](float val, InputEventType type, int id) {
         if(id == deviceID)
@@ -80,6 +79,15 @@ void Player::Update()
     RigidBody* rb = m_Owner->GetComponent<RigidBody>();
 
 	glm::vec3 direction = glm::vec3(moveInput.x, 0.0f, moveInput.y);
+
+    if (glm::length(moveInput) > 0.01f)
+    {
+        m_ParticleEmitter->Play();
+    }
+    else
+    {
+        m_ParticleEmitter->Stop();
+    }
 
     if (rb != nullptr)
     {

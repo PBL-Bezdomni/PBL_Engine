@@ -9,7 +9,7 @@ class ParticleEmitter : public Component
 {
 public:
 	glm::vec3 MaxVelocity = glm::vec3(2.f, 0.2f, 2.f);
-	float VelocityMult = 1;
+	float VelocityMult = 4;
 	glm::vec4 Color = glm::vec4(0.9f);
 	glm::vec4 ColorVelocity = glm::vec4(0);
 	bool DecreaseAlpha = true;
@@ -20,6 +20,8 @@ public:
 	float MaxSize = 0.5f;
 	float MinSize = 0.01f;
 	bool IsRandomSize = false;
+
+	int Bulk = 5;
 	
 	void Awake() override;
 	void Start() override;
@@ -36,8 +38,8 @@ public:
 private:
 	bool m_IsEmitting = false;
 
-	float spawnRate = 20.0f; // particles per second
-	float accumulator = 0.0f;
+	float m_SpawnRate = 30.0f; // particles per second
+	float m_Accumulator = 0.0f;
 
 	ParticleSystem* m_ParticleSystem;
 

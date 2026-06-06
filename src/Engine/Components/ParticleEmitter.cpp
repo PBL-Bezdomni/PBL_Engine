@@ -21,14 +21,17 @@ void ParticleEmitter::Update()
 	{
 		float deltaTime = Time::GetDeltaTime();
 
-		accumulator += spawnRate * deltaTime;
-		uint32_t count = static_cast<uint32_t>(accumulator);
+		m_Accumulator += m_SpawnRate * deltaTime;
+		uint32_t count = static_cast<uint32_t>(m_Accumulator);
 
-		accumulator -= count;
-
-		if (m_ParticleSystem != nullptr)
+		if (count >= Bulk)
 		{
-			m_ParticleSystem->Emit(*this, count);
+			m_Accumulator -= count;
+
+			if (m_ParticleSystem != nullptr)
+			{
+				m_ParticleSystem->Emit(*this, count);
+			}
 		}
 	}
 }
