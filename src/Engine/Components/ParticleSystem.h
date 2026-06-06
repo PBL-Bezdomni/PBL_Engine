@@ -1,5 +1,7 @@
 #pragma once
 #include <memory>
+
+#include "Camera.h"
 #include "Component.h"
 #include "ParticleEmitter.h"
 #include "Shader.h"
@@ -33,8 +35,7 @@ private:
 	GLuint m_SSBO;
 	uint32_t m_NextParticle = 0;
 
-	float XVelocity = 0.5f;
-	float YVelocity = 0.2f;
+	Camera* m_MainCamera;
 
 	void InitialBuffers();
 	void Dispatch();

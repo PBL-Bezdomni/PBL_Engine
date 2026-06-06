@@ -9,7 +9,9 @@
 void ParticleSystem::Awake()
 {
 	Component::Awake();
-	AssetManager* am = &Engine::GetInstance().GetAssetManager();
+	Engine* engine = &Engine::GetInstance();
+	AssetManager* am = &engine->GetAssetManager();
+	SceneManager* sm = &engine->GetGameManager().GetSceneManager();
 
 	m_Owner->Name = "ParticleSystem";
 
@@ -39,8 +41,10 @@ void ParticleSystem::Awake()
 	m_Owner->AddComponent<Model>(billboard);
 	// Just to be sure
 	m_Owner->GetComponent<Model>()->ReassignShader(*m_ParticleGraphicShader);
-	Texture tex = *am->GetTexture("res/textures/stone.jpg");
+	Texture tex = *am->GetTexture("res/textures/UI/smoke.png");
 	m_Owner->GetComponent<Model>()->AssignTexture(tex);
+
+	m_MainCamera = sm->GetMainCamera().get();
 }
 
 void ParticleSystem::Update()
@@ -55,13 +59,15 @@ void ParticleSystem::DrawUpdate()
 	m_ParticleGraphicShader->Use();
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_SSBO);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_SSBO);
+	m_ParticleGraphicShader->SetVec3("cameraRight", m_MainCamera->GetRight());
+	m_ParticleGraphicShader->SetVec3("cameraUp", m_MainCamera->GetUp());
 
-	Particle* data = (Particle*)glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_WRITE_ONLY);
-
-	data[0].alive = 0;
-	data[1].alive = 0;
-
-	glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+	// Particle* data = (Particle*)glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_WRITE_ONLY);
+	//
+	// data[0].alive = 0;
+	// data[1].alive = 0;
+	//
+	// glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 }
 
 void ParticleSystem::Emit(ParticleEmitter& emitter, uint32_t count)
@@ -80,16 +86,19 @@ void ParticleSystem::Emit(ParticleEmitter& emitter, uint32_t count)
 		Particle& p = particles[m_NextParticle];
 		p.position = glm::vec4(position, 1.0f);
 
+		glm::vec3 vel = emitter.MaxVelocity;
+		vel *= emitter.VelocityMult;
 		p.velocity = glm::vec4(
-			Random::GetRandomFloat(-XVelocity, XVelocity),
-			Random::GetRandomFloat(-YVelocity, YVelocity),
-			Random::GetRandomFloat(-XVelocity, XVelocity),
+			Random::GetRandomFloat(-vel.x, vel.x),
+			Random::GetRandomFloat(-vel.y, vel.y),
+			Random::GetRandomFloat(-vel.z, vel.z),
 			0.0f
 		);
 
-		p.life = 2.0f;
-		p.maxLife = 2.0f;
-		p.size = 25.f;
+		p.color = emitter.Color;
+		p.life = emitter.MaxLife;
+		p.maxLife = emitter.MaxLife;
+		p.size = emitter.MaxSize;
 		p.alive = 1;
 
 		m_NextParticle = (m_NextParticle + 1) % MAX_PARTICLES;

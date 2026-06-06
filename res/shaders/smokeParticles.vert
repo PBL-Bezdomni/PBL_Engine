@@ -7,11 +7,14 @@ layout (location = 3) in mat4 instanceMatrix;
 out vec2 TexCoord;
 out vec3 Normal;
 out vec3 FragPos;
-out vec3 DebugColor;
+out vec4 Color;
 
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
+
+uniform vec3 cameraRight;
+uniform vec3 cameraUp;
 
 struct Particle
 {
@@ -34,17 +37,18 @@ void main()
     Particle p = particles[gl_InstanceID];
 //    Particle p = particles[0];
 
-//    if (p.alive == 0)
-//    {
-//        gl_Position = vec4(-99999.0);
-//        return;
-//    }
-    DebugColor = (p.alive == 0) ? vec3(1, 0, 0) : vec3(0, 1, 0);
+    Color = p.color;
+    if (p.alive == 0)
+    {
+        gl_Position = vec4(-99999.0);
+        return;
+    }
     
     vec3 pos = p.position.xyz;
     
 //    vec3 worldPos = aPos + vec3(gl_InstanceID, 0.0f, 0.0f);
-    vec3 worldPos = aPos + pos;
+//    vec3 worldPos = pos + aPos;
+    vec3 worldPos = pos + (cameraRight * aPos.x * p.size) + (cameraUp * aPos.z * p.size);
 
     gl_Position = projection * view * vec4(worldPos, 1.0f);
     TexCoord = aTexCoord;

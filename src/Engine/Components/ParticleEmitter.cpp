@@ -49,5 +49,15 @@ void ParticleEmitter::Stop()
 
 glm::vec3 ParticleEmitter::GetPosition()
 {
-	return m_Owner->transform->GetGlobalPosition();
+	return m_Owner->transform->GetGlobalPosition() + m_PositionOffset;
+}
+
+glm::vec3 ParticleEmitter::GetPositionOffset()
+{
+	return m_PositionOffset;
+}
+
+void ParticleEmitter::SetPositionOffset(glm::vec3 offset)
+{
+	m_PositionOffset = offset;
 }
