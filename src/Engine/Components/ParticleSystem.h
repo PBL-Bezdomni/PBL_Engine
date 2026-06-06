@@ -27,7 +27,8 @@ private:
 	const uint32_t MAX_PARTICLES = 100;
 
 	std::vector<Particle> m_Particles;
-	std::shared_ptr<Shader> m_ParticlesShader;
+	std::shared_ptr<Shader> m_ParticleGraphicShader;
+	std::shared_ptr<Shader> m_ParticleComputeShader;
 	GLuint m_SSBO;
 	uint32_t m_NextParticle = 0;
 

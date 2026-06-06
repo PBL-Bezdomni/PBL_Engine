@@ -39,14 +39,15 @@ shared_ptr<Shader> AssetManager::GetShader(const char* vertexPath, const char* f
 	return m_Shaders.back();	
 }
 
-void AssetManager::AddComputeShader(shared_ptr<Shader> shader, const char* computePath)
+shared_ptr<Shader> AssetManager::GetComputeShader(const char* computePath)
 {
 	// Check if string starts with relative path.
 	// Just to make sure, in case something that passes path with relative path is still somewhere in code, this wil]l still work.
 	string cPath = GetPathWithRelativePrefix(computePath);
 	string relativePath = Loader::RelativePath();
 
-	shader->AddComputeShader(cPath.c_str());
+	m_Shaders.push_back(make_shared<Shader>(cPath.c_str()));
+	return m_Shaders.back();
 }
 
 shared_ptr<Model> AssetManager::GetModel(Shader& shader, const char* path, unsigned int instancing, vector<glm::mat4> instanceMatrix)

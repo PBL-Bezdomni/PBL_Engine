@@ -25,10 +25,6 @@ void main()
     uint id = gl_GlobalInvocationID.x;
 
     Particle p = particles[id];
-
-    p.alive = 0;
-    particles[id] = p;
-    return;
     
     if(p.alive == 0)
     return;

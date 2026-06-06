@@ -12,8 +12,8 @@ void ParticleSystem::Awake()
 
 	m_Owner->Name = "ParticleSystem";
 
-	m_ParticlesShader = am->GetShader("res/shaders/smokeParticles.vert", "res/shaders/smokeParticles.frag");
-	am->AddComputeShader(m_ParticlesShader, "res/shaders/smokeParticles.comp");
+	m_ParticleGraphicShader = am->GetShader("res/shaders/smokeParticles.vert", "res/shaders/smokeParticles.frag");
+	m_ParticleComputeShader = am->GetComputeShader("res/shaders/smokeParticles.comp");
 
 	m_Particles.resize(MAX_PARTICLES);
 
@@ -34,10 +34,10 @@ void ParticleSystem::Awake()
 	// Create Model for shader
 	// not used, but I do it, because I don't know what will happen without it and don't want to test it now
 	vector<glm::mat4> instanceMatrix(MAX_PARTICLES);
-	Model billboard = Model(*m_ParticlesShader, "res/models/PieChartPlane.obj", MAX_PARTICLES, instanceMatrix);
+	Model billboard = Model(*m_ParticleGraphicShader, "res/models/PieChartPlane.obj", MAX_PARTICLES, instanceMatrix);
 	m_Owner->AddComponent<Model>(billboard);
 	// Just to be sure
-	m_Owner->GetComponent<Model>()->ReassignShader(*m_ParticlesShader);
+	m_Owner->GetComponent<Model>()->ReassignShader(*m_ParticleGraphicShader);
 	Texture tex = *am->GetTexture("res/textures/stone.jpg");
 	m_Owner->GetComponent<Model>()->AssignTexture(tex);
 }
@@ -51,7 +51,7 @@ void ParticleSystem::Update()
 void ParticleSystem::DrawUpdate()
 {
 	Component::DrawUpdate();
-	m_ParticlesShader->Use();
+	m_ParticleGraphicShader->Use();
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_SSBO);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_SSBO);
 
@@ -106,9 +106,9 @@ void ParticleSystem::InitialBuffers()
 
 void ParticleSystem::Dispatch()
 {
-	m_ParticlesShader->Use();
+	m_ParticleComputeShader->Use();
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0 , m_SSBO);
-	m_ParticlesShader->SetFloat("deltaTime", Time::GetDeltaTime());
+	m_ParticleComputeShader->SetFloat("deltaTime", Time::GetDeltaTime());
 	glDispatchCompute((MAX_PARTICLES + 255) / 256, 1, 1);
 	// glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
 	glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT |

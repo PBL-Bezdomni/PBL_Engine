@@ -64,7 +64,7 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath)
     glDeleteShader(fragment);
 }
 
-void Shader::AddComputeShader(const char* computePath)
+Shader::Shader(const char* computePath)
 {
     // 1. retrieve the vertex/fragment source code from filePath
     std::string computeCode;
@@ -96,6 +96,7 @@ void Shader::AddComputeShader(const char* computePath)
     glCompileShader(compute);
     CheckCompileErrors(compute, "COMPUTE");
     // shader Program
+    ID = glCreateProgram();
     glAttachShader(ID, compute);
     glLinkProgram(ID);
     CheckCompileErrors(ID, "PROGRAM");
