@@ -108,6 +108,8 @@ void Animal::Update()
     Behaviour::Update();
 	m_CurrTime = m_SceneMgr->GetTimeLeft();
 
+    if (m_IsCarried) return;
+
     if (!m_IsInitialized)
     {
 		m_LastPosition = m_Owner->transform->GetGlobalPosition();
@@ -164,7 +166,7 @@ void Animal::Update()
     }
     else
     {
-    	m_ProgressBar->SetActive(false);[]
+    	m_ProgressBar->SetActive(false);
     }
 
     if (m_IsSeated) return;
@@ -449,6 +451,9 @@ void Animal::ResetEverythingSpawn(glm::vec3 spawnPosition)
 
 	m_IsSeated = false;
 	m_IsFulfillingNeed = false;
+
+    m_IsCarried = false;
+    m_CurrentOnsen = nullptr;
 
 	m_WaitTime = 1.5f;
 	m_CurrentWaitTime = 0.0f;

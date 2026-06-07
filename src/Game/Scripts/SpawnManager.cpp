@@ -10,6 +10,7 @@
 #include "Game/SceneManager.h"
 #include "Engine/Components/RigidBody.h"
 #include "Game/Scripts/Animal.h"
+#include "Game/Scripts/AOnsenObject.h"
 
 SpawnManager* SpawnManager::Instance = nullptr;
 
@@ -121,6 +122,11 @@ void SpawnManager::DespawnAnimal(GameObject* animal)
 				{
 					anScript->m_IsMoving = false;
 					anScript->m_IsInitialized = false;
+
+					if (anScript->m_CurrentOnsen != nullptr)
+					{
+						anScript->m_CurrentOnsen->RemoveAnimal(anScript);
+					}
 				}
 				RigidBody* rb = spawnedAnimal->GetComponent<RigidBody>();
 				if (rb != nullptr)

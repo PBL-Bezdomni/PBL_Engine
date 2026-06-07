@@ -29,4 +29,7 @@ public:
 
 	void OnTriggerEnter(GameObject* other) override;
 	void OnTriggerExit(GameObject* other) override;
+
+	void RemoveAnimal(Animal* animal);
+	Animal* GetAnimalForPlayer(glm::vec3 rayStart, glm::vec3 rayDir);
 };

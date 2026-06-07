@@ -8,6 +8,7 @@
 #include "Engine/Components/RigidBody.h"
 #include "Engine/Time.h"
 #include "Engine/Components/ParticleEmitter.h"
+#include "Game/Scripts/AOnsenObject.h"
 
 Player::Player(int deviceid)
 {
@@ -167,12 +168,26 @@ void Player::HandleActionPressed()
             //spdlog::info("Check: {} {} {}", hitObject->transform->Position.x, hitObject->transform->Position.y, hitObject->transform->Position.z);
 
             Animal* animalScript = hitObject->GetDerivedComponent<Animal>();
+
+            if (animalScript == nullptr)
+            {
+                AOnsenObject* onsenObject = hitObject->GetDerivedComponent<AOnsenObject>();
+                if (onsenObject != nullptr)
+                {
+                    //glm::vec3 sightOrigin = playerPos + glm::vec3(0.0f, 1.5f, 0.0f);
+                    animalScript = onsenObject->GetAnimalForPlayer(playerPos, playerForward);
+                    if (animalScript != nullptr)
+                    {
+                        hitObject = animalScript->GetGameObject();
+                    }
+                }
+            }
             if (animalScript != nullptr)
             {
 
                 m_CarriedAnimal = hitObject;
-
-                animalScript->m_IsSeated = true;
+                animalScript->m_IsSeated = false;
+                animalScript->m_IsCarried = true;
             }
         }
     }
@@ -208,8 +223,14 @@ void Player::HandleThrowReleased()
         if (animalScript != nullptr)
         {
             animalScript->m_IsSeated = false;
+            animalScript->m_IsCarried = false;
             animalScript->m_IsMoving = false;
 			animalScript->m_WasDroppedByPlayer = true;
+
+            animalScript->m_WaitTime = 2.0f;
+            animalScript->m_CurrentWaitTime = 0.0f;
+            animalScript->m_StuckTimer = 0.0f;
+            
         }
 
         m_CarriedAnimal = nullptr;

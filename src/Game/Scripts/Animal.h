@@ -9,6 +9,7 @@
 #include "AnimalInteractions.h"
 
 class GameObject;
+class AOnsenObject;
 
 enum class AnimalNeeds
 {
@@ -54,10 +55,6 @@ private:
 	glm::vec3 m_TargetPosition;
     glm::vec3 m_LastPosition;
 
-	float m_WaitTime = 0.0f;
-	float m_CurrentWaitTime = 0.0f;
-	float m_StuckTimer = 0.0f;
-
 	void PickNewTargetPosition();
 
     std::shared_ptr<Shader> m_PieShader;
@@ -71,12 +68,17 @@ private:
     std::shared_ptr<GameObject> m_Checkmark;
 
 public:
+    AOnsenObject* m_CurrentOnsen = nullptr;
     std::vector<AnimalNeeds> m_RequiredServices;
     bool m_IsInitialized = false;
     bool m_WasDroppedByPlayer = false;
     bool m_IsSeated = false;
     bool m_IsMoving = false;
+    bool m_IsCarried = false;
 	int Earned_money = 0;
+    float m_WaitTime = 0.0f;
+    float m_CurrentWaitTime = 0.0f;
+    float m_StuckTimer = 0.0f;
     void ResetEverythingSpawn(glm::vec3 spawnPosition);
 
 	void Awake() override;
@@ -104,6 +106,6 @@ public:
     void FulfillNeed(AnimalNeeds need);
 
 	GameObject* GetGameObject() { return m_Owner; }
-
+    
 	const char* GetScriptName() const override { return "Animal"; }
 };
