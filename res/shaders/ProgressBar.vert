@@ -9,8 +9,15 @@ uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
+uniform vec3 cameraRight;
+uniform vec3 cameraUp;
+uniform float u_width;
+uniform float u_height;
+
 void main()
 {
     TexCoords = aTexCoords;
-    gl_Position = projection * view * model * vec4(aPos, 1.0);
+    vec3 center = vec3(model * vec4(0.0, 0.0, 0.0, 1.0));
+    vec3 worldPos = center + (cameraRight * aPos.x * u_width) + (cameraUp * aPos.z * u_height);
+    gl_Position = projection * view * vec4(worldPos, 1.0);
 }

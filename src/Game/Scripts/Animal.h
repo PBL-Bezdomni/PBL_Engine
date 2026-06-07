@@ -4,7 +4,6 @@
 #include <vector>
 #include "Shader.h"
 #include <memory>
-
 #include "Engine/AssetManager.h"
 #include "Game/SceneManager.h"
 #include "AnimalInteractions.h"
@@ -25,6 +24,7 @@ private:
 	AssetManager*       m_AssetMgr;
 	SceneManager*       m_SceneMgr;
 	AnimalInteractions m_AnimalInteractions;
+	Camera* m_MainCamera;
 
 	float m_TimeLimit;
 	float m_CurrTime;

@@ -18,6 +18,7 @@ void Animal::Awake()
     m_SceneMgr = &Engine::GetInstance().GetGameManager().GetSceneManager();
 	m_TimeLimit = m_SceneMgr->GetTimeLimit();
 	m_CurrTime = m_SceneMgr->GetTimeLeft();
+	m_MainCamera = m_SceneMgr->GetMainCamera().get();
 
 	m_Indicator = m_SceneMgr->Instantiate(m_Owner, "res/models/PieChartPlane.obj", m_AssetMgr->PieChartShader);
 	m_Indicator->Name = "NeedsIndicator";
@@ -29,7 +30,7 @@ void Animal::Awake()
     m_ProgressBar->Name = "ProgressBar";
     m_ProgressBar->transform->Position = glm::vec3(0.f, 5.0f, 0.f);
     m_ProgressBar->transform->EulerAngles = glm::vec3(90.0f, 0.0f, 0.0f);
-    m_ProgressBar->transform->Scale = glm::vec3(0.0f);
+	m_ProgressBar->SetActive(false);
     SetProgressBarShader(m_AssetMgr->ProgressBarShader);
 
     DrawRandomNeeds();
@@ -121,7 +122,8 @@ void Animal::Update()
     {
         m_CurrentNeedProgress += m_SatisfactionSpeed * Time::GetDeltaTime();
 
-        m_ProgressBar->transform->Scale = glm::vec3(1.5f, 1.0f, 0.3f);
+        // m_ProgressBar->transform->Scale = glm::vec3(1.5f, 1.0f, 0.3f);
+    	m_ProgressBar->SetActive(true);
 
         UpdateProgressBar();
 
@@ -134,6 +136,10 @@ void Animal::Update()
         }
 
         return;
+    }
+    else
+    {
+    	m_ProgressBar->SetActive(false);
     }
 
     if (m_IsSeated) return;
@@ -378,6 +384,10 @@ void Animal::UpdateProgressBar()
     {
         m_ProgressBarShader->Use();
         m_ProgressBarShader->SetFloat("u_Progress", m_CurrentNeedProgress);
+        m_ProgressBarShader->SetVec3("cameraRight", m_MainCamera->GetRight());
+        m_ProgressBarShader->SetVec3("cameraUp", m_MainCamera->GetUp());
+    	m_ProgressBarShader->SetFloat("u_width", 1.0f);
+    	m_ProgressBarShader->SetFloat("u_height", 0.15f);
     }
 }
 
