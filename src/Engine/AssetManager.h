@@ -27,6 +27,7 @@ public:
 	shared_ptr<Shader> SimpleDepthShader;
 	shared_ptr<Shader> PieChartShader;
 	shared_ptr<Shader> ProgressBarShader;
+	shared_ptr<Shader> CheckmarkShader;
 	
 	AssetManager() = default;
 	~AssetManager();

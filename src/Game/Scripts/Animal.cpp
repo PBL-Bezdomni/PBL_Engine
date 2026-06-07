@@ -19,11 +19,13 @@ void Animal::Awake()
 	m_TimeLimit = m_SceneMgr->GetTimeLimit();
 	m_CurrTime = m_SceneMgr->GetTimeLeft();
 
+
 	m_Indicator = m_SceneMgr->Instantiate(m_Owner, "res/models/PieChartPlane.obj", m_AssetMgr->PieChartShader);
 	m_Indicator->Name = "NeedsIndicator";
 	m_Indicator->transform->Position = glm::vec3(0.f, -0.8f, 0.f);
 	m_Indicator->transform->Scale = glm::vec3(2.0f, 2.0f, 2.0f);	
     SetIndicatorShader(m_AssetMgr->PieChartShader);
+
 
     m_ProgressBar = m_SceneMgr->Instantiate(m_Owner, "res/models/ProgressBarPlane.obj", m_AssetMgr->ProgressBarShader);
     m_ProgressBar->Name = "ProgressBar";
@@ -31,6 +33,19 @@ void Animal::Awake()
     m_ProgressBar->transform->EulerAngles = glm::vec3(90.0f, 0.0f, 0.0f);
     m_ProgressBar->transform->Scale = glm::vec3(0.0f);
     SetProgressBarShader(m_AssetMgr->ProgressBarShader);
+
+
+    m_Checkmark = m_SceneMgr->Instantiate(m_Owner, "res/models/CheckmarkPlane.obj", m_AssetMgr->CheckmarkShader);
+    m_Checkmark->Name = "Checkmark";
+    m_Checkmark->transform->Position = glm::vec3(0.f, 4.0f, 0.f);
+    m_Checkmark->transform->EulerAngles = glm::vec3(90.0f, 0.0f, 0.0f);
+    m_Checkmark->transform->Scale = glm::vec3(0.0f, 0.0f, 0.0f);
+    Model* checkmarkModel = m_Checkmark->GetComponent<Model>();
+    if (checkmarkModel != nullptr)
+    {
+        checkmarkModel->AssignTexture(*m_AssetMgr->GetTexture("res/textures/UI/checkmark.png"));
+    }
+    SetCheckmarkShader(m_AssetMgr->CheckmarkShader);
 
     DrawRandomNeeds();
 }
@@ -296,6 +311,11 @@ void Animal::SetProgressBarShader(std::shared_ptr<Shader> barShader)
     m_ProgressBarShader = barShader;
 }
 
+void Animal::SetCheckmarkShader(std::shared_ptr<Shader> checkmarkShader)
+{
+    m_CheckmarkShader = checkmarkShader;
+}
+
 void Animal::UpdateIndicatorColors()
 {
     if (m_PieShader == nullptr) return;
@@ -331,7 +351,7 @@ void Animal::FulfillNeed(AnimalNeeds need) {
 
         if (m_RequiredServices.empty())
         {
-            spdlog::info("Zwierzak zaspokoil wszystkie potrzeby");
+            m_Checkmark->transform->Scale = glm::vec3(2.0f, 1.0f, 2.0f);
 
             if (m_Indicator != nullptr)
             {

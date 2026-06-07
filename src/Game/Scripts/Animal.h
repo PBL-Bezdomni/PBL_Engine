@@ -67,6 +67,9 @@ private:
     std::shared_ptr<GameObject> m_ProgressBar;
     void UpdateProgressBar();
 
+    std::shared_ptr<Shader> m_CheckmarkShader;
+    std::shared_ptr<GameObject> m_Checkmark;
+
 public:
     std::vector<AnimalNeeds> m_RequiredServices;
     bool m_IsInitialized = false;
@@ -89,6 +92,7 @@ public:
 
     void SetProgressBarShader(std::shared_ptr<Shader> barShader);
     void SetIndicatorShader(std::shared_ptr<Shader> pieShader);
+    void SetCheckmarkShader(std::shared_ptr<Shader> checkmarkShader);
     void UpdateIndicatorColors();
     void SetIndicatorObject(std::shared_ptr<GameObject> indicator) { m_Indicator = indicator; }
     std::shared_ptr<GameObject> GetIndicatorObject() { return m_Indicator; }
