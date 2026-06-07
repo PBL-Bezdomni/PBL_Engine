@@ -74,6 +74,7 @@ private:
 
     std::shared_ptr<Shader> m_CheckmarkShader;
     std::shared_ptr<GameObject> m_Checkmark;
+    void UpdateCheckmark();
 
     AnimalState m_CurrentState = AnimalState::None;
     float m_StateTimer = 0.0f;

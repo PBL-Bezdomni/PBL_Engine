@@ -37,7 +37,7 @@ void Animal::Awake()
     SetProgressBarShader(m_AssetMgr->ProgressBarShader);
 
 
-    m_Checkmark = m_SceneMgr->Instantiate(m_Owner, "res/models/CheckmarkPlane.obj", m_AssetMgr->CheckmarkShader);
+    m_Checkmark = m_SceneMgr->Instantiate(m_Owner, "res/models/CheckmarkPlane.obj", m_AssetMgr->WorldUIShader);
     m_Checkmark->Name = "Checkmark";
     m_Checkmark->transform->Position = glm::vec3(0.f, 4.0f, 0.f);
     m_Checkmark->transform->EulerAngles = glm::vec3(90.0f, 0.0f, 0.0f);
@@ -48,7 +48,7 @@ void Animal::Awake()
         checkmarkModel->AssignTexture(*m_AssetMgr->GetTexture("res/textures/UI/checkmark.png"));
     }
     m_Checkmark->SetActive(false);
-    SetCheckmarkShader(m_AssetMgr->CheckmarkShader);
+    SetCheckmarkShader(m_AssetMgr->WorldUIShader);
 
     DrawRandomNeeds();
 
@@ -371,6 +371,7 @@ void Animal::FulfillNeed(AnimalNeeds need) {
 
         if (m_RequiredServices.empty())
         {
+            UpdateCheckmark();
             m_Checkmark->SetActive(true);
 
             if (m_Indicator != nullptr)
@@ -432,6 +433,14 @@ void Animal::UpdateProgressBar()
     	m_ProgressBarShader->SetFloat("u_width", 1.0f);
     	m_ProgressBarShader->SetFloat("u_height", 0.15f);
     }
+}
+
+void Animal::UpdateCheckmark() {
+    m_CheckmarkShader->Use();
+    m_CheckmarkShader->SetVec3("cameraRight", m_MainCamera->GetRight());
+    m_CheckmarkShader->SetVec3("cameraUp", -m_MainCamera->GetUp());
+    m_CheckmarkShader->SetFloat("u_width", 1.0f);
+    m_CheckmarkShader->SetFloat("u_height", 1.0f);
 }
 
 void Animal::ResetEverythingSpawn(glm::vec3 spawnPosition)
