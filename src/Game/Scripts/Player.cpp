@@ -187,7 +187,6 @@ void Player::HandleActionPressed()
             {
 
                 m_CarriedAnimal = hitObject;
-                animalScript->m_IsSeated = false;
                 animalScript->ChangeState(AnimalState::PickedUp);
             }
         }
@@ -224,7 +223,6 @@ void Player::HandleThrowReleased()
 
         if (animalScript != nullptr)
         {
-            animalScript->m_IsSeated = false;
 			animalScript->m_WasDroppedByPlayer = true;
 
             animalScript->m_WaitTime = 2.0f;

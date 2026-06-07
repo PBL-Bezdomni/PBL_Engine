@@ -88,7 +88,6 @@ void Animal::ForceNewTargetPosition()
 	m_StuckTimer = 0.0f;
 	m_CurrentWaitTime = 0.0f;
 	m_JumpTimer = 0.0f;
-	m_IsSeated = false;
 	m_ShouldTeleport = false;
 
 	PickNewTargetPosition();
@@ -162,7 +161,7 @@ void Animal::UpdateIdle() {
     glm::vec3 currentPos = m_Owner->transform->GetGlobalPosition();
 
     float distanceMoved = glm::length(currentPos - m_LastPosition);
-    if (distanceMoved < 0.1f * Time::GetDeltaTime() * m_MoveSpeed)
+    if (distanceMoved < 0.01f)
     {
         m_StuckTimer += Time::GetDeltaTime();
     }
@@ -175,6 +174,7 @@ void Animal::UpdateIdle() {
     if (m_StuckTimer > 1.0f)
     {
         rb->SetLinearVelocity(glm::vec3(0.0f, rb->GetLinearVelocity().y, 0.0f));
+        PickNewTargetPosition();
         m_WaitTime = 1.0f;
         m_CurrentWaitTime = 0.0f;
         m_StuckTimer = 0.0f;
@@ -210,7 +210,7 @@ void Animal::UpdateIdle() {
         if (obstacle != nullptr)
         {
             rb->SetLinearVelocity(glm::vec3(0.0f, rb->GetLinearVelocity().y, 0.0f));
-
+            PickNewTargetPosition();
             m_WaitTime = Random::GetRandomFloat(1.0f, 3.0f);
             m_CurrentWaitTime = 0.0f;
             m_StuckTimer = 0.0f;
@@ -261,10 +261,17 @@ void Animal::UpdateIdle() {
     {
         rb->SetLinearVelocity(glm::vec3(0.0f, rb->GetLinearVelocity().y, 0.0f));
 
-        m_WaitTime = Random::GetRandomFloat(1.0f, 3.0f);
-        m_CurrentWaitTime = 0.0f;
-        m_StuckTimer = 0.0f;
-        m_JumpTimer = 0.0f;
+        m_CurrentWaitTime += Time::GetDeltaTime();
+
+        if (m_CurrentWaitTime >= m_WaitTime)
+        {
+            PickNewTargetPosition();
+
+            m_WaitTime = Random::GetRandomFloat(1.0f, 3.0f);
+            m_CurrentWaitTime = 0.0f;
+            m_StuckTimer = 0.0f;
+            m_JumpTimer = 0.0f;
+        }
     }
 }
 
@@ -378,7 +385,6 @@ void Animal::EnterPosition(glm::vec3 exactWorldPosition)
 {
     m_TeleportTarget = exactWorldPosition;
     m_ShouldTeleport = true;
-    m_IsSeated = true;
 }
 
 void Animal::DrawRandomNeeds()
@@ -452,8 +458,6 @@ void Animal::ResetEverythingSpawn(glm::vec3 spawnPosition)
     m_TargetPosition = spawnPosition + glm::vec3(radius * cos(angle), 0.0f, radius * sin(angle));
 
     m_IsInitialized = true;
-
-    m_IsSeated = false;
 
     m_WaitTime = 1.5f;
     m_CurrentWaitTime = 0.0f;

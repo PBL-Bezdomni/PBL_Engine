@@ -45,7 +45,6 @@ private:
     int m_numberOfNeeds = 1;
 
     float m_SatisfactionSpeed = 0.1f;
-    bool m_IsSeatedInObject = false;
     AnimalNeeds m_CurrentNeedBeingFulfilled;
     float m_CurrentNeedProgress = 0.0f;
 
@@ -84,7 +83,6 @@ public:
     std::vector<AnimalNeeds> m_RequiredServices;
     bool m_IsInitialized = false;
     bool m_WasDroppedByPlayer = false;
-    bool m_IsSeated = false;
 	int Earned_money = 0;
     float m_WaitTime = 0.0f;
     float m_CurrentWaitTime = 0.0f;

@@ -16,6 +16,8 @@ PhysicsContactListener::Pair PhysicsContactListener::MakePair(JPH::BodyID a, JPH
 
 void PhysicsContactListener::OnContactAdded(const JPH::Body& inBody1, const JPH::Body& inBody2, const JPH::ContactManifold& inManifold, JPH::ContactSettings& ioSettings)
 {
+    std::lock_guard<std::mutex> lock(m_Mutex);
+
     Pair pair = MakePair(inBody1.GetID(), inBody2.GetID());
     if (++m_ContactCounts[pair] == 1)
     {
@@ -63,6 +65,8 @@ void PhysicsContactListener::OnContactPersisted(const JPH::Body& inBody1, const 
 
 void PhysicsContactListener::OnContactRemoved(const JPH::SubShapeIDPair& inSubShapePair)
 {
+    std::lock_guard<std::mutex> lock(m_Mutex);
+
     Pair pair = MakePair(inSubShapePair.GetBody1ID(), inSubShapePair.GetBody2ID());
 
     auto countIt = m_ContactCounts.find(pair);

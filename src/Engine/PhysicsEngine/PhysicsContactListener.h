@@ -51,6 +51,7 @@ private:
 
     // Makes pair, making sure that lower id is always first
     Pair MakePair(JPH::BodyID a, JPH::BodyID b);
+    std::mutex m_Mutex;
 public:
     virtual void OnContactAdded(const JPH::Body& inBody1, const JPH::Body& inBody2, const JPH::ContactManifold& inManifold, JPH::ContactSettings& ioSettings) override;
 
