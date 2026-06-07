@@ -14,9 +14,14 @@ private:
 
     ParticleEmitter* m_ParticleEmitter;
 
+    void BindInput();
+    
     void HandleActionPressed();
     void HandleThrowPressed();
     void HandleThrowReleased();
+
+    shared_ptr<GameObject> m_ChargeMeter;
+    shared_ptr<Shader> m_ChargeMeterShader;
 public:
     glm::vec2 moveInput{ 0.0f };
     float speed = 10.0f;
@@ -25,6 +30,7 @@ public:
     Player(int deviceid);
     void Awake() override;
     void Update() override;
+    void DrawUpdate() override;
 
     GameObject* m_CarriedAnimal = nullptr;
 

@@ -23,7 +23,7 @@ void Player::Awake()
     
     Engine& engine = Engine::GetInstance();
     AssetManager* am = &engine.GetAssetManager();
-    InputManager* im = &engine.GetGameManager().GetInputManager();
+    SceneManager* sm = &engine.GetGameManager().GetSceneManager();
     string path = "res/models/players/";
     if (deviceID == 0)
     {
@@ -38,37 +38,17 @@ void Player::Awake()
 
     m_ParticleEmitter = m_Owner->AddComponent<ParticleEmitter>();
 
-    im->subscribe(deviceID, m_InputName.MOVE_FORWARD, [this](float val, InputEventType type, int id) {
-        if(id == deviceID)
-            this->moveInput.y = val;
-        });
+    m_ChargeMeterShader = am->GetShader("res/shaders/powerMeter.vert", "res/shaders/ProgressBar.frag");
+    m_ChargeMeter = sm->Instantiate(m_Owner, "res/models/CheckmarkPlane.obj", m_ChargeMeterShader);
+    m_ChargeMeter->GetComponent<Model>()->ReassignShader(*m_ChargeMeterShader);
+    // Maybe custom texture for meter
+    // m_ChargeMeter->GetComponent<Model>()->AssignTexture();
+    m_ChargeMeter->transform->Position = glm::vec3(0.f, -0.7f, 4.f);
+    m_ChargeMeter->transform->EulerAngles = glm::vec3(0.f, -90.f, 0.f);
+    m_ChargeMeter->transform->Scale = glm::vec3(2.6f, 1.0f, 0.5f);
+    m_ChargeMeter->SetActive(false);
 
-    im->subscribe(deviceID, m_InputName.MOVE_STRAFE, [this](float val, InputEventType type, int id) {
-        if (id == deviceID)
-            this->moveInput.x = val;
-        });
-
-    im->subscribe(deviceID, m_InputName.ACTION, [this](float val, InputEventType type, int id)
-    {
-        if (id == deviceID && type == InputEventType::Started)
-            this->HandleActionPressed();
-    });
-
-    im->subscribe(deviceID, m_InputName.THROW, [this](float val, InputEventType type, int id)
-    {
-        if (id == deviceID && type == InputEventType::Started)
-        {
-            this->HandleThrowPressed();
-        }
-    });
-
-    im->subscribe(deviceID, m_InputName.THROW, [this](float val, InputEventType type, int id)
-    {
-        if (id == deviceID && type == InputEventType::Ended)
-        {
-            this->HandleThrowReleased();
-        }
-    });
+    BindInput();
 }
 
 
@@ -146,6 +126,55 @@ void Player::Update()
     }
 }
 
+void Player::DrawUpdate()
+{
+    Behaviour::DrawUpdate();
+    if (m_IsChargingThrow)
+    {
+        float chargePercentage = m_ThrowCharge / m_MaxThrowForce;
+        spdlog::info("Charge power" + std::to_string(chargePercentage));
+        m_ChargeMeterShader->Use();
+        m_ChargeMeterShader->SetFloat("u_Progress", m_ThrowCharge / m_MaxThrowForce);
+    }
+}
+
+void Player::BindInput()
+{
+    InputManager* im = &Engine::GetInstance().GetGameManager().GetInputManager();
+    
+    im->subscribe(deviceID, m_InputName.MOVE_FORWARD, [this](float val, InputEventType type, int id) {
+        if(id == deviceID)
+            this->moveInput.y = val;
+        });
+
+    im->subscribe(deviceID, m_InputName.MOVE_STRAFE, [this](float val, InputEventType type, int id) {
+        if (id == deviceID)
+            this->moveInput.x = val;
+        });
+
+    im->subscribe(deviceID, m_InputName.ACTION, [this](float val, InputEventType type, int id)
+    {
+        if (id == deviceID && type == InputEventType::Started)
+            this->HandleActionPressed();
+    });
+
+    im->subscribe(deviceID, m_InputName.THROW, [this](float val, InputEventType type, int id)
+    {
+        if (id == deviceID && type == InputEventType::Started)
+        {
+            this->HandleThrowPressed();
+        }
+    });
+
+    im->subscribe(deviceID, m_InputName.THROW, [this](float val, InputEventType type, int id)
+    {
+        if (id == deviceID && type == InputEventType::Ended)
+        {
+            this->HandleThrowReleased();
+        }
+    });
+}
+
 void Player::HandleActionPressed()
 {
     if (m_CarriedAnimal == nullptr)
@@ -198,6 +227,7 @@ void Player::HandleThrowPressed()
     if (m_CarriedAnimal != nullptr)
     {
         m_IsChargingThrow = true;
+        m_ChargeMeter->SetActive(true);
     }
 }
 
@@ -233,6 +263,7 @@ void Player::HandleThrowReleased()
 
         m_CarriedAnimal = nullptr;
         m_IsChargingThrow = false;
+        m_ChargeMeter->SetActive(false);
         m_ThrowCharge = m_MinThrowForce;
     }
 }
