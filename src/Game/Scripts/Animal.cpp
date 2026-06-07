@@ -20,11 +20,13 @@ void Animal::Awake()
 	m_CurrTime = m_SceneMgr->GetTimeLeft();
 	m_MainCamera = m_SceneMgr->GetMainCamera().get();
 
+
 	m_Indicator = m_SceneMgr->Instantiate(m_Owner, "res/models/PieChartPlane.obj", m_AssetMgr->PieChartShader);
 	m_Indicator->Name = "NeedsIndicator";
 	m_Indicator->transform->Position = glm::vec3(0.f, -0.8f, 0.f);
 	m_Indicator->transform->Scale = glm::vec3(2.0f, 2.0f, 2.0f);	
     SetIndicatorShader(m_AssetMgr->PieChartShader);
+
 
     m_ProgressBar = m_SceneMgr->Instantiate(m_Owner, "res/models/ProgressBarPlane.obj", m_AssetMgr->ProgressBarShader);
     m_ProgressBar->Name = "ProgressBar";
@@ -32,6 +34,19 @@ void Animal::Awake()
     m_ProgressBar->transform->EulerAngles = glm::vec3(90.0f, 0.0f, 0.0f);
 	m_ProgressBar->SetActive(false);
     SetProgressBarShader(m_AssetMgr->ProgressBarShader);
+
+
+    m_Checkmark = m_SceneMgr->Instantiate(m_Owner, "res/models/CheckmarkPlane.obj", m_AssetMgr->CheckmarkShader);
+    m_Checkmark->Name = "Checkmark";
+    m_Checkmark->transform->Position = glm::vec3(0.f, 4.0f, 0.f);
+    m_Checkmark->transform->EulerAngles = glm::vec3(90.0f, 0.0f, 0.0f);
+    m_Checkmark->transform->Scale = glm::vec3(0.0f, 0.0f, 0.0f);
+    Model* checkmarkModel = m_Checkmark->GetComponent<Model>();
+    if (checkmarkModel != nullptr)
+    {
+        checkmarkModel->AssignTexture(*m_AssetMgr->GetTexture("res/textures/UI/checkmark.png"));
+    }
+    SetCheckmarkShader(m_AssetMgr->CheckmarkShader);
 
     DrawRandomNeeds();
 }
@@ -118,28 +133,34 @@ void Animal::Update()
         }
     }
 
-    if (m_IsFulfillingNeed)
-    {
-        m_CurrentNeedProgress += m_SatisfactionSpeed * Time::GetDeltaTime();
+    if (m_IsSeatedInObject) {
+
+        RigidBody* rb = m_Owner->GetComponent<RigidBody>();
+        if (rb != nullptr)
+        {
+            rb->SetLinearVelocity(glm::vec3(0.0f));
+            rb->SetAngularVelocity(glm::vec3(0.0f));
+        }
+
+        if (m_IsFulfillingNeed)
+        {
+            m_CurrentNeedProgress += m_SatisfactionSpeed * Time::GetDeltaTime();
 
         // m_ProgressBar->transform->Scale = glm::vec3(1.5f, 1.0f, 0.3f);
     	m_ProgressBar->SetActive(true);
 
-        UpdateProgressBar();
+            UpdateProgressBar();
 
-        if (m_CurrentNeedProgress >= 1.0f)
-        {
-            m_IsFulfillingNeed = false;
-            m_CurrentNeedProgress = 0.0f;
+            if (m_CurrentNeedProgress >= 1.0f)
+            {
+                m_IsFulfillingNeed = false;
+                m_CurrentNeedProgress = 0.0f;
 
-            FulfillNeed(m_CurrentNeedBeingFulfilled);
+                FulfillNeed(m_CurrentNeedBeingFulfilled);
+            }
+
+            return;
         }
-
-        return;
-    }
-    else
-    {
-    	m_ProgressBar->SetActive(false);
     }
 
     if (m_IsSeated) return;
@@ -292,6 +313,11 @@ void Animal::SetProgressBarShader(std::shared_ptr<Shader> barShader)
     m_ProgressBarShader = barShader;
 }
 
+void Animal::SetCheckmarkShader(std::shared_ptr<Shader> checkmarkShader)
+{
+    m_CheckmarkShader = checkmarkShader;
+}
+
 void Animal::UpdateIndicatorColors()
 {
     if (m_PieShader == nullptr) return;
@@ -327,7 +353,7 @@ void Animal::FulfillNeed(AnimalNeeds need) {
 
         if (m_RequiredServices.empty())
         {
-            spdlog::info("Zwierzak zaspokoil wszystkie potrzeby");
+            m_Checkmark->transform->Scale = glm::vec3(2.0f, 1.0f, 2.0f);
 
             if (m_Indicator != nullptr)
             {
@@ -367,6 +393,7 @@ void Animal::DrawRandomNeeds()
 
 void Animal::StartFulfillingNeed(AnimalNeeds need)
 {
+    m_IsSeatedInObject = true;
     m_IsFulfillingNeed = true;
     m_CurrentNeedBeingFulfilled = need;
     m_CurrentNeedProgress = 0.0f;
@@ -374,6 +401,7 @@ void Animal::StartFulfillingNeed(AnimalNeeds need)
 
 void Animal::StopFulfillingNeed()
 {
+    m_IsSeatedInObject = false; 
     m_IsFulfillingNeed = false;
     m_CurrentNeedProgress = 0.0f;
 }

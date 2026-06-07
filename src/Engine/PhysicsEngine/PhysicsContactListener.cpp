@@ -63,46 +63,43 @@ void PhysicsContactListener::OnContactPersisted(const JPH::Body& inBody1, const 
 
 void PhysicsContactListener::OnContactRemoved(const JPH::SubShapeIDPair& inSubShapePair)
 {
-    // #PG It's still calling OnCantactRemoved even when it wasn't removed really.
-    
-    // Pair pair = MakePair(inSubShapePair.GetBody1ID(), inSubShapePair.GetBody2ID());
-    // ContactListener::OnContactRemoved(inSubShapePair);
-    //
-    // auto countIt = m_ContactCounts.find(pair);
-    //
-    // if (countIt == m_ContactCounts.end()) return;
-    //
-    // if (--countIt->second == 0)
-    // {
-    //     auto it = m_ActiveContacts.find(pair);
-    //
-    //     if (it != m_ActiveContacts.end())
-    //     {
-    //         GameObject* obj1 = it->second.gameObject1;
-    //         GameObject* obj2 = it->second.gameObject2;
-    //         
-    //         if (!obj1 || !obj2) return;
-    //
-    //         vector<Behaviour*> scripts = obj1->GetVectorOfComponents<Behaviour>();
-    //         for (Behaviour* script : scripts)
-    //         {
-    //             if (script != nullptr)
-    //             {
-    //                 script->OnTriggerExit(obj2);
-    //             }
-    //         }
-    //
-    //         scripts = obj2->GetVectorOfComponents<Behaviour>();
-    //         for (Behaviour* script : scripts)
-    //         {
-    //             if (script != nullptr)
-    //             {
-    //                 script->OnTriggerExit(obj1);
-    //             }
-    //         }
-    //             
-    //         m_ActiveContacts.erase(it);
-    //     }
-    //     m_ContactCounts.erase(countIt);
-    // }
+    Pair pair = MakePair(inSubShapePair.GetBody1ID(), inSubShapePair.GetBody2ID());
+
+    auto countIt = m_ContactCounts.find(pair);
+
+    if (countIt == m_ContactCounts.end()) return;
+
+    if (--countIt->second == 0)
+    {
+        auto it = m_ActiveContacts.find(pair);
+
+        if (it != m_ActiveContacts.end())
+        {
+            GameObject* obj1 = it->second.gameObject1;
+            GameObject* obj2 = it->second.gameObject2;
+
+            if (!obj1 || !obj2) return;
+
+            vector<Behaviour*> scripts = obj1->GetVectorOfComponents<Behaviour>();
+            for (Behaviour* script : scripts)
+            {
+                if (script != nullptr)
+                {
+                    script->OnTriggerExit(obj2);
+                }
+            }
+
+            scripts = obj2->GetVectorOfComponents<Behaviour>();
+            for (Behaviour* script : scripts)
+            {
+                if (script != nullptr)
+                {
+                    script->OnTriggerExit(obj1);
+                }
+            }
+
+            m_ActiveContacts.erase(it);
+        }
+        m_ContactCounts.erase(countIt);
+    }
 }
