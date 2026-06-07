@@ -131,8 +131,6 @@ void Player::DrawUpdate()
     Behaviour::DrawUpdate();
     if (m_IsChargingThrow)
     {
-        float chargePercentage = m_ThrowCharge / m_MaxThrowForce;
-        spdlog::info("Charge power" + std::to_string(chargePercentage));
         m_ChargeMeterShader->Use();
         m_ChargeMeterShader->SetFloat("u_Progress", m_ThrowCharge / m_MaxThrowForce);
     }
