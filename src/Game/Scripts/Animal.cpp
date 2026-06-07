@@ -146,8 +146,8 @@ void Animal::Update()
         {
             m_CurrentNeedProgress += m_SatisfactionSpeed * Time::GetDeltaTime();
 
-        // m_ProgressBar->transform->Scale = glm::vec3(1.5f, 1.0f, 0.3f);
-    	m_ProgressBar->SetActive(true);
+			// m_ProgressBar->transform->Scale = glm::vec3(1.5f, 1.0f, 0.3f);
+    		m_ProgressBar->SetActive(true);
 
             UpdateProgressBar();
 
@@ -161,6 +161,10 @@ void Animal::Update()
 
             return;
         }
+    }
+    else
+    {
+    	m_ProgressBar->SetActive(false);[]
     }
 
     if (m_IsSeated) return;
