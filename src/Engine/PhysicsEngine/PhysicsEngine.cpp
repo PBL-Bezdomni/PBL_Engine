@@ -9,6 +9,7 @@
 #include <Jolt/Physics/Collision/CastResult.h>
 #include "GameObject.h"
 #include <Jolt/Physics/Body/BodyID.h>
+#include "Game/Scripts/Animal.h"
 
 void PhysicsEngine::Init() {
     JPH::RegisterDefaultAllocator();
@@ -43,6 +44,11 @@ JPH::BodyID PhysicsEngine::CreateBox(const glm::vec3& position, const glm::quat&
     JPH::Quat joltRot(rotation.x, rotation.y, rotation.z, rotation.w);
 
     JPH::BodyCreationSettings settings(shape, PhysicsMath::ToJPH(position), joltRot, motionType, layer);
+
+    settings.mAllowedDOFs = JPH::EAllowedDOFs::TranslationX |
+        JPH::EAllowedDOFs::TranslationY |
+        JPH::EAllowedDOFs::TranslationZ |
+        JPH::EAllowedDOFs::RotationY;
 
     JPH::BodyInterface* bodyInterface = &m_PhysicsSystem->GetBodyInterface();
     JPH::Body* body = bodyInterface->CreateBody(settings);
@@ -93,13 +99,42 @@ GameObject* PhysicsEngine::CastRay(const glm::vec3& startOrigin, const glm::vec3
     JPH::RRayCast ray(origin, dir);
     JPH::RayCastResult result;
 
-    JPH::IgnoreSingleBodyFilter bodyFilter{ JPH::BodyID(ignoreBodyID) };
+    JPH::BodyInterface& bodyInterface = m_PhysicsSystem->GetBodyInterface();
 
-    if (m_PhysicsSystem->GetNarrowPhaseQuery().CastRay(ray, result, {}, {}, bodyFilter))
+    class AnimalOnlyFilter : public JPH::BodyFilter
+    {
+    private:
+        JPH::BodyID mIgnoreBody;
+    public:
+        AnimalOnlyFilter(JPH::BodyID ignoreID) : mIgnoreBody(ignoreID) {}
+
+        virtual bool ShouldCollide(const JPH::BodyID& inBodyID) const override
+        {
+            if (inBodyID == mIgnoreBody) return false;
+
+            return true;
+        }
+
+        virtual bool ShouldCollideLocked(const JPH::Body& inBody) const override
+        {
+            uint64_t userData = inBody.GetUserData();
+            if (userData != 0)
+            {
+                GameObject* go = reinterpret_cast<GameObject*>(userData);
+                if (go != nullptr)
+                {
+                    return go->GetDerivedComponent<Animal>() != nullptr;
+                }
+            }
+            return false;
+        }
+    };
+
+    AnimalOnlyFilter animalFilter{ JPH::BodyID(ignoreBodyID) };
+
+    if (m_PhysicsSystem->GetNarrowPhaseQuery().CastRay(ray, result, {}, {}, animalFilter))
     {
         JPH::BodyID hitBodyID = result.mBodyID;
-
-        JPH::BodyInterface& bodyInterface = m_PhysicsSystem->GetBodyInterface();
 
         if (bodyInterface.IsAdded(hitBodyID))
         {
@@ -113,6 +148,7 @@ GameObject* PhysicsEngine::CastRay(const glm::vec3& startOrigin, const glm::vec3
 
     return nullptr;
 }
+
 
 void PhysicsEngine::DrawDebugLine(const glm::vec3& start, const glm::vec3& end, const glm::vec3& color)
 {

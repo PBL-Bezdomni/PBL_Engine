@@ -117,23 +117,33 @@ void Animal::Update()
         }
     }
 
-    if (m_IsFulfillingNeed)
-    {
-        m_CurrentNeedProgress += m_SatisfactionSpeed * Time::GetDeltaTime();
+    if (m_IsSeatedInObject) {
 
-        m_ProgressBar->transform->Scale = glm::vec3(1.5f, 1.0f, 0.3f);
-
-        UpdateProgressBar();
-
-        if (m_CurrentNeedProgress >= 1.0f)
+        RigidBody* rb = m_Owner->GetComponent<RigidBody>();
+        if (rb != nullptr)
         {
-            m_IsFulfillingNeed = false;
-            m_CurrentNeedProgress = 0.0f;
-
-            FulfillNeed(m_CurrentNeedBeingFulfilled);
+            rb->SetLinearVelocity(glm::vec3(0.0f));
+            rb->SetAngularVelocity(glm::vec3(0.0f));
         }
 
-        return;
+        if (m_IsFulfillingNeed)
+        {
+            m_CurrentNeedProgress += m_SatisfactionSpeed * Time::GetDeltaTime();
+
+            m_ProgressBar->transform->Scale = glm::vec3(1.5f, 1.0f, 0.3f);
+
+            UpdateProgressBar();
+
+            if (m_CurrentNeedProgress >= 1.0f)
+            {
+                m_IsFulfillingNeed = false;
+                m_CurrentNeedProgress = 0.0f;
+
+                FulfillNeed(m_CurrentNeedBeingFulfilled);
+            }
+
+            return;
+        }
     }
 
     if (m_IsSeated) return;
@@ -361,6 +371,7 @@ void Animal::DrawRandomNeeds()
 
 void Animal::StartFulfillingNeed(AnimalNeeds need)
 {
+    m_IsSeatedInObject = true;
     m_IsFulfillingNeed = true;
     m_CurrentNeedBeingFulfilled = need;
     m_CurrentNeedProgress = 0.0f;
@@ -368,6 +379,7 @@ void Animal::StartFulfillingNeed(AnimalNeeds need)
 
 void Animal::StopFulfillingNeed()
 {
+    m_IsSeatedInObject = false; 
     m_IsFulfillingNeed = false;
     m_CurrentNeedProgress = 0.0f;
 }

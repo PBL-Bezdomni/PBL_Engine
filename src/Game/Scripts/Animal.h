@@ -35,6 +35,7 @@ private:
 
     float m_SatisfactionSpeed = 0.1f;
     bool m_IsFulfillingNeed = false;
+    bool m_IsSeatedInObject = false;
     AnimalNeeds m_CurrentNeedBeingFulfilled;
     float m_CurrentNeedProgress = 0.0f;
 
