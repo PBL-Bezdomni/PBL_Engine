@@ -19,6 +19,16 @@ enum class AnimalNeeds
     Massage
 };
 
+enum class AnimalState
+{
+    None,
+    Idle,          
+    PickedUp,        
+    Throw,
+    Rest,
+    CheckIn
+};
+
 class Animal : public Behaviour
 {
 private:
@@ -35,7 +45,6 @@ private:
     int m_numberOfNeeds = 1;
 
     float m_SatisfactionSpeed = 0.1f;
-    bool m_IsFulfillingNeed = false;
     bool m_IsSeatedInObject = false;
     AnimalNeeds m_CurrentNeedBeingFulfilled;
     float m_CurrentNeedProgress = 0.0f;
@@ -67,14 +76,15 @@ private:
     std::shared_ptr<Shader> m_CheckmarkShader;
     std::shared_ptr<GameObject> m_Checkmark;
 
+    AnimalState m_CurrentState = AnimalState::None;
+    float m_StateTimer = 0.0f;
+
 public:
     AOnsenObject* m_CurrentOnsen = nullptr;
     std::vector<AnimalNeeds> m_RequiredServices;
     bool m_IsInitialized = false;
     bool m_WasDroppedByPlayer = false;
     bool m_IsSeated = false;
-    bool m_IsMoving = false;
-    bool m_IsCarried = false;
 	int Earned_money = 0;
     float m_WaitTime = 0.0f;
     float m_CurrentWaitTime = 0.0f;
@@ -85,10 +95,17 @@ public:
     void Start() override;
 	void DrawUpdate() override;
 
-    void EnterTable(GameObject* table);                // probably will
-    void EnterPosition(glm::vec3 exactWorldPosition); // merge them
+    void EnterTable(GameObject* table);                
+    void EnterPosition(glm::vec3 exactWorldPosition);
+
+    void ChangeState(AnimalState newState);
 
     void Update() override;
+    void UpdateIdle();
+    void UpdatePickedUp();
+    void UpdateThrow();
+    void UpdateFulfillingNeed();
+    void UpdateCheckIn();
 
     void ForceNewTargetPosition();
 
@@ -98,7 +115,7 @@ public:
     void UpdateIndicatorColors();
     void SetIndicatorObject(std::shared_ptr<GameObject> indicator) { m_Indicator = indicator; }
     std::shared_ptr<GameObject> GetIndicatorObject() { return m_Indicator; }
-    void SetTartgetPosition(glm::vec3 position) { m_TargetPosition = position; m_IsMoving = true; }
+    void SetTargetPosition(glm::vec3 position) { m_TargetPosition = position;}
 	void SetSpeed(float speed) { m_MoveSpeed = speed; }
 	void DrawRandomNeeds();
     void StartFulfillingNeed(AnimalNeeds need);

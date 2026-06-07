@@ -94,17 +94,18 @@ void Player::Update()
     {
         if (glm::length(direction) > 1.0f) {
             direction = glm::normalize(direction);
-
-            float targetAngle = glm::degrees(atan2(direction.x, direction.z));
-
-            rb->SetRotation(glm::vec3(0.0f, targetAngle, 0.0f));
-
-            if (glm::length(direction) > 0.01f)
-            {
-                // Save last input that moved player
-                m_LastMoveDir = moveInput;
-            }
         }
+
+        float targetAngle = glm::degrees(atan2(direction.x, direction.z));
+
+        rb->SetRotation(glm::vec3(0.0f, targetAngle, 0.0f));
+
+        if (glm::length(direction) > 0.01f)
+        {
+            // Save last input that moved player
+            m_LastMoveDir = moveInput;
+        }
+
 
         glm::vec3 currentVel = rb->GetLinearVelocity();
         glm::vec3 targetVel = direction * speed;
@@ -139,8 +140,8 @@ void Player::Update()
         {
             rb->SetLinearVelocity(glm::vec3(0.0f));
             rb->SetAngularVelocity(glm::vec3(0.0f));
-            a->m_IsMoving = false;
             rb->Teleport(headPos);
+            a->ChangeState(AnimalState::PickedUp);
         }
     }
 }
@@ -187,7 +188,7 @@ void Player::HandleActionPressed()
 
                 m_CarriedAnimal = hitObject;
                 animalScript->m_IsSeated = false;
-                animalScript->m_IsCarried = true;
+                animalScript->ChangeState(AnimalState::PickedUp);
             }
         }
     }
@@ -218,13 +219,12 @@ void Player::HandleThrowReleased()
             throwVelocity.y = m_ThrowCharge * 0.4f;
 
             animalRb->SetLinearVelocity(throwVelocity);
+            animalScript->ChangeState(AnimalState::Throw);
         }
 
         if (animalScript != nullptr)
         {
             animalScript->m_IsSeated = false;
-            animalScript->m_IsCarried = false;
-            animalScript->m_IsMoving = false;
 			animalScript->m_WasDroppedByPlayer = true;
 
             animalScript->m_WaitTime = 2.0f;

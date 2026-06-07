@@ -33,8 +33,8 @@ void main()
     vec3 sliceColor = vec3(0.5); 
     
     if (currentNeed == 0)      sliceColor = vec3(0.0, 0.4, 1.0);
-    else if (currentNeed == 1) sliceColor = vec3(1.0, 0.2, 0.2);
-    else if (currentNeed == 2) sliceColor = vec3(1.0, 0.75, 0.2);
+    else if (currentNeed == 1) sliceColor = vec3(1.0, 0.75, 0.2);
+    else if (currentNeed == 2) sliceColor = vec3(1.0, 0.2, 0.2);
     else if (currentNeed == 3) sliceColor = vec3(0.5, 0.5, 0.5);
 
     

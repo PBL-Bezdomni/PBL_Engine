@@ -120,13 +120,8 @@ void SpawnManager::DespawnAnimal(GameObject* animal)
 				Animal* anScript = spawnedAnimal->GetComponent<Animal>();
 				if (anScript != nullptr)
 				{
-					anScript->m_IsMoving = false;
 					anScript->m_IsInitialized = false;
-
-					if (anScript->m_CurrentOnsen != nullptr)
-					{
-						anScript->m_CurrentOnsen->RemoveAnimal(anScript);
-					}
+					anScript->ChangeState(AnimalState::None);
 				}
 				RigidBody* rb = spawnedAnimal->GetComponent<RigidBody>();
 				if (rb != nullptr)

@@ -43,7 +43,7 @@ void AnimalInteractions::HandleBear(Animal* animal)
 	{
 		m_IsChasing = true;
 		animal->SetSpeed(5.3f);
-		animal->SetTartgetPosition(bunny->transform->GetGlobalPosition());
+		animal->SetTargetPosition(bunny->transform->GetGlobalPosition());
 
 		float dist = glm::length(bunny->transform->GetGlobalPosition() - animal->GetGameObject()->transform->GetGlobalPosition());
 		if (dist <= m_EatDistance)
@@ -73,7 +73,7 @@ void AnimalInteractions::HandleBunny(Animal* animal)
 
 		glm::vec3 escapePosition = animal->GetGameObject()->transform->GetGlobalPosition() + (runDirection * 5.0f);
 		escapePosition.y = animal->GetGameObject()->transform->Position.y;
-		animal->SetTartgetPosition(escapePosition);
+		animal->SetTargetPosition(escapePosition);
 	}
 }
 
@@ -87,7 +87,7 @@ bool AnimalInteractions::HandleSkunk(Animal* animal)
 
 		glm::vec3 escapePosition = animal->GetGameObject()->transform->GetGlobalPosition() + (runDirection * 5.0f);
 		escapePosition.y = animal->GetGameObject()->transform->Position.y;
-		animal->SetTartgetPosition(escapePosition);
+		animal->SetTargetPosition(escapePosition);
 		m_IsChasing = false;
 
 		return true;

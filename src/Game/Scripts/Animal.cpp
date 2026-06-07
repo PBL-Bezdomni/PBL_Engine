@@ -32,7 +32,8 @@ void Animal::Awake()
     m_ProgressBar->Name = "ProgressBar";
     m_ProgressBar->transform->Position = glm::vec3(0.f, 5.0f, 0.f);
     m_ProgressBar->transform->EulerAngles = glm::vec3(90.0f, 0.0f, 0.0f);
-	m_ProgressBar->SetActive(false);
+    m_ProgressBar->transform->Scale = glm::vec3(1.5f, 1.0f, 0.3f);
+    m_ProgressBar->SetActive(false);
     SetProgressBarShader(m_AssetMgr->ProgressBarShader);
 
 
@@ -40,19 +41,22 @@ void Animal::Awake()
     m_Checkmark->Name = "Checkmark";
     m_Checkmark->transform->Position = glm::vec3(0.f, 4.0f, 0.f);
     m_Checkmark->transform->EulerAngles = glm::vec3(90.0f, 0.0f, 0.0f);
-    m_Checkmark->transform->Scale = glm::vec3(0.0f, 0.0f, 0.0f);
+    m_Checkmark->transform->Scale = glm::vec3(2.0f, 1.0f, 2.0f);
     Model* checkmarkModel = m_Checkmark->GetComponent<Model>();
     if (checkmarkModel != nullptr)
     {
         checkmarkModel->AssignTexture(*m_AssetMgr->GetTexture("res/textures/UI/checkmark.png"));
     }
+    m_Checkmark->SetActive(false);
     SetCheckmarkShader(m_AssetMgr->CheckmarkShader);
 
     DrawRandomNeeds();
+
 }
 
 void Animal::Start()
 {
+    ChangeState(AnimalState::CheckIn);
 	Behaviour::Start();
 }
 
@@ -70,7 +74,6 @@ void Animal::PickNewTargetPosition()
 
 	glm::vec3 currentPos = m_Owner->transform->GetGlobalPosition();
 	m_TargetPosition = currentPos + glm::vec3(radius * cos(angle), 0.0f, radius * sin(angle));
-	m_IsMoving = true;
 	m_WasDroppedByPlayer = false;
 }
 
@@ -106,17 +109,7 @@ void Animal::EnterTable(GameObject* table)
 void Animal::Update()
 {
     Behaviour::Update();
-	m_CurrTime = m_SceneMgr->GetTimeLeft();
-
-    if (m_IsCarried) return;
-
-    if (!m_IsInitialized)
-    {
-		m_LastPosition = m_Owner->transform->GetGlobalPosition();
-		m_CurrentAngle = m_Owner->transform->EulerAngles.y;
-		PickNewTargetPosition();
-		m_IsInitialized = true;
-    }
+    m_CurrTime = m_SceneMgr->GetTimeLeft();
 
     if (m_ShouldTeleport)
     {
@@ -135,179 +128,191 @@ void Animal::Update()
         }
     }
 
-    if (m_IsSeatedInObject) {
+    RigidBody* rb = m_Owner->GetComponent<RigidBody>();
+    if (rb == nullptr) return;
 
-        RigidBody* rb = m_Owner->GetComponent<RigidBody>();
-        if (rb != nullptr)
-        {
-            rb->SetLinearVelocity(glm::vec3(0.0f));
-            rb->SetAngularVelocity(glm::vec3(0.0f));
-        }
+    switch (m_CurrentState)
+    {
+    case AnimalState::None:
+        break;
+    case AnimalState::Idle:
+        UpdateIdle();
+        break;
+    case AnimalState::PickedUp:
+        UpdatePickedUp();
+        break;
+    case AnimalState::Throw:
+        UpdateThrow();
+        break;
+    case AnimalState::Rest:
+        UpdateFulfillingNeed();
+        break;
+    case AnimalState::CheckIn:
+        UpdateCheckIn();
+        break;
+    }
+}
 
-        if (m_IsFulfillingNeed)
-        {
-            m_CurrentNeedProgress += m_SatisfactionSpeed * Time::GetDeltaTime();
 
-			// m_ProgressBar->transform->Scale = glm::vec3(1.5f, 1.0f, 0.3f);
-    		m_ProgressBar->SetActive(true);
+void Animal::UpdateIdle() {
+    RigidBody* rb = m_Owner->GetComponent<RigidBody>();
 
-            UpdateProgressBar();
+    m_AnimalInteractions.Update(this);
 
-            if (m_CurrentNeedProgress >= 1.0f)
-            {
-                m_IsFulfillingNeed = false;
-                m_CurrentNeedProgress = 0.0f;
+    glm::vec3 currentPos = m_Owner->transform->GetGlobalPosition();
 
-                FulfillNeed(m_CurrentNeedBeingFulfilled);
-            }
-
-            return;
-        }
+    float distanceMoved = glm::length(currentPos - m_LastPosition);
+    if (distanceMoved < 0.1f * Time::GetDeltaTime() * m_MoveSpeed)
+    {
+        m_StuckTimer += Time::GetDeltaTime();
     }
     else
     {
-    	m_ProgressBar->SetActive(false);
+        m_StuckTimer = 0.0f;
     }
 
-    if (m_IsSeated) return;
-
-	m_AnimalInteractions.Update(this);
-
-	RigidBody* rb = m_Owner->GetComponent<RigidBody>();
-
-	if (rb == nullptr) return;
-
-    if (m_IsMoving)
+    m_LastPosition = currentPos;
+    if (m_StuckTimer > 1.0f)
     {
-        glm::vec3 currentPos = m_Owner->transform->GetGlobalPosition();
+        rb->SetLinearVelocity(glm::vec3(0.0f, rb->GetLinearVelocity().y, 0.0f));
+        m_WaitTime = 1.0f;
+        m_CurrentWaitTime = 0.0f;
+        m_StuckTimer = 0.0f;
+        m_JumpTimer = 0.0f;
+        return;
+    }
+    glm::vec3 diff = m_TargetPosition - currentPos;
+    diff.y = 0.0f;
+    float distance = glm::length(diff);
 
-        float distanceMoved = glm::length(currentPos - m_LastPosition);
-        if (distanceMoved < 0.1f * Time::GetDeltaTime() * m_MoveSpeed)
-        {
-            m_StuckTimer += Time::GetDeltaTime();
-        }
-        else
-        {
-            m_StuckTimer = 0.0f;
-        }
+    if (distance > 0.5f)
+    {
+        glm::vec3 direction = glm::normalize(diff);
 
-        m_LastPosition = currentPos;
-        if (m_StuckTimer > 1.0f)
+        float targetAngle = glm::degrees(atan2(direction.x, direction.z));
+        float deltaAngle = targetAngle - m_CurrentAngle;
+
+        while (deltaAngle > 180.0f) deltaAngle -= 360.0f;
+        while (deltaAngle < -180.0f) deltaAngle += 360.0f;
+
+        m_CurrentAngle += deltaAngle * m_RotationSpeed * Time::GetDeltaTime();
+
+        while (m_CurrentAngle > 360.0f) m_CurrentAngle -= 360.0f;
+        while (m_CurrentAngle < -360.0f) m_CurrentAngle += 360.0f;
+
+        rb->SetRotation(glm::vec3(0.0f, m_CurrentAngle, 0.0f));
+
+        glm::vec3 rayStart = currentPos + glm::vec3(0.0f, 0.5f, 0.0f);
+        float lookAheadDistance = 1.5f;
+
+        GameObject* obstacle = Engine::GetInstance().GetPhysicsEngine().CastRay(rayStart, direction, lookAheadDistance, rb->GetBodyID());
+
+        if (obstacle != nullptr)
         {
-            m_IsMoving = false;
             rb->SetLinearVelocity(glm::vec3(0.0f, rb->GetLinearVelocity().y, 0.0f));
-            m_WaitTime = 1.0f;
+
+            m_WaitTime = Random::GetRandomFloat(1.0f, 3.0f);
             m_CurrentWaitTime = 0.0f;
             m_StuckTimer = 0.0f;
-			m_JumpTimer = 0.0f;
             return;
         }
-        glm::vec3 diff = m_TargetPosition - currentPos;
-        diff.y = 0.0f;
-        float distance = glm::length(diff);
 
-        if (distance > 0.5f)
+        float speedMultiplier = 1.0f;
+        float slowDownDistance = 2.0f;
+
+        if (distance < slowDownDistance)
         {
-            glm::vec3 direction = glm::normalize(diff);
+            speedMultiplier = std::max(0.3f, distance / slowDownDistance);
+        }
 
-            float targetAngle = glm::degrees(atan2(direction.x, direction.z));
-            float deltaAngle = targetAngle - m_CurrentAngle;
+        glm::vec3 currentVelocity = rb->GetLinearVelocity();
+        float currentMoveSpeed = m_MoveSpeed * speedMultiplier;
+        float newVelY = currentVelocity.y;
 
-			while (deltaAngle > 180.0f) deltaAngle -= 360.0f;
-			while (deltaAngle < -180.0f) deltaAngle += 360.0f;
+        bool isOnGround = (currentPos.y <= 2.6f);
 
-			m_CurrentAngle += deltaAngle * m_RotationSpeed * Time::GetDeltaTime();
+        if (m_Owner->Name.find("bunny") != std::string::npos)
+        {
+            m_JumpTimer += Time::GetDeltaTime();
 
-			while (m_CurrentAngle > 360.0f) m_CurrentAngle -= 360.0f;
-			while (m_CurrentAngle < -360.0f) m_CurrentAngle += 360.0f;
-
-            rb->SetRotation(glm::vec3(0.0f, m_CurrentAngle, 0.0f));
-
-			glm::vec3 rayStart = currentPos + glm::vec3(0.0f, 0.5f, 0.0f);
-			float lookAheadDistance = 1.5f;
-
-			GameObject* obstacle = Engine::GetInstance().GetPhysicsEngine().CastRay(rayStart, direction, lookAheadDistance, rb->GetBodyID());
-
-            if (obstacle != nullptr)
+            if (isOnGround)
             {
-				m_IsMoving = false;
-				rb->SetLinearVelocity(glm::vec3(0.0f, rb->GetLinearVelocity().y, 0.0f));
-
-				m_WaitTime = Random::GetRandomFloat(1.0f, 3.0f);
-				m_CurrentWaitTime = 0.0f;
-				m_StuckTimer = 0.0f;
-                return; 
-            }
-
-            float speedMultiplier = 1.0f;
-			float slowDownDistance = 2.0f;
-
-            if (distance < slowDownDistance)
-            {
-				speedMultiplier = std::max(0.3f, distance / slowDownDistance);
-            }
-
-            glm::vec3 currentVelocity = rb->GetLinearVelocity();
-			float currentMoveSpeed = m_MoveSpeed * speedMultiplier;
-			float newVelY = currentVelocity.y;
-
-            bool isOnGround = (currentPos.y <= 2.6f);
-
-            if (m_Owner->Name.find("bunny") != std::string::npos)
-            {
-				m_JumpTimer += Time::GetDeltaTime();
-
-                if (isOnGround)
+                currentMoveSpeed *= 0.1f;
+                if (m_JumpTimer >= 0.6f && distance > 1.5f)
                 {
-                    currentMoveSpeed *= 0.1f;
-                    if (m_JumpTimer >= 0.6f && distance > 1.5f)
-                    {
-                        newVelY = m_JumpForce;
-                        m_JumpTimer = 0.0f;
-                    }
-                }
-                else
-                {
-					currentMoveSpeed *= 1.5f;
+                    newVelY = m_JumpForce;
+                    m_JumpTimer = 0.0f;
                 }
             }
-            glm::vec3 targetVelocity = direction * (m_MoveSpeed * speedMultiplier);
-
-			float accel = (m_Owner->Name.find("bunny") != std::string::npos) ? m_Acceleration * 4.0f : m_Acceleration;
-            float newVelX = glm::mix(currentVelocity.x, targetVelocity.x, accel *Time::GetDeltaTime());
-            float newVelZ = glm::mix(currentVelocity.z, targetVelocity.z, accel * Time::GetDeltaTime());
-
-            rb->SetLinearVelocity(glm::vec3(newVelX, newVelY, newVelZ));
+            else
+            {
+                currentMoveSpeed *= 1.5f;
+            }
         }
-        else
-        {
-            m_IsMoving = false;
-            rb->SetLinearVelocity(glm::vec3(0.0f, rb->GetLinearVelocity().y, 0.0f));
-        
-			m_WaitTime = Random::GetRandomFloat(1.0f, 3.0f);
-            m_CurrentWaitTime = 0.0f;
-            m_StuckTimer = 0.0f;
-			m_JumpTimer = 0.0f;
-        }
-	}
-	else
-	{
-		m_LastPosition = m_Owner->transform->GetGlobalPosition();
+        glm::vec3 targetVelocity = direction * (m_MoveSpeed * speedMultiplier);
 
-		m_CurrentWaitTime += Time::GetDeltaTime();
-		if (m_CurrentWaitTime >= m_WaitTime)
-		{
-			PickNewTargetPosition();
-		}
-	}
+        float accel = (m_Owner->Name.find("bunny") != std::string::npos) ? m_Acceleration * 4.0f : m_Acceleration;
+        float newVelX = glm::mix(currentVelocity.x, targetVelocity.x, accel * Time::GetDeltaTime());
+        float newVelZ = glm::mix(currentVelocity.z, targetVelocity.z, accel * Time::GetDeltaTime());
 
-    if (m_Indicator != nullptr)
+        rb->SetLinearVelocity(glm::vec3(newVelX, newVelY, newVelZ));
+    }
+    else
     {
-    	glm::vec3 worldPos = glm::vec3(m_Owner->transform->ModelMatrix[3]);
-        // m_Indicator->transform->Position = worldPos + glm::vec3(0.0f, -0.5f, 0.0f);
-        m_Indicator->UpdateSelfAndChild();
+        rb->SetLinearVelocity(glm::vec3(0.0f, rb->GetLinearVelocity().y, 0.0f));
+
+        m_WaitTime = Random::GetRandomFloat(1.0f, 3.0f);
+        m_CurrentWaitTime = 0.0f;
+        m_StuckTimer = 0.0f;
+        m_JumpTimer = 0.0f;
     }
 }
+
+void Animal::UpdatePickedUp() {
+
+}
+
+void Animal::UpdateThrow() {
+    m_StateTimer += Time::GetDeltaTime();
+
+    if (m_StateTimer >= 3.0f)
+    {
+        ChangeState(AnimalState::Idle);
+    }
+}
+
+void Animal::UpdateCheckIn() {
+    m_StateTimer += Time::GetDeltaTime();
+
+    if (m_StateTimer >= 1.5f)
+    {
+        ChangeState(AnimalState::Idle);
+    }
+}
+
+void Animal::UpdateFulfillingNeed() {
+
+    RigidBody* rb = m_Owner->GetComponent<RigidBody>();
+    if (rb != nullptr)
+    {
+        rb->SetLinearVelocity(glm::vec3(0.0f));
+        rb->SetAngularVelocity(glm::vec3(0.0f));
+    }
+
+    m_CurrentNeedProgress += m_SatisfactionSpeed * Time::GetDeltaTime();
+
+    UpdateProgressBar();
+
+    if (m_CurrentNeedProgress >= 1.0f)
+    {
+        m_CurrentNeedProgress = 0.0f;
+
+        StopFulfillingNeed();
+        FulfillNeed(m_CurrentNeedBeingFulfilled);
+    }
+
+}
+
 
 void Animal::SetIndicatorShader(std::shared_ptr<Shader> pieShader)
 {
@@ -359,7 +364,7 @@ void Animal::FulfillNeed(AnimalNeeds need) {
 
         if (m_RequiredServices.empty())
         {
-            m_Checkmark->transform->Scale = glm::vec3(2.0f, 1.0f, 2.0f);
+            m_Checkmark->SetActive(true);
 
             if (m_Indicator != nullptr)
             {
@@ -374,7 +379,6 @@ void Animal::EnterPosition(glm::vec3 exactWorldPosition)
     m_TeleportTarget = exactWorldPosition;
     m_ShouldTeleport = true;
     m_IsSeated = true;
-    m_IsMoving = false;
 }
 
 void Animal::DrawRandomNeeds()
@@ -399,16 +403,15 @@ void Animal::DrawRandomNeeds()
 
 void Animal::StartFulfillingNeed(AnimalNeeds need)
 {
-    m_IsSeatedInObject = true;
-    m_IsFulfillingNeed = true;
+    m_ProgressBar->SetActive(true);
+    m_CurrentState = AnimalState::Rest;
     m_CurrentNeedBeingFulfilled = need;
     m_CurrentNeedProgress = 0.0f;
 }
 
 void Animal::StopFulfillingNeed()
 {
-    m_IsSeatedInObject = false; 
-    m_IsFulfillingNeed = false;
+    m_ProgressBar->SetActive(false);
     m_CurrentNeedProgress = 0.0f;
 }
 
@@ -427,40 +430,49 @@ void Animal::UpdateProgressBar()
 
 void Animal::ResetEverythingSpawn(glm::vec3 spawnPosition)
 {
-	m_Owner->transform->Position = spawnPosition;
+    m_Owner->transform->Position = spawnPosition;
 
-	RigidBody* rb = m_Owner->GetComponent<RigidBody>();
-	if (rb != nullptr)
-	{
-		rb->RequestTeleport(spawnPosition);
+    RigidBody* rb = m_Owner->GetComponent<RigidBody>();
+    if (rb != nullptr)
+    {
+        rb->RequestTeleport(spawnPosition);
 
-		rb->SetLinearVelocity(glm::vec3(0.0f));
-		rb->SetAngularVelocity(glm::vec3(0.0f));
+        rb->SetLinearVelocity(glm::vec3(0.0f));
+        rb->SetAngularVelocity(glm::vec3(0.0f));
         rb->SetRotation(glm::vec3(0.0f));
-	}
+    }
 
-	m_CurrentAngle = 0.0f;
-	m_LastPosition = spawnPosition;
+    m_CurrentAngle = 0.0f;
+    m_LastPosition = spawnPosition;
 
-	float angle = Random::GetRandomFloat(0.0f, 2.0f * glm::pi<float>());
-	float radius = Random::GetRandomFloat(0.0f, m_MovingRadius);
-	m_TargetPosition = spawnPosition + glm::vec3(radius * cos(angle), 0.0f, radius * sin(angle));
+    ChangeState(AnimalState::CheckIn);
 
-	m_IsMoving = false;
-	m_IsInitialized = true;
+    float angle = Random::GetRandomFloat(0.0f, 2.0f * glm::pi<float>());
+    float radius = Random::GetRandomFloat(0.0f, m_MovingRadius);
+    m_TargetPosition = spawnPosition + glm::vec3(radius * cos(angle), 0.0f, radius * sin(angle));
 
-	m_IsSeated = false;
-	m_IsFulfillingNeed = false;
+    m_IsInitialized = true;
 
-    m_IsCarried = false;
-    m_CurrentOnsen = nullptr;
+    m_IsSeated = false;
 
-	m_WaitTime = 1.5f;
-	m_CurrentWaitTime = 0.0f;
-	
+    m_WaitTime = 1.5f;
+    m_CurrentWaitTime = 0.0f;
+
     m_StuckTimer = 0.0f;
-	m_JumpTimer = 0.0f;
+    m_JumpTimer = 0.0f;
 
     m_ShouldTeleport = false;
-	m_CurrentNeedProgress = 0.0f;
+    m_CurrentNeedProgress = 0.0f;
+}
+
+
+void Animal::ChangeState(AnimalState newState)
+{
+    m_StateTimer = 0.0f;
+    m_CurrentState = newState;
+
+    if (newState == AnimalState::Idle)
+    {
+        PickNewTargetPosition();
+    }
 }
