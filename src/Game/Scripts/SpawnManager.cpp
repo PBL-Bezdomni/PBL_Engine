@@ -11,6 +11,7 @@
 #include "Engine/Components/RigidBody.h"
 #include "Game/Scripts/Animal.h"
 #include "Game/Scripts/AOnsenObject.h"
+#include "Engine/Components/TutorialAnimal.h"
 
 SpawnManager* SpawnManager::Instance = nullptr;
 
@@ -143,6 +144,7 @@ shared_ptr<GameObject> SpawnManager::CreateAnimal(shared_ptr<Shader> shader, con
 	animal->AddComponent<Animal>();
 	animal->transform->Position = m_ExiledPos;
 	animal->UpdateSelfAndChild();
+	//animal->AddComponent<TutorialAnimal>();
 	m_SceneMgr->AddAnimal(animal);
 	return animal;
 }

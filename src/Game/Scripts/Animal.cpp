@@ -8,7 +8,6 @@
 #include <Engine/Engine.h>
 
 #include "Engine/AssetManager.h"
-#include "Engine/Engine.h"
 
 void Animal::Awake()
 {
