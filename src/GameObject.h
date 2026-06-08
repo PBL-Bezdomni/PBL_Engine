@@ -106,6 +106,40 @@ public:
 	}
 
 	template<typename T>
+	vector<T*> FindComponentsInChildren(bool getFirst = false)
+	{
+		vector<T*> result;
+
+		for (auto& [type, components] : m_Components)
+		{
+			for (auto& component : components)
+			{
+				if (auto* casted = dynamic_cast<T*>(component.get()))
+				{
+					result.push_back(casted);
+					if (getFirst)
+					{
+						return result;
+					}
+				}
+			}
+		}
+
+		vector<T*> childrenResult;
+		for (auto child : Children)
+		{
+			childrenResult = child->FindComponentsInChildren<T>(getFirst);
+			result.insert(result.end(), childrenResult.begin(), childrenResult.end());
+			if (!childrenResult.empty() && getFirst)
+			{
+				break;
+			}
+		}
+
+		return result;
+	}
+
+	template<typename T>
 	T* GetDerivedComponent()
 	{
 		for (auto& pair : m_Components)
