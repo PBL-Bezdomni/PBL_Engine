@@ -3,12 +3,14 @@
 #include "Engine/InputManager.h"
 #include "Game/Scripts/SpawnManager.h"
 
+class AOnsenObject;
 class ParticleEmitter;
 class GameObject;
 
 class Player : public Behaviour
 {
 private:
+    SceneManager* m_SceneMgr;
     InputName m_InputName;
     glm::vec2 m_LastMoveDir = glm::vec2(0);
 
@@ -22,6 +24,8 @@ private:
 
     shared_ptr<GameObject> m_ChargeMeter;
     shared_ptr<Shader> m_ChargeMeterShader;
+
+    vector<AOnsenObject*> m_OnsenObjects;
 public:
     glm::vec2 moveInput{ 0.0f };
     float speed = 10.0f;

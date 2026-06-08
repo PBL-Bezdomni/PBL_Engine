@@ -4,6 +4,8 @@
 #include <Game/Scripts/Animal.h>
 #include <string>
 #include <vector>
+
+#include "TutorialArrow.h"
 #include "Engine/InputManager.h"
 #include "Engine/Components/RigidBody.h"
 #include "Engine/Time.h"
@@ -23,7 +25,7 @@ void Player::Awake()
     
     Engine& engine = Engine::GetInstance();
     AssetManager* am = &engine.GetAssetManager();
-    SceneManager* sm = &engine.GetGameManager().GetSceneManager();
+    m_SceneMgr = &engine.GetGameManager().GetSceneManager();
     string path = "res/models/players/";
     if (deviceID == 0)
     {
@@ -39,7 +41,7 @@ void Player::Awake()
     m_ParticleEmitter = m_Owner->AddComponent<ParticleEmitter>();
 
     m_ChargeMeterShader = am->GetShader("res/shaders/powerMeter.vert", "res/shaders/ProgressBar.frag");
-    m_ChargeMeter = sm->Instantiate(m_Owner, "res/models/CheckmarkPlane.obj", m_ChargeMeterShader);
+    m_ChargeMeter = m_SceneMgr->Instantiate(m_Owner, "res/models/CheckmarkPlane.obj", m_ChargeMeterShader);
     m_ChargeMeter->GetComponent<Model>()->ReassignShader(*m_ChargeMeterShader);
     // Maybe custom texture for meter
     // m_ChargeMeter->GetComponent<Model>()->AssignTexture();
@@ -49,6 +51,8 @@ void Player::Awake()
     m_ChargeMeter->SetActive(false);
 
     BindInput();
+
+    m_OnsenObjects = m_SceneMgr->GetLevelParent()->FindComponentsInChildren<AOnsenObject>();
 }
 
 
@@ -212,9 +216,16 @@ void Player::HandleActionPressed()
             }
             if (animalScript != nullptr)
             {
-
                 m_CarriedAnimal = hitObject;
                 animalScript->ChangeState(AnimalState::PickedUp);
+                for (AOnsenObject* obj : m_OnsenObjects)
+                {
+                    TutorialArrow* arrow = obj->GetTutorialArrow();
+                    if (arrow != nullptr)
+                    {
+                        arrow->SetActive(true);
+                    }
+                }
             }
         }
     }
@@ -263,6 +274,14 @@ void Player::HandleThrowReleased()
         m_IsChargingThrow = false;
         m_ChargeMeter->SetActive(false);
         m_ThrowCharge = m_MinThrowForce;
+        for (AOnsenObject* obj : m_OnsenObjects)
+        {
+            TutorialArrow* arrow = obj->GetTutorialArrow();
+            if (arrow != nullptr)
+            {
+                arrow->SetActive(false);
+            }
+        }
     }
 }
 

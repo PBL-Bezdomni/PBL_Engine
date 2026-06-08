@@ -5,6 +5,7 @@
 #include "Engine/Components/Behaviour.h"
 #include "glm/vec3.hpp"
 
+class TutorialArrow;
 class Animal;
 
 class AOnsenObject : public Behaviour
@@ -15,6 +16,7 @@ protected:
 
 	bool m_IsOccupied = false;
 	GameObject* m_OccupyingAnimal = nullptr;
+	TutorialArrow* m_TutorialArrow;
 
 	std::vector<glm::vec3> m_SlotsPos = {
 		glm::vec3(-3.0f, 2.5f, -3.0f),
@@ -32,4 +34,6 @@ public:
 
 	void RemoveAnimal(Animal* animal);
 	Animal* GetAnimalForPlayer(glm::vec3 rayStart, glm::vec3 rayDir);
+
+	TutorialArrow* GetTutorialArrow();
 };

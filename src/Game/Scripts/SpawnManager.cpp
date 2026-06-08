@@ -11,7 +11,7 @@
 #include "Engine/Components/RigidBody.h"
 #include "Game/Scripts/Animal.h"
 #include "Game/Scripts/AOnsenObject.h"
-#include "Engine/Components/TutorialAnimal.h"
+#include "Game/Scripts/TutorialArrow.h"
 
 SpawnManager* SpawnManager::Instance = nullptr;
 

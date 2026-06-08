@@ -1,5 +1,6 @@
 #include "AOnsenObject.h"
 #include "Animal.h"
+#include "TutorialArrow.h"
 #include "glm/vec3.hpp"
 
 void AOnsenObject::Awake()
@@ -11,6 +12,8 @@ void AOnsenObject::Awake()
 		m_Slots.push_back(ObjectSlot());
 		m_Slots[i].LocalOffset = m_SlotsPos[i];
 	}
+
+	m_TutorialArrow = m_Owner->AddComponent<TutorialArrow>();
 }
 
 void AOnsenObject::OnTriggerEnter(GameObject* other)
@@ -109,4 +112,9 @@ Animal* AOnsenObject::GetAnimalForPlayer(glm::vec3 rayStart, glm::vec3 rayDir)
 		}
 	}
 	return closestAnimal;
+}
+
+TutorialArrow* AOnsenObject::GetTutorialArrow()
+{
+	return m_TutorialArrow;
 }
