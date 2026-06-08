@@ -29,7 +29,7 @@ void Animal::Awake()
 
     m_ProgressBar = m_SceneMgr->Instantiate(m_Owner, "res/models/ProgressBarPlane.obj", m_AssetMgr->ProgressBarShader);
     m_ProgressBar->Name = "ProgressBar";
-    m_ProgressBar->transform->Position = glm::vec3(0.f, 5.0f, 0.f);
+    m_ProgressBar->transform->Position = glm::vec3(0.f, 8.0f, 0.f);
     m_ProgressBar->transform->EulerAngles = glm::vec3(90.0f, 0.0f, 0.0f);
     m_ProgressBar->transform->Scale = glm::vec3(1.5f, 1.0f, 0.3f);
     m_ProgressBar->SetActive(false);
@@ -44,6 +44,7 @@ void Animal::Awake()
     Model* checkmarkModel = m_Checkmark->GetComponent<Model>();
     if (checkmarkModel != nullptr)
     {
+        checkmarkModel->ReassignShader(*m_AssetMgr->WorldUIShader);
         checkmarkModel->AssignTexture(*m_AssetMgr->GetTexture("res/textures/UI/checkmark.png"));
     }
     m_Checkmark->SetActive(false);
@@ -423,10 +424,10 @@ void Animal::StopFulfillingNeed()
 
 void Animal::UpdateProgressBar()
 {
-    if (m_ProgressBarShader != nullptr && m_ProgressBar != nullptr)
+    if (m_ProgressBarShader != nullptr && m_ProgressBar != nullptr && m_CurrentState == AnimalState::Rest)
     {
         m_ProgressBarShader->Use();
-        m_ProgressBarShader->SetFloat("u_Progress", m_CurrentNeedProgress);
+        m_ProgressBarShader->SetFloat("u_Progress", m_CurrentNeedProgress / 1);
         m_ProgressBarShader->SetVec3("cameraRight", m_MainCamera->GetRight());
         m_ProgressBarShader->SetVec3("cameraUp", m_MainCamera->GetUp());
     	m_ProgressBarShader->SetFloat("u_width", 1.0f);
