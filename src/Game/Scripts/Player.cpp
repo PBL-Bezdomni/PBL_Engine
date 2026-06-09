@@ -219,12 +219,25 @@ void Player::HandleActionPressed()
                 m_CarriedAnimal = hitObject;
                 m_HasPickUpReleased = false;
                 animalScript->ChangeState(AnimalState::PickedUp);
+                vector<AnimalNeeds> services = animalScript->GetRequiredServices();
                 for (AOnsenObject* obj : m_OnsenObjects)
                 {
-                    TutorialArrow* arrow = obj->GetTutorialArrow();
-                    if (arrow != nullptr)
+                    bool isNeeded = false;
+                    for (AnimalNeeds service : services)
                     {
-                        arrow->SetActive(true);
+                        if (service == obj->GetNeed())
+                        {
+                            isNeeded = true;
+                            break;
+                        }
+                    }
+                    if (isNeeded)
+                    {
+                        TutorialArrow* arrow = obj->GetTutorialArrow();
+                        if (arrow != nullptr)
+                        {
+                            arrow->SetActive(true);
+                        }
                     }
                 }
             }

@@ -114,6 +114,11 @@ Animal* AOnsenObject::GetAnimalForPlayer(glm::vec3 rayStart, glm::vec3 rayDir)
 	return closestAnimal;
 }
 
+AnimalNeeds AOnsenObject::GetNeed()
+{
+	return m_ObjectNeed;
+}
+
 TutorialArrow* AOnsenObject::GetTutorialArrow()
 {
 	return m_TutorialArrow;

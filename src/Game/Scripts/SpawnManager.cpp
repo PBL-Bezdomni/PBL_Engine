@@ -58,7 +58,7 @@ void SpawnManager::OnTriggerEnter(GameObject* other)
 	Animal* animal = other->GetComponent<Animal>();
 	if (animal != nullptr)
 	{
-		if (animal->m_RequiredServices.empty())
+		if (animal->GetRequiredServices().empty())
 		{
 			AddMoney(10); 
 		}

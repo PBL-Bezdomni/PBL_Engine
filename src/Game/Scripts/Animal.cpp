@@ -93,6 +93,11 @@ void Animal::ForceNewTargetPosition()
 	PickNewTargetPosition();
 }
 
+std::vector<AnimalNeeds> Animal::GetRequiredServices()
+{
+    return m_RequiredServices;
+}
+
 void Animal::EnterTable(GameObject* table)
 {
     if (table == nullptr) return;

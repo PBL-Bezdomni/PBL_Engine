@@ -79,9 +79,10 @@ private:
     AnimalState m_CurrentState = AnimalState::None;
     float m_StateTimer = 0.0f;
 
+	std::vector<AnimalNeeds> m_RequiredServices;
+
 public:
     AOnsenObject* m_CurrentOnsen = nullptr;
-    std::vector<AnimalNeeds> m_RequiredServices;
     bool m_IsInitialized = false;
     bool m_WasDroppedByPlayer = false;
 	int Earned_money = 0;
@@ -107,6 +108,7 @@ public:
     void UpdateCheckIn();
 
     void ForceNewTargetPosition();
+	std::vector<AnimalNeeds> GetRequiredServices();
 
     void SetProgressBarShader(std::shared_ptr<Shader> barShader);
     void SetIndicatorShader(std::shared_ptr<Shader> pieShader);
