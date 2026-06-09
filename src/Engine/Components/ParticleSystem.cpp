@@ -123,6 +123,5 @@ void ParticleSystem::Dispatch()
 	m_ParticleComputeShader->SetFloat("deltaTime", Time::GetDeltaTime());
 	glDispatchCompute((MAX_PARTICLES + 255) / 256, 1, 1);
 	// glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
-	glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT |
-				GL_BUFFER_UPDATE_BARRIER_BIT);
+	glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT |	GL_BUFFER_UPDATE_BARRIER_BIT);
 }

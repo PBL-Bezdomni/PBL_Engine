@@ -16,6 +16,8 @@ private:
 
     ParticleEmitter* m_ParticleEmitter;
 
+    bool  m_HasPickUpReleased;
+
     void BindInput();
     
     void HandleActionPressed();

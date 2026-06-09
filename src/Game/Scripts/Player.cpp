@@ -217,6 +217,7 @@ void Player::HandleActionPressed()
             if (animalScript != nullptr)
             {
                 m_CarriedAnimal = hitObject;
+                m_HasPickUpReleased = false;
                 animalScript->ChangeState(AnimalState::PickedUp);
                 for (AOnsenObject* obj : m_OnsenObjects)
                 {
@@ -235,6 +236,10 @@ void Player::HandleThrowPressed()
 {
     if (m_CarriedAnimal != nullptr)
     {
+        if (!m_HasPickUpReleased)
+        {
+            return;
+        }
         m_IsChargingThrow = true;
         m_ChargeMeter->SetActive(true);
     }
@@ -242,6 +247,11 @@ void Player::HandleThrowPressed()
 
 void Player::HandleThrowReleased()
 {
+    if (!m_HasPickUpReleased && m_CarriedAnimal != nullptr)
+    {
+        m_HasPickUpReleased = true;
+        return;
+    }
     if (m_CarriedAnimal != nullptr && m_IsChargingThrow)
     {
         RigidBody* animalRb = m_CarriedAnimal->GetComponent<RigidBody>();

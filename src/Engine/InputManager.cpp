@@ -12,6 +12,7 @@ void InputManager::Initialize()
     addBinding(InputName.ACTION, {BindingType::Button, GLFW_GAMEPAD_BUTTON_A});
     addBinding(InputName.THROW, {BindingType::Button, GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER});
     addBinding(InputName.THROW, { BindingType::Button, GLFW_GAMEPAD_BUTTON_LEFT_BUMPER });
+    addBinding(InputName.THROW, { BindingType::Button, GLFW_GAMEPAD_BUTTON_A });
 }
 
 void InputManager::createAction(const std::string& name) {
