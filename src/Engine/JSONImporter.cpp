@@ -74,6 +74,11 @@ shared_ptr<GameObject> JSONImporter::ImportObjectFromData(nlohmann::basic_json<>
         
         auto size = obj.value(gn.COLLIDER_SIZE, std::vector<float>{1.0f, 1.0f, 1.0f});
         
+        if (size.empty())
+        {
+            size = { 1.0f, 1.0f, 1.0f };
+        }
+
         glm::vec3 colliderSize = glm::vec3(size[0], size[1], size[2]);
         // colliderSize *= COLLIDER_MOD;
         

@@ -1,0 +1,6032 @@
+{
+    "objects": [
+        {
+            "name": "Pillar (4)",
+            "prefab": "UNKNOWN",
+            "id": 1,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Pillar.fbx",
+            "base_color_texture": "Pillar_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                0.36744868755340578,
+                1.0100007057189942,
+                1.6990047693252564
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                -0.4569700062274933,
+                0.49404412508010867,
+                0.3742470145225525
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                0.000030517578125,
+                -2.117582368135751e-21,
+                -0.000013172626495361328
+            ],
+            "collider_size": [
+                0.3484542965888977,
+                0.32769984006881716,
+                2.574939012527466
+            ],
+            "scripts": [],
+            "saveTime": 639166866658631525
+        },
+        {
+            "name": "LillyPot (1)",
+            "prefab": "UNKNOWN",
+            "id": 2,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "LillyPot.fbx",
+            "base_color_texture": "LillyPot_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -1.4865338802337647,
+                0.4890008568763733,
+                0.15000545978546143
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                313.5276184082031
+            ],
+            "scale": [
+                0.2662642300128937,
+                0.26626428961753847,
+                0.037927743047475818
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658631525
+        },
+        {
+            "name": "LillyPot (4)",
+            "prefab": "UNKNOWN",
+            "id": 3,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "LillyPot.fbx",
+            "base_color_texture": "LillyPot_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                0.9694597721099854,
+                0.4890008568763733,
+                0.15300381183624268
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                313.5276184082031
+            ],
+            "scale": [
+                0.2662642300128937,
+                0.26626428961753847,
+                0.037927743047475818
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658631525
+        },
+        {
+            "name": "Carpet",
+            "prefab": "UNKNOWN",
+            "id": 4,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Carpet.fbx",
+            "base_color_texture": "Carpet_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -1.1225354671478272,
+                0.6500001549720764,
+                3.8790016174316408
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.7117605209350587,
+                1.30439031124115,
+                0.8703603744506836
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658631525
+        },
+        {
+            "name": "ShortInnerWall (3)",
+            "prefab": "UNKNOWN",
+            "id": 5,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "ShortInnerWall.fbx",
+            "base_color_texture": "",
+            "normal_texture": "",
+            "position": [
+                1.2064592838287354,
+                1.0100007057189942,
+                4.922000885009766
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                -0.00004105222978978418
+            ],
+            "scale": [
+                -1.1893219947814942,
+                0.01832599937915802,
+                0.17590799927711488
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                0.0,
+                0.00048828125,
+                -0.000016927719116210938
+            ],
+            "collider_size": [
+                0.07827750593423844,
+                37.72272491455078,
+                5.32736349105835
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Bamboo3 (8)",
+            "prefab": "UNKNOWN",
+            "id": 6,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo3.fbx",
+            "base_color_texture": "Bamboo3_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.3525311946868898,
+                0.5619989037513733,
+                1.3090020418167115
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.3072670102119446,
+                0.2565500736236572,
+                3.804922103881836
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "ModelInnerWall (5)",
+            "prefab": "UNKNOWN",
+            "id": 7,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "ModelInnerWall.fbx",
+            "base_color_texture": "",
+            "normal_texture": "",
+            "position": [
+                1.2064592838287354,
+                1.0100007057189942,
+                4.119998931884766
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                180.0
+            ],
+            "scale": [
+                -1.1893224716186524,
+                0.01832600310444832,
+                0.17590799927711488
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                0.00000762939453125,
+                0.00048828125,
+                -0.000003814697265625
+            ],
+            "collider_size": [
+                0.07796671241521836,
+                51.26544952392578,
+                5.317535877227783
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "TinyFancePillar",
+            "prefab": "UNKNOWN",
+            "id": 8,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "TinyFancePillar.fbx",
+            "base_color_texture": "TinyFancePillar_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -0.5860364437103272,
+                0.6700006127357483,
+                0.6187020540237427
+            ],
+            "rotation": [
+                90.0,
+                0.0,
+                270.00006103515627
+            ],
+            "scale": [
+                0.1490635722875595,
+                0.20033417642116548,
+                0.1349106878042221
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                0.0,
+                0.0,
+                -0.000007867813110351563
+            ],
+            "collider_size": [
+                0.10212057083845139,
+                0.14357924461364747,
+                1.1186376810073853
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Bamboo4",
+            "prefab": "UNKNOWN",
+            "id": 9,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo4.fbx",
+            "base_color_texture": "Bamboo4_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.2585675716400148,
+                0.5100007653236389,
+                -4.910877227783203
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                257.9382019042969
+            ],
+            "scale": [
+                0.30726709961891177,
+                0.2565500736236572,
+                3.8049211502075197
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Bamboo4 (10)",
+            "prefab": "UNKNOWN",
+            "id": 10,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo4.fbx",
+            "base_color_texture": "Bamboo4_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.067542791366577,
+                0.5619989037513733,
+                1.2370034456253052
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                257.9382019042969
+            ],
+            "scale": [
+                0.30726709961891177,
+                0.2565500736236572,
+                3.8049211502075197
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "MassageTable (1)",
+            "prefab": "UNKNOWN",
+            "id": 11,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "MassageTable.fbx",
+            "base_color_texture": "MassageTable_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -2.4625470638275148,
+                0.7499986290931702,
+                4.329006195068359
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                180.0000457763672
+            ],
+            "scale": [
+                0.442038357257843,
+                0.5126879811286926,
+                1.0
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": true,
+            "is_static": true,
+            "collider_pos": [
+                0.000030547380447387695,
+                -5.082197683525802e-21,
+                0.000001341104507446289
+            ],
+            "collider_size": [
+                1.8799710273742676,
+                0.935569167137146,
+                0.23797819018363954
+            ],
+            "scripts": [
+                "MassageTable"
+            ],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Arka (2)",
+            "prefab": "UNKNOWN",
+            "id": 12,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Arka.fbx",
+            "base_color_texture": "Arka_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                2.057457208633423,
+                1.011000156402588,
+                -4.150997161865234
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                270.0000305175781
+            ],
+            "scale": [
+                0.747035026550293,
+                0.747035026550293,
+                0.747035026550293
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "BarrelWithCoal",
+            "prefab": "UNKNOWN",
+            "id": 13,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "BarrelWithCoal.fbx",
+            "base_color_texture": "BarrelWithCoal_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                0.23345208168029786,
+                0.7040010094642639,
+                -2.8739967346191408
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                80.0000228881836
+            ],
+            "scale": [
+                0.2484377771615982,
+                0.24843783676624299,
+                0.2484377771615982
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "ShortInnerWall (4)",
+            "prefab": "UNKNOWN",
+            "id": 14,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "ShortInnerWall.fbx",
+            "base_color_texture": "",
+            "normal_texture": "",
+            "position": [
+                1.2064592838287354,
+                1.0100007057189942,
+                5.599002838134766
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                -0.00004105222978978418
+            ],
+            "scale": [
+                -1.1893219947814942,
+                0.01832599937915802,
+                0.17590799927711488
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                0.0,
+                0.00048828125,
+                0.000013113021850585938
+            ],
+            "collider_size": [
+                0.07827750593423844,
+                37.72272491455078,
+                5.32736349105835
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "ModelInnerWall",
+            "prefab": "UNKNOWN",
+            "id": 15,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "ModelInnerWall.fbx",
+            "base_color_texture": "",
+            "normal_texture": "",
+            "position": [
+                -3.7595441341400148,
+                1.0100007057189942,
+                2.243000030517578
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                180.0
+            ],
+            "scale": [
+                1.1893224716186524,
+                0.01832600310444832,
+                0.17590799927711488
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                -0.00000762939453125,
+                0.0,
+                -0.0000019073486328125
+            ],
+            "collider_size": [
+                0.07796671241521836,
+                51.26544952392578,
+                5.317535877227783
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "TinyFance (5)",
+            "prefab": "UNKNOWN",
+            "id": 16,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "TinyFance.fbx",
+            "base_color_texture": "TinyFance_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -1.8155438899993897,
+                0.6420007348060608,
+                -0.15900027751922608
+            ],
+            "rotation": [
+                -2.1169772532192433e-11,
+                0.000007629395440744702,
+                270.0001220703125
+            ],
+            "scale": [
+                0.09561607986688614,
+                0.18472810089588166,
+                0.25518324971199038
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                -0.002909525763243437,
+                0.13840743899345399,
+                0.000030428171157836914
+            ],
+            "collider_size": [
+                0.17627675831317902,
+                0.8563334345817566,
+                1.1186373233795167
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Bamboo1 (7)",
+            "prefab": "UNKNOWN",
+            "id": 17,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo1.fbx",
+            "base_color_texture": "Bamboo1_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.4849774837493898,
+                0.5100007653236389,
+                1.3794671297073365
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.3072670102119446,
+                0.2565500736236572,
+                3.804922103881836
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "TinyFance (21)",
+            "prefab": "UNKNOWN",
+            "id": 18,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "TinyFance.fbx",
+            "base_color_texture": "TinyFance_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                0.6114580631256104,
+                0.6420007348060608,
+                0.6260033845901489
+            ],
+            "rotation": [
+                -2.1169772532192433e-11,
+                0.000007629395440744702,
+                270.0001220703125
+            ],
+            "scale": [
+                0.09561607986688614,
+                0.18472810089588166,
+                0.25518324971199038
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                -0.002909525763243437,
+                0.13840684294700623,
+                0.000060945749282836914
+            ],
+            "collider_size": [
+                0.17627675831317902,
+                0.8563334345817566,
+                1.1186373233795167
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Lamp (2)",
+            "prefab": "UNKNOWN",
+            "id": 19,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Lamp.fbx",
+            "base_color_texture": "Lamp_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -1.7335431575775147,
+                0.782999575138092,
+                -0.4119986295700073
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.564893364906311,
+                0.5648934841156006,
+                0.5648934841156006
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Bamboo2 (6)",
+            "prefab": "UNKNOWN",
+            "id": 20,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo2.fbx",
+            "base_color_texture": "Bamboo2_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.118079900741577,
+                0.5100007653236389,
+                -6.101581573486328
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.3072670102119446,
+                0.2565500736236572,
+                3.804922103881836
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Bamboo3 (5)",
+            "prefab": "UNKNOWN",
+            "id": 21,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo3.fbx",
+            "base_color_texture": "Bamboo3_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -2.812537908554077,
+                0.5100007653236389,
+                -6.000995635986328
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.3072670102119446,
+                0.2565500736236572,
+                3.804922103881836
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Towels",
+            "prefab": "UNKNOWN",
+            "id": 22,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Towels.fbx",
+            "base_color_texture": "Towels_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                0.40746331214904787,
+                0.710001528263092,
+                4.279003143310547
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.270251989364624,
+                0.313414990901947,
+                0.09520204365253449
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": true,
+            "is_static": true,
+            "collider_pos": [
+                1.563688039779663,
+                1.3013542890548707,
+                1.9799983501434327
+            ],
+            "collider_size": [
+                4.627843856811523,
+                4.012570381164551,
+                6.310297966003418
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Bonsai",
+            "prefab": "UNKNOWN",
+            "id": 23,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bonsai.fbx",
+            "base_color_texture": "Bonsai_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -2.7555463314056398,
+                1.1439995765686036,
+                -3.8800010681152345
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                179.99996948242188
+            ],
+            "scale": [
+                1.2946009635925294,
+                1.294600009918213,
+                1.294600009918213
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "ModuleWall (9)",
+            "prefab": "UNKNOWN",
+            "id": 24,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "ModuleWall.fbx",
+            "base_color_texture": "ModuleWall_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                1.2014544010162354,
+                1.0100007057189942,
+                -2.7849998474121095
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.24772800505161286,
+                5.761960029602051,
+                1.0733742713928223
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                2.9802322387695315e-8,
+                1.1175872671742582e-8,
+                -0.0000017881393432617188
+            ],
+            "collider_size": [
+                1.769836187362671,
+                0.17114274203777314,
+                0.8358191847801209
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "ShortInnerWall (5)",
+            "prefab": "UNKNOWN",
+            "id": 25,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "ShortInnerWall.fbx",
+            "base_color_texture": "",
+            "normal_texture": "",
+            "position": [
+                0.7904589176177979,
+                1.0100007057189942,
+                1.695003628730774
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                90.0
+            ],
+            "scale": [
+                -1.1893219947814942,
+                0.01832600310444832,
+                0.17590799927711488
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                0.0,
+                -0.00048828125,
+                -0.0000064373016357421879
+            ],
+            "collider_size": [
+                0.07827762514352799,
+                37.722740173339847,
+                5.327364921569824
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "TinyFance",
+            "prefab": "UNKNOWN",
+            "id": 26,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "TinyFance.fbx",
+            "base_color_texture": "TinyFance_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -1.8155438899993897,
+                0.6420007348060608,
+                0.6199990510940552
+            ],
+            "rotation": [
+                -2.1169772532192433e-11,
+                0.000007629395440744702,
+                270.0001220703125
+            ],
+            "scale": [
+                0.09561607986688614,
+                0.18472810089588166,
+                0.25518324971199038
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                -0.002909525763243437,
+                0.13840684294700623,
+                0.000030428171157836914
+            ],
+            "collider_size": [
+                0.17627675831317902,
+                0.8563334345817566,
+                1.1186373233795167
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Bamboo2 (8)",
+            "prefab": "UNKNOWN",
+            "id": 27,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo2.fbx",
+            "base_color_texture": "Bamboo2_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.4565045833587648,
+                0.5619989037513733,
+                1.5648843050003052
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.3072670102119446,
+                0.2565500736236572,
+                3.804922103881836
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Bridge",
+            "prefab": "UNKNOWN",
+            "id": 28,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bridge.fbx",
+            "base_color_texture": "Bridge_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -2.330543279647827,
+                0.5749993920326233,
+                0.22000515460968018
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.5055609941482544,
+                0.505561113357544,
+                0.6256999969482422
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Bamboo3 (2)",
+            "prefab": "UNKNOWN",
+            "id": 29,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo3.fbx",
+            "base_color_texture": "Bamboo3_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -2.8195416927337648,
+                0.5100007653236389,
+                -5.098003387451172
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.3072670102119446,
+                0.2565500736236572,
+                3.804922103881836
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "TinyFancePillar (2)",
+            "prefab": "UNKNOWN",
+            "id": 30,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "TinyFancePillar.fbx",
+            "base_color_texture": "TinyFancePillar_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -2.7465436458587648,
+                0.6700006127357483,
+                0.6187020540237427
+            ],
+            "rotation": [
+                90.0,
+                0.0,
+                270.00006103515627
+            ],
+            "scale": [
+                0.1490635722875595,
+                0.20033417642116548,
+                0.1349106878042221
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                -0.00006103515625,
+                0.0,
+                -0.000009298324584960938
+            ],
+            "collider_size": [
+                0.10212057083845139,
+                0.14357924461364747,
+                1.1186376810073853
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "LongInnerWall",
+            "prefab": "UNKNOWN",
+            "id": 31,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "LongInnerWall.fbx",
+            "base_color_texture": "LongInnerWall_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.042854070663452,
+                1.0100007057189942,
+                6.024005889892578
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                270.00006103515627
+            ],
+            "scale": [
+                1.1893219947814942,
+                0.01832599937915802,
+                0.17590799927711488
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                0.00000762939453125,
+                0.0,
+                -0.000013113021850585938
+            ],
+            "collider_size": [
+                0.07773122936487198,
+                71.25526428222656,
+                5.32736349105835
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "WidhEndWall (1)",
+            "prefab": "UNKNOWN",
+            "id": 32,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "WidhEndWall.fbx",
+            "base_color_texture": "",
+            "normal_texture": "",
+            "position": [
+                1.2014544010162354,
+                1.0100007057189942,
+                -3.523998260498047
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.24772800505161286,
+                -5.761960029602051,
+                1.0733742713928223
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                1.1920928955078126e-7,
+                2.421439049271612e-8,
+                -0.0000016689300537109376
+            ],
+            "collider_size": [
+                1.76983642578125,
+                0.08585257083177567,
+                0.8358197212219238
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Water",
+            "prefab": "UNKNOWN",
+            "id": 33,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Water.fbx",
+            "base_color_texture": "Water_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                0.8374559879302979,
+                0.49000030755996706,
+                0.3190041780471802
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                2.405919075012207,
+                1.1893222332000733,
+                1.0
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "ShortInnerWall (1)",
+            "prefab": "UNKNOWN",
+            "id": 34,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "ShortInnerWall.fbx",
+            "base_color_texture": "",
+            "normal_texture": "",
+            "position": [
+                -3.7595441341400148,
+                1.0100007057189942,
+                5.599002838134766
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                -0.00004105222978978418
+            ],
+            "scale": [
+                1.1893219947814942,
+                0.01832599937915802,
+                0.17590799927711488
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                0.0,
+                0.0,
+                0.000010728836059570313
+            ],
+            "collider_size": [
+                0.07827750593423844,
+                37.72272491455078,
+                5.32736349105835
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "TinyFance (19)",
+            "prefab": "UNKNOWN",
+            "id": 35,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "TinyFance.fbx",
+            "base_color_texture": "TinyFance_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                0.8844530582427979,
+                0.6420007348060608,
+                0.6260033845901489
+            ],
+            "rotation": [
+                -2.1169772532192433e-11,
+                0.000007629395440744702,
+                270.0001220703125
+            ],
+            "scale": [
+                0.09561607986688614,
+                0.18472810089588166,
+                0.25518324971199038
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                -0.002909525763243437,
+                0.13840684294700623,
+                0.000060945749282836914
+            ],
+            "collider_size": [
+                0.17627675831317902,
+                0.8563334345817566,
+                1.1186373233795167
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "TinyFance (16)",
+            "prefab": "UNKNOWN",
+            "id": 36,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "TinyFance.fbx",
+            "base_color_texture": "TinyFance_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                0.6114580631256104,
+                0.6420007348060608,
+                -0.18899905681610108
+            ],
+            "rotation": [
+                -2.1169772532192433e-11,
+                0.000007629395440744702,
+                270.0001220703125
+            ],
+            "scale": [
+                0.09561607986688614,
+                0.18472810089588166,
+                0.25518324971199038
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                -0.002970560919493437,
+                0.13840743899345399,
+                0.000060945749282836914
+            ],
+            "collider_size": [
+                0.17627675831317902,
+                0.8563334345817566,
+                1.1186373233795167
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "ModelInnerWall (3)",
+            "prefab": "UNKNOWN",
+            "id": 37,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "ModelInnerWall.fbx",
+            "base_color_texture": "",
+            "normal_texture": "",
+            "position": [
+                1.2064592838287354,
+                1.0100007057189942,
+                2.243000030517578
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                180.0
+            ],
+            "scale": [
+                -1.1893224716186524,
+                0.01832600310444832,
+                0.17590799927711488
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                0.00000762939453125,
+                0.0,
+                -0.0000026226043701171877
+            ],
+            "collider_size": [
+                0.07796671241521836,
+                51.26544952392578,
+                5.317535877227783
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Bamboo1 (8)",
+            "prefab": "UNKNOWN",
+            "id": 38,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo1.fbx",
+            "base_color_texture": "Bamboo1_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.4849774837493898,
+                0.5619989037513733,
+                1.3794671297073365
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.3072670102119446,
+                0.2565500736236572,
+                3.804922103881836
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Ground",
+            "prefab": "UNKNOWN",
+            "id": 39,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Ground.fbx",
+            "base_color_texture": "Grass1_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                0.3199999928474426,
+                0.3100000023841858,
+                0.1599999964237213
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                180.0
+            ],
+            "scale": [
+                2.1500558853149416,
+                1.4351946115493775,
+                1.0
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                -1.4006847625681104e-22,
+                -1.85656704785697e-15,
+                0.0000022601743694394829
+            ],
+            "collider_size": [
+                7.455384731292725,
+                14.931565284729004,
+                0.572627067565918
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Door (2)",
+            "prefab": "UNKNOWN",
+            "id": 40,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Door.fbx",
+            "base_color_texture": "Door_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                0.38546013832092287,
+                1.046999454498291,
+                1.7999993562698365
+            ],
+            "rotation": [
+                89.98021697998047,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                -1.6354296207427979,
+                -0.22053922712802888,
+                -0.8134174346923828
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "EndWall (1)",
+            "prefab": "UNKNOWN",
+            "id": 41,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "EndWall.fbx",
+            "base_color_texture": "EndWall_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -0.7175366878509522,
+                1.0100007057189942,
+                -6.705997467041016
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                180.0000762939453
+            ],
+            "scale": [
+                -0.2477281540632248,
+                5.761960029602051,
+                1.0733740329742432
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                1.7618285302889448e-19,
+                -9.294599294662476e-7,
+                0.0000014901161193847657
+            ],
+            "collider_size": [
+                2.2263829708099367,
+                0.05749346315860748,
+                0.8358191847801209
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "TinyFance (15)",
+            "prefab": "UNKNOWN",
+            "id": 42,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "TinyFance.fbx",
+            "base_color_texture": "TinyFance_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -2.8975446224212648,
+                0.6420007348060608,
+                -0.18899905681610108
+            ],
+            "rotation": [
+                -2.1169772532192433e-11,
+                0.000007629395440744702,
+                270.0001220703125
+            ],
+            "scale": [
+                0.09561607986688614,
+                0.18472810089588166,
+                0.25518324971199038
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                -0.002970560919493437,
+                0.13840743899345399,
+                -0.000030606985092163086
+            ],
+            "collider_size": [
+                0.17627675831317902,
+                0.8563334345817566,
+                1.1186373233795167
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "ModuleWall",
+            "prefab": "UNKNOWN",
+            "id": 43,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "ModuleWall.fbx",
+            "base_color_texture": "ModuleWall_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.752540349960327,
+                1.0100007057189942,
+                1.1270028352737427
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                -0.24772800505161286,
+                5.761960029602051,
+                1.0733742713928223
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                2.9802322387695315e-8,
+                1.1175872671742582e-8,
+                0.0000016093254089355469
+            ],
+            "collider_size": [
+                1.769836187362671,
+                0.17114274203777314,
+                0.8358191847801209
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "MassageTable (3)",
+            "prefab": "UNKNOWN",
+            "id": 44,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "MassageTable.fbx",
+            "base_color_texture": "MassageTable_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -2.4625470638275148,
+                0.7499986290931702,
+                2.529003143310547
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                180.0000457763672
+            ],
+            "scale": [
+                0.442038357257843,
+                0.5126879811286926,
+                1.0
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": true,
+            "is_static": true,
+            "collider_pos": [
+                0.000030547380447387695,
+                -5.082197683525802e-21,
+                0.000001996755599975586
+            ],
+            "collider_size": [
+                1.8799710273742676,
+                0.935569167137146,
+                0.23797819018363954
+            ],
+            "scripts": [
+                "MassageTable"
+            ],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "ModuleShortWall (2)",
+            "prefab": "UNKNOWN",
+            "id": 45,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "ModuleShortWall.fbx",
+            "base_color_texture": "ModuleShortWall_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -0.13953375816345216,
+                1.0100007057189942,
+                -6.705997467041016
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                -0.24772800505161286,
+                -5.761960029602051,
+                1.0733742713928223
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                -1.7881393432617188e-7,
+                9.778887033462525e-7,
+                -0.0000013560056686401368
+            ],
+            "collider_size": [
+                2.4777989387512209,
+                0.05749344453215599,
+                0.835819661617279
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Bamboo1 (6)",
+            "prefab": "UNKNOWN",
+            "id": 46,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo1.fbx",
+            "base_color_texture": "Bamboo1_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.1465375423431398,
+                0.5100007653236389,
+                -6.286998748779297
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.3072670102119446,
+                0.2565500736236572,
+                3.804922103881836
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Jakuzi",
+            "prefab": "UNKNOWN",
+            "id": 47,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Jakuzi.fbx",
+            "base_color_texture": "Jakuzi_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                0.27846550941467287,
+                0.7540002465248108,
+                -1.9539984464645386
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                2.034419059753418,
+                2.034419536590576,
+                1.0
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": true,
+            "is_static": true,
+            "collider_pos": [
+                0.0,
+                0.0,
+                -0.000003337860107421875
+            ],
+            "collider_size": [
+                0.6246137022972107,
+                0.6342495679855347,
+                0.33169785141944888
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "TinyFance (14)",
+            "prefab": "UNKNOWN",
+            "id": 48,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "TinyFance.fbx",
+            "base_color_texture": "TinyFance_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.1705243587493898,
+                0.6420007348060608,
+                -0.18899905681610108
+            ],
+            "rotation": [
+                -2.1169772532192433e-11,
+                0.000007629395440744702,
+                270.0001220703125
+            ],
+            "scale": [
+                0.09561607986688614,
+                0.18472810089588166,
+                0.25518324971199038
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                -0.002970560919493437,
+                0.13840743899345399,
+                -8.940695295223122e-8
+            ],
+            "collider_size": [
+                0.17627675831317902,
+                0.8563334345817566,
+                1.1186373233795167
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Lamp (3)",
+            "prefab": "UNKNOWN",
+            "id": 49,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Lamp.fbx",
+            "base_color_texture": "Lamp_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -1.7335431575775147,
+                0.7800012230873108,
+                -5.951000213623047
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.564893364906311,
+                0.5648934841156006,
+                0.5648934841156006
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Bamboo4 (5)",
+            "prefab": "UNKNOWN",
+            "id": 50,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo4.fbx",
+            "base_color_texture": "Bamboo4_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -2.8625409603118898,
+                0.5100007653236389,
+                -5.884990692138672
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                257.9382019042969
+            ],
+            "scale": [
+                0.30726709961891177,
+                0.2565500736236572,
+                3.8049211502075197
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Bamboo1 (5)",
+            "prefab": "UNKNOWN",
+            "id": 51,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo1.fbx",
+            "base_color_texture": "Bamboo1_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -2.9449689388275148,
+                0.5100007653236389,
+                -5.930530548095703
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.3072670102119446,
+                0.2565500736236572,
+                3.804922103881836
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Lamp (1)",
+            "prefab": "UNKNOWN",
+            "id": 52,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Lamp.fbx",
+            "base_color_texture": "Lamp_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -0.7545392513275147,
+                0.782999575138092,
+                -0.4119986295700073
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.564893364906311,
+                0.5648934841156006,
+                0.5648934841156006
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "TinyFance (10)",
+            "prefab": "UNKNOWN",
+            "id": 53,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "TinyFance.fbx",
+            "base_color_texture": "TinyFance_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.4435346126556398,
+                0.6420007348060608,
+                0.6199990510940552
+            ],
+            "rotation": [
+                -2.1169772532192433e-11,
+                0.000007629395440744702,
+                270.0001220703125
+            ],
+            "scale": [
+                0.09561607986688614,
+                0.18472810089588166,
+                0.25518324971199038
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                -0.002970560919493437,
+                0.13840684294700623,
+                0.000030428171157836914
+            ],
+            "collider_size": [
+                0.17627675831317902,
+                0.8563334345817566,
+                1.1186373233795167
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "ModelInnerWall (1)",
+            "prefab": "UNKNOWN",
+            "id": 54,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "ModelInnerWall.fbx",
+            "base_color_texture": "",
+            "normal_texture": "",
+            "position": [
+                -3.7595441341400148,
+                1.0100007057189942,
+                3.1820030212402345
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                180.0
+            ],
+            "scale": [
+                1.1893224716186524,
+                0.01832600310444832,
+                0.17590799927711488
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                -0.00000762939453125,
+                0.00048828125,
+                -0.000002384185791015625
+            ],
+            "collider_size": [
+                0.07796671241521836,
+                51.26544952392578,
+                5.317535877227783
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "LongInnerWall (1)",
+            "prefab": "UNKNOWN",
+            "id": 55,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "LongInnerWall.fbx",
+            "base_color_texture": "LongInnerWall_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                0.47715020179748537,
+                1.0100007057189942,
+                6.024005889892578
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                270.00006103515627
+            ],
+            "scale": [
+                -1.1893219947814942,
+                0.01832599937915802,
+                0.17590799927711488
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                0.0,
+                0.0,
+                -0.000013113021850585938
+            ],
+            "collider_size": [
+                0.07773122936487198,
+                71.25526428222656,
+                5.32736349105835
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Bamboo1 (1)",
+            "prefab": "UNKNOWN",
+            "id": 56,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo1.fbx",
+            "base_color_texture": "Bamboo1_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.2909772396087648,
+                0.5100007653236389,
+                -5.463535308837891
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.3072670102119446,
+                0.2565500736236572,
+                3.804922103881836
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Bamboo3 (9)",
+            "prefab": "UNKNOWN",
+            "id": 57,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo3.fbx",
+            "base_color_texture": "Bamboo3_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.2501142024993898,
+                0.5619989037513733,
+                0.8045388460159302
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.3072670102119446,
+                0.2565500736236572,
+                3.804922103881836
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "ModuleWall (6)",
+            "prefab": "UNKNOWN",
+            "id": 58,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "ModuleWall.fbx",
+            "base_color_texture": "ModuleWall_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                1.2014544010162354,
+                1.0100007057189942,
+                -0.8260000944137573
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.24772800505161286,
+                5.761960029602051,
+                1.0733742713928223
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                2.9802322387695315e-8,
+                1.1175872671742582e-8,
+                -0.0000019669532775878908
+            ],
+            "collider_size": [
+                1.769836187362671,
+                0.17114274203777314,
+                0.8358191847801209
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "TinyFancePillar (4)",
+            "prefab": "UNKNOWN",
+            "id": 59,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "TinyFancePillar.fbx",
+            "base_color_texture": "TinyFancePillar_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                1.0354540348052979,
+                0.6700006127357483,
+                -0.19029605388641358
+            ],
+            "rotation": [
+                90.0,
+                0.0,
+                270.00006103515627
+            ],
+            "scale": [
+                0.1490635722875595,
+                0.20033417642116548,
+                0.1349106878042221
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                0.0,
+                0.0,
+                -0.000011682510375976563
+            ],
+            "collider_size": [
+                0.10212057083845139,
+                0.14357924461364747,
+                1.1186376810073853
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Level",
+            "prefab": "UNKNOWN",
+            "id": 60,
+            "parent": "",
+            "parentID": -1,
+            "mesh": "",
+            "base_color_texture": "",
+            "normal_texture": "",
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.5580599904060364,
+                0.5580599904060364,
+                0.5580599904060364
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                -1.4006847625681104e-22,
+                -1.85656704785697e-15,
+                0.0000022601743694394829
+            ],
+            "collider_size": [
+                7.455384731292725,
+                14.931565284729004,
+                0.572627067565918
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "WallCorner (1)",
+            "prefab": "UNKNOWN",
+            "id": 61,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "WallCorner.fbx",
+            "base_color_texture": "WallCorner_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                1.0984575748443604,
+                1.0100007057189942,
+                -6.543994903564453
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                180.00001525878907
+            ],
+            "scale": [
+                -0.2477281540632248,
+                5.761960029602051,
+                1.0733740329742432
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                -0.00006103515625,
+                -1.4890989561078738e-15,
+                1.6391277313232423e-7
+            ],
+            "collider_size": [
+                2.604329824447632,
+                0.11361944675445557,
+                0.8358193635940552
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "WoodenFloor",
+            "prefab": "UNKNOWN",
+            "id": 62,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "WoodenFloor.fbx",
+            "base_color_texture": "WoodenFloor_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -1.2725446224212647,
+                0.5600000023841858,
+                3.868999481201172
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                90.00006103515625
+            ],
+            "scale": [
+                1.3416587114334107,
+                1.7254565954208375,
+                0.1797039955854416
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                2.7859823337195168e-9,
+                -0.000007631560947629623,
+                0.17445245385169984
+            ],
+            "collider_size": [
+                3.235074520111084,
+                2.89877986907959,
+                0.3489721417427063
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Door (4)",
+            "prefab": "UNKNOWN",
+            "id": 63,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Door.fbx",
+            "base_color_texture": "Door_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                0.09845757484436035,
+                1.046999454498291,
+                5.928005218505859
+            ],
+            "rotation": [
+                89.98021697998047,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                -1.6354296207427979,
+                -0.22053922712802888,
+                -0.8134174346923828
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "TinyFance (9)",
+            "prefab": "UNKNOWN",
+            "id": 64,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "TinyFance.fbx",
+            "base_color_texture": "TinyFance_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -0.7375409603118897,
+                0.6420007348060608,
+                -0.15900027751922608
+            ],
+            "rotation": [
+                -2.1169772532192433e-11,
+                0.000007629395440744702,
+                270.0001220703125
+            ],
+            "scale": [
+                0.09561607986688614,
+                0.18472810089588166,
+                0.25518324971199038
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                -0.002970560919493437,
+                0.13840743899345399,
+                -8.940695295223122e-8
+            ],
+            "collider_size": [
+                0.17627675831317902,
+                0.8563334345817566,
+                1.1186373233795167
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "GameObject",
+            "prefab": "UNKNOWN",
+            "id": 65,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "",
+            "base_color_texture": "",
+            "normal_texture": "",
+            "position": [
+                0.20999999344348908,
+                0.6399999856948853,
+                -0.47999998927116396
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "has_rigid_body": false,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [
+                "SpawnManager"
+            ],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Bamboo2 (2)",
+            "prefab": "UNKNOWN",
+            "id": 66,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo2.fbx",
+            "base_color_texture": "Bamboo2_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -2.9235150814056398,
+                0.5100007653236389,
+                -4.842121124267578
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.3072670102119446,
+                0.2565500736236572,
+                3.804922103881836
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Bamboo4 (7)",
+            "prefab": "UNKNOWN",
+            "id": 67,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo4.fbx",
+            "base_color_texture": "Bamboo4_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.4025495052337648,
+                0.5100007653236389,
+                1.4250069856643677
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                257.9382019042969
+            ],
+            "scale": [
+                0.30726709961891177,
+                0.2565500736236572,
+                3.8049211502075197
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Pillar (3)",
+            "prefab": "UNKNOWN",
+            "id": 68,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Pillar.fbx",
+            "base_color_texture": "Pillar_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -2.3195416927337648,
+                1.0100007057189942,
+                6.027004241943359
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.4569700062274933,
+                0.49404412508010867,
+                0.3742470145225525
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                0.0,
+                -2.117582368135751e-21,
+                -0.000014483928680419922
+            ],
+            "collider_size": [
+                0.3484542965888977,
+                0.32769984006881716,
+                2.574939012527466
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Bamboo2 (10)",
+            "prefab": "UNKNOWN",
+            "id": 69,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo2.fbx",
+            "base_color_texture": "Bamboo2_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.1215131282806398,
+                0.5619989037513733,
+                1.3768807649612427
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.3072670102119446,
+                0.2565500736236572,
+                3.804922103881836
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "ModuleWall (2)",
+            "prefab": "UNKNOWN",
+            "id": 70,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "ModuleWall.fbx",
+            "base_color_texture": "ModuleWall_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.752540349960327,
+                1.0100007057189942,
+                -1.8059958219528199
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                -0.24772800505161286,
+                5.761960029602051,
+                1.0733742713928223
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                2.9802322387695315e-8,
+                1.1175872671742582e-8,
+                -0.0000018477439880371094
+            ],
+            "collider_size": [
+                1.769836187362671,
+                0.17114274203777314,
+                0.8358191847801209
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Bamboo4 (3)",
+            "prefab": "UNKNOWN",
+            "id": 71,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo4.fbx",
+            "base_color_texture": "Bamboo4_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -2.675575017929077,
+                0.5100007653236389,
+                -5.321872711181641
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                257.9382019042969
+            ],
+            "scale": [
+                0.30726709961891177,
+                0.2565500736236572,
+                3.8049211502075197
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Door (1)",
+            "prefab": "UNKNOWN",
+            "id": 72,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Door.fbx",
+            "base_color_texture": "Door_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.2905499935150148,
+                1.046999454498291,
+                1.8320046663284302
+            ],
+            "rotation": [
+                89.98021697998047,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                -1.6354296207427979,
+                -0.22053922712802888,
+                -0.8134174346923828
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "ModuleWall (3)",
+            "prefab": "UNKNOWN",
+            "id": 73,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "ModuleWall.fbx",
+            "base_color_texture": "ModuleWall_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.752540349960327,
+                1.0100007057189942,
+                -2.785999298095703
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                -0.24772800505161286,
+                5.761960029602051,
+                1.0733742713928223
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                2.9802322387695315e-8,
+                1.1175872671742582e-8,
+                -0.0000017881393432617188
+            ],
+            "collider_size": [
+                1.769836187362671,
+                0.17114274203777314,
+                0.8358191847801209
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "ModuleWall (7)",
+            "prefab": "UNKNOWN",
+            "id": 74,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "ModuleWall.fbx",
+            "base_color_texture": "ModuleWall_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                1.2014544010162354,
+                1.0100007057189942,
+                -1.8059958219528199
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.24772800505161286,
+                5.761960029602051,
+                1.0733742713928223
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                2.9802322387695315e-8,
+                1.1175872671742582e-8,
+                -0.0000018477439880371094
+            ],
+            "collider_size": [
+                1.769836187362671,
+                0.17114274203777314,
+                0.8358191847801209
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "LillyPot",
+            "prefab": "UNKNOWN",
+            "id": 75,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "LillyPot.fbx",
+            "base_color_texture": "LillyPot_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.3095319271087648,
+                0.4890008568763733,
+                0.13100063800811768
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                179.6992950439453
+            ],
+            "scale": [
+                0.2285531610250473,
+                0.22855307161808015,
+                0.03255600854754448
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "WallCorner",
+            "prefab": "UNKNOWN",
+            "id": 76,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "WallCorner.fbx",
+            "base_color_texture": "WallCorner_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.649543523788452,
+                1.0100007057189942,
+                -6.543994903564453
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                180.00001525878907
+            ],
+            "scale": [
+                0.2477281540632248,
+                5.761960029602051,
+                1.0733740329742432
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                0.00006103515625,
+                -1.4890989561078738e-15,
+                1.043081283569336e-7
+            ],
+            "collider_size": [
+                2.604329824447632,
+                0.11361944675445557,
+                0.8358193635940552
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "LillyPot (2)",
+            "prefab": "UNKNOWN",
+            "id": 77,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "LillyPot.fbx",
+            "base_color_texture": "LillyPot_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -1.1305463314056397,
+                0.4890008568763733,
+                0.3860055208206177
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                356.75823974609377
+            ],
+            "scale": [
+                0.16428232192993165,
+                0.16428236663341523,
+                0.023401034995913507
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Door (3)",
+            "prefab": "UNKNOWN",
+            "id": 78,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Door.fbx",
+            "base_color_texture": "Door_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                0.7544634342193604,
+                1.046999454498291,
+                1.8320046663284302
+            ],
+            "rotation": [
+                89.98021697998047,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                -1.6354296207427979,
+                -0.22053922712802888,
+                -0.8134174346923828
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Door (5)",
+            "prefab": "UNKNOWN",
+            "id": 79,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Door.fbx",
+            "base_color_texture": "Door_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -2.662544012069702,
+                1.046999454498291,
+                5.928005218505859
+            ],
+            "rotation": [
+                89.98021697998047,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                -1.6354296207427979,
+                -0.22053922712802888,
+                -0.8134174346923828
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Bamboo3 (1)",
+            "prefab": "UNKNOWN",
+            "id": 80,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo3.fbx",
+            "base_color_texture": "Bamboo3_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.1585309505462648,
+                0.5100007653236389,
+                -5.534000396728516
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.3072670102119446,
+                0.2565500736236572,
+                3.804922103881836
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "ShortInnerWall",
+            "prefab": "UNKNOWN",
+            "id": 81,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "ShortInnerWall.fbx",
+            "base_color_texture": "",
+            "normal_texture": "",
+            "position": [
+                -3.7595441341400148,
+                1.0100007057189942,
+                4.922000885009766
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                -0.00004105222978978418
+            ],
+            "scale": [
+                1.1893219947814942,
+                0.01832599937915802,
+                0.17590799927711488
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                0.0,
+                0.00048828125,
+                -0.000019311904907226563
+            ],
+            "collider_size": [
+                0.07827750593423844,
+                37.72272491455078,
+                5.32736349105835
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "WidhEndWall",
+            "prefab": "UNKNOWN",
+            "id": 82,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "WidhEndWall.fbx",
+            "base_color_texture": "",
+            "normal_texture": "",
+            "position": [
+                1.2014544010162354,
+                1.0100007057189942,
+                -4.985996246337891
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.24772800505161286,
+                5.761960029602051,
+                1.0733742713928223
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                1.1920928955078126e-7,
+                2.421439049271612e-8,
+                -0.0000014901161193847657
+            ],
+            "collider_size": [
+                1.76983642578125,
+                0.08585257083177567,
+                0.8358197212219238
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Bamboo2 (7)",
+            "prefab": "UNKNOWN",
+            "id": 83,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo2.fbx",
+            "base_color_texture": "Bamboo2_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.4565045833587648,
+                0.5100007653236389,
+                1.5648843050003052
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.3072670102119446,
+                0.2565500736236572,
+                3.804922103881836
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "GateWall (1)",
+            "prefab": "UNKNOWN",
+            "id": 84,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "GateWall.fbx",
+            "base_color_texture": "GateWall_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                1.2014544010162354,
+                1.0100007057189942,
+                0.15000545978546143
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                0.0,
+                8.940698847936801e-8,
+                2.5331974029541018e-7
+            ],
+            "collider_size": [
+                0.43843790888786318,
+                0.9874289035797119,
+                0.8971469402313232
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Arka",
+            "prefab": "UNKNOWN",
+            "id": 85,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Arka.fbx",
+            "base_color_texture": "Arka_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -1.2325360774993897,
+                0.9950013756752014,
+                -7.514278411865234
+            ],
+            "rotation": [
+                270.019775390625,
+                0.0,
+                180.0
+            ],
+            "scale": [
+                0.747035026550293,
+                0.7470347881317139,
+                0.7470347881317139
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "TinyFance (6)",
+            "prefab": "UNKNOWN",
+            "id": 86,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "TinyFance.fbx",
+            "base_color_texture": "TinyFance_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -1.5425336360931397,
+                0.6420007348060608,
+                -0.15900027751922608
+            ],
+            "rotation": [
+                -2.1169772532192433e-11,
+                0.000007629395440744702,
+                270.0001220703125
+            ],
+            "scale": [
+                0.09561607986688614,
+                0.18472810089588166,
+                0.25518324971199038
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                -0.002909525763243437,
+                0.13840743899345399,
+                -8.940695295223122e-8
+            ],
+            "collider_size": [
+                0.17627675831317902,
+                0.8563334345817566,
+                1.1186373233795167
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "TinyFance (13)",
+            "prefab": "UNKNOWN",
+            "id": 87,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "TinyFance.fbx",
+            "base_color_texture": "TinyFance_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.4435346126556398,
+                0.6420007348060608,
+                -0.18899905681610108
+            ],
+            "rotation": [
+                -2.1169772532192433e-11,
+                0.000007629395440744702,
+                270.0001220703125
+            ],
+            "scale": [
+                0.09561607986688614,
+                0.18472810089588166,
+                0.25518324971199038
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                -0.002970560919493437,
+                0.13840743899345399,
+                0.000030428171157836914
+            ],
+            "collider_size": [
+                0.17627675831317902,
+                0.8563334345817566,
+                1.1186373233795167
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Bamboo3",
+            "prefab": "UNKNOWN",
+            "id": 88,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo3.fbx",
+            "base_color_texture": "Bamboo3_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.208564519882202,
+                0.5100007653236389,
+                -5.026882171630859
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.3072670102119446,
+                0.2565500736236572,
+                3.804922103881836
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "ModuleWall (8)",
+            "prefab": "UNKNOWN",
+            "id": 89,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "ModuleWall.fbx",
+            "base_color_texture": "ModuleWall_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.752540349960327,
+                1.0100007057189942,
+                -3.7659950256347658
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                -0.24772800505161286,
+                5.761960029602051,
+                1.0733742713928223
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                2.9802322387695315e-8,
+                1.1175872671742582e-8,
+                -0.0000016689300537109376
+            ],
+            "collider_size": [
+                1.769836187362671,
+                0.17114274203777314,
+                0.8358191847801209
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "ModuleWall (5)",
+            "prefab": "UNKNOWN",
+            "id": 90,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "ModuleWall.fbx",
+            "base_color_texture": "ModuleWall_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                1.2014544010162354,
+                1.0100007057189942,
+                1.1270028352737427
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.24772800505161286,
+                5.761960029602051,
+                1.0733742713928223
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                2.9802322387695315e-8,
+                1.1175872671742582e-8,
+                0.0000016093254089355469
+            ],
+            "collider_size": [
+                1.769836187362671,
+                0.17114274203777314,
+                0.8358191847801209
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Bamboo2 (9)",
+            "prefab": "UNKNOWN",
+            "id": 91,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo2.fbx",
+            "base_color_texture": "Bamboo2_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.3540875911712648,
+                0.5619989037513733,
+                1.060421109199524
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.3072670102119446,
+                0.2565500736236572,
+                3.804922103881836
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Bamboo4 (6)",
+            "prefab": "UNKNOWN",
+            "id": 92,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo4.fbx",
+            "base_color_texture": "Bamboo4_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.0641095638275148,
+                0.5100007653236389,
+                -6.241458892822266
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                257.9382019042969
+            ],
+            "scale": [
+                0.30726709961891177,
+                0.2565500736236572,
+                3.8049211502075197
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "TinyFance (2)",
+            "prefab": "UNKNOWN",
+            "id": 93,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "TinyFance.fbx",
+            "base_color_texture": "TinyFance_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -1.2615430355072022,
+                0.6420007348060608,
+                0.6199990510940552
+            ],
+            "rotation": [
+                -2.1169772532192433e-11,
+                0.000007629395440744702,
+                270.0001220703125
+            ],
+            "scale": [
+                0.09561607986688614,
+                0.18472810089588166,
+                0.25518324971199038
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                -0.002909525763243437,
+                0.13840684294700623,
+                -8.940695295223122e-8
+            ],
+            "collider_size": [
+                0.17627675831317902,
+                0.8563334345817566,
+                1.1186373233795167
+            ],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Gate",
+            "prefab": "UNKNOWN",
+            "id": 94,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Gate.fbx",
+            "base_color_texture": "Gate_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.7324750423431398,
+                0.4839997887611389,
+                0.22299587726593018
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.5581859946250916,
+                1.0,
+                2.6955230236053469
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "Bamboo3 (4)",
+            "prefab": "UNKNOWN",
+            "id": 95,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo3.fbx",
+            "base_color_texture": "Bamboo3_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.2485578060150148,
+                0.5100007653236389,
+                -6.026882171630859
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.3072670102119446,
+                0.2565500736236572,
+                3.804922103881836
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658641533
+        },
+        {
+            "name": "ModuleWall (11)",
+            "prefab": "UNKNOWN",
+            "id": 96,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "ModuleWall.fbx",
+            "base_color_texture": "ModuleWall_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.752540349960327,
+                1.0100007057189942,
+                -5.724994659423828
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                -0.24772800505161286,
+                5.761960029602051,
+                1.0733742713928223
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                2.9802322387695315e-8,
+                1.1175872671742582e-8,
+                -0.000001430511474609375
+            ],
+            "collider_size": [
+                1.769836187362671,
+                0.17114274203777314,
+                0.8358191847801209
+            ],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "Bamboo2",
+            "prefab": "UNKNOWN",
+            "id": 97,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo2.fbx",
+            "base_color_texture": "Bamboo2_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.312537908554077,
+                0.5100007653236389,
+                -4.770999908447266
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.3072670102119446,
+                0.2565500736236572,
+                3.804922103881836
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "ModuleWall (10)",
+            "prefab": "UNKNOWN",
+            "id": 98,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "ModuleWall.fbx",
+            "base_color_texture": "ModuleWall_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                1.2014544010162354,
+                1.0100007057189942,
+                -5.724994659423828
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.24772800505161286,
+                5.761960029602051,
+                1.0733742713928223
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                2.9802322387695315e-8,
+                1.1175872671742582e-8,
+                -0.000001430511474609375
+            ],
+            "collider_size": [
+                1.769836187362671,
+                0.17114274203777314,
+                0.8358191847801209
+            ],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "Pillar (5)",
+            "prefab": "UNKNOWN",
+            "id": 99,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Pillar.fbx",
+            "base_color_texture": "Pillar_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -0.22954535484313966,
+                1.0100007057189942,
+                6.027004241943359
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                -0.4569700062274933,
+                0.49404412508010867,
+                0.3742470145225525
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                0.0,
+                -2.117582368135751e-21,
+                -0.000014483928680419922
+            ],
+            "collider_size": [
+                0.3484542965888977,
+                0.32769984006881716,
+                2.574939012527466
+            ],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "Bamboo4 (4)",
+            "prefab": "UNKNOWN",
+            "id": 100,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo4.fbx",
+            "base_color_texture": "Bamboo4_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.2985761165618898,
+                0.5100007653236389,
+                -5.910877227783203
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                257.9382019042969
+            ],
+            "scale": [
+                0.30726709961891177,
+                0.2565500736236572,
+                3.8049211502075197
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "Bamboo1 (2)",
+            "prefab": "UNKNOWN",
+            "id": 101,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo1.fbx",
+            "base_color_texture": "Bamboo1_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -2.951972723007202,
+                0.5100007653236389,
+                -5.027538299560547
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.3072670102119446,
+                0.2565500736236572,
+                3.804922103881836
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "Bamboo2 (1)",
+            "prefab": "UNKNOWN",
+            "id": 102,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo2.fbx",
+            "base_color_texture": "Bamboo2_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.2625043392181398,
+                0.5100007653236389,
+                -5.278118133544922
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.3072670102119446,
+                0.2565500736236572,
+                3.804922103881836
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "TinyFancePillar (3)",
+            "prefab": "UNKNOWN",
+            "id": 103,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "TinyFancePillar.fbx",
+            "base_color_texture": "TinyFancePillar_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -2.7465436458587648,
+                0.6700006127357483,
+                -0.19029605388641358
+            ],
+            "rotation": [
+                90.0,
+                0.0,
+                270.00006103515627
+            ],
+            "scale": [
+                0.1490635722875595,
+                0.20033417642116548,
+                0.1349106878042221
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                0.0,
+                0.0,
+                -0.00001430511474609375
+            ],
+            "collider_size": [
+                0.10212057083845139,
+                0.14357924461364747,
+                1.1186376810073853
+            ],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "TinyFancePillar (1)",
+            "prefab": "UNKNOWN",
+            "id": 104,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "TinyFancePillar.fbx",
+            "base_color_texture": "TinyFancePillar_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -0.5860364437103272,
+                0.6700006127357483,
+                -0.16029727458953858
+            ],
+            "rotation": [
+                90.0,
+                0.0,
+                270.00006103515627
+            ],
+            "scale": [
+                0.1490635722875595,
+                0.20033417642116548,
+                0.1349106878042221
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                0.0,
+                0.0,
+                -0.000012636184692382813
+            ],
+            "collider_size": [
+                0.10212057083845139,
+                0.14357924461364747,
+                1.1186376810073853
+            ],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "LillyPot (7)",
+            "prefab": "UNKNOWN",
+            "id": 105,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "LillyPot.fbx",
+            "base_color_texture": "LillyPot_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -2.998542547225952,
+                0.4890008568763733,
+                0.3129998445510864
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                313.5276184082031
+            ],
+            "scale": [
+                0.2662642300128937,
+                0.26626428961753847,
+                0.037927743047475818
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "TinyFancePillar (5)",
+            "prefab": "UNKNOWN",
+            "id": 106,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "TinyFancePillar.fbx",
+            "base_color_texture": "TinyFancePillar_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                1.0354540348052979,
+                0.6700006127357483,
+                0.6247063875198364
+            ],
+            "rotation": [
+                90.0,
+                0.0,
+                270.00006103515627
+            ],
+            "scale": [
+                0.1490635722875595,
+                0.20033417642116548,
+                0.1349106878042221
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                0.0,
+                0.0,
+                -0.00000667572021484375
+            ],
+            "collider_size": [
+                0.10212057083845139,
+                0.14357924461364747,
+                1.1186376810073853
+            ],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "ModuleWall (1)",
+            "prefab": "UNKNOWN",
+            "id": 107,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "ModuleWall.fbx",
+            "base_color_texture": "ModuleWall_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.752540349960327,
+                1.0100007057189942,
+                -0.8260000944137573
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                -0.24772800505161286,
+                5.761960029602051,
+                1.0733742713928223
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                2.9802322387695315e-8,
+                1.1175872671742582e-8,
+                -0.0000019669532775878908
+            ],
+            "collider_size": [
+                1.769836187362671,
+                0.17114274203777314,
+                0.8358191847801209
+            ],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "TinyFance (8)",
+            "prefab": "UNKNOWN",
+            "id": 108,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "TinyFance.fbx",
+            "base_color_texture": "TinyFance_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -0.9985425472259522,
+                0.6420007348060608,
+                -0.15900027751922608
+            ],
+            "rotation": [
+                -2.1169772532192433e-11,
+                0.000007629395440744702,
+                270.0001220703125
+            ],
+            "scale": [
+                0.09561607986688614,
+                0.18472810089588166,
+                0.25518324971199038
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                -0.002909525763243437,
+                0.13840743899345399,
+                -0.000030606985092163086
+            ],
+            "collider_size": [
+                0.17627675831317902,
+                0.8563334345817566,
+                1.1186373233795167
+            ],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "TinyFance (17)",
+            "prefab": "UNKNOWN",
+            "id": 109,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "TinyFance.fbx",
+            "base_color_texture": "TinyFance_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                0.33844780921936037,
+                0.6420007348060608,
+                -0.18899905681610108
+            ],
+            "rotation": [
+                -2.1169772532192433e-11,
+                0.000007629395440744702,
+                270.0001220703125
+            ],
+            "scale": [
+                0.09561607986688614,
+                0.18472810089588166,
+                0.25518324971199038
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                -0.002970560919493437,
+                0.13840743899345399,
+                -8.940695295223122e-8
+            ],
+            "collider_size": [
+                0.17627675831317902,
+                0.8563334345817566,
+                1.1186373233795167
+            ],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "Lamp (5)",
+            "prefab": "UNKNOWN",
+            "id": 110,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Lamp.fbx",
+            "base_color_texture": "Lamp_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                0.6664659976959229,
+                0.7800012230873108,
+                -3.531993865966797
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.564893364906311,
+                0.5648934841156006,
+                0.5648934841156006
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "ModuleShortWall (1)",
+            "prefab": "UNKNOWN",
+            "id": 111,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "ModuleShortWall.fbx",
+            "base_color_texture": "ModuleShortWall_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.0236432552337648,
+                1.0100007057189942,
+                -6.705997467041016
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.24772800505161286,
+                -5.761960029602051,
+                1.0733742713928223
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                -1.7881393432617188e-7,
+                9.778887033462525e-7,
+                -0.0000013560056686401368
+            ],
+            "collider_size": [
+                2.4777989387512209,
+                0.05749344453215599,
+                0.835819661617279
+            ],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "Arka (1)",
+            "prefab": "UNKNOWN",
+            "id": 112,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Arka.fbx",
+            "base_color_texture": "Arka_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -1.2325360774993897,
+                0.9950013756752014,
+                -8.689998626708985
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                189.64852905273438
+            ],
+            "scale": [
+                0.7470352649688721,
+                0.7470352053642273,
+                0.747035026550293
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "Pillar (1)",
+            "prefab": "UNKNOWN",
+            "id": 113,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Pillar.fbx",
+            "base_color_texture": "Pillar_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -2.9055402278900148,
+                1.0100007057189942,
+                1.699001431465149
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.4569700062274933,
+                0.49404412508010867,
+                0.3742470145225525
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                0.0,
+                -2.117582368135751e-21,
+                -0.000013172626495361328
+            ],
+            "collider_size": [
+                0.3484542965888977,
+                0.32769984006881716,
+                2.574939012527466
+            ],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "Basen",
+            "prefab": "UNKNOWN",
+            "id": 114,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Basen.fbx",
+            "base_color_texture": "Basen_zaborrrrrr_wire_086086086_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -2.6435468196868898,
+                0.6400018334388733,
+                -2.687999725341797
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                357.13037109375
+            ],
+            "scale": [
+                40.797359466552737,
+                40.797367095947269,
+                50.62443923950195
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": true,
+            "is_static": true,
+            "collider_pos": [
+                0.0,
+                -2.3655593395233155e-7,
+                5.587935447692871e-9
+            ],
+            "collider_size": [
+                0.0433867946267128,
+                0.04965093359351158,
+                0.008088341914117337
+            ],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "TinyFance (4)",
+            "prefab": "UNKNOWN",
+            "id": 115,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "TinyFance.fbx",
+            "base_color_texture": "TinyFance_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -0.7375409603118897,
+                0.6420007348060608,
+                0.6199990510940552
+            ],
+            "rotation": [
+                -2.1169772532192433e-11,
+                0.000007629395440744702,
+                270.0001220703125
+            ],
+            "scale": [
+                0.09561607986688614,
+                0.18472810089588166,
+                0.25518324971199038
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                -0.002970560919493437,
+                0.13840684294700623,
+                -8.940695295223122e-8
+            ],
+            "collider_size": [
+                0.17627675831317902,
+                0.8563334345817566,
+                1.1186373233795167
+            ],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "ModuleShortWall (4)",
+            "prefab": "UNKNOWN",
+            "id": 116,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "ModuleShortWall.fbx",
+            "base_color_texture": "ModuleShortWall_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                0.47145867347717287,
+                1.0100007057189942,
+                -6.705997467041016
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                -0.24772800505161286,
+                -5.761960029602051,
+                1.0733742713928223
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                -1.7881393432617188e-7,
+                9.778887033462525e-7,
+                -0.0000013560056686401368
+            ],
+            "collider_size": [
+                2.4777989387512209,
+                0.05749344453215599,
+                0.835819661617279
+            ],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "TinyFance (3)",
+            "prefab": "UNKNOWN",
+            "id": 117,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "TinyFance.fbx",
+            "base_color_texture": "TinyFance_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -0.9985425472259522,
+                0.6420007348060608,
+                0.6199990510940552
+            ],
+            "rotation": [
+                -2.1169772532192433e-11,
+                0.000007629395440744702,
+                270.0001220703125
+            ],
+            "scale": [
+                0.09561607986688614,
+                0.18472810089588166,
+                0.25518324971199038
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                -0.002909525763243437,
+                0.13840684294700623,
+                -0.000030606985092163086
+            ],
+            "collider_size": [
+                0.17627675831317902,
+                0.8563334345817566,
+                1.1186373233795167
+            ],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "Bamboo3 (10)",
+            "prefab": "UNKNOWN",
+            "id": 118,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo3.fbx",
+            "base_color_texture": "Bamboo3_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.0175397396087648,
+                0.5619989037513733,
+                1.120998501777649
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.3072670102119446,
+                0.2565500736236572,
+                3.804922103881836
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "EndWall",
+            "prefab": "UNKNOWN",
+            "id": 119,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "EndWall.fbx",
+            "base_color_texture": "EndWall_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -1.8375470638275147,
+                1.0100007057189942,
+                -6.705997467041016
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                180.0000762939453
+            ],
+            "scale": [
+                0.2477281540632248,
+                5.761960029602051,
+                1.0733740329742432
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                -1.7618285302889448e-19,
+                -9.294599294662476e-7,
+                0.0000014901161193847657
+            ],
+            "collider_size": [
+                2.2263829708099367,
+                0.05749346315860748,
+                0.8358191847801209
+            ],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "TinyFance (12)",
+            "prefab": "UNKNOWN",
+            "id": 120,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "TinyFance.fbx",
+            "base_color_texture": "TinyFance_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -2.8975446224212648,
+                0.6420007348060608,
+                0.6199990510940552
+            ],
+            "rotation": [
+                -2.1169772532192433e-11,
+                0.000007629395440744702,
+                270.0001220703125
+            ],
+            "scale": [
+                0.09561607986688614,
+                0.18472810089588166,
+                0.25518324971199038
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                -0.002909525763243437,
+                0.13840684294700623,
+                -0.000030606985092163086
+            ],
+            "collider_size": [
+                0.17627675831317902,
+                0.8563334345817566,
+                1.1186373233795167
+            ],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "Bamboo3 (3)",
+            "prefab": "UNKNOWN",
+            "id": 121,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo3.fbx",
+            "base_color_texture": "Bamboo3_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -2.6255719661712648,
+                0.5100007653236389,
+                -5.437877655029297
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.3072670102119446,
+                0.2565500736236572,
+                3.804922103881836
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "Bamboo4 (1)",
+            "prefab": "UNKNOWN",
+            "id": 122,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo4.fbx",
+            "base_color_texture": "Bamboo4_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.2085492610931398,
+                0.5100007653236389,
+                -5.417995452880859
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                257.9382019042969
+            ],
+            "scale": [
+                0.30726709961891177,
+                0.2565500736236572,
+                3.8049211502075197
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "Lamp (4)",
+            "prefab": "UNKNOWN",
+            "id": 123,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Lamp.fbx",
+            "base_color_texture": "Lamp_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -0.5225446224212647,
+                0.7800012230873108,
+                -5.951000213623047
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.564893364906311,
+                0.5648934841156006,
+                0.5648934841156006
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "Bamboo1 (10)",
+            "prefab": "UNKNOWN",
+            "id": 124,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo1.fbx",
+            "base_color_texture": "Bamboo1_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.149970769882202,
+                0.5619989037513733,
+                1.191463589668274
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.3072670102119446,
+                0.2565500736236572,
+                3.804922103881836
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "Lamp (6)",
+            "prefab": "UNKNOWN",
+            "id": 125,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Lamp.fbx",
+            "base_color_texture": "Lamp_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                0.6524584293365479,
+                0.7800012230873108,
+                -5.111995697021484
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.564893364906311,
+                0.5648934841156006,
+                0.5648934841156006
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "TinyFance (1)",
+            "prefab": "UNKNOWN",
+            "id": 126,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "TinyFance.fbx",
+            "base_color_texture": "TinyFance_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -1.5425336360931397,
+                0.6420007348060608,
+                0.6199990510940552
+            ],
+            "rotation": [
+                -2.1169772532192433e-11,
+                0.000007629395440744702,
+                270.0001220703125
+            ],
+            "scale": [
+                0.09561607986688614,
+                0.18472810089588166,
+                0.25518324971199038
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                -0.002909525763243437,
+                0.13840684294700623,
+                -8.940695295223122e-8
+            ],
+            "collider_size": [
+                0.17627675831317902,
+                0.8563334345817566,
+                1.1186373233795167
+            ],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "Bamboo1 (9)",
+            "prefab": "UNKNOWN",
+            "id": 127,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo1.fbx",
+            "base_color_texture": "Bamboo1_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.3825299739837648,
+                0.5619989037513733,
+                0.8750039339065552
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.3072670102119446,
+                0.2565500736236572,
+                3.804922103881836
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "TinyFance (18)",
+            "prefab": "UNKNOWN",
+            "id": 128,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "TinyFance.fbx",
+            "base_color_texture": "TinyFance_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                0.8844530582427979,
+                0.6420007348060608,
+                -0.18899905681610108
+            ],
+            "rotation": [
+                -2.1169772532192433e-11,
+                0.000007629395440744702,
+                270.0001220703125
+            ],
+            "scale": [
+                0.09561607986688614,
+                0.18472810089588166,
+                0.25518324971199038
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                -0.002970560919493437,
+                0.13840743899345399,
+                0.000060945749282836914
+            ],
+            "collider_size": [
+                0.17627675831317902,
+                0.8563334345817566,
+                1.1186373233795167
+            ],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "LillyPot (6)",
+            "prefab": "UNKNOWN",
+            "id": 129,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "LillyPot.fbx",
+            "base_color_texture": "LillyPot_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                0.6034624576568604,
+                0.4890008568763733,
+                0.14600002765655518
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                46.84695816040039
+            ],
+            "scale": [
+                0.24327918887138368,
+                0.24327918887138368,
+                0.03465364873409271
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "Bamboo2 (3)",
+            "prefab": "UNKNOWN",
+            "id": 130,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo2.fbx",
+            "base_color_texture": "Bamboo2_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -2.7295453548431398,
+                0.5100007653236389,
+                -5.181995391845703
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.3072670102119446,
+                0.2565500736236572,
+                3.804922103881836
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "ModuleShortWall (3)",
+            "prefab": "UNKNOWN",
+            "id": 131,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "ModuleShortWall.fbx",
+            "base_color_texture": "ModuleShortWall_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -2.4145429134368898,
+                1.0100007057189942,
+                -6.705997467041016
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.24772800505161286,
+                -5.761960029602051,
+                1.0733742713928223
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                -1.7881393432617188e-7,
+                9.778887033462525e-7,
+                -0.0000013560056686401368
+            ],
+            "collider_size": [
+                2.4777989387512209,
+                0.05749344453215599,
+                0.835819661617279
+            ],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "Pillar",
+            "prefab": "UNKNOWN",
+            "id": 132,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Pillar.fbx",
+            "base_color_texture": "Pillar_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.7495343685150148,
+                1.0100007057189942,
+                1.699001431465149
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.4569700062274933,
+                0.49404412508010867,
+                0.3742470145225525
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                0.000030517578125,
+                -2.117582368135751e-21,
+                -0.000013172626495361328
+            ],
+            "collider_size": [
+                0.3484542965888977,
+                0.32769984006881716,
+                2.574939012527466
+            ],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "TinyFance (11)",
+            "prefab": "UNKNOWN",
+            "id": 133,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "TinyFance.fbx",
+            "base_color_texture": "TinyFance_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.1705243587493898,
+                0.6420007348060608,
+                0.6199990510940552
+            ],
+            "rotation": [
+                -2.1169772532192433e-11,
+                0.000007629395440744702,
+                270.0001220703125
+            ],
+            "scale": [
+                0.09561607986688614,
+                0.18472810089588166,
+                0.25518324971199038
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                -0.002909525763243437,
+                0.13840684294700623,
+                -8.940695295223122e-8
+            ],
+            "collider_size": [
+                0.17627675831317902,
+                0.8563334345817566,
+                1.1186373233795167
+            ],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "Bamboo4 (8)",
+            "prefab": "UNKNOWN",
+            "id": 134,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo4.fbx",
+            "base_color_texture": "Bamboo4_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.4025495052337648,
+                0.5619989037513733,
+                1.4250069856643677
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                257.9382019042969
+            ],
+            "scale": [
+                0.30726709961891177,
+                0.2565500736236572,
+                3.8049211502075197
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "Bamboo1 (3)",
+            "prefab": "UNKNOWN",
+            "id": 135,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo1.fbx",
+            "base_color_texture": "Bamboo1_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -2.758002996444702,
+                0.5100007653236389,
+                -5.367412567138672
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.3072670102119446,
+                0.2565500736236572,
+                3.804922103881836
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "MassageTable (2)",
+            "prefab": "UNKNOWN",
+            "id": 136,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "MassageTable.fbx",
+            "base_color_texture": "MassageTable_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -2.4625470638275148,
+                0.7499986290931702,
+                3.368999481201172
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                180.0000457763672
+            ],
+            "scale": [
+                0.442038357257843,
+                0.5126879811286926,
+                1.0
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": true,
+            "is_static": true,
+            "collider_pos": [
+                0.000030547380447387695,
+                -5.082197683525802e-21,
+                0.0000016987323760986329
+            ],
+            "collider_size": [
+                1.8799710273742676,
+                0.935569167137146,
+                0.23797819018363954
+            ],
+            "scripts": [
+                "MassageTable"
+            ],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "GateWall",
+            "prefab": "UNKNOWN",
+            "id": 137,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "GateWall.fbx",
+            "base_color_texture": "GateWall_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.752540349960327,
+                1.0100007057189942,
+                0.15000545978546143
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                -1.0,
+                1.0,
+                1.0
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                0.0,
+                8.940698847936801e-8,
+                2.5331974029541018e-7
+            ],
+            "collider_size": [
+                0.43843790888786318,
+                0.9874289035797119,
+                0.8971469402313232
+            ],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "Bamboo2 (5)",
+            "prefab": "UNKNOWN",
+            "id": 138,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo2.fbx",
+            "base_color_texture": "Bamboo2_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -2.916511297225952,
+                0.5100007653236389,
+                -5.745113372802734
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.3072670102119446,
+                0.2565500736236572,
+                3.804922103881836
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "Bamboo1 (4)",
+            "prefab": "UNKNOWN",
+            "id": 139,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo1.fbx",
+            "base_color_texture": "Bamboo1_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.3810040950775148,
+                0.5100007653236389,
+                -5.956417083740234
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.3072670102119446,
+                0.2565500736236572,
+                3.804922103881836
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "Bamboo3 (6)",
+            "prefab": "UNKNOWN",
+            "id": 140,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo3.fbx",
+            "base_color_texture": "Bamboo3_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.014106512069702,
+                0.5100007653236389,
+                -6.357463836669922
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.3072670102119446,
+                0.2565500736236572,
+                3.804922103881836
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "Door",
+            "prefab": "UNKNOWN",
+            "id": 141,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Door.fbx",
+            "base_color_texture": "Door_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -2.9795453548431398,
+                1.046999454498291,
+                1.7999993562698365
+            ],
+            "rotation": [
+                89.98021697998047,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                -1.6354296207427979,
+                -0.22053922712802888,
+                -0.8134174346923828
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "Bamboo4 (2)",
+            "prefab": "UNKNOWN",
+            "id": 142,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo4.fbx",
+            "base_color_texture": "Bamboo4_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -2.869544744491577,
+                0.5100007653236389,
+                -4.981998443603516
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                257.9382019042969
+            ],
+            "scale": [
+                0.30726709961891177,
+                0.2565500736236572,
+                3.8049211502075197
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "Pillar (2)",
+            "prefab": "UNKNOWN",
+            "id": 143,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Pillar.fbx",
+            "base_color_texture": "Pillar_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.7495343685150148,
+                1.0100007057189942,
+                6.027004241943359
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.4569700062274933,
+                0.49404412508010867,
+                0.3742470145225525
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                0.000030517578125,
+                -2.117582368135751e-21,
+                -0.000014483928680419922
+            ],
+            "collider_size": [
+                0.3484542965888977,
+                0.32769984006881716,
+                2.574939012527466
+            ],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "TinyFance (7)",
+            "prefab": "UNKNOWN",
+            "id": 144,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "TinyFance.fbx",
+            "base_color_texture": "TinyFance_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -1.2615430355072022,
+                0.6420007348060608,
+                -0.15900027751922608
+            ],
+            "rotation": [
+                -2.1169772532192433e-11,
+                0.000007629395440744702,
+                270.0001220703125
+            ],
+            "scale": [
+                0.09561607986688614,
+                0.18472810089588166,
+                0.25518324971199038
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                -0.002909525763243437,
+                0.13840743899345399,
+                -8.940695295223122e-8
+            ],
+            "collider_size": [
+                0.17627675831317902,
+                0.8563334345817566,
+                1.1186373233795167
+            ],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "ModelInnerWall (4)",
+            "prefab": "UNKNOWN",
+            "id": 145,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "ModelInnerWall.fbx",
+            "base_color_texture": "",
+            "normal_texture": "",
+            "position": [
+                1.2064592838287354,
+                1.0100007057189942,
+                3.1820030212402345
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                180.0
+            ],
+            "scale": [
+                -1.1893224716186524,
+                0.01832600310444832,
+                0.17590799927711488
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                0.00000762939453125,
+                0.00048828125,
+                -0.0000030994415283203127
+            ],
+            "collider_size": [
+                0.07796671241521836,
+                51.26544952392578,
+                5.317535877227783
+            ],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "Pillar (6)",
+            "prefab": "UNKNOWN",
+            "id": 146,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Pillar.fbx",
+            "base_color_texture": "Pillar_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                1.2004473209381104,
+                1.0100007057189942,
+                6.027004241943359
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                -0.4569700062274933,
+                0.49404412508010867,
+                0.3742470145225525
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                0.0,
+                -2.117582368135751e-21,
+                -0.000014483928680419922
+            ],
+            "collider_size": [
+                0.3484542965888977,
+                0.32769984006881716,
+                2.574939012527466
+            ],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "Bamboo2 (4)",
+            "prefab": "UNKNOWN",
+            "id": 147,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo2.fbx",
+            "base_color_texture": "Bamboo2_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.3525311946868898,
+                0.5100007653236389,
+                -5.770999908447266
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.3072670102119446,
+                0.2565500736236572,
+                3.804922103881836
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "ModuleWall (4)",
+            "prefab": "UNKNOWN",
+            "id": 148,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "ModuleWall.fbx",
+            "base_color_texture": "ModuleWall_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.752540349960327,
+                1.0100007057189942,
+                -4.742992401123047
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                -0.24772800505161286,
+                5.761960029602051,
+                1.0733742713928223
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                2.9802322387695315e-8,
+                1.1175872671742582e-8,
+                -0.0000015497207641601563
+            ],
+            "collider_size": [
+                1.769836187362671,
+                0.17114274203777314,
+                0.8358191847801209
+            ],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "Pillar (7)",
+            "prefab": "UNKNOWN",
+            "id": 149,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Pillar.fbx",
+            "base_color_texture": "Pillar_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                1.2114489078521729,
+                1.0100007057189942,
+                1.699001431465149
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                -0.4569700062274933,
+                0.49404412508010867,
+                0.3742470145225525
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                -0.000030517578125,
+                -2.117582368135751e-21,
+                -0.000013172626495361328
+            ],
+            "collider_size": [
+                0.3484542965888977,
+                0.32769984006881716,
+                2.574939012527466
+            ],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "MassageTable",
+            "prefab": "UNKNOWN",
+            "id": 150,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "MassageTable.fbx",
+            "base_color_texture": "MassageTable_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -2.4625470638275148,
+                0.7479997277259827,
+                5.191005706787109
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                180.0000457763672
+            ],
+            "scale": [
+                0.442038357257843,
+                0.5126879811286926,
+                1.0
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": true,
+            "is_static": true,
+            "collider_pos": [
+                -0.000030487775802612305,
+                -5.082197683525802e-21,
+                0.000001043081283569336
+            ],
+            "collider_size": [
+                1.8799710273742676,
+                0.935569167137146,
+                0.23797819018363954
+            ],
+            "scripts": [
+                "MassageTable"
+            ],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "ModelInnerWall (2)",
+            "prefab": "UNKNOWN",
+            "id": 151,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "ModelInnerWall.fbx",
+            "base_color_texture": "",
+            "normal_texture": "",
+            "position": [
+                -3.7595441341400148,
+                1.0100007057189942,
+                4.119998931884766
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                180.0
+            ],
+            "scale": [
+                1.1893224716186524,
+                0.01832600310444832,
+                0.17590799927711488
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                -0.00000762939453125,
+                0.00048828125,
+                -0.0000030994415283203127
+            ],
+            "collider_size": [
+                0.07796671241521836,
+                51.26544952392578,
+                5.317535877227783
+            ],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "TinyFance (20)",
+            "prefab": "UNKNOWN",
+            "id": 152,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "TinyFance.fbx",
+            "base_color_texture": "TinyFance_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                0.33844780921936037,
+                0.6420007348060608,
+                0.6260033845901489
+            ],
+            "rotation": [
+                -2.1169772532192433e-11,
+                0.000007629395440744702,
+                270.0001220703125
+            ],
+            "scale": [
+                0.09561607986688614,
+                0.18472810089588166,
+                0.25518324971199038
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                -0.002909525763243437,
+                0.13840684294700623,
+                -8.940695295223122e-8
+            ],
+            "collider_size": [
+                0.17627675831317902,
+                0.8563334345817566,
+                1.1186373233795167
+            ],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "Bridge (1)",
+            "prefab": "UNKNOWN",
+            "id": 153,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bridge.fbx",
+            "base_color_texture": "Bridge_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -0.16954779624938966,
+                0.5749993920326233,
+                0.22000515460968018
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.5055609941482544,
+                0.505561113357544,
+                0.6256999969482422
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "Bamboo1",
+            "prefab": "UNKNOWN",
+            "id": 154,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo1.fbx",
+            "base_color_texture": "Bamboo1_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.3409955501556398,
+                0.5100007653236389,
+                -4.956417083740234
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.3072670102119446,
+                0.2565500736236572,
+                3.804922103881836
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "Bamboo4 (9)",
+            "prefab": "UNKNOWN",
+            "id": 155,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo4.fbx",
+            "base_color_texture": "Bamboo4_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.3001019954681398,
+                0.5619989037513733,
+                0.9205437898635864
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                257.9382019042969
+            ],
+            "scale": [
+                0.30726709961891177,
+                0.2565500736236572,
+                3.8049211502075197
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "ShortInnerWall (2)",
+            "prefab": "UNKNOWN",
+            "id": 156,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "ShortInnerWall.fbx",
+            "base_color_texture": "",
+            "normal_texture": "",
+            "position": [
+                -3.3265302181243898,
+                1.0100007057189942,
+                1.695003628730774
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                90.0
+            ],
+            "scale": [
+                1.1893219947814942,
+                0.01832600310444832,
+                0.17590799927711488
+            ],
+            "has_rigid_body": true,
+            "has_collider": true,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [
+                0.0,
+                -0.00146484375,
+                -0.000007867813110351563
+            ],
+            "collider_size": [
+                0.07827762514352799,
+                37.722740173339847,
+                5.327364921569824
+            ],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "LillyPot (3)",
+            "prefab": "UNKNOWN",
+            "id": 157,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "LillyPot.fbx",
+            "base_color_texture": "LillyPot_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -0.7875440120697022,
+                0.4890008568763733,
+                0.18600094318389893
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                46.84695816040039
+            ],
+            "scale": [
+                0.24327918887138368,
+                0.24327918887138368,
+                0.03465364873409271
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "LillyPot (5)",
+            "prefab": "UNKNOWN",
+            "id": 158,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "LillyPot.fbx",
+            "base_color_texture": "LillyPot_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                0.46845269203186037,
+                0.4890008568763733,
+                0.4460030794143677
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                356.75823974609377
+            ],
+            "scale": [
+                0.16428232192993165,
+                0.16428236663341523,
+                0.023401034995913507
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "BarrelWithWater",
+            "prefab": "UNKNOWN",
+            "id": 159,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "BarrelWithWater.fbx",
+            "base_color_texture": "BarrelWithWater_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                0.6234514713287354,
+                0.7180009484291077,
+                -2.8449974060058595
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                80.0000228881836
+            ],
+            "scale": [
+                0.4236360192298889,
+                0.42363613843917849,
+                0.2082350105047226
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "Gate (1)",
+            "prefab": "UNKNOWN",
+            "id": 160,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Gate.fbx",
+            "base_color_texture": "Gate_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                1.1974565982818604,
+                0.4839997887611389,
+                0.22299587726593018
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.5581859946250916,
+                1.0,
+                2.6955230236053469
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "Bamboo3 (7)",
+            "prefab": "UNKNOWN",
+            "id": 161,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Bamboo3.fbx",
+            "base_color_texture": "Bamboo3_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                -3.3525311946868898,
+                0.5100007653236389,
+                1.3090020418167115
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                0.3072670102119446,
+                0.2565500736236572,
+                3.804922103881836
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        },
+        {
+            "name": "Arka (3)",
+            "prefab": "UNKNOWN",
+            "id": 162,
+            "parent": "Level",
+            "parentID": 60,
+            "mesh": "Arka.fbx",
+            "base_color_texture": "Arka_DefaultMaterial_BaseColor.png",
+            "normal_texture": "",
+            "position": [
+                3.247459650039673,
+                1.011000156402588,
+                -4.090999603271484
+            ],
+            "rotation": [
+                270.0,
+                0.0,
+                279.64849853515627
+            ],
+            "scale": [
+                0.747035026550293,
+                0.747035026550293,
+                0.747035026550293
+            ],
+            "has_rigid_body": true,
+            "has_collider": false,
+            "has_trigger": false,
+            "is_static": true,
+            "collider_pos": [],
+            "collider_size": [],
+            "scripts": [],
+            "saveTime": 639166866658651510
+        }
+    ]
+}
