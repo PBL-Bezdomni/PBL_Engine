@@ -1,6 +1,7 @@
 #include "AudioManager.h"
 
 #include "Loader.h"
+#include <spdlog/spdlog.h>
 
 int AudioManager::Initialize()
 {
@@ -12,4 +13,16 @@ int AudioManager::Initialize()
 	}
 	// ma_engine_play_sound(m_AudioEngine.get(), (Loader::RelativePath() + "res/audio/pipe.mp3").c_str(), NULL);
 	return MA_SUCCESS;
+}
+
+void AudioManager::PlaySound(const std::string& path)
+{
+	if (!m_AudioEngine) return;
+
+	std::string full = Loader::RelativePath() + path;
+	ma_result result = ma_engine_play_sound(m_AudioEngine.get(), full.c_str(), NULL);
+	if (result != MA_SUCCESS)
+	{
+		spdlog::error("Failed to play sound: {}", full);
+	}
 }

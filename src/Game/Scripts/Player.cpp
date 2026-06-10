@@ -11,6 +11,10 @@
 #include "Engine/Time.h"
 #include "Engine/Components/ParticleEmitter.h"
 #include "Game/Scripts/AOnsenObject.h"
+#include <filesystem>
+#include "Engine/Loader.h"
+#include <cstdlib>
+#include <ctime>
 
 Player::Player(int deviceid)
 {
@@ -53,6 +57,27 @@ void Player::Awake()
     BindInput();
 
     m_OnsenObjects = m_SceneMgr->GetLevelParent()->FindComponentsInChildren<AOnsenObject>();
+
+    // Initialize footstep audio clips from folder
+    try {
+        std::srand((unsigned)std::time(nullptr));
+        std::string relDir = "res/audio/footsteps/Forest_ground";
+        std::string fullDir = Loader::RelativePath() + relDir;
+        if (std::filesystem::exists(fullDir))
+        {
+            for (auto& p : std::filesystem::directory_iterator(fullDir))
+            {
+                if (p.is_regular_file())
+                {
+                    std::string name = p.path().filename().string();
+                    m_FootstepClips.push_back(relDir + "/" + name);
+                }
+            }
+        }
+    }
+    catch (...) {
+        // ignore filesystem errors
+    }
 }
 
 
@@ -68,10 +93,22 @@ void Player::Update()
     if (glm::length(moveInput) > 0.01f)
     {
         m_ParticleEmitter->Play();
+        // Footstep handling
+        if (!m_FootstepClips.empty())
+        {
+            m_FootstepTimer -= deltaTime;
+            if (m_FootstepTimer <= 0.0f)
+            {
+                int idx = std::rand() % m_FootstepClips.size();
+                Engine::GetInstance().GetAudioManager().PlaySound(m_FootstepClips[idx]);
+                m_FootstepTimer = m_FootstepInterval;
+            }
+        }
     }
     else
     {
         m_ParticleEmitter->Stop();
+        m_FootstepTimer = 0.0f;
     }
 
     if (rb != nullptr)
@@ -220,6 +257,8 @@ void Player::HandleActionPressed()
                 m_HasPickUpReleased = false;
                 animalScript->ChangeState(AnimalState::PickedUp);
                 vector<AnimalNeeds> services = animalScript->GetRequiredServices();
+                // Play pickup sound
+                Engine::GetInstance().GetAudioManager().PlaySound("res/audio/2.wav");
                 for (AOnsenObject* obj : m_OnsenObjects)
                 {
                     bool isNeeded = false;
@@ -267,6 +306,7 @@ void Player::HandleThrowReleased()
     }
     if (m_CarriedAnimal != nullptr && m_IsChargingThrow)
     {
+        Engine::GetInstance().GetAudioManager().PlaySound("res/audio/4.wav");
         RigidBody* animalRb = m_CarriedAnimal->GetComponent<RigidBody>();
         Animal* animalScript = m_CarriedAnimal->GetDerivedComponent<Animal>();
 

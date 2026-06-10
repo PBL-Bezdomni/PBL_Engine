@@ -28,6 +28,10 @@ private:
     shared_ptr<Shader> m_ChargeMeterShader;
 
     vector<AOnsenObject*> m_OnsenObjects;
+    // Footstep audio
+    std::vector<std::string> m_FootstepClips;
+    float m_FootstepTimer = 0.0f;
+    float m_FootstepInterval = 0.45f; // seconds between footsteps while moving
 public:
     glm::vec2 moveInput{ 0.0f };
     float speed = 10.0f;

@@ -60,6 +60,7 @@ void SpawnManager::OnTriggerEnter(GameObject* other)
 	{
 		if (animal->GetRequiredServices().empty())
 		{
+			Engine::GetInstance().GetAudioManager().PlaySound("res/audio/1.wav");
 			AddMoney(10); 
 		}
 		DespawnAnimal(other);
