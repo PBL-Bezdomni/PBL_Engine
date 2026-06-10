@@ -89,7 +89,7 @@ void PhysicsEngine::DrawHitboxes(Shader& lineShader, const glm::mat4& view, cons
     m_PhysicsSystem->DrawBodies(drawSettings, m_DebugRenderer, nullptr);
 }
 
-GameObject* PhysicsEngine::CastRay(const glm::vec3& startOrigin, const glm::vec3& direction, float distance, uint32_t ignoreBodyID)
+GameObject* PhysicsEngine::CastRay(const glm::vec3& startOrigin, const glm::vec3& direction, float distance, uint32_t ignoreBodyID, bool isPlayerCast)
 {
     if (!m_PhysicsSystem) return nullptr;
 
@@ -105,8 +105,9 @@ GameObject* PhysicsEngine::CastRay(const glm::vec3& startOrigin, const glm::vec3
     {
     private:
         JPH::BodyID mIgnoreBody;
+        bool mIsPlayerCast;
     public:
-        AnimalOnlyFilter(JPH::BodyID ignoreID) : mIgnoreBody(ignoreID) {}
+        AnimalOnlyFilter(JPH::BodyID ignoreID, bool isPlayerCast) : mIgnoreBody(ignoreID), mIsPlayerCast(isPlayerCast) {}
 
         virtual bool ShouldCollide(const JPH::BodyID& inBodyID) const override
         {
@@ -117,20 +118,25 @@ GameObject* PhysicsEngine::CastRay(const glm::vec3& startOrigin, const glm::vec3
 
         virtual bool ShouldCollideLocked(const JPH::Body& inBody) const override
         {
-            uint64_t userData = inBody.GetUserData();
-            if (userData != 0)
+            if (mIsPlayerCast)
             {
-                GameObject* go = reinterpret_cast<GameObject*>(userData);
-                if (go != nullptr)
+                uint64_t userData = inBody.GetUserData();
+                if (userData != 0)
                 {
-                    return go->GetDerivedComponent<Animal>() != nullptr;
+                    GameObject* go = reinterpret_cast<GameObject*>(userData);
+                    if (go != nullptr)
+                    {
+                        return go->GetDerivedComponent<Animal>() != nullptr;
+                    }
                 }
+                return false;
             }
-            return false;
+            
+            return ShouldCollide(inBody.GetID());
         }
     };
 
-    AnimalOnlyFilter animalFilter{ JPH::BodyID(ignoreBodyID) };
+    AnimalOnlyFilter animalFilter{ JPH::BodyID(ignoreBodyID), isPlayerCast };
 
     if (m_PhysicsSystem->GetNarrowPhaseQuery().CastRay(ray, result, {}, {}, animalFilter))
     {

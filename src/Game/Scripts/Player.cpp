@@ -230,7 +230,7 @@ void Player::HandleActionPressed()
 
         glm::vec3 endPos = playerPos + (playerForward * rayDistance);
 
-        GameObject* hitObject = Engine::GetInstance().GetPhysicsEngine().CastRay(playerPos, playerForward, rayDistance, m_Owner->GetComponent<RigidBody>()->GetBodyID());
+        GameObject* hitObject = Engine::GetInstance().GetPhysicsEngine().CastRay(playerPos, playerForward, rayDistance, m_Owner->GetComponent<RigidBody>()->GetBodyID(), true);
 
         if (hitObject != nullptr)
         {
