@@ -50,21 +50,21 @@ void AOnsenObject::OnTriggerEnter(GameObject* other)
 
 void AOnsenObject::OnTriggerExit(GameObject* other)
 {
-	Animal* animal = other->GetComponent<Animal>();
-	if (animal == nullptr) return;
-
-	for (int i = 0; i < m_MaxSlots; i++)
-	{
-		if (m_Slots[i].OccupyingAnimal == animal)
-		{
-			m_Slots[i].IsOccupied = false;
-			m_Slots[i].OccupyingAnimal = nullptr;
-
-			animal->StopFulfillingNeed();
-			animal->m_CurrentOnsen = nullptr;
-			return;
-		}
-	}
+	// Animal* animal = other->GetComponent<Animal>();
+	// if (animal == nullptr) return;
+	//
+	// for (int i = 0; i < m_MaxSlots; i++)
+	// {
+	// 	if (m_Slots[i].OccupyingAnimal == animal)
+	// 	{
+	// 		m_Slots[i].IsOccupied = false;
+	// 		m_Slots[i].OccupyingAnimal = nullptr;
+	//
+	// 		animal->StopFulfillingNeed();
+	// 		animal->m_CurrentOnsen = nullptr;
+	// 		return;
+	// 	}
+	// }
 }
 
 void AOnsenObject::RemoveAnimal(Animal* animal)
