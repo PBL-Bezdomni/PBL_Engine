@@ -224,9 +224,12 @@ shared_ptr<GameObject> SceneManager::Instantiate(GameObject* parent, string path
 			shader = AssetMgr->BasicShader;
 		}
 		Model model = *AssetMgr->GetModel(*shader, path.c_str());
-		go->AddComponent<Model>(model);
+		Model* modelComp = go->AddComponent<Model>(model);
 		// Force that shader
-		go->GetComponent<Model>()->ReassignShader(*shader);
+		if (modelComp != nullptr)
+		{
+			modelComp->ReassignShader(*shader);
+		}
 	}
 	if (parent == nullptr)
 	{

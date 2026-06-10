@@ -254,15 +254,29 @@ void Player::HandleActionPressed()
             if (animalScript != nullptr)
             {
                 m_CarriedAnimal = hitObject;
+                m_HasPickUpReleased = false;
                 animalScript->ChangeState(AnimalState::PickedUp);
+                vector<AnimalNeeds> services = animalScript->GetRequiredServices();
                 // Play pickup sound
                 Engine::GetInstance().GetAudioManager().PlaySound("res/audio/2.wav");
                 for (AOnsenObject* obj : m_OnsenObjects)
                 {
-                    TutorialArrow* arrow = obj->GetTutorialArrow();
-                    if (arrow != nullptr)
+                    bool isNeeded = false;
+                    for (AnimalNeeds service : services)
                     {
-                        arrow->SetActive(true);
+                        if (service == obj->GetNeed())
+                        {
+                            isNeeded = true;
+                            break;
+                        }
+                    }
+                    if (isNeeded)
+                    {
+                        TutorialArrow* arrow = obj->GetTutorialArrow();
+                        if (arrow != nullptr)
+                        {
+                            arrow->SetActive(true);
+                        }
                     }
                 }
             }
@@ -274,6 +288,10 @@ void Player::HandleThrowPressed()
 {
     if (m_CarriedAnimal != nullptr)
     {
+        if (!m_HasPickUpReleased)
+        {
+            return;
+        }
         m_IsChargingThrow = true;
         m_ChargeMeter->SetActive(true);
     }
@@ -281,6 +299,11 @@ void Player::HandleThrowPressed()
 
 void Player::HandleThrowReleased()
 {
+    if (!m_HasPickUpReleased && m_CarriedAnimal != nullptr)
+    {
+        m_HasPickUpReleased = true;
+        return;
+    }
     if (m_CarriedAnimal != nullptr && m_IsChargingThrow)
     {
         Engine::GetInstance().GetAudioManager().PlaySound("res/audio/4.wav");

@@ -35,5 +35,7 @@ public:
 	void RemoveAnimal(Animal* animal);
 	Animal* GetAnimalForPlayer(glm::vec3 rayStart, glm::vec3 rayDir);
 
+	AnimalNeeds GetNeed();
+
 	TutorialArrow* GetTutorialArrow();
 };

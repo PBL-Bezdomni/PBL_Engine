@@ -58,7 +58,7 @@ void SpawnManager::OnTriggerEnter(GameObject* other)
 	Animal* animal = other->GetComponent<Animal>();
 	if (animal != nullptr)
 	{
-		if (animal->m_RequiredServices.empty())
+		if (animal->GetRequiredServices().empty())
 		{
 			Engine::GetInstance().GetAudioManager().PlaySound("res/audio/1.wav");
 			AddMoney(10); 

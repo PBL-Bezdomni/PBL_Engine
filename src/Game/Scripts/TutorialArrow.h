@@ -16,7 +16,7 @@ private:
     float m_PositionOffset = 0.2f;
     float m_AnimationTimer = 0;
     int m_AnimationSign = 1;
-    float m_StartPosition = 2.0f;
+    glm::vec3 m_StartPosition = glm::vec3(0.f, 2.0f, 0.f);
     const float ANIMATION_TIME = 1.5f;
 
     // GameObject* m_Target = nullptr;
@@ -30,6 +30,8 @@ public:
     void Update() override;
 
     void UpdateArrowShader();
+
+    void SetStartPosition(glm::vec3 pos);
 
     void SetActive(bool active);
 };

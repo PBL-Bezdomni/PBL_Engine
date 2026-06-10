@@ -28,7 +28,7 @@ void TutorialArrow::Awake()
     }
 
     m_ArrowObject->transform->Scale = glm::vec3(1.0f);
-    m_ArrowObject->transform->Position = glm::vec3(0.0f, m_StartPosition, 0.0f);
+    m_ArrowObject->transform->Position = m_StartPosition;
     SetActive(false);
 }
 
@@ -59,7 +59,7 @@ void TutorialArrow::Update()
             m_AnimationTimer = 0;
             m_AnimationSign *= -1;
         }
-        m_ArrowObject->transform->Position.y = m_StartPosition + y;
+        m_ArrowObject->transform->Position.y = m_StartPosition.y + y;
     }
 }
 
@@ -69,6 +69,13 @@ void TutorialArrow::UpdateArrowShader()
     {
         m_AssetMgr->TutorialArrowShader->Use();
     }
+}
+
+void TutorialArrow::SetStartPosition(glm::vec3 pos)
+{
+    m_StartPosition = pos;
+    m_ArrowObject->transform->Position = m_StartPosition;
+    
 }
 
 void TutorialArrow::SetActive(bool active)
