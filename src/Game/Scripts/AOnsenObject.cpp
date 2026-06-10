@@ -29,6 +29,22 @@ void AOnsenObject::OnTriggerEnter(GameObject* other)
 			return;
 		}
 	}
+
+	vector<AnimalNeeds> needs = animal->GetRequiredServices();
+	bool objectInNeeds = false;
+	for (AnimalNeeds need : needs)
+	{
+		if (need == m_ObjectNeed)
+		{
+			objectInNeeds = true;
+			break;
+		}
+	}
+
+	if (!objectInNeeds)
+	{
+		return;
+	}
 	
 	for (int i = 0; i < m_MaxSlots; i++)
 	{
