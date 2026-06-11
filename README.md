@@ -1,0 +1,1 @@
+On Branch "Production" (not yet made) there won't be ImGUI library and spdlog (currently used for debug purposes)
