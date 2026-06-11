@@ -50,7 +50,7 @@ struct Frustum
 // Default camera values
 const float YAW = -90.0f;
 const float PITCH = 0.0f;
-const float SPEED = 10.f;
+const float SPEED = 100.f;
 const float SENSITIVITY = 0.1f;
 const float ZOOM = 45.0f;
 // Camera restraints
@@ -59,7 +59,7 @@ const float MAX_ZOOM = 80.f;
 const float MAX_PITCH = 89.f;
 // Camera near and far planes
 const float NEAR_PLANE = .1f;
-const float FAR_PLANE = 200.f;
+const float FAR_PLANE = 1000.f;
 
 class Camera
 {

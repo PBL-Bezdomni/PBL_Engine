@@ -312,7 +312,7 @@ void SceneManager::AssignSceneGraph()
 void SceneManager::LoadModels()
 {
 	m_WorldParent = GameObject();
-	vector<shared_ptr<GameObject>> objs = m_JSONImporter->ImportScene("scene", &m_WorldParent);
+	vector<shared_ptr<GameObject>> objs = m_JSONImporter->ImportScene("scene2", &m_WorldParent);
 	m_GameObjects.insert(m_GameObjects.end(), objs.begin(), objs.end());
 
 	m_LightSourceObject = GameObject();

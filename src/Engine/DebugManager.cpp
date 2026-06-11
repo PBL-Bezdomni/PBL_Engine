@@ -500,7 +500,11 @@ void DebugManager::UpdateGameObjects(GameObjectData& data)
 	{
 		rb->SetHitboxSize(glm::vec3(data.ColliderSizeX, data.ColliderSizeY, data.ColliderSizeZ));
 		// rb->SetRotation(gameObject->transform->EulerAngles);
-		// rb->Teleport(gameObject->transform->Position);
+		glm::vec3 worldPos = glm::vec3(gameObject->transform->ModelMatrix[3]);
+
+		// 2. Передаем именно мировые координаты!
+		// rb->SetRotation(gameObject->transform->EulerAngles);
+		rb->Teleport(worldPos);
 	}
 }
 
