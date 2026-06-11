@@ -23,6 +23,7 @@
 #include "Game/Scripts/MassageTable.h"
 #include "Game/Scripts/Bath.h"
 #include "Game/Scripts/Animal.h"
+#include "Scripts/CameraManager.h"
 
 
 #define _USE_MATH_DEFINES
@@ -108,6 +109,8 @@ void SceneManager::LoadScene()
 	
 	// TODO create event here
 	Engine::GetInstance().GetDebugManager().RefreshGameObjectData();
+
+	m_CameraManager.GetComponent<CameraManager>()->AssignCameraAndPlayer(MainCamera.get(), &m_Player1);
 }
 
 void SceneManager::UpdateScene()
@@ -302,6 +305,7 @@ void SceneManager::AssignSceneGraph()
 {
 	m_WorldParent.AddChild(&m_LightSource);
 	m_WorldParent.AddChild(&m_ParticleSystem);
+	m_WorldParent.AddChild(&m_CameraManager);
 
 	// m_WorldParent.transform->Position = glm::vec3(0.f, 0.f, -30.f);
 	// m_WorldParent.transform->Scale = glm::vec3(0.7f);
@@ -327,6 +331,10 @@ void SceneManager::LoadModels()
 	
 	m_UIPanelTex = *AssetMgr->GetTexture("res/textures/UI/UI_panel.png");
 	m_UICoinTex = *AssetMgr->GetTexture("res/textures/UI/coin.png");
+
+	m_CameraManager = GameObject();
+	m_CameraManager.Name = "CameraManager";
+	m_CameraManager.AddComponent<CameraManager>();
 }
 
 void SceneManager::InitializeUI()
