@@ -38,7 +38,7 @@ class InputManager {
 private:
     std::map<std::string, InputAction> actions;
     std::map<int, std::map<std::string, InputAction>> devices;
-    float deadzone = 0.1f;
+    float deadzone = 0.5f;
 
 public:
     InputName InputName;
