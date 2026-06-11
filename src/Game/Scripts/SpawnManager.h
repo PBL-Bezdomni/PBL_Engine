@@ -18,9 +18,9 @@ private:
 	float m_SpawnCounter;
 	float m_SpawnTime = 2.f;
 
-	int m_BunnyLimit = 7;
-	int m_BearLimit = 3;
-	int m_SkunkLimit = 4;
+	int m_BunnyLimit = 2; //7
+	int m_BearLimit = 1; //3
+	int m_SkunkLimit = 2; //4
 	int m_SpawnedLimit = 5;
 	int m_EarnedMoney = 0;
 	
@@ -39,9 +39,9 @@ public:
 	int GetMoney() const { return m_EarnedMoney; }
 	SpawnManager() = default;
 	void CreateEntities(shared_ptr<Shader> shader);
-	shared_ptr<GameObject> CreateAnimal(shared_ptr<Shader> shader, const char* path, const char* name, int index = 0);
+	shared_ptr<GameObject> CreateAnimal(shared_ptr<Shader> shader, const char* path, const char* name, int index = 0, std::string animPat = "");
 	shared_ptr<GameObject> CreateBunny(shared_ptr<Shader> shader, int index = 0);
-	shared_ptr<GameObject> CreateBear(shared_ptr<Shader> shader, int index = 0);
+	shared_ptr<GameObject> CreateBear(shared_ptr<Shader> shader, std::shared_ptr<Shader> animShader, int index = 0);
 	shared_ptr<GameObject> CreateSkunk(shared_ptr<Shader> shader, int index = 0);
 
 	shared_ptr<GameObject> PickAnimal();

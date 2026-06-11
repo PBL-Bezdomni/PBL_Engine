@@ -29,6 +29,7 @@ public:
 	shared_ptr<Shader> ProgressBarShader;
 	shared_ptr<Shader> TutorialArrowShader;
 	shared_ptr<Shader> WorldUIShader;
+	shared_ptr<Shader> AnimatedShader;
 	
 	AssetManager() = default;
 	~AssetManager();

@@ -8,6 +8,7 @@
 #include <Engine/Engine.h>
 
 #include "Engine/AssetManager.h"
+#include <Engine/Animation/Animator.h>
 
 void Animal::Awake()
 {
@@ -147,6 +148,12 @@ void Animal::Update()
 {
     Behaviour::Update();
     m_CurrTime = m_SceneMgr->GetTimeLeft();
+
+    Animator* animator = m_Owner->GetComponent<Animator>();
+    if (animator != nullptr)
+    {
+        animator->UpdateAnimation(Time::GetDeltaTime());
+    }
 
     if (m_ShouldTeleport)
     {
@@ -522,8 +529,11 @@ void Animal::ChangeState(AnimalState newState)
     m_StateTimer = 0.0f;
     m_CurrentState = newState;
 
+    Animator* animator = m_Owner->GetComponent<Animator>();
+
     if (newState == AnimalState::Idle)
     {
         PickNewTargetPosition();
+        if (animator) animator->PlayAnimation("eat");
     }
 }
