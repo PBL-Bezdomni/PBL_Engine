@@ -85,7 +85,7 @@ shared_ptr<GameObject> SpawnManager::PickAnimal()
 void SpawnManager::SetSpawnValue(GameObject* animal)
 {
 	glm::vec3 spawnPosition = m_Owner->transform->GetGlobalPosition();
-	spawnPosition.z -= 4;
+	spawnPosition.x -= 5;
 	//spawnedEntity->transform->Scale = glm::vec3(2, 2, 2);
 	if (animal != nullptr)
 	{
@@ -101,7 +101,7 @@ void SpawnManager::SetSpawnValue(GameObject* animal)
 void SpawnManager::SpawnAnimal(GameObject* animal)
 {
 	RigidBody* animalRB = animal->GetComponent<RigidBody>();
-	glm::vec3 throwVelocity = glm::vec3(-1, 0, 0) * 20.f;
+	glm::vec3 throwVelocity = glm::vec3(-1, 0, 0) * 40.f;
 	animalRB->SetLinearVelocity(throwVelocity);
 }
 
