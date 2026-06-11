@@ -72,8 +72,8 @@ unsigned int ShadowMap::GenerateMap(GameObject& m_WorldParent, Shader& depthShad
 glm::mat4 ShadowMap::ConfigureShaderAndMatrices() {
 	glm::mat4 lightProjection, lightView;
 	glm::mat4 lightSpaceMatrix;
-	float near_plane = 0.1f, far_plane = 100.0f;
-	lightProjection = glm::ortho(-50.0f, 50.0f, -50.0f, 50.0f, near_plane, far_plane);
+	float near_plane = 0.1f, far_plane = 200.0f;
+	lightProjection = glm::ortho(-250.0f, 250.0f, -250.0f, 250.0f, near_plane, far_plane);
 
 	glm::vec3 sceneCenter = glm::vec3(0.0f, 0.0f, -30.0f);
 	glm::vec3 lightDir = glm::normalize(glm::vec3(0.0f, -1.0f, -1.0f));
