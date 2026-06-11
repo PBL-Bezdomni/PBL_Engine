@@ -140,8 +140,8 @@ shared_ptr<GameObject> SpawnManager::CreateAnimal(shared_ptr<Shader> shader, con
 {
 	shared_ptr<GameObject> animal = m_SceneMgr->Instantiate(m_AnimalParent, path, shader);
 	animal->Name = name + std::to_string(index);
-	animal->AddComponent<RigidBody>();
-	animal->GetComponent<RigidBody>()->PrepareInit();
+	// animal->AddComponent<RigidBody>();
+	// animal->GetComponent<RigidBody>()->PrepareInit();
 	animal->AddComponent<Animal>();
 	animal->transform->Position = m_ExiledPos;
 	animal->UpdateSelfAndChild();

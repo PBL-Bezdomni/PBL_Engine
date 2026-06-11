@@ -220,7 +220,7 @@ void Player::HandleActionPressed()
     {   
         glm::vec3 playerPos = m_Owner->GetWorldPosition();
 
-        playerPos.y += 0.5f;
+        // playerPos.y = 0.5f;
 
         glm::vec3 rot = glm::vec3(m_LastMoveDir.x, 0, m_LastMoveDir.y);
         glm::vec3 playerForward = glm::normalize(rot);

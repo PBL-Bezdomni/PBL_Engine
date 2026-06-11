@@ -19,11 +19,44 @@ void Animal::Awake()
 	m_CurrTime = m_SceneMgr->GetTimeLeft();
 	m_MainCamera = m_SceneMgr->GetMainCamera().get();
 
-
+    m_RB = m_Owner->AddComponent<RigidBody>();
 	m_Indicator = m_SceneMgr->Instantiate(m_Owner, "res/models/PieChartPlane.obj", m_AssetMgr->PieChartShader);
 	m_Indicator->Name = "NeedsIndicator";
 	m_Indicator->transform->Position = glm::vec3(0.f, -0.8f, 0.f);
-	m_Indicator->transform->Scale = glm::vec3(2.0f, 2.0f, 2.0f);	
+    // TODO add scripts for every animal kind, that will override enum
+    if (m_Owner->Name.find("bunny") != std::string::npos)
+    {
+        if (m_RB != nullptr)
+        {
+            m_RB->PrepareInit(glm::vec3(0.5f));
+        }
+        m_Indicator->transform->Scale = glm::vec3(3.0f);
+    }
+    else if (m_Owner->Name.find("bear") != std::string::npos)
+    {
+        m_Indicator->transform->Scale = glm::vec3(10.0f);
+        if (m_RB != nullptr)
+        {
+            m_RB->PrepareInit(glm::vec3(2.f));
+        }
+    }
+    else if (m_Owner->Name.find("skunk") != std::string::npos)
+    {
+        m_Indicator->transform->Scale = glm::vec3(4.0f);
+        if (m_RB != nullptr)
+        {
+            m_RB->PrepareInit(glm::vec3(1.f));
+        }
+    }
+    else
+    {
+        // Failsafe
+	    m_Indicator->transform->Scale = glm::vec3(2.0f, 2.0f, 2.0f);
+        if (m_RB != nullptr)
+        {
+            m_RB->PrepareInit(glm::vec3(1.f));
+        }
+    }
     SetIndicatorShader(m_AssetMgr->PieChartShader);
 
 
