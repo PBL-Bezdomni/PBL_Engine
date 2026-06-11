@@ -4,11 +4,15 @@ void InputManager::Initialize()
 {
     createAction(InputName.MOVE_FORWARD);
     createAction(InputName.MOVE_STRAFE);
+    createAction(InputName.LOOK_FORWARD);
+    createAction(InputName.LOOK_STRAFE);
     createAction(InputName.ACTION);
     createAction(InputName.THROW);
 
     addBinding(InputName.MOVE_FORWARD, {BindingType::Axis, GLFW_GAMEPAD_AXIS_LEFT_Y });
     addBinding(InputName.MOVE_STRAFE, {BindingType::Axis, GLFW_GAMEPAD_AXIS_LEFT_X });
+    addBinding(InputName.LOOK_FORWARD, {BindingType::Axis, GLFW_GAMEPAD_AXIS_RIGHT_Y });
+    addBinding(InputName.LOOK_STRAFE, {BindingType::Axis, GLFW_GAMEPAD_AXIS_RIGHT_X });
     addBinding(InputName.ACTION, {BindingType::Button, GLFW_GAMEPAD_BUTTON_A});
     addBinding(InputName.THROW, {BindingType::Button, GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER});
     addBinding(InputName.THROW, { BindingType::Button, GLFW_GAMEPAD_BUTTON_LEFT_BUMPER });

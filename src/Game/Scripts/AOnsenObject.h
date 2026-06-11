@@ -19,10 +19,10 @@ protected:
 	TutorialArrow* m_TutorialArrow;
 
 	std::vector<glm::vec3> m_SlotsPos = {
-		glm::vec3(-3.0f, 2.5f, -3.0f),
-		glm::vec3(3.0f, 2.5f, -3.0f),
-		glm::vec3(-3.0f, 2.5f, 3.0f),
-		glm::vec3(3.0f, 2.5f, 3.0f)
+		glm::vec3(-3.0f, -4.f, -3.0f),
+		glm::vec3(3.0f, -4.f, -3.0f),
+		glm::vec3(-3.0f, -4.f, 3.0f),
+		glm::vec3(3.0f, -4.f, 3.0f)
 	};
 
 	AnimalNeeds m_ObjectNeed = AnimalNeeds::Bath;

@@ -8,6 +8,7 @@
 #include "Game/SceneManager.h"
 #include "AnimalInteractions.h"
 
+class RigidBody;
 class GameObject;
 class AOnsenObject;
 
@@ -80,6 +81,7 @@ private:
     float m_StateTimer = 0.0f;
 
 	std::vector<AnimalNeeds> m_RequiredServices;
+	RigidBody* m_RB;
 
 public:
     AOnsenObject* m_CurrentOnsen = nullptr;

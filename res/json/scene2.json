@@ -5817,15 +5817,15 @@
         {
             "base_color_texture": "",
             "collider_size": [
-                0.0,
-                0.0,
-                0.0
+                10.0,
+                1.0,
+                15.0
             ],
             "has_normal": false,
-            "has_rigid_body": false,
+            "has_rigid_body": true,
             "id": 172,
-            "is_static": false,
-            "is_trigger": false,
+            "is_static": true,
+            "is_trigger": true,
             "mesh": "",
             "name": "SpawnManager",
             "normal_texture": "",
@@ -5833,13 +5833,13 @@
             "parentID": 1,
             "position": [
                 -70.0,
-                60.0,
-                -200.0
+                60.00001525878906,
+                -280.0
             ],
             "rotation": [
                 90.0,
-                0.0,
-                90.0
+                -89.9720230102539,
+                0.0
             ],
             "scale": [
                 1.0,
@@ -8438,6 +8438,142 @@
             ]
         },
         {
+            "base_color_texture": "arrowIcon.png",
+            "collider_size": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "has_normal": false,
+            "has_rigid_body": false,
+            "id": 249,
+            "is_static": false,
+            "is_trigger": false,
+            "mesh": "ProgressBarPlane.obj",
+            "name": "TestArrow",
+            "normal_texture": "",
+            "parent": "Basen",
+            "parentID": 248,
+            "position": [
+                0.0,
+                2.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "scripts": []
+        },
+        {
+            "base_color_texture": "",
+            "collider_size": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "has_normal": false,
+            "has_rigid_body": false,
+            "id": 250,
+            "is_static": false,
+            "is_trigger": false,
+            "mesh": "",
+            "name": "TestArrow",
+            "normal_texture": "",
+            "parent": "Basen",
+            "parentID": 248,
+            "position": [
+                0.0,
+                2.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "scripts": []
+        },
+        {
+            "base_color_texture": "",
+            "collider_size": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "has_normal": false,
+            "has_rigid_body": false,
+            "id": 251,
+            "is_static": false,
+            "is_trigger": false,
+            "mesh": "",
+            "name": "TestArrow",
+            "normal_texture": "",
+            "parent": "Basen",
+            "parentID": 248,
+            "position": [
+                0.0,
+                2.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "scripts": []
+        },
+        {
+            "base_color_texture": "",
+            "collider_size": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "has_normal": false,
+            "has_rigid_body": false,
+            "id": 252,
+            "is_static": false,
+            "is_trigger": false,
+            "mesh": "",
+            "name": "TestArrow",
+            "normal_texture": "",
+            "parent": "Basen",
+            "parentID": 248,
+            "position": [
+                0.0,
+                2.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "scripts": []
+        },
+        {
             "base_color_texture": "",
             "collider_size": [
                 7.0,
@@ -8446,7 +8582,7 @@
             ],
             "has_normal": false,
             "has_rigid_body": true,
-            "id": 249,
+            "id": 253,
             "is_static": true,
             "is_trigger": true,
             "mesh": "",
@@ -8475,6 +8611,142 @@
             ]
         },
         {
+            "base_color_texture": "arrowIcon.png",
+            "collider_size": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "has_normal": false,
+            "has_rigid_body": false,
+            "id": 254,
+            "is_static": false,
+            "is_trigger": false,
+            "mesh": "ProgressBarPlane.obj",
+            "name": "TestArrow",
+            "normal_texture": "",
+            "parent": "Jakuzi",
+            "parentID": 253,
+            "position": [
+                0.0,
+                2.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "scripts": []
+        },
+        {
+            "base_color_texture": "",
+            "collider_size": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "has_normal": false,
+            "has_rigid_body": false,
+            "id": 255,
+            "is_static": false,
+            "is_trigger": false,
+            "mesh": "",
+            "name": "TestArrow",
+            "normal_texture": "",
+            "parent": "Jakuzi",
+            "parentID": 253,
+            "position": [
+                0.0,
+                2.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "scripts": []
+        },
+        {
+            "base_color_texture": "",
+            "collider_size": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "has_normal": false,
+            "has_rigid_body": false,
+            "id": 256,
+            "is_static": false,
+            "is_trigger": false,
+            "mesh": "",
+            "name": "TestArrow",
+            "normal_texture": "",
+            "parent": "Jakuzi",
+            "parentID": 253,
+            "position": [
+                0.0,
+                2.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "scripts": []
+        },
+        {
+            "base_color_texture": "",
+            "collider_size": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "has_normal": false,
+            "has_rigid_body": false,
+            "id": 257,
+            "is_static": false,
+            "is_trigger": false,
+            "mesh": "",
+            "name": "TestArrow",
+            "normal_texture": "",
+            "parent": "Jakuzi",
+            "parentID": 253,
+            "position": [
+                0.0,
+                2.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "scripts": []
+        },
+        {
             "base_color_texture": "",
             "collider_size": [
                 8.0,
@@ -8483,7 +8755,7 @@
             ],
             "has_normal": false,
             "has_rigid_body": true,
-            "id": 250,
+            "id": 258,
             "is_static": true,
             "is_trigger": true,
             "mesh": "",
@@ -8512,6 +8784,142 @@
             ]
         },
         {
+            "base_color_texture": "arrowIcon.png",
+            "collider_size": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "has_normal": false,
+            "has_rigid_body": false,
+            "id": 259,
+            "is_static": false,
+            "is_trigger": false,
+            "mesh": "ProgressBarPlane.obj",
+            "name": "TestArrow",
+            "normal_texture": "",
+            "parent": "Towels",
+            "parentID": 258,
+            "position": [
+                -30.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "scripts": []
+        },
+        {
+            "base_color_texture": "",
+            "collider_size": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "has_normal": false,
+            "has_rigid_body": false,
+            "id": 260,
+            "is_static": false,
+            "is_trigger": false,
+            "mesh": "",
+            "name": "TestArrow",
+            "normal_texture": "",
+            "parent": "Towels",
+            "parentID": 258,
+            "position": [
+                -30.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "scripts": []
+        },
+        {
+            "base_color_texture": "",
+            "collider_size": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "has_normal": false,
+            "has_rigid_body": false,
+            "id": 261,
+            "is_static": false,
+            "is_trigger": false,
+            "mesh": "",
+            "name": "TestArrow",
+            "normal_texture": "",
+            "parent": "Towels",
+            "parentID": 258,
+            "position": [
+                -30.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "scripts": []
+        },
+        {
+            "base_color_texture": "",
+            "collider_size": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "has_normal": false,
+            "has_rigid_body": false,
+            "id": 262,
+            "is_static": false,
+            "is_trigger": false,
+            "mesh": "",
+            "name": "TestArrow",
+            "normal_texture": "",
+            "parent": "Towels",
+            "parentID": 258,
+            "position": [
+                -30.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "scripts": []
+        },
+        {
             "base_color_texture": "",
             "collider_size": [
                 5.0,
@@ -8520,7 +8928,7 @@
             ],
             "has_normal": false,
             "has_rigid_body": true,
-            "id": 251,
+            "id": 263,
             "is_static": true,
             "is_trigger": true,
             "mesh": "",
@@ -8549,6 +8957,142 @@
             ]
         },
         {
+            "base_color_texture": "arrowIcon.png",
+            "collider_size": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "has_normal": false,
+            "has_rigid_body": false,
+            "id": 264,
+            "is_static": false,
+            "is_trigger": false,
+            "mesh": "ProgressBarPlane.obj",
+            "name": "TestArrow",
+            "normal_texture": "",
+            "parent": "Massage1",
+            "parentID": 263,
+            "position": [
+                -20.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "scripts": []
+        },
+        {
+            "base_color_texture": "",
+            "collider_size": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "has_normal": false,
+            "has_rigid_body": false,
+            "id": 265,
+            "is_static": false,
+            "is_trigger": false,
+            "mesh": "",
+            "name": "TestArrow",
+            "normal_texture": "",
+            "parent": "Massage1",
+            "parentID": 263,
+            "position": [
+                -20.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "scripts": []
+        },
+        {
+            "base_color_texture": "",
+            "collider_size": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "has_normal": false,
+            "has_rigid_body": false,
+            "id": 266,
+            "is_static": false,
+            "is_trigger": false,
+            "mesh": "",
+            "name": "TestArrow",
+            "normal_texture": "",
+            "parent": "Massage1",
+            "parentID": 263,
+            "position": [
+                -20.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "scripts": []
+        },
+        {
+            "base_color_texture": "",
+            "collider_size": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "has_normal": false,
+            "has_rigid_body": false,
+            "id": 267,
+            "is_static": false,
+            "is_trigger": false,
+            "mesh": "",
+            "name": "TestArrow",
+            "normal_texture": "",
+            "parent": "Massage1",
+            "parentID": 263,
+            "position": [
+                -20.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "scripts": []
+        },
+        {
             "base_color_texture": "",
             "collider_size": [
                 5.0,
@@ -8557,7 +9101,7 @@
             ],
             "has_normal": false,
             "has_rigid_body": true,
-            "id": 252,
+            "id": 268,
             "is_static": true,
             "is_trigger": true,
             "mesh": "",
@@ -8586,6 +9130,142 @@
             ]
         },
         {
+            "base_color_texture": "arrowIcon.png",
+            "collider_size": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "has_normal": false,
+            "has_rigid_body": false,
+            "id": 269,
+            "is_static": false,
+            "is_trigger": false,
+            "mesh": "ProgressBarPlane.obj",
+            "name": "TestArrow",
+            "normal_texture": "",
+            "parent": "Massage2",
+            "parentID": 268,
+            "position": [
+                -20.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "scripts": []
+        },
+        {
+            "base_color_texture": "",
+            "collider_size": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "has_normal": false,
+            "has_rigid_body": false,
+            "id": 270,
+            "is_static": false,
+            "is_trigger": false,
+            "mesh": "",
+            "name": "TestArrow",
+            "normal_texture": "",
+            "parent": "Massage2",
+            "parentID": 268,
+            "position": [
+                -20.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "scripts": []
+        },
+        {
+            "base_color_texture": "",
+            "collider_size": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "has_normal": false,
+            "has_rigid_body": false,
+            "id": 271,
+            "is_static": false,
+            "is_trigger": false,
+            "mesh": "",
+            "name": "TestArrow",
+            "normal_texture": "",
+            "parent": "Massage2",
+            "parentID": 268,
+            "position": [
+                -20.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "scripts": []
+        },
+        {
+            "base_color_texture": "",
+            "collider_size": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "has_normal": false,
+            "has_rigid_body": false,
+            "id": 272,
+            "is_static": false,
+            "is_trigger": false,
+            "mesh": "",
+            "name": "TestArrow",
+            "normal_texture": "",
+            "parent": "Massage2",
+            "parentID": 268,
+            "position": [
+                -20.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "scripts": []
+        },
+        {
             "base_color_texture": "",
             "collider_size": [
                 5.0,
@@ -8594,7 +9274,7 @@
             ],
             "has_normal": false,
             "has_rigid_body": true,
-            "id": 253,
+            "id": 273,
             "is_static": true,
             "is_trigger": true,
             "mesh": "",
@@ -8623,6 +9303,142 @@
             ]
         },
         {
+            "base_color_texture": "arrowIcon.png",
+            "collider_size": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "has_normal": false,
+            "has_rigid_body": false,
+            "id": 274,
+            "is_static": false,
+            "is_trigger": false,
+            "mesh": "ProgressBarPlane.obj",
+            "name": "TestArrow",
+            "normal_texture": "",
+            "parent": "Massage3",
+            "parentID": 273,
+            "position": [
+                -20.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "scripts": []
+        },
+        {
+            "base_color_texture": "",
+            "collider_size": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "has_normal": false,
+            "has_rigid_body": false,
+            "id": 275,
+            "is_static": false,
+            "is_trigger": false,
+            "mesh": "",
+            "name": "TestArrow",
+            "normal_texture": "",
+            "parent": "Massage3",
+            "parentID": 273,
+            "position": [
+                -20.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "scripts": []
+        },
+        {
+            "base_color_texture": "",
+            "collider_size": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "has_normal": false,
+            "has_rigid_body": false,
+            "id": 276,
+            "is_static": false,
+            "is_trigger": false,
+            "mesh": "",
+            "name": "TestArrow",
+            "normal_texture": "",
+            "parent": "Massage3",
+            "parentID": 273,
+            "position": [
+                -20.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "scripts": []
+        },
+        {
+            "base_color_texture": "",
+            "collider_size": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "has_normal": false,
+            "has_rigid_body": false,
+            "id": 277,
+            "is_static": false,
+            "is_trigger": false,
+            "mesh": "",
+            "name": "TestArrow",
+            "normal_texture": "",
+            "parent": "Massage3",
+            "parentID": 273,
+            "position": [
+                -20.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "scripts": []
+        },
+        {
             "base_color_texture": "",
             "collider_size": [
                 5.0,
@@ -8631,7 +9447,7 @@
             ],
             "has_normal": false,
             "has_rigid_body": true,
-            "id": 254,
+            "id": 278,
             "is_static": true,
             "is_trigger": true,
             "mesh": "",
@@ -8658,6 +9474,142 @@
                 "Behaviour",
                 "MassageTable"
             ]
+        },
+        {
+            "base_color_texture": "arrowIcon.png",
+            "collider_size": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "has_normal": false,
+            "has_rigid_body": false,
+            "id": 279,
+            "is_static": false,
+            "is_trigger": false,
+            "mesh": "ProgressBarPlane.obj",
+            "name": "TestArrow",
+            "normal_texture": "",
+            "parent": "Massage4",
+            "parentID": 278,
+            "position": [
+                -20.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "scripts": []
+        },
+        {
+            "base_color_texture": "",
+            "collider_size": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "has_normal": false,
+            "has_rigid_body": false,
+            "id": 280,
+            "is_static": false,
+            "is_trigger": false,
+            "mesh": "",
+            "name": "TestArrow",
+            "normal_texture": "",
+            "parent": "Massage4",
+            "parentID": 278,
+            "position": [
+                -20.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "scripts": []
+        },
+        {
+            "base_color_texture": "",
+            "collider_size": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "has_normal": false,
+            "has_rigid_body": false,
+            "id": 281,
+            "is_static": false,
+            "is_trigger": false,
+            "mesh": "",
+            "name": "TestArrow",
+            "normal_texture": "",
+            "parent": "Massage4",
+            "parentID": 278,
+            "position": [
+                -20.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "scripts": []
+        },
+        {
+            "base_color_texture": "",
+            "collider_size": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "has_normal": false,
+            "has_rigid_body": false,
+            "id": 282,
+            "is_static": false,
+            "is_trigger": false,
+            "mesh": "",
+            "name": "TestArrow",
+            "normal_texture": "",
+            "parent": "Massage4",
+            "parentID": 278,
+            "position": [
+                -20.0,
+                0.0,
+                0.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "scripts": []
         }
     ]
 }

@@ -30,6 +30,8 @@ struct InputName
 {
     const char* MOVE_FORWARD = "MoveForward";
     const char* MOVE_STRAFE = "MoveStrafe";
+    const char* LOOK_FORWARD = "LookForward";
+    const char* LOOK_STRAFE = "LookStrafe";
     const char* ACTION = "Action";
     const char* THROW = "Throw";
 };
