@@ -88,9 +88,11 @@ void Player::Update()
 
     RigidBody* rb = m_Owner->GetComponent<RigidBody>();
 
-	glm::vec3 direction = glm::vec3(moveInput.x, 0.0f, moveInput.y);
+	glm::vec3 direction = glm::vec3(MoveInput.x, 0.0f, MoveInput.y);
+    glm::vec3 lookAt = glm::vec3(LookInput.x, 0.f, LookInput.y);
+    bool isLookingAwayFromMove = glm::length(lookAt) > 0.5f;
 
-    if (glm::length(moveInput) > 0.01f)
+    if (glm::length(MoveInput) > 0.01f)
     {
         m_ParticleEmitter->Play();
         // Footstep handling
@@ -113,20 +115,48 @@ void Player::Update()
 
     if (rb != nullptr)
     {
+        bool changeRotation = false;
+        if (glm::length(direction) > 0.01f || glm::length(lookAt) > 0.01f)
+        {
+            changeRotation = true;
+        }
         if (glm::length(direction) > 1.0f) {
             direction = glm::normalize(direction);
         }
-
-        float targetAngle = glm::degrees(atan2(direction.x, direction.z));
-
-        rb->SetRotation(glm::vec3(0.0f, targetAngle, 0.0f));
-
-        if (glm::length(direction) > 0.01f)
+        if (glm::length(lookAt) > 1.f)
         {
-            // Save last input that moved player
-            m_LastMoveDir = moveInput;
+            lookAt = glm::normalize(lookAt);
         }
 
+        if (changeRotation)
+        {
+            glm::vec3 rotVector = direction;
+            if (isLookingAwayFromMove)
+            {
+                rotVector = lookAt;
+            }
+
+            float targetAngle = glm::degrees(atan2(rotVector.x, rotVector.z));
+
+            rb->SetRotation(glm::vec3(0.0f, targetAngle, 0.0f));
+
+
+            if (glm::length(rotVector) > 0.05f)
+            {
+                // Save last input that moved player
+                m_LastLookDir = glm::vec2(rotVector.x, rotVector.z);
+                if (glm::isnan(rotVector.x) || glm::isnan(rotVector.z))
+                {
+                    spdlog::warn("last look is nan");
+                }
+            }
+        }
+
+        if (glm::length(direction) > 0.05f)
+        {
+            // Save last input that moved player
+            m_LastMoveDir = glm::vec2(direction.x, direction.z);;
+        }
 
         glm::vec3 currentVel = rb->GetLinearVelocity();
         glm::vec3 targetVel = direction * speed;
@@ -183,12 +213,22 @@ void Player::BindInput()
     
     im->subscribe(deviceID, m_InputName.MOVE_FORWARD, [this](float val, InputEventType type, int id) {
         if(id == deviceID)
-            this->moveInput.y = val;
+            this->MoveInput.y = val;
         });
 
     im->subscribe(deviceID, m_InputName.MOVE_STRAFE, [this](float val, InputEventType type, int id) {
         if (id == deviceID)
-            this->moveInput.x = val;
+            this->MoveInput.x = val;
+        });
+
+    im->subscribe(deviceID, m_InputName.LOOK_FORWARD, [this](float val, InputEventType type, int id) {
+        if(id == deviceID)
+            this->LookInput.y = val;
+        });
+
+    im->subscribe(deviceID, m_InputName.LOOK_STRAFE, [this](float val, InputEventType type, int id) {
+        if (id == deviceID)
+            this->LookInput.x = val;
         });
 
     im->subscribe(deviceID, m_InputName.ACTION, [this](float val, InputEventType type, int id)
@@ -312,13 +352,17 @@ void Player::HandleThrowReleased()
 
         if (animalRb != nullptr)
         {
-            glm::vec3 rot = glm::vec3(m_LastMoveDir.x, 0, m_LastMoveDir.y);
+            glm::vec3 rot = glm::vec3(m_LastLookDir.x, 0, m_LastLookDir.y);
             glm::vec3 playerForward = glm::normalize(rot);
             // glm::vec3 playerForward = glm::quat(glm::radians(m_Owner->transform->EulerAngles)) * glm::vec3(0.0f, 0.0f, 1.0f);
 
             glm::vec3 throwVelocity = playerForward * m_ThrowCharge;
             throwVelocity.y = m_ThrowCharge * 0.4f;
-
+            if (glm::isnan(throwVelocity.x) || glm::isnan(throwVelocity.z))
+            {
+                spdlog::warn("Throw Velocity was NaN");
+                throwVelocity = glm::vec3(1.0, 0, 0);
+            }
             animalRb->SetLinearVelocity(throwVelocity);
             animalScript->ChangeState(AnimalState::Throw);
         }

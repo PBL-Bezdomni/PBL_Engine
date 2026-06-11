@@ -13,6 +13,7 @@ private:
     SceneManager* m_SceneMgr;
     InputName m_InputName;
     glm::vec2 m_LastMoveDir = glm::vec2(0);
+    glm::vec2 m_LastLookDir = glm::vec2(0);
 
     ParticleEmitter* m_ParticleEmitter;
 
@@ -33,7 +34,8 @@ private:
     float m_FootstepTimer = 0.0f;
     float m_FootstepInterval = 0.45f; // seconds between footsteps while moving
 public:
-    glm::vec2 moveInput{ 0.0f };
+    glm::vec2 MoveInput{ 0.0f };
+    glm::vec2 LookInput{ 0.0f };
     float speed = 10.0f;
     int deviceID;
 
