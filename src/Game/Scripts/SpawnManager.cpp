@@ -101,7 +101,7 @@ void SpawnManager::SetSpawnValue(GameObject* animal)
 void SpawnManager::SpawnAnimal(GameObject* animal)
 {
 	RigidBody* animalRB = animal->GetComponent<RigidBody>();
-	glm::vec3 throwVelocity = glm::vec3(0, 0, -1) * 20.f;
+	glm::vec3 throwVelocity = glm::vec3(-1, 0, 0) * 20.f;
 	animalRB->SetLinearVelocity(throwVelocity);
 }
 
@@ -152,17 +152,17 @@ shared_ptr<GameObject> SpawnManager::CreateAnimal(shared_ptr<Shader> shader, con
 
 shared_ptr<GameObject> SpawnManager::CreateBunny(shared_ptr<Shader> shader, int index)
 {
-	return CreateAnimal(shader, "res/models/animals/bunny/bunny.obj", "bunny", index);
+	return CreateAnimal(shader, "res/models/animals/bunny/Bunnyf.obj", "bunny", index);
 }
 
 shared_ptr<GameObject> SpawnManager::CreateBear(shared_ptr<Shader> shader, int index)
 {
-	return CreateAnimal(shader, "res/models/animals/bear/bear_1500.fbx", "bear", index);
+	return CreateAnimal(shader, "res/models/animals/bear/Bearf.obj", "bear", index);
 }
 
 shared_ptr<GameObject> SpawnManager::CreateSkunk(shared_ptr<Shader> shader, int index)
 {
-	return CreateAnimal(shader, "res/models/animals/skunks/skunks.fbx", "skunk", index);
+	return CreateAnimal(shader, "res/models/animals/skunks/Skunksf.obj", "skunk", index);
 }
 
 
