@@ -27,6 +27,7 @@ void AssetManager::Initialize()
 	ProgressBarShader = GetShader("res/shaders/ProgressBar.vert", "res/shaders/ProgressBar.frag");
 	WorldUIShader = GetShader("res/shaders/worldUIShader.vert", "res/shaders/worldUIShader.frag");
 	TutorialArrowShader = GetShader("res/shaders/tutorialArrow.vert", "res/shaders/tutorialArrow.frag");
+	CelShadingShader = GetShader("res/shaders/celShading.vert", "res/shaders/celShading.frag");
 }
 
 shared_ptr<Shader> AssetManager::GetShader(const char* vertexPath, const char* fragmentPath)

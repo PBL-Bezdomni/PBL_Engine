@@ -16,6 +16,7 @@ class PhysicsEngine;
 class DebugManager;
 class WindowManager;
 class Player;
+class CelShading;
 
 class SceneManager
 {
@@ -88,6 +89,8 @@ private:
 	
 	GameObject m_Player1;
 	GameObject m_Player2;
+
+	CelShading* m_cl;
 	
 	Skybox m_Skybox;
 

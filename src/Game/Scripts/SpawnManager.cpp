@@ -152,12 +152,12 @@ shared_ptr<GameObject> SpawnManager::CreateAnimal(shared_ptr<Shader> shader, con
 
 shared_ptr<GameObject> SpawnManager::CreateBunny(shared_ptr<Shader> shader, int index)
 {
-	return CreateAnimal(shader, "res/models/animals/bunny/Bunnyf.obj", "bunny", index);
+	return CreateAnimal(shader, "res/models/animals/bunny-2/bunnyf.obj", "bunny", index);
 }
 
 shared_ptr<GameObject> SpawnManager::CreateBear(shared_ptr<Shader> shader, int index)
 {
-	return CreateAnimal(shader, "res/models/animals/bear/Bearf.obj", "bear", index);
+	return CreateAnimal(shader, "res/models/animals/bear-2/bearf.obj", "bear", index);
 }
 
 shared_ptr<GameObject> SpawnManager::CreateSkunk(shared_ptr<Shader> shader, int index)

@@ -24,6 +24,8 @@
 #include "Game/Scripts/Bath.h"
 #include "Game/Scripts/Animal.h"
 
+#include "CelShading.h"
+
 
 #define _USE_MATH_DEFINES
 
@@ -53,6 +55,8 @@ void SceneManager::Initialize()
 	glfwSetCursorPosCallback(WindowMgr->GetWindowPointer(), SceneManager::MouseCallbackDispatcher);
 	glfwSetScrollCallback(WindowMgr->GetWindowPointer(), ScrollCallbackDispatcher);
 	glfwSetJoystickCallback(SceneManager::JoystickCallback);
+
+	m_cl = new CelShading(WindowMgr->GetWindowPointer());
     
 	spdlog::info("Initialized project.");
 
@@ -118,25 +122,31 @@ void SceneManager::UpdateScene()
 
 void SceneManager::RenderScene()
 {
+
+	AssetMgr->BasicShader->Use();
+	AssetMgr->BasicShader->SetBool("useDirLight", false);
+	AssetMgr->BasicShader->SetBool("usePointLight", false);
+	AssetMgr->BasicShader->SetBool("useSpotLight1", false);
+
+	UpdateShaderLight(&m_WorldParent, *AssetMgr->BasicShader, *AssetMgr->SimpleDepthShader); 
+
+	m_cl->CheckScreenSize(WindowMgr->GetWindowPointer());
+	m_cl->FBOInit();
+
 	glEnable(GL_DEPTH_TEST);
     glm::mat4 skyboxView = glm::mat4(glm::mat3(MainCamera->GetViewMatrix()));
     glm::mat4 view = MainCamera->GetViewMatrix();
     glm::mat4 projection = MainCamera->GetProjectionMatrix();
 
 	AssetMgr->SetShadersViewProjection(view, projection);
-	
-    AssetMgr->BasicShader->Use();
-	AssetMgr->BasicShader->SetBool("useDirLight", false);
-	AssetMgr->BasicShader->SetBool("usePointLight", false);
-	AssetMgr->BasicShader->SetBool("useSpotLight1", false);
-	
-    UpdateShaderLight(&m_WorldParent, *AssetMgr->BasicShader, *AssetMgr->SimpleDepthShader);
 
     m_WorldParent.UpdateSelfAndChild();
 
 	int windowH, windowW;
 	glfwGetWindowSize(WindowMgr->GetWindowPointer(), &windowW, &windowH);
 	glViewport(0, 0, windowW, windowH);
+
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     m_WorldParent.DrawSelfAndChild();
@@ -149,6 +159,11 @@ void SceneManager::RenderScene()
     {
         Physics->DrawHitboxes(*AssetMgr->LineShader, view, projection);
     }
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	m_cl->RenderQuad(*AssetMgr->CelShadingShader);
 
 	// IMPORTANT: Do not write things below Freetype/UI, if you do not know what you are doing, thanks :)
 	// Draw UI

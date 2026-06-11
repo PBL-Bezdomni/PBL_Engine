@@ -1,6 +1,7 @@
 #version 330 core
 
-out vec4 FragColor;
+layout (location = 0) out vec4 FragColor;
+layout (location = 1) out vec3 NormalColor;
 in vec2 TexCoord;
 in vec3 Normal;
 in vec3 FragPos;
@@ -95,6 +96,7 @@ void main()
     }
 
     FragColor = vec4(result, texColor.a);
+    NormalColor = normalize(Normal);
 
 }
 
