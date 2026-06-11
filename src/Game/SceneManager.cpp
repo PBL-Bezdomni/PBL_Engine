@@ -90,8 +90,8 @@ void SceneManager::LoadScene()
 
 	m_WorldParent.AddChild(&m_Player1);
 	m_WorldParent.AddChild(&m_Player2);
-	m_Player1.transform->Position = glm::vec3(0.0f, 1.0f, 0.0f);
-	m_Player2.transform->Position = glm::vec3(5.0f, 5.0f, 0.0f);
+	m_Player1.transform->Position = glm::vec3(10.0f, 0.0f, -20.0f);
+	m_Player2.transform->Position = glm::vec3(10.0f, 0.0f, -25.0f);
 
 	m_WorldParent.UpdateSelfAndChild();
 
