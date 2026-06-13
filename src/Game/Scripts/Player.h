@@ -35,6 +35,9 @@ private:
     float m_FootstepInterval = 0.45f; // seconds between footsteps while moving
 
     std::vector<class TargetingZone*> m_TargetingZones;
+    GameObject* m_LastThrownAnimal = nullptr;
+    float m_IgnoreThrownAnimalTimer = 0.0f;
+
 public:
     glm::vec2 MoveInput{ 0.0f };
     glm::vec2 LookInput{ 0.0f };
