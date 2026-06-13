@@ -27,6 +27,7 @@ void AssetManager::Initialize()
 	ProgressBarShader = GetShader("res/shaders/ProgressBar.vert", "res/shaders/ProgressBar.frag");
 	WorldUIShader = GetShader("res/shaders/worldUIShader.vert", "res/shaders/worldUIShader.frag");
 	TutorialArrowShader = GetShader("res/shaders/tutorialArrow.vert", "res/shaders/tutorialArrow.frag");
+	AnimatedShader = GetShader("res/shaders/animated.vert", "res/shaders/basic.frag");
 	CelShadingShader = GetShader("res/shaders/celShading.vert", "res/shaders/celShading.frag");
 }
 

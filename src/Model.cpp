@@ -4,8 +4,19 @@
 #include "GameObject.h"
 #include "assimp/postprocess.h"
 #include "Engine/Engine.h"
+#include <Engine/Animation/Animator.h>
 
-unsigned int TextureFromFile(const char* path, const string& directory, bool gamma = false);
+unsigned int TextureFromFile(const char* path, const string& directory, const aiScene* scene, bool gamma = false);
+
+static inline glm::mat4 ConvertMatrixToGLMFormat(const aiMatrix4x4& from)
+{
+    glm::mat4 to;
+    to[0][0] = from.a1; to[1][0] = from.a2; to[2][0] = from.a3; to[3][0] = from.a4;
+    to[0][1] = from.b1; to[1][1] = from.b2; to[2][1] = from.b3; to[3][1] = from.b4;
+    to[0][2] = from.c1; to[1][2] = from.c2; to[2][2] = from.c3; to[3][2] = from.c4;
+    to[0][3] = from.d1; to[1][3] = from.d2; to[2][3] = from.d3; to[3][3] = from.d4;
+    return to;
+}
 
 Model::Model()
 {
@@ -104,6 +115,17 @@ void Model::Draw(glm::mat4 modelMatrix, Shader* shader)
         shaderToUse.SetVec3("u_GlowColor", glm::vec3(0.0f));
     }
 
+    
+    Animator* animator = m_Owner->GetComponent<Animator>();
+    if (animator != nullptr)
+    {
+        auto& transforms = animator->GetFinalBoneMatrices();
+        for (int i = 0; i < transforms.size(); ++i)
+        {
+            shaderToUse.SetMat4("bonesMatrices[" + std::to_string(i) + "]", transforms[i]);
+        }
+    }
+
     for (unsigned int i = 0; i < Meshes.size(); i++)
     {
         if (m_CheckFrustum)
@@ -127,8 +149,7 @@ void Model::Draw(glm::mat4 modelMatrix, Shader* shader)
 void Model::LoadModel(string path)
 {
     Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
-
+    const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_LimitBoneWeights);
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
         spdlog::error("ERROR::ASSIMP::");
@@ -167,6 +188,7 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
     for(unsigned int i = 0; i < mesh->mNumVertices; i++)
     {
         Vertex vertex;
+        SetVertexBoneDataToDefault(vertex);
         // process vertex positions, normals and texture coordinates
         glm::vec3 vector;
         // positions
@@ -193,6 +215,7 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
         }
         vertices.push_back(vertex);
     }
+    ExtractBoneWeightForVertices(vertices, mesh, scene);
     // process indices
     for (unsigned int i = 0; i < mesh->mNumFaces; i++)
     {
@@ -208,24 +231,23 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
     {
         aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
         vector<Texture> diffuseMaps = LoadMaterialTextures(material,
-            aiTextureType_DIFFUSE, EngineConsts::DIFFUSE);
+            aiTextureType_DIFFUSE, EngineConsts::DIFFUSE, scene);
         textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
         vector<Texture> specularMaps = LoadMaterialTextures(material,
-            aiTextureType_SPECULAR, EngineConsts::SPECULAR);
+            aiTextureType_SPECULAR, EngineConsts::SPECULAR, scene);
         textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
         vector<Texture> normalMaps = LoadMaterialTextures(material,
-            aiTextureType_NORMALS, EngineConsts::NORMAL);
+            aiTextureType_NORMALS, EngineConsts::NORMAL, scene);
         if (normalMaps.size() > 0)
         {
             m_HasNormal = true;
         }
         textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
     }
-
     return Mesh(vertices, indices, textures, Instancing, InstanceMatrix);
 }
 
-vector<Texture> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, string typeName)
+vector<Texture> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, string typeName, const aiScene* scene)
 {
     vector<Texture> textures;
     for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
@@ -245,7 +267,7 @@ vector<Texture> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type,
         if (!skip)
         {   // if texture hasn't been loaded already, load it
             Texture texture;
-            texture.ID = TextureFromFile(str.C_Str(), m_FileDirectory);
+            texture.ID = TextureFromFile(str.C_Str(), m_FileDirectory, scene);
             texture.Type = typeName;
             texture.Path = str.C_Str();
             // filesystem::path filePath(str.C_Str());
@@ -259,7 +281,7 @@ vector<Texture> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type,
     return textures;
 }
 
-unsigned int TextureFromFile(const char* path, const string& directory, bool gamma)
+unsigned int TextureFromFile(const char* path, const string& directory, const aiScene* scene, bool gamma)
 {
     string filename = string(path);
     filename = directory + '/' + filename;
@@ -268,7 +290,30 @@ unsigned int TextureFromFile(const char* path, const string& directory, bool gam
     glGenTextures(1, &textureID);
 
     int width, height, nrComponents;
-    unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
+    //unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
+    unsigned char* data = nullptr;
+
+    if (scene != nullptr)
+    {
+        const aiTexture* embeddedTexture = scene->GetEmbeddedTexture(path);
+        if (embeddedTexture)
+        {
+            if (embeddedTexture->mHeight == 0)
+            {
+                data = stbi_load_from_memory(reinterpret_cast<unsigned char*>(embeddedTexture->pcData), embeddedTexture->mWidth, &width, &height, &nrComponents, 0);
+            }
+            else
+            {
+                data = stbi_load_from_memory(reinterpret_cast<unsigned char*>(embeddedTexture->pcData), embeddedTexture->mWidth * embeddedTexture->mHeight * 4, &width, &height, &nrComponents, 0);
+            }
+        }
+    }
+
+    if (!data)
+    {
+       data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
+    }
+
     if (data)
     {
         GLenum format;
@@ -343,4 +388,60 @@ void Model::UpdateInstanceMatrix(glm::vec3 transform, glm::vec3 rotation, glm::v
 string Model::GetFileName()
 {
     return m_FileName;
+}
+
+void Model::SetVertexBoneDataToDefault(Vertex& vertex)
+{
+    for (int i = 0; i < MAX_BONE_INFLUENCE; i++)
+    {
+        vertex.m_BoneIDs[i] = -1;
+        vertex.m_Weights[i] = 0.0f;
+    }
+}
+
+void Model::ExtractBoneWeightForVertices(vector<Vertex>& vertices, aiMesh* mesh, const aiScene* scene)
+{
+    //spdlog::info("mesh loading: {}, bone found: {}", mesh->mName.C_Str(), mesh->mNumBones);
+    for (unsigned int boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex)
+    {
+        int boneID = -1;
+        string boneName = mesh->mBones[boneIndex]->mName.C_Str();
+
+        if (m_BoneInfoMap.find(boneName) == m_BoneInfoMap.end())
+        {
+            BoneInfo newBoneInfo;
+            newBoneInfo.id = m_BoneCount;
+            newBoneInfo.offset = ConvertMatrixToGLMFormat(mesh->mBones[boneIndex]->mOffsetMatrix);
+            m_BoneInfoMap[boneName] = newBoneInfo;
+            boneID = m_BoneCount;
+            m_BoneCount++;
+            //spdlog::info("loaded bone: {} (ID: {})", boneName, boneID);
+        }
+        else
+        {
+            boneID = m_BoneInfoMap[boneName].id;
+        }
+
+        assert(boneID != -1);
+
+        auto weights = mesh->mBones[boneIndex]->mWeights;
+        int numWeights = mesh->mBones[boneIndex]->mNumWeights;
+
+        for (int weightIndex = 0; weightIndex < numWeights; ++weightIndex)
+        {
+            int vertexID = weights[weightIndex].mVertexId;
+            float weight = weights[weightIndex].mWeight;
+            assert(vertexID <= vertices.size());
+
+            for (int i = 0; i < MAX_BONE_INFLUENCE; ++i)
+            {
+                if (vertices[vertexID].m_BoneIDs[i] < 0)
+                {
+                    vertices[vertexID].m_Weights[i] = weight;
+                    vertices[vertexID].m_BoneIDs[i] = boneID;
+                    break;
+                }
+            }
+        }
+    }
 }

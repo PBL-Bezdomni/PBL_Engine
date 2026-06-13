@@ -12,6 +12,8 @@
 #include "Game/Scripts/Animal.h"
 #include "Game/Scripts/AOnsenObject.h"
 #include "Game/Scripts/TutorialArrow.h"
+#include <Engine/Animation/Animation.h>
+#include <Engine/Animation/Animator.h>
 
 SpawnManager* SpawnManager::Instance = nullptr;
 
@@ -136,13 +138,24 @@ void SpawnManager::DespawnAnimal(GameObject* animal)
 	}
 }
 
-shared_ptr<GameObject> SpawnManager::CreateAnimal(shared_ptr<Shader> shader, const char* path, const char* name, int index)
+shared_ptr<GameObject> SpawnManager::CreateAnimal(shared_ptr<Shader> shader, const char* path, const char* name, int index, std::string animalPath)
 {
 	shared_ptr<GameObject> animal = m_SceneMgr->Instantiate(m_AnimalParent, path, shader);
 	animal->Name = name + std::to_string(index);
 	// animal->AddComponent<RigidBody>();
 	// animal->GetComponent<RigidBody>()->PrepareInit();
 	animal->AddComponent<Animal>();
+
+	if (!animalPath.empty())
+	{
+		Model* model = animal->GetComponent<Model>();
+		if (model != nullptr)
+		{
+			Animation* startAnimation = new Animation(animalPath, model);
+			animal->AddComponent<Animator>(startAnimation);
+		}
+	}
+
 	animal->transform->Position = m_ExiledPos;
 	animal->UpdateSelfAndChild();
 	//animal->AddComponent<TutorialAnimal>();
@@ -155,9 +168,21 @@ shared_ptr<GameObject> SpawnManager::CreateBunny(shared_ptr<Shader> shader, int 
 	return CreateAnimal(shader, "res/models/animals/bunny-2/bunnyf.obj", "bunny", index);
 }
 
-shared_ptr<GameObject> SpawnManager::CreateBear(shared_ptr<Shader> shader, int index)
+shared_ptr<GameObject> SpawnManager::CreateBear(shared_ptr<Shader> shader, std::shared_ptr<Shader> animShader, int index)
 {
-	return CreateAnimal(shader, "res/models/animals/bear-2/bearf.obj", "bear", index);
+	shared_ptr<GameObject> animal = CreateAnimal(animShader, "res/models/animations/animals/bear-animations/bear-eating.glb", "bear", index, "res/models/animations/animals/bear-animations/bear-eating.glb");
+	Animator* animator = animal->GetComponent<Animator>();
+	Model* model = animal->GetComponent<Model>();
+
+	if (animator != nullptr && model != nullptr)
+	{
+		animator->AddAnimation("idle", new Animation("res/models/animations/animals/bear-animations/bear-waiting.glb", model));
+		animator->AddAnimation("walk", new Animation("res/models/animations/animals/bear-animations/bear-walking.glb", model));
+		animator->AddAnimation("eat", new Animation("res/models/animations/animals/bear-animations/bear-eating.glb", model));
+		animator->AddAnimation("run", new Animation("res/models/animations/animals/bear-animations/bear-running.glb", model));
+		animator->PlayAnimation("idle");
+	}
+	return animal;
 }
 
 shared_ptr<GameObject> SpawnManager::CreateSkunk(shared_ptr<Shader> shader, int index)
@@ -169,6 +194,7 @@ shared_ptr<GameObject> SpawnManager::CreateSkunk(shared_ptr<Shader> shader, int 
 void SpawnManager::CreateEntities(shared_ptr<Shader> shader)
 {
 	int r = Random::GetRandomInt(0, 99);
+	shared_ptr<Shader> animatedShader = m_AssetMgr->AnimatedShader;
 
 	for (int i = 0; i < m_BunnyLimit; i++)
 	{
@@ -176,7 +202,7 @@ void SpawnManager::CreateEntities(shared_ptr<Shader> shader)
 	}
 	for (int i = 0; i < m_BearLimit; i++)
 	{
-		m_AnimalsPool.push_back(CreateBear(shader, i + 1));
+		m_AnimalsPool.push_back(CreateBear(shader, animatedShader, i + 1));
 	}
 	for (int i = 0; i < m_SkunkLimit; i++)
 	{

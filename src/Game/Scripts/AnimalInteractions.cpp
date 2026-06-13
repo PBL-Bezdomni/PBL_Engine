@@ -3,6 +3,7 @@
 #include "Animal.h"
 #include "GameObject.h"
 #include "SpawnManager.h"
+#include <Engine/Animation/Animator.h>
 
 void AnimalInteractions::Update(Animal* animal)
 {
@@ -41,6 +42,8 @@ void AnimalInteractions::HandleBear(Animal* animal)
 	GameObject* bunny = FindClosestAnimal(animal, "bunny", m_DetectionRadius);
 	if (bunny != nullptr)
 	{
+		Animator* animator = animal->GetGameObject()->GetComponent<Animator>();
+		if (animator) animator->PlayAnimation("run");
 		m_IsChasing = true;
 		animal->SetSpeed(5.3f);
 		animal->SetTargetPosition(bunny->transform->GetGlobalPosition());
@@ -50,6 +53,7 @@ void AnimalInteractions::HandleBear(Animal* animal)
 		{
 			if (SpawnManager::Instance != nullptr)
 			{
+				if (animator) animator->PlayAnimation("eat");
 				SpawnManager::Instance->DespawnAnimal(bunny);
 				m_IsChasing = false;
 				m_HungerTimer = m_HungerCooldown;

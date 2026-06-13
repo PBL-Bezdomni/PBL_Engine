@@ -104,7 +104,7 @@ public:
     void EnterPosition(glm::vec3 exactWorldPosition);
 
     void ChangeState(AnimalState newState);
-    AnimalState GetState();
+    AnimalState GetState() { return m_CurrentState; }
 
     void Update() override;
     void UpdateIdle();
@@ -122,7 +122,7 @@ public:
     void UpdateIndicatorColors();
     void SetIndicatorObject(std::shared_ptr<GameObject> indicator) { m_Indicator = indicator; }
     std::shared_ptr<GameObject> GetIndicatorObject() { return m_Indicator; }
-    void SetTargetPosition(glm::vec3 position) { m_TargetPosition = position;}
+    void SetTargetPosition(glm::vec3 position) { m_TargetPosition = position; }
 	void SetSpeed(float speed) { m_MoveSpeed = speed; }
 	void DrawRandomNeeds();
     void StartFulfillingNeed(AnimalNeeds need);

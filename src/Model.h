@@ -10,6 +10,7 @@
 #include "Camera.h"
 #include "Engine/Components/Component.h"
 #include "Engine/Components/Transform.h"
+#include <map>
 
 using namespace std;
 
@@ -126,6 +127,12 @@ struct AABB : Volume
     }
 };
 
+struct BoneInfo
+{
+    int id;
+    glm::mat4 offset;
+};
+
 class Model : public Component
 {
 public:
@@ -145,6 +152,8 @@ public:
     void ReassignShader(Shader& shader);
     string GetFileName();
     bool m_IsHighlighted = false;
+    auto& GetBoneInfoMap() { return m_BoneInfoMap; }
+    int& GetBoneCount() { return m_BoneCount; }
 private:
     // model data
     string m_FileDirectory;
@@ -158,7 +167,13 @@ private:
     void LoadModel(string path);
     void ProcessNode(aiNode* node, const aiScene* scene);
     Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
-    vector<Texture> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, string typeName);
+    vector<Texture> LoadMaterialTextures(aiMaterial* mat, aiTextureType type, string typeName, const aiScene* scene);
 
     bool m_CheckFrustum = false;
+
+    std::map<string, BoneInfo> m_BoneInfoMap;
+    int m_BoneCount = 0;
+
+    void SetVertexBoneDataToDefault(Vertex& vertex);
+    void ExtractBoneWeightForVertices(vector<Vertex>& vertices, aiMesh* mesh, const aiScene* scene);
 };

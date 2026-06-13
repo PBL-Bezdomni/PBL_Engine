@@ -8,6 +8,7 @@
 #include <Engine/Engine.h>
 
 #include "Engine/AssetManager.h"
+#include <Engine/Animation/Animator.h>
 
 void Animal::Awake()
 {
@@ -28,28 +29,25 @@ void Animal::Awake()
     {
         if (m_RB != nullptr)
         {
-            m_RB->PrepareInit(glm::vec3(1.0f));
+            m_RB->PrepareInit(glm::vec3(0.5f));
         }
-        m_Indicator->transform->Scale = glm::vec3(6.0f);
-        m_Indicator->transform->Position = glm::vec3(0.f, -4.0f, 0.f);
+        m_Indicator->transform->Scale = glm::vec3(3.0f);
     }
     else if (m_Owner->Name.find("bear") != std::string::npos)
     {
+        m_Indicator->transform->Scale = glm::vec3(10.0f);
         if (m_RB != nullptr)
         {
             m_RB->PrepareInit(glm::vec3(2.f));
         }
-        m_Indicator->transform->Scale = glm::vec3(10.0f);
-        m_Indicator->transform->Position = glm::vec3(0.0f, -8.0f, 5.0f);
     }
     else if (m_Owner->Name.find("skunk") != std::string::npos)
     {
+        m_Indicator->transform->Scale = glm::vec3(4.0f);
         if (m_RB != nullptr)
         {
-            m_RB->PrepareInit(glm::vec3(2.0f));
+            m_RB->PrepareInit(glm::vec3(1.f));
         }
-        m_Indicator->transform->Scale = glm::vec3(7.0f);
-        m_Indicator->transform->Position = glm::vec3(0.0f, -8.0f, 0.0f);
     }
     else
     {
@@ -111,6 +109,10 @@ void Animal::PickNewTargetPosition()
 	glm::vec3 currentPos = m_Owner->transform->GetGlobalPosition();
 	m_TargetPosition = currentPos + glm::vec3(radius * cos(angle), 0.0f, radius * sin(angle));
 	m_WasDroppedByPlayer = false;
+
+    Animator* animator = m_Owner->GetComponent<Animator>();
+
+    if (animator) animator->PlayAnimation("walk");
 }
 
 void Animal::ForceNewTargetPosition()
@@ -151,6 +153,12 @@ void Animal::Update()
     Behaviour::Update();
     m_CurrTime = m_SceneMgr->GetTimeLeft();
 
+    Animator* animator = m_Owner->GetComponent<Animator>();
+    if (animator != nullptr)
+    {
+        animator->UpdateAnimation(Time::GetDeltaTime());
+    }
+
     if (m_ShouldTeleport)
     {
         m_ShouldTeleport = false;
@@ -176,19 +184,24 @@ void Animal::Update()
     case AnimalState::None:
         break;
     case AnimalState::Idle:
-        UpdateIdle();
+        UpdateIdle();        
+        if (animator) animator->PlayAnimation("idle");
         break;
     case AnimalState::PickedUp:
         UpdatePickedUp();
+        if (animator) animator->PlayAnimation("idle");
         break;
     case AnimalState::Throw:
         UpdateThrow();
+        if (animator) animator->PlayAnimation("idle");
         break;
     case AnimalState::Rest:
         UpdateFulfillingNeed();
+        if (animator) animator->PlayAnimation("idle");
         break;
     case AnimalState::CheckIn:
         UpdateCheckIn();
+        if (animator) animator->PlayAnimation("idle");
         break;
     }
 }
@@ -270,8 +283,8 @@ void Animal::UpdateIdle() {
         float currentMoveSpeed = m_MoveSpeed * speedMultiplier;
         float newVelY = currentVelocity.y;
 
-        bool isOnGround = (currentPos.y <= 2.6f);
-
+        bool isOnGround = (currentPos.y <= -36.5f);
+        
         if (m_Owner->Name.find("bunny") != std::string::npos)
         {
             m_JumpTimer += Time::GetDeltaTime();
@@ -525,12 +538,10 @@ void Animal::ChangeState(AnimalState newState)
     m_StateTimer = 0.0f;
     m_CurrentState = newState;
 
+    Animator* animator = m_Owner->GetComponent<Animator>();
+
     if (newState == AnimalState::Idle)
     {
         PickNewTargetPosition();
     }
-}
-
-AnimalState Animal::GetState() {
-    return m_CurrentState;
 }
