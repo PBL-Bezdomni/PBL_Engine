@@ -123,7 +123,7 @@ void SceneManager::LoadScene()
 	TargetingZone* p1_tz2 = p1_Zone2->AddComponent<TargetingZone>();
 	p1_tz2->BaseWeight = 300.0f;
 	RigidBody* rb2 = p1_Zone2->AddComponent<RigidBody>();
-	rb2->Init(glm::vec3(1.5f, 2.0f, 1.5f), true, true);
+	rb2->Init(glm::vec3(3.0f, 3.0f, 3.0f), true, true);
 
 	GameObject* p1_Zone3 = new GameObject();
 	p1_Zone3->Name = "TargetZone_Medium_Front";
@@ -144,6 +144,42 @@ void SceneManager::LoadScene()
 	rb4->Init(glm::vec3(0.5f, 2.0f, 4.0f), true, true);
 
 
+
+	GameObject* p2_Zone1 = new GameObject();
+	p2_Zone1->Name = "TargetZone_Large_Air";
+	p2_Zone1->transform->Position = m_Player2.transform->Position;
+	m_Player2.AddChild(p2_Zone1);
+	TargetingZone* p2_tz1 = p2_Zone1->AddComponent<TargetingZone>();
+	p2_tz1->BaseWeight = 100.0f;
+	RigidBody* rb5 = p2_Zone1->AddComponent<RigidBody>();
+	rb5->Init(glm::vec3(7.0f, 7.0f, 7.0f), true, true);
+
+	GameObject* p2_Zone2 = new GameObject();
+	p2_Zone2->Name = "TargetZone_Small_Proximity";
+	p2_Zone2->transform->Position = m_Player2.transform->Position;
+	m_Player2.AddChild(p2_Zone2);
+	TargetingZone* p2_tz2 = p2_Zone2->AddComponent<TargetingZone>();
+	p2_tz2->BaseWeight = 300.0f;
+	RigidBody* rb6 = p2_Zone2->AddComponent<RigidBody>();
+	rb6->Init(glm::vec3(3.0f, 3.0f, 3.0f), true, true);
+
+	GameObject* p2_Zone3 = new GameObject();
+	p2_Zone3->Name = "TargetZone_Medium_Front";
+	p2_Zone3->transform->Position = glm::vec3(0.0f, 0.0f, 2.0f);
+	m_Player2.AddChild(p2_Zone3);
+	TargetingZone* p2_tz3 = p2_Zone3->AddComponent<TargetingZone>();
+	p2_tz3->BaseWeight = 500.0f;
+	RigidBody* rb7 = p2_Zone3->AddComponent<RigidBody>();
+	rb7->Init(glm::vec3(3.0f, 2.0f, 3.0f), true, true);
+
+	GameObject* p2_Zone4 = new GameObject();
+	p2_Zone4->Name = "TargetZone_Precision_Front";
+	p2_Zone4->transform->Position = glm::vec3(0.0f, 0.0f, 3.0f);
+	m_Player2.AddChild(p2_Zone4);
+	TargetingZone* p2_tz4 = p2_Zone4->AddComponent<TargetingZone>();
+	p2_tz4->BaseWeight = 800.0f;
+	RigidBody* rb8 = p2_Zone4->AddComponent<RigidBody>();
+	rb8->Init(glm::vec3(0.5f, 2.0f, 4.0f), true, true);
 	
 	// SHADOW
 	AssetMgr->BasicShader->Use();
