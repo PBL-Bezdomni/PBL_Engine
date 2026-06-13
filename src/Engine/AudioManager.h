@@ -7,6 +7,7 @@ class AudioManager
 {
 public:
 	AudioManager() = default;
+	~AudioManager();
 	int Initialize();
 
 	void PlaySound(const std::string& path);

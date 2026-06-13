@@ -15,6 +15,14 @@ int AudioManager::Initialize()
 	return MA_SUCCESS;
 }
 
+AudioManager::~AudioManager()
+{
+	if (m_AudioEngine)
+	{
+		ma_engine_uninit(m_AudioEngine.get());
+	}
+}
+
 void AudioManager::PlaySound(const std::string& path)
 {
 	if (!m_AudioEngine) return;
