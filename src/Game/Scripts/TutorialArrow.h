@@ -34,4 +34,6 @@ public:
     void SetStartPosition(glm::vec3 pos);
 
     void SetActive(bool active);
+
+    glm::vec3 m_ArrowColor = glm::vec3(1.0f, 1.0f, 1.0f);
 };

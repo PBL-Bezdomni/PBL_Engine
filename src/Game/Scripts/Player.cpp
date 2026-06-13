@@ -390,6 +390,15 @@ void Player::HandleActionPressed()
                         TutorialArrow* arrow = obj->GetTutorialArrow();
                         if (arrow != nullptr)
                         {
+                            if (deviceID == 0) {
+                                arrow->m_ArrowColor = glm::vec3(0.18f, 0.36f, 0.54f);
+                            }
+                            else if (deviceID == 1) {
+                                arrow->m_ArrowColor = glm::vec3(0.25f, 0.42f, 0.31f);
+                            }
+                            else {
+                                arrow->m_ArrowColor = glm::vec3(1.0f, 1.0f, 1.0f);
+                            }
                             arrow->SetActive(true);
                         }
                     }

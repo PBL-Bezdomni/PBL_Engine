@@ -45,6 +45,7 @@ void TutorialArrow::DrawUpdate()
     m_ArrowShader->SetVec3("cameraRight", m_MainCamera->GetRight());
     m_ArrowShader->SetVec3("cameraUp", m_MainCamera->GetUp());
     m_ArrowShader->SetFloat("rotationAngle", glm::pi<float>() / 2);
+    m_ArrowShader->SetVec3("u_ArrowColor", m_ArrowColor);
 }
 
 void TutorialArrow::Update()
