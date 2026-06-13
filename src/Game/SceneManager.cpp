@@ -114,7 +114,7 @@ void SceneManager::LoadScene()
 	TargetingZone* p1_tz1 = p1_Zone1->AddComponent<TargetingZone>();
 	p1_tz1->BaseWeight = 100.0f;
 	RigidBody* rb1 = p1_Zone1->AddComponent<RigidBody>();
-	rb1->Init(glm::vec3(7.0f, 7.0f, 7.0f), true, true);
+	rb1->Init(glm::vec3(7.0f, 20.0f, 7.0f), true, true);
 
 	GameObject* p1_Zone2 = new GameObject();
 	p1_Zone2->Name = "TargetZone_Small_Proximity";
@@ -152,7 +152,7 @@ void SceneManager::LoadScene()
 	TargetingZone* p2_tz1 = p2_Zone1->AddComponent<TargetingZone>();
 	p2_tz1->BaseWeight = 100.0f;
 	RigidBody* rb5 = p2_Zone1->AddComponent<RigidBody>();
-	rb5->Init(glm::vec3(7.0f, 7.0f, 7.0f), true, true);
+	rb5->Init(glm::vec3(7.0f, 20.0f, 7.0f), true, true);
 
 	GameObject* p2_Zone2 = new GameObject();
 	p2_Zone2->Name = "TargetZone_Small_Proximity";

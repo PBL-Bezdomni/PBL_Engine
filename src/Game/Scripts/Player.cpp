@@ -107,6 +107,23 @@ void Player::Update()
         }
     }
 
+    if (m_BestAnimalTarget != nullptr)
+    {
+        Animal* bestAnimalScript = m_BestAnimalTarget->GetDerivedComponent<Animal>();
+
+        if (bestAnimalScript != nullptr && bestAnimalScript->GetState() == AnimalState::PickedUp)
+        {
+            SetHighlight(m_BestAnimalTarget, false);
+            m_BestAnimalTarget = nullptr;
+            m_BestAnimalScore = -1.0f;
+            RecalculateBestTarget();
+        }
+        else if (m_CarriedAnimal == nullptr)
+        {
+            SetHighlight(m_BestAnimalTarget, true);
+        }
+    }
+
     RigidBody* rb = m_Owner->GetComponent<RigidBody>();
 
 	glm::vec3 direction = glm::vec3(MoveInput.x, 0.0f, MoveInput.y);
@@ -462,6 +479,11 @@ void Player::SetHighlight(GameObject* animal, bool isHighlighted)
 void Player::OnAnimalEnteredZone(GameObject* animal, float score)
 {
     if (m_CarriedAnimal != nullptr) return;
+
+    Animal* animalScript = animal->GetDerivedComponent<Animal>();
+    if (animalScript != nullptr && animalScript->GetState() == AnimalState::PickedUp) {
+        return;
+    }
 
     if (score > m_BestAnimalScore && animal != m_LastThrownAnimal)
     {
