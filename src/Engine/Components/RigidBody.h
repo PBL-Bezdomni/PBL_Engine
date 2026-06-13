@@ -10,8 +10,8 @@ class RigidBody : public Component
 public:
     RigidBody();
 
-    void PrepareInit(const glm::vec3& halfExtents = glm::vec3(1.0, 1.0, 1.0), bool isStatic = false, bool isTrigger = false);
-    void Init(const glm::vec3& halfExtents = glm::vec3(1.0, 1.0, 1.0), bool isStatic = false, bool isTrigger = false);
+    void PrepareInit(const glm::vec3& halfExtents = glm::vec3(1.0, 1.0, 1.0), bool isStatic = false, bool isTrigger = false, const glm::vec3& offset = glm::vec3(0.0f));
+    void Init(const glm::vec3& halfExtents = glm::vec3(1.0, 1.0, 1.0), bool isStatic = false, bool isTrigger = false, const glm::vec3& offset = glm::vec3(0.0f));
 
     void Update();
 
@@ -38,6 +38,7 @@ public:
 
 private:
     glm::vec3 m_HalfExtents;
+    glm::vec3 m_Offset = glm::vec3(0.0f);
     bool m_IsStatic;
     bool m_IsTrigger;
     

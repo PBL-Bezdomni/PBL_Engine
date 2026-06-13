@@ -12,16 +12,18 @@ RigidBody::RigidBody()
     m_HalfExtents = glm::vec3(1);
     m_IsStatic = false;
     m_IsTrigger = false;
+    m_Offset = glm::vec3(0.0f);
 }
 
-void RigidBody::PrepareInit(const glm::vec3& halfExtents, bool isStatic, bool isTrigger)
+void RigidBody::PrepareInit(const glm::vec3& halfExtents, bool isStatic, bool isTrigger, const glm::vec3& offset)
 {
     m_HalfExtents = halfExtents;
     m_IsStatic = isStatic;
     m_IsTrigger = isTrigger;
+    m_Offset = offset;
 }
 
-void RigidBody::Init(const glm::vec3& halfExtents, bool isStatic, bool isTrigger)
+void RigidBody::Init(const glm::vec3& halfExtents, bool isStatic, bool isTrigger, const glm::vec3& offset)
 {
     m_PhysicsEngine = &Engine::GetInstance().GetPhysicsEngine();
 
@@ -35,6 +37,9 @@ void RigidBody::Init(const glm::vec3& halfExtents, bool isStatic, bool isTrigger
 
     glm::quat worldRot = glm::quat_cast(rotMatrix);
     worldRot = glm::normalize(worldRot);
+
+    glm::vec3 offsetWorld = worldRot * m_Offset;
+    glm::vec3 finalWorldPos = worldPos + offsetWorld;
 
     JPH::BodyInterface& bodyInterface = m_PhysicsEngine->GetSystem()->GetBodyInterface();
 
@@ -80,6 +85,10 @@ void RigidBody::Update()
         localMatrix[2] = glm::normalize(localMatrix[2]);
 
         glm::quat localRot = glm::quat_cast(localMatrix);
+
+        glm::vec3 offsetWorld = localRot * m_Offset;
+        m_Owner->transform->Position = glm::vec3(localMatrix[3]) - offsetWorld;
+
         m_Owner->transform->EulerAngles = glm::degrees(glm::eulerAngles(localRot));
     }
 }
@@ -102,6 +111,9 @@ void RigidBody::Teleport(const glm::vec3& newWorldPosition)
     if (!m_Initialized || !m_PhysicsEngine) return;
 
     JPH::BodyInterface& bodyInterface = m_PhysicsEngine->GetSystem()->GetBodyInterface();
+
+    glm::quat currentRot = glm::quat(glm::radians(m_Owner->transform->EulerAngles));
+    glm::vec3 bodyPos = newWorldPosition + (currentRot * m_Offset);
 
     bodyInterface.SetPosition(
         JPH::BodyID(m_BodyID),
@@ -150,6 +162,9 @@ glm::vec3 RigidBody::GetPosition()
 
     JPH::Vec3 joltPos = m_PhysicsEngine->GetSystem()->GetBodyInterface().GetPosition(JPH::BodyID(m_BodyID));
 
+    glm::quat currentRot = glm::quat(glm::radians(m_Owner->transform->EulerAngles));
+    glm::vec3 offsetWorld = currentRot * m_Offset;
+
     return glm::vec3(joltPos.GetX(), joltPos.GetY(), joltPos.GetZ());
 }
 
@@ -193,6 +208,8 @@ void RigidBody::MoveKinematic(const glm::vec3& newWorldPosition, const glm::quat
     if (!m_Initialized || !m_PhysicsEngine) return;
 
     JPH::BodyInterface& bodyInterface = m_PhysicsEngine->GetSystem()->GetBodyInterface();
+
+    glm::vec3 bodyPos = newWorldPosition + (newWorldRotation * m_Offset);
 
     JPH::Vec3 joltPos(newWorldPosition.x, newWorldPosition.y, newWorldPosition.z);
     JPH::Quat joltRot(newWorldRotation.x, newWorldRotation.y, newWorldRotation.z, newWorldRotation.w);

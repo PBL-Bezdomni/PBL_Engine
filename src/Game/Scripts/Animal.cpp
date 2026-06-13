@@ -28,25 +28,28 @@ void Animal::Awake()
     {
         if (m_RB != nullptr)
         {
-            m_RB->PrepareInit(glm::vec3(0.5f));
+            m_RB->PrepareInit(glm::vec3(1.0f));
         }
-        m_Indicator->transform->Scale = glm::vec3(3.0f);
+        m_Indicator->transform->Scale = glm::vec3(6.0f);
+        m_Indicator->transform->Position = glm::vec3(0.f, -4.0f, 0.f);
     }
     else if (m_Owner->Name.find("bear") != std::string::npos)
     {
-        m_Indicator->transform->Scale = glm::vec3(10.0f);
         if (m_RB != nullptr)
         {
             m_RB->PrepareInit(glm::vec3(2.f));
         }
+        m_Indicator->transform->Scale = glm::vec3(10.0f);
+        m_Indicator->transform->Position = glm::vec3(0.0f, -8.0f, 5.0f);
     }
     else if (m_Owner->Name.find("skunk") != std::string::npos)
     {
-        m_Indicator->transform->Scale = glm::vec3(4.0f);
         if (m_RB != nullptr)
         {
-            m_RB->PrepareInit(glm::vec3(1.f));
+            m_RB->PrepareInit(glm::vec3(2.0f));
         }
+        m_Indicator->transform->Scale = glm::vec3(7.0f);
+        m_Indicator->transform->Position = glm::vec3(0.0f, -8.0f, 0.0f);
     }
     else
     {
