@@ -56,7 +56,7 @@ void Animation::ReadMissingBones(const aiAnimation* animation, Model& model)
 	{
 		auto channel = animation->mChannels[i];
 		string boneName = channel->mNodeName.data;
-		spdlog::info("Animation needs bone, name: {}", boneName);
+		//spdlog::info("Animation needs bone, name: {}", boneName);
 		if (boneInfoMap.find(boneName) == boneInfoMap.end())
 		{
 			boneInfoMap[boneName].id = boneCount;

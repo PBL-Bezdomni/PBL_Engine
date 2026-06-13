@@ -63,6 +63,7 @@ float ShadowCalculation(vec4 fragPosLightSpace, sampler2D map);
 void main()
 {
     //FragColor = texture(texture_diffuse1, TexCoord);
+
     vec3 norm;
     if (useNormal)
     {

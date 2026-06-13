@@ -25,7 +25,6 @@ void main()
 	mat4 boneTransform = mat4(0.0);
 	bool hasBones = false;
 
-	// KROK 1: Oblicz ca³kowit¹ sumê wag dla danego wierzcho³ka
 	float totalWeight = 0.0;
 	for (int i = 0; i < MAX_BONE_INFLUENCE; i++)
 	{
@@ -35,12 +34,10 @@ void main()
 		}
 	}
 
-	// KROK 2: Zaaplikuj znormalizowane wagi do transformacji
 	for (int i = 0; i < MAX_BONE_INFLUENCE; i++)
 	{
 		if (aBoneIDs[i] >= 0 && aBoneIDs[i] < MAX_BONES)
 		{
-			// Dzielimy wagê przez ca³kowit¹ sumê, wymuszaj¹c proporcje
 			float normWeight = (totalWeight > 0.0) ? (aWeights[i] / totalWeight) : 0.0;
 			boneTransform += bonesMatrices[aBoneIDs[i]] * normWeight;
 			hasBones = true;

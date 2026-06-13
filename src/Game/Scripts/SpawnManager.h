@@ -18,9 +18,9 @@ private:
 	float m_SpawnCounter;
 	float m_SpawnTime = 2.f;
 
-	int m_BunnyLimit = 2; //7
-	int m_BearLimit = 1; //3
-	int m_SkunkLimit = 2; //4
+	int m_BunnyLimit = 7; 
+	int m_BearLimit = 3; 
+	int m_SkunkLimit = 4; 
 	int m_SpawnedLimit = 5;
 	int m_EarnedMoney = 0;
 	

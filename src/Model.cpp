@@ -387,7 +387,7 @@ void Model::SetVertexBoneDataToDefault(Vertex& vertex)
 
 void Model::ExtractBoneWeightForVertices(vector<Vertex>& vertices, aiMesh* mesh, const aiScene* scene)
 {
-    spdlog::info("mesh loading: {}, bone found: {}", mesh->mName.C_Str(), mesh->mNumBones);
+    //spdlog::info("mesh loading: {}, bone found: {}", mesh->mName.C_Str(), mesh->mNumBones);
     for (unsigned int boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex)
     {
         int boneID = -1;
@@ -401,7 +401,7 @@ void Model::ExtractBoneWeightForVertices(vector<Vertex>& vertices, aiMesh* mesh,
             m_BoneInfoMap[boneName] = newBoneInfo;
             boneID = m_BoneCount;
             m_BoneCount++;
-            spdlog::info("loaded bone: {} (ID: {})", boneName, boneID);
+            //spdlog::info("loaded bone: {} (ID: {})", boneName, boneID);
         }
         else
         {

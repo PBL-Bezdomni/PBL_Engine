@@ -16,7 +16,7 @@ private:
 	Animation* m_CurrentAnimation;
 	float m_CurrentTime;
 	float m_DeltaTime;
-	// Dodaj to do Animator.h w sekcji private:
+
 	glm::mat4 m_GlobalInverseTransform;
 	std::map<std::string, Animation*> m_Animations;
 

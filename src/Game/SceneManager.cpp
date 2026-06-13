@@ -105,7 +105,9 @@ void SceneManager::LoadScene()
 	AssetMgr->BasicShader->Use();
 	AssetMgr->BasicShader->SetInt("shadowMap", 20);
 	AssetMgr->BasicShader->SetInt("staticShadowMap", 21);
-	
+	AssetMgr->AnimatedShader->Use();
+	AssetMgr->AnimatedShader->SetInt("shadowMap", 20);
+	AssetMgr->AnimatedShader->SetInt("staticShadowMap", 21);
 	// TODO create event here
 	Engine::GetInstance().GetDebugManager().RefreshGameObjectData();
 }
@@ -129,8 +131,13 @@ void SceneManager::RenderScene()
 	AssetMgr->BasicShader->SetBool("useDirLight", false);
 	AssetMgr->BasicShader->SetBool("usePointLight", false);
 	AssetMgr->BasicShader->SetBool("useSpotLight1", false);
-	
+
     UpdateShaderLight(&m_WorldParent, *AssetMgr->BasicShader, *AssetMgr->SimpleDepthShader);
+	AssetMgr->AnimatedShader->Use();
+	AssetMgr->AnimatedShader->SetBool("useDirLight", false);
+	AssetMgr->AnimatedShader->SetBool("usePointLight", false);
+	AssetMgr->AnimatedShader->SetBool("useSpotLight1", false);
+	UpdateShaderLight(&m_WorldParent, *AssetMgr->AnimatedShader, *AssetMgr->SimpleDepthShader);
 
     m_WorldParent.UpdateSelfAndChild();
 

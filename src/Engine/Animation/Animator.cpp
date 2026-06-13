@@ -26,12 +26,6 @@ void Animator::UpdateAnimation(float dt)
 		m_CurrentTime = fmod(m_CurrentTime, m_CurrentAnimation->GetDuration());
 
 		CalculateBoneTransform(&m_CurrentAnimation->GetRootNode(), glm::mat4(1.0f));
-		static float timer = 0.0f;
-		timer += dt;
-		if (timer > 1.0f) {
-			spdlog::info("Animator works, time: {:.2f}, bone mat count: {}", m_CurrentTime, m_FinalBoneMatrices.size());
-			timer = 0.0f;
-		}
 	}
 }
 
@@ -76,7 +70,6 @@ void Animator::CalculateBoneTransform(const AssimpNodeData* node, const glm::mat
 
 	glm::mat4 globalTransformation = parentTransform * nodeTransform;
 
-	// NOWOŒÆ: Pobieramy odwrotnoœæ g³ównego wêz³a sceny z animacji
 	glm::mat4 globalInverse = glm::inverse(m_CurrentAnimation->GetRootNode().transformation);
 
 	auto boneInfoMap = m_CurrentAnimation->GetBoneIDMap();
@@ -86,7 +79,6 @@ void Animator::CalculateBoneTransform(const AssimpNodeData* node, const glm::mat
 		glm::mat4 offset = boneInfoMap[nodeName].offset;
 		if (index < m_FinalBoneMatrices.size())
 		{
-			// NOWOŒÆ: Mno¿ymy finaln¹ macierz przez globalInverse NA POCZ¥TKU równania
 			m_FinalBoneMatrices[index] = globalInverse * globalTransformation * offset;
 		}
 	}

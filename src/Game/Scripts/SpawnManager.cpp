@@ -170,20 +170,15 @@ shared_ptr<GameObject> SpawnManager::CreateBunny(shared_ptr<Shader> shader, int 
 
 shared_ptr<GameObject> SpawnManager::CreateBear(shared_ptr<Shader> shader, std::shared_ptr<Shader> animShader, int index)
 {
-	//return CreateAnimal(shader, "res/models/animals/bear/bear_1500.fbx", "bear", index);
-	shared_ptr<GameObject> animal = CreateAnimal(animShader, "res/models/animations/animals/bear-animations/bear-eating-2.glb", "bear", index, "res/models/animations/animals/bear-animations/bear-eating-2.glb");
-	//shared_ptr<GameObject> animal = CreateAnimal(animShader, "res/models/animals/bear-2/bear-rigging-skining.fbx", "bear", index, "res/models/animations/animals/bear-animations/format-fbx/bear-walking.fbx");
-	animal->transform->Scale = glm::vec3(100.0f);
+	shared_ptr<GameObject> animal = CreateAnimal(animShader, "res/models/animations/animals/bear-animations/bear-eating.glb", "bear", index, "res/models/animations/animals/bear-animations/bear-eating.glb");
+	//animal->transform->Scale = glm::vec3(100.0f);
 	Animator* animator = animal->GetComponent<Animator>();
 	Model* model = animal->GetComponent<Model>();
 
 	if (animator != nullptr && model != nullptr)
 	{
-		animator->AddAnimation("idle", new Animation("res/models/animations/animals/bear-animations/bear-eating-2.glb", model));
-		animator->AddAnimation("walk", new Animation("res/models/animations/animals/bear-animations/bear-eating-2.glb", model));
-
-		//animator->AddAnimation("idle", new Animation("res/models/animations/animals/bear-animations/format-fbx/bear-walking.fbx", model));
-		//animator->AddAnimation("walk", new Animation("res/models/animations/animals/bear-animations/format-fbx/bear-walking.fbx", model));
+		animator->AddAnimation("idle", new Animation("res/models/animations/animals/bear-animations/bear-eating.glb", model));
+		animator->AddAnimation("walk", new Animation("res/models/animations/animals/bear-animations/bear-eating.glb", model));
 		animator->PlayAnimation("idle");
 	}
 	return animal;
