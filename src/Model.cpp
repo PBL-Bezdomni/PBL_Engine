@@ -94,7 +94,16 @@ void Model::Draw(glm::mat4 modelMatrix, Shader* shader)
     shaderToUse.Use();
     shaderToUse.SetMat4("model", modelMatrix);
     shaderToUse.SetBool("useNormal", m_HasNormal);
-    
+
+    if (m_IsHighlighted) {
+        shaderToUse.SetBool("u_IsHighlighted", true);
+        shaderToUse.SetVec3("u_GlowColor", glm::vec3(0.2f, 0.2f, 0.2f));
+    }
+    else {
+        shaderToUse.SetBool("u_IsHighlighted", false);
+        shaderToUse.SetVec3("u_GlowColor", glm::vec3(0.0f));
+    }
+
     for (unsigned int i = 0; i < Meshes.size(); i++)
     {
         if (m_CheckFrustum)
@@ -108,6 +117,10 @@ void Model::Draw(glm::mat4 modelMatrix, Shader* shader)
         {
             Meshes[i].Draw(shaderToUse);
         }
+    }
+
+    if (m_IsHighlighted) {
+        shaderToUse.SetBool("u_IsHighlighted", false);
     }
 }
 

@@ -6,6 +6,7 @@ in vec2 TexCoords;
 uniform sampler2D sceneColor;
 uniform sampler2D sceneNormal;
 uniform sampler2D sceneDepth;
+uniform sampler2D sceneGlow;
 
 uniform float near;
 uniform float far;
@@ -65,8 +66,19 @@ void main() {
 
     float outline = max(depthEdge, normalEdge);
 
+    vec3 glowColor = vec3(0.0);
+    vec2 glowTexel = 1.0 / textureSize(sceneGlow, 0);
 
-    vec3 finalColor = mix(color, vec3(0.0, 0.0, 0.0), outline);
+    for(int x = -2; x <= 2; ++x) {
+        for(int y = -2; y <= 2; ++y) {
+            vec2 offset = vec2(float(x), float(y)) * glowTexel;
+            glowColor += texture(sceneGlow, TexCoords + offset).rgb;
+        }
+    }
+
+    glowColor /= 25.0;
+
+    vec3 finalColor = mix(color, vec3(0.0, 0.0, 0.0), outline) + glowColor;
 
     FragColor = vec4(finalColor, 1.0);
 }

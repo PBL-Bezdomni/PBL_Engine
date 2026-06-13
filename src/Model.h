@@ -144,6 +144,7 @@ public:
     void ScaleTexture(float scale);
     void ReassignShader(Shader& shader);
     string GetFileName();
+    bool m_IsHighlighted = false;
 private:
     // model data
     string m_FileDirectory;

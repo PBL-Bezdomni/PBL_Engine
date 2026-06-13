@@ -10,6 +10,7 @@
 #include "Engine/Components/RigidBody.h"
 #include "Engine/Time.h"
 #include "Engine/Components/ParticleEmitter.h"
+#include "Engine/Components/TargetingZone.h"
 #include "Game/Scripts/AOnsenObject.h"
 #include <filesystem>
 #include "Engine/Loader.h"
@@ -85,6 +86,13 @@ void Player::Update()
 {
     float deltaTime = Time::GetDeltaTime();
 	if (!m_Owner) return;
+
+    if (m_TargetingZones.empty()) {
+        m_TargetingZones = m_Owner->FindComponentsInChildren<TargetingZone>();
+        for (TargetingZone* zone : m_TargetingZones) {
+            zone->LinkedPlayer = this;
+        }
+    }
 
     RigidBody* rb = m_Owner->GetComponent<RigidBody>();
 
@@ -195,6 +203,47 @@ void Player::Update()
             a->ChangeState(AnimalState::PickedUp);
         }
     }
+
+    glm::vec3 playerWorldPos = m_Owner->GetWorldPosition();
+
+    glm::vec3 lookVec = glm::vec3(m_LastLookDir.x, 0.0f, m_LastLookDir.y);
+    glm::vec3 forward = glm::vec3(0.0f, 0.0f, 1.0f);
+
+    if (glm::length(lookVec) > 0.001f) {
+        forward = glm::normalize(lookVec);
+    }
+
+    float playerAngle = atan2(forward.x, forward.z);
+    glm::quat playerRot = glm::quat(glm::vec3(0.0f, playerAngle, 0.0f));
+
+    for (TargetingZone* zone : m_TargetingZones)
+    {
+        GameObject* zoneGO = zone->GetOwner();
+        RigidBody* zoneRB = zoneGO->GetComponent<RigidBody>();
+
+        if (zoneRB != nullptr)
+        {
+            if (zoneGO->Name == "TargetZone_Large_Air" || zoneGO->Name == "TargetZone_Small_Proximity")
+            {
+                zoneGO->transform->Position = playerWorldPos;
+                zoneRB->MoveKinematic(playerWorldPos, playerRot);
+            }
+            else if (zoneGO->Name == "TargetZone_Medium_Front")
+            {
+                glm::vec3 offsetPos = playerWorldPos + (forward * 2.0f);
+
+                zoneGO->transform->Position = offsetPos;
+                zoneRB->MoveKinematic(offsetPos, playerRot);
+            }
+            else if (zoneGO->Name == "TargetZone_Precision_Front")
+            {
+                glm::vec3 offsetPos = playerWorldPos + (forward * 3.0f);
+
+                zoneGO->transform->Position = offsetPos;
+                zoneRB->MoveKinematic(offsetPos, playerRot);
+            }
+        }
+    }
 }
 
 void Player::DrawUpdate()
@@ -264,13 +313,8 @@ void Player::HandleActionPressed()
 
         glm::vec3 rot = glm::vec3(m_LastMoveDir.x, 0, m_LastMoveDir.y);
         glm::vec3 playerForward = glm::normalize(rot);
-        // glm::vec3 playerForward = glm::quat(glm::radians(m_Owner->transform->EulerAngles)) * glm::vec3(0.0f, 0.0f, 1.0f);
 
-        float rayDistance = 5.0f;
-
-        glm::vec3 endPos = playerPos + (playerForward * rayDistance);
-
-        GameObject* hitObject = Engine::GetInstance().GetPhysicsEngine().CastRay(playerPos, playerForward, rayDistance, m_Owner->GetComponent<RigidBody>()->GetBodyID(), true);
+        GameObject* hitObject = m_BestAnimalTarget;
 
         if (hitObject != nullptr)
         {
@@ -392,3 +436,49 @@ void Player::HandleThrowReleased()
     }
 }
 
+void Player::SetHighlight(GameObject* animal, bool isHighlighted)
+{
+    if (animal == nullptr) return;
+
+    animal->GetComponent<Model>()->m_IsHighlighted = isHighlighted;
+}
+
+void Player::OnAnimalEnteredZone(GameObject* animal, float score)
+{
+    if (score > m_BestAnimalScore)
+    {
+        if (m_BestAnimalTarget != nullptr)
+        {
+            SetHighlight(m_BestAnimalTarget, false);
+        }
+
+        m_BestAnimalTarget = animal;
+        m_BestAnimalScore = score;
+
+        SetHighlight(m_BestAnimalTarget, true);
+    }
+}
+
+void Player::OnAnimalExitedZone(GameObject* animal)
+{
+    if (animal == m_BestAnimalTarget)
+    {
+        SetHighlight(m_BestAnimalTarget, false);
+        m_BestAnimalTarget = nullptr;
+        m_BestAnimalScore = -1.0f;
+
+        RecalculateBestTarget();
+    }
+}
+
+void Player::RecalculateBestTarget()
+{
+    for (TargetingZone* zone : m_TargetingZones)
+    {
+        for (GameObject* animal : zone->AnimalsInZone)
+        {
+            float score = zone->GetAnimalScore(animal);
+            OnAnimalEnteredZone(animal, score);
+        }
+    }
+}

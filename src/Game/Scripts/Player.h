@@ -33,6 +33,8 @@ private:
     std::vector<std::string> m_FootstepClips;
     float m_FootstepTimer = 0.0f;
     float m_FootstepInterval = 0.45f; // seconds between footsteps while moving
+
+    std::vector<class TargetingZone*> m_TargetingZones;
 public:
     glm::vec2 MoveInput{ 0.0f };
     glm::vec2 LookInput{ 0.0f };
@@ -53,4 +55,13 @@ public:
     const float m_ChargeSpeed = 10.0f;
 
     const char* GetScriptName() const override { return "Player"; }
+
+    GameObject* m_BestAnimalTarget = nullptr;
+    float m_BestAnimalScore = -1.0f;
+
+    void OnAnimalEnteredZone(GameObject* animal, float score);
+    void OnAnimalExitedZone(GameObject* animal);
+    void RecalculateBestTarget();
+
+    void SetHighlight(GameObject* animal, bool isHighlighted);
 };

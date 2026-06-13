@@ -77,6 +77,8 @@ private:
     std::shared_ptr<GameObject> m_Checkmark;
     void UpdateCheckmark();
 
+    std::shared_ptr<Shader> m_CellShadingShader;
+
     AnimalState m_CurrentState = AnimalState::None;
     float m_StateTimer = 0.0f;
 
@@ -91,6 +93,7 @@ public:
     float m_WaitTime = 0.0f;
     float m_CurrentWaitTime = 0.0f;
     float m_StuckTimer = 0.0f;
+    bool m_IsHighlighted = true;
     void ResetEverythingSpawn(glm::vec3 spawnPosition);
 
 	void Awake() override;
@@ -101,6 +104,7 @@ public:
     void EnterPosition(glm::vec3 exactWorldPosition);
 
     void ChangeState(AnimalState newState);
+    AnimalState GetState();
 
     void Update() override;
     void UpdateIdle();

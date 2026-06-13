@@ -38,7 +38,7 @@ JPH::BodyID PhysicsEngine::CreateBox(const glm::vec3& position, const glm::quat&
     JPH::BoxShapeSettings boxSettings(PhysicsMath::ToJPH(halfExtents));
     JPH::ShapeRefC shape = boxSettings.Create().Get();
 
-    JPH::EMotionType motionType = isStatic ? JPH::EMotionType::Static : JPH::EMotionType::Dynamic;
+    JPH::EMotionType motionType = isStatic ? JPH::EMotionType::Kinematic : JPH::EMotionType::Dynamic;
     JPH::ObjectLayer layer = isStatic ? Layers::NON_MOVING : Layers::MOVING;
 
     JPH::Quat joltRot(rotation.x, rotation.y, rotation.z, rotation.w);

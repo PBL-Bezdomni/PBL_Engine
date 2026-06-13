@@ -21,6 +21,12 @@ CelShading::CelShading(GLFWwindow* window) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, m_ScreenNormalTex, 0);
 
+    glGenTextures(1, &m_ScreenGlowTex);
+    glBindTexture(GL_TEXTURE_2D, m_ScreenGlowTex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, windowWidth, windowHeight, 0, GL_RGB, GL_FLOAT, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, m_ScreenGlowTex, 0);
 
     glGenTextures(1, &m_ScreenDepthTex);
     glBindTexture(GL_TEXTURE_2D, m_ScreenDepthTex);
@@ -30,8 +36,8 @@ CelShading::CelShading(GLFWwindow* window) {
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_ScreenDepthTex, 0);
 
 
-    unsigned int attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
-    glDrawBuffers(2, attachments);
+    unsigned int attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
+    glDrawBuffers(3, attachments);
 
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
         spdlog::error("Post Process Framebuffer not complete!");
@@ -55,6 +61,9 @@ void CelShading::CheckScreenSize(GLFWwindow* window) {
     glBindTexture(GL_TEXTURE_2D, m_ScreenDepthTex);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, windowWidth, windowHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 
+    glBindTexture(GL_TEXTURE_2D, m_ScreenGlowTex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, windowWidth, windowHeight, 0, GL_RGB, GL_FLOAT, NULL);
+
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
@@ -76,6 +85,10 @@ void CelShading::RenderQuad(Shader& shader) {
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_2D, m_ScreenDepthTex);
     shader.SetInt("sceneDepth", 2);
+
+    glActiveTexture(GL_TEXTURE3);
+    glBindTexture(GL_TEXTURE_2D, m_ScreenGlowTex);
+    shader.SetInt("sceneGlow", 3);
 
     shader.SetFloat("near", 0.1f);
     shader.SetFloat("far", 200.0f);

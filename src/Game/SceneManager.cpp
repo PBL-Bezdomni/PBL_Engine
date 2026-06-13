@@ -19,6 +19,7 @@
 
 #include "Engine/JSONImporter.h"
 #include "Engine/Components/ParticleSystem.h"
+#include "Engine/Components/TargetingZone.h"
 
 #include "Game/Scripts/MassageTable.h"
 #include "Game/Scripts/Bath.h"
@@ -105,6 +106,44 @@ void SceneManager::LoadScene()
 
 	m_Player2.AddComponent<RigidBody>();
 	m_Player2.GetComponent<RigidBody>()->Init(glm::vec3(1.0f, 1.0f, 1.0f), false);
+
+	GameObject* p1_Zone1 = new GameObject();
+	p1_Zone1->Name = "TargetZone_Large_Air";
+	p1_Zone1->transform->Position = m_Player1.transform->Position;
+	m_Player1.AddChild(p1_Zone1);
+	TargetingZone* p1_tz1 = p1_Zone1->AddComponent<TargetingZone>();
+	p1_tz1->BaseWeight = 100.0f;
+	RigidBody* rb1 = p1_Zone1->AddComponent<RigidBody>();
+	rb1->Init(glm::vec3(7.0f, 7.0f, 7.0f), true, true);
+
+	GameObject* p1_Zone2 = new GameObject();
+	p1_Zone2->Name = "TargetZone_Small_Proximity";
+	p1_Zone2->transform->Position = m_Player1.transform->Position;
+	m_Player1.AddChild(p1_Zone2);
+	TargetingZone* p1_tz2 = p1_Zone2->AddComponent<TargetingZone>();
+	p1_tz2->BaseWeight = 300.0f;
+	RigidBody* rb2 = p1_Zone2->AddComponent<RigidBody>();
+	rb2->Init(glm::vec3(1.5f, 2.0f, 1.5f), true, true);
+
+	GameObject* p1_Zone3 = new GameObject();
+	p1_Zone3->Name = "TargetZone_Medium_Front";
+	p1_Zone3->transform->Position = glm::vec3(0.0f, 0.0f, 2.0f);
+	m_Player1.AddChild(p1_Zone3);
+	TargetingZone* p1_tz3 = p1_Zone3->AddComponent<TargetingZone>();
+	p1_tz3->BaseWeight = 500.0f;
+	RigidBody* rb3 = p1_Zone3->AddComponent<RigidBody>();
+	rb3->Init(glm::vec3(3.0f, 2.0f, 3.0f), true, true);
+
+	GameObject* p1_Zone4 = new GameObject();
+	p1_Zone4->Name = "TargetZone_Precision_Front";
+	p1_Zone4->transform->Position = glm::vec3(0.0f, 0.0f, 3.0f);
+	m_Player1.AddChild(p1_Zone4);
+	TargetingZone* p1_tz4 = p1_Zone4->AddComponent<TargetingZone>();
+	p1_tz4->BaseWeight = 800.0f;
+	RigidBody* rb4 = p1_Zone4->AddComponent<RigidBody>();
+	rb4->Init(glm::vec3(0.5f, 2.0f, 4.0f), true, true);
+
+
 	
 	// SHADOW
 	AssetMgr->BasicShader->Use();

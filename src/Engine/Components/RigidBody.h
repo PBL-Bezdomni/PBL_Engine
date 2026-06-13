@@ -25,6 +25,8 @@ public:
     void Teleport(const glm::vec3& newWorldPosition);
     void RequestTeleport(const glm::vec3& newWorldPosition);
 
+    void MoveKinematic(const glm::vec3& newWorldPosition, const glm::quat& newWorldRotation);
+
     void SetRotation(const glm::vec3& eulerAnglesDegrees);
 
     glm::vec3 GetPosition();

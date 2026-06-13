@@ -187,3 +187,15 @@ bool RigidBody::GetIsTrigger()
 {
     return m_IsTrigger;
 }
+
+void RigidBody::MoveKinematic(const glm::vec3& newWorldPosition, const glm::quat& newWorldRotation)
+{
+    if (!m_Initialized || !m_PhysicsEngine) return;
+
+    JPH::BodyInterface& bodyInterface = m_PhysicsEngine->GetSystem()->GetBodyInterface();
+
+    JPH::Vec3 joltPos(newWorldPosition.x, newWorldPosition.y, newWorldPosition.z);
+    JPH::Quat joltRot(newWorldRotation.x, newWorldRotation.y, newWorldRotation.z, newWorldRotation.w);
+
+    bodyInterface.MoveKinematic(JPH::BodyID(m_BodyID), joltPos, joltRot, 1.0f / 60.0f);
+}

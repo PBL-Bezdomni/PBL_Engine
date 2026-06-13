@@ -15,6 +15,7 @@ private:
 	unsigned int m_ScreenColorTex;
 	unsigned int m_ScreenNormalTex;
 	unsigned int m_ScreenDepthTex;
+	unsigned int m_ScreenGlowTex;
 	unsigned int m_QuadVAO = 0, m_QuadVBO;
 	int windowWidth, windowHeight;
 public:

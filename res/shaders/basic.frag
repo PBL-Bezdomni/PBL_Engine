@@ -2,10 +2,14 @@
 
 layout (location = 0) out vec4 FragColor;
 layout (location = 1) out vec3 NormalColor;
+layout (location = 2) out vec3 GlowColor;
 in vec2 TexCoord;
 in vec3 Normal;
 in vec3 FragPos;
 in vec4 FragPosLightSpace;
+
+uniform bool u_IsHighlighted;
+uniform vec3 u_GlowColor;
 
 uniform sampler2D texture_diffuse1;
 uniform sampler2D texture_diffuse2;
@@ -97,6 +101,12 @@ void main()
 
     FragColor = vec4(result, texColor.a);
     NormalColor = normalize(Normal);
+
+    if (u_IsHighlighted) {
+        GlowColor = u_GlowColor * 1.5;
+    } else {
+        GlowColor = vec3(0.0);
+    }
 
 }
 

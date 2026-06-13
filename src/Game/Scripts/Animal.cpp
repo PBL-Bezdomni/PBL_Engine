@@ -527,3 +527,7 @@ void Animal::ChangeState(AnimalState newState)
         PickNewTargetPosition();
     }
 }
+
+AnimalState Animal::GetState() {
+    return m_CurrentState;
+}
