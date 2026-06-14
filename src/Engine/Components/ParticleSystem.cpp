@@ -125,16 +125,22 @@ void ParticleSystem::InitialBuffers()
 
 void ParticleSystem::Dispatch()
 {
+	float startTime = glfwGetTime();
 	m_ParticleComputeShader->Use();
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0 , m_SSBO);
 	m_ParticleComputeShader->SetFloat("deltaTime", Time::GetDeltaTime());
 	glDispatchCompute((MAX_PARTICLES + 255) / 256, 1, 1);
 	// glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
-	glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT |	GL_BUFFER_UPDATE_BARRIER_BIT);
+	glFinish();
+	// glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT |	GL_BUFFER_UPDATE_BARRIER_BIT);
+
+	float endTime = glfwGetTime();
+	cout << (endTime - startTime) * 1000 << endl;
 }
 
 void ParticleSystem::DispatchCPU()
 {
+	float startTime = glfwGetTime();
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_SSBO);
 	
 	Particle* particles = (Particle*)glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(Particle) * MAX_PARTICLES, GL_MAP_WRITE_BIT);
@@ -172,4 +178,6 @@ void ParticleSystem::DispatchCPU()
 	}
 
 	glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+	float endTime = glfwGetTime();
+	cout << (endTime - startTime) * 1000 << endl;
 }
