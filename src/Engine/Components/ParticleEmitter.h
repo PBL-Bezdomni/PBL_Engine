@@ -22,6 +22,8 @@ public:
 	bool IsRandomSize = false;
 
 	int Bulk = 5;
+
+	void Initialize(const char* vertPath, const char* fragPath, const char* compPath, const char* modelPath, const char* texPath);
 	
 	void Awake() override;
 	void Start() override;
@@ -35,7 +37,10 @@ public:
 	glm::vec3 GetPositionOffset();
 	void      SetPositionOffset(glm::vec3 offset);
 
+	uint64_t GetID();
+
 private:
+	uint64_t m_ID;
 	bool m_IsEmitting = false;
 
 	float m_SpawnRate = 30.0f; // particles per second
@@ -44,4 +49,6 @@ private:
 	ParticleSystem* m_ParticleSystem;
 
 	glm::vec3 m_PositionOffset = glm::vec3(0);
+
+	void FetchParticleSystem();
 };

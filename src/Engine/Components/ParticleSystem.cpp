@@ -10,13 +10,13 @@ void ParticleSystem::Awake()
 {
 	Component::Awake();
 	Engine* engine = &Engine::GetInstance();
-	AssetManager* am = &engine->GetAssetManager();
+	m_AssetMgr = &engine->GetAssetManager();
 	SceneManager* sm = &engine->GetGameManager().GetSceneManager();
 
 	m_Owner->Name = "ParticleSystem";
 
-	m_ParticleGraphicShader = am->GetShader("res/shaders/smokeParticles.vert", "res/shaders/smokeParticles.frag");
-	m_ParticleComputeShader = am->GetComputeShader("res/shaders/smokeParticles.comp");
+	// m_ParticleGraphicShader = am->GetShader("res/shaders/smokeParticles.vert", "res/shaders/smokeParticles.frag");
+	// m_ParticleComputeShader = am->GetComputeShader("res/shaders/smokeParticles.comp");
 
 	m_Particles.resize(MAX_PARTICLES);
 
@@ -31,18 +31,18 @@ void ParticleSystem::Awake()
 		particle.size = 0.0f;
 		particle.alive = 0;
 	}
-
-	InitialBuffers();
+	
+	// InitialBuffers();
 
 	// Create Model for shader
 	// not used, but I do it, because I don't know what will happen without it and don't want to test it now
-	vector<glm::mat4> instanceMatrix(MAX_PARTICLES);
-	Model billboard = Model(*m_ParticleGraphicShader, (Loader::RelativePath() + "res/models/PieChartPlane.obj").c_str(), MAX_PARTICLES, instanceMatrix);
-	m_Owner->AddComponent<Model>(billboard);
-	// Just to be sure
-	m_Owner->GetComponent<Model>()->ReassignShader(*m_ParticleGraphicShader);
-	Texture tex = *am->GetTexture("res/textures/UI/smoke.png");
-	m_Owner->GetComponent<Model>()->AssignTexture(tex);
+	// vector<glm::mat4> instanceMatrix(MAX_PARTICLES);
+	// Model billboard = Model(*m_ParticleGraphicShader, (Loader::RelativePath() + "res/models/PieChartPlane.obj").c_str(), MAX_PARTICLES, instanceMatrix);
+	// m_Owner->AddComponent<Model>(billboard);
+	// // Just to be sure
+	// m_Owner->GetComponent<Model>()->ReassignShader(*m_ParticleGraphicShader);
+	// Texture tex = *am->GetTexture("res/textures/UI/smoke.png");
+	// m_Owner->GetComponent<Model>()->AssignTexture(tex);
 
 	m_MainCamera = sm->GetMainCamera().get();
 }
@@ -55,12 +55,16 @@ void ParticleSystem::Update()
 
 void ParticleSystem::DrawUpdate()
 {
-	Component::DrawUpdate();
-	m_ParticleGraphicShader->Use();
-	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_SSBO);
-	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_SSBO);
-	m_ParticleGraphicShader->SetVec3("cameraRight", m_MainCamera->GetRight());
-	m_ParticleGraphicShader->SetVec3("cameraUp", m_MainCamera->GetUp());
+	for (auto [id, shader] : m_GraphicalShaderMap)
+	{
+		GLuint ssbo = m_BuffersMap.at(id);
+		Component::DrawUpdate();
+		shader->Use();
+		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, ssbo);
+		glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+		shader->SetVec3("cameraRight", m_MainCamera->GetRight());
+		shader->SetVec3("cameraUp", m_MainCamera->GetUp());
+	}
 
 	// Particle* data = (Particle*)glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_WRITE_ONLY);
 	//
@@ -70,10 +74,38 @@ void ParticleSystem::DrawUpdate()
 	// glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 }
 
+uint64_t ParticleSystem::CreateEmitter(const char* vertPath, const char* fragPath, const char* compPath, const char* modelPath, const char* texPath)
+{
+	m_NextEmitterID++;
+
+	// m_ParticleGraphicShader = m_AssetMgr->GetShader("res/shaders/smokeParticles.vert", "res/shaders/smokeParticles.frag");
+	// m_ParticleComputeShader = m_AssetMgr->GetComputeShader("res/shaders/smokeParticles.comp");
+	m_GraphicalShaderMap[m_NextEmitterID] = m_AssetMgr->GetShader(vertPath, fragPath);
+	m_ComputeGraphicalShaderMap[m_NextEmitterID] = m_AssetMgr->GetComputeShader(compPath);
+	m_BuffersMap[m_NextEmitterID] = InitialBuffers();
+
+	vector<glm::mat4> instanceMatrix(MAX_PARTICLES);
+	shared_ptr<Shader> shader = m_GraphicalShaderMap.at(m_NextEmitterID);
+	Model billboard = Model(*shader, (Loader::RelativePath() + modelPath).c_str(), MAX_PARTICLES, instanceMatrix);
+	shared_ptr<GameObject> emitter = make_shared<GameObject>();
+	emitter->Name = compPath;
+	m_Owner->AddChild(emitter.get());
+	emitter->AddComponent<Model>(billboard);
+	// Just to be sure
+	emitter->GetComponent<Model>()->ReassignShader(*shader);
+	Texture tex = *m_AssetMgr->GetTexture(texPath);
+	emitter->GetComponent<Model>()->AssignTexture(tex);
+	m_Emitters.push_back(emitter);
+
+	return m_NextEmitterID;
+}
+
 void ParticleSystem::Emit(ParticleEmitter& emitter, uint32_t count)
 {
-	// m_ParticlesShader->Use();
-	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_SSBO);
+	uint64_t id = emitter.GetID();
+	GLuint ssbo = m_BuffersMap.at(id);
+	
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
 
 	glm::vec3 position = emitter.GetPosition();
 	
@@ -107,21 +139,27 @@ void ParticleSystem::Emit(ParticleEmitter& emitter, uint32_t count)
 	glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 }
 
-void ParticleSystem::InitialBuffers()
+GLuint ParticleSystem::InitialBuffers()
 {
-	glGenBuffers(1, &m_SSBO);
-	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_SSBO);
+	GLuint ssbo;
+	glGenBuffers(1, &ssbo);
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
 	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(Particle) * MAX_PARTICLES, m_Particles.data(), GL_DYNAMIC_DRAW);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_SSBO);
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, ssbo);
+	return ssbo;
 }
 
 void ParticleSystem::Dispatch()
 {
-	m_ParticleComputeShader->Use();
-	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0 , m_SSBO);
-	m_ParticleComputeShader->SetFloat("deltaTime", Time::GetDeltaTime());
-	glDispatchCompute((MAX_PARTICLES + 255) / 256, 1, 1);
-	// glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
-	glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT |	GL_BUFFER_UPDATE_BARRIER_BIT);
+	for (auto [id, shader] : m_ComputeGraphicalShaderMap)
+	{
+		GLuint ssbo = m_BuffersMap.at(id);
+		shader->Use();
+		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0 , ssbo);
+		shader->SetFloat("deltaTime", Time::GetDeltaTime());
+		glDispatchCompute((MAX_PARTICLES + 255) / 256, 1, 1);
+		// glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+		glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT |	GL_BUFFER_UPDATE_BARRIER_BIT);
+	}
 }
