@@ -30,6 +30,7 @@ private:
 	UIPanel m_TimerPanel;
 	UIPanel m_MoneyPanel;
 	UIPanel m_FpsPanel;
+	UIPanel m_ALetterPanel;
 
 	std::vector<shared_ptr<GameObject>> m_AnimalsList;
 	

@@ -59,6 +59,7 @@ public:
 
     const char* GetScriptName() const override { return "Player"; }
 
+    GameObject* GetBestAnimalTarget() const { return m_BestAnimalTarget; }
     GameObject* m_BestAnimalTarget = nullptr;
     float m_BestAnimalScore = -1.0f;
 

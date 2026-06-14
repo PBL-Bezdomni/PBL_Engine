@@ -284,6 +284,40 @@ void SceneManager::RenderScene()
 	m_UIManager.DrawPanelWithText(*AssetMgr->UIShader, *AssetMgr->TextShader, m_MoneyPanel);
 	m_UIManager.DrawPanelWithText(*AssetMgr->UIShader, *AssetMgr->TextShader, m_TimerPanel);
 	m_UIManager.DrawPanelWithText(*AssetMgr->UIShader, *AssetMgr->TextShader, m_FpsPanel);
+
+	GameObject* targetAnimal = nullptr;
+
+	Player* player1Script = m_Player1.GetDerivedComponent<Player>();
+	Player* player2Script = m_Player2.GetDerivedComponent<Player>();
+
+	if (player1Script != nullptr && player1Script->GetBestAnimalTarget() != nullptr)
+	{
+		targetAnimal = player1Script->GetBestAnimalTarget();
+	}
+	else if (player2Script != nullptr && player2Script->GetBestAnimalTarget() != nullptr)
+	{
+		targetAnimal = player2Script->GetBestAnimalTarget();
+	}
+
+	if (targetAnimal != nullptr)
+	{
+		glm::vec3 animalWorldPos = targetAnimal->GetWorldPosition() + glm::vec3(0.0f, 3.0f, 0.0f);
+
+		
+		int windowW, windowH;
+		glfwGetWindowSize(WindowMgr->GetWindowPointer(), &windowW, &windowH);
+		glm::vec4 viewport = glm::vec4(0.0f, 0.0f, static_cast<float>(windowW), static_cast<float>(windowH));
+
+		glm::vec3 screenPos = glm::project(animalWorldPos, view, projection, viewport);
+		screenPos.y = static_cast<float>(windowH) - screenPos.y;
+		m_ALetterPanel.Position = glm::vec2(screenPos.x, screenPos.y);
+
+		// opcjonalnie: Mo¿esz dodaæ delikatne falowanie góra/dó³ za pomoc¹ funkcji sin i czasu gry
+		m_ALetterPanel.Position.y += sin(glfwGetTime() * 5.0f) * 5.0f;
+
+		m_UIManager.DrawPanelWithText(*AssetMgr->UIShader, *AssetMgr->TextShader, m_ALetterPanel);
+	}
+
 }
 
 void SceneManager::AddAnimal(shared_ptr<GameObject> spawnedEntity)
@@ -426,7 +460,7 @@ void SceneManager::LoadModels()
 
 	m_LightSource.transform->Position = glm::vec3(0.f, 15.0f, 0.0f);
 	//m_LightSource.transform->Position = glm::vec3(0.f, 15.0f, -30.0f);
-	
+
 	m_UIPanelTex = *AssetMgr->GetTexture("res/textures/UI/UI_panel.png");
 	m_UICoinTex = *AssetMgr->GetTexture("res/textures/UI/coin.png");
 
@@ -448,6 +482,14 @@ void SceneManager::InitializeUI()
 	m_MoneyPanel.HasIcon = true;
 	m_MoneyPanel.InconTextureID = m_UICoinTex.ID;
 	m_MoneyPanel.IconSize = glm::vec2(40.0f, 40.0f);
+
+	m_ALetterPanel.TextureID = m_UIPanelTex.ID;
+	m_ALetterPanel.HasTexture = true;
+	m_ALetterPanel.Size = glm::vec2(50.0f, 50.0f);
+	m_ALetterPanel.Position = glm::vec2((WindowMgr->WINDOW_WIDTH / 2.0f) - 50.0f, (WindowMgr->WINDOW_HEIGHT / 2.0f) - 50.0f);
+	m_ALetterPanel.Text = L"A";
+	m_ALetterPanel.TextScale = 1.0f;
+	m_ALetterPanel.TextColor = glm::vec3(0.333f, 0.227f, 0.196f);
 
 	m_TimerPanel.TextureID = m_UIPanelTex.ID;
 	m_TimerPanel.Size = glm::vec2(300.0f, 100.0f);
