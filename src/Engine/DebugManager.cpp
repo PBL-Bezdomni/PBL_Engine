@@ -12,6 +12,7 @@ DebugManager::~DebugManager()
 	// ImGui_ImplOpenGL3_Shutdown();
 	// ImGui_ImplGlfw_Shutdown();
 	// ImGui::DestroyContext();
+	// m_Binder.UnbindAll();
 }
 
 void DebugManager::InitializeImGUI(GLFWwindow* window, const char* glslVersion)
@@ -39,6 +40,11 @@ void DebugManager::InitializeImGUI(GLFWwindow* window, const char* glslVersion)
 	m_MainCamera = m_SceneMgr->GetMainCamera().get();
 	LoadCameraData();
 	RefreshGameObjectData();
+	m_Binder = EventBinder();
+	m_Binder.Bind(m_SceneMgr->OnSceneLoaded, [this]()
+	{
+		RefreshGameObjectData();
+	});
 }
 
 void DebugManager::RefreshGameObjectData()

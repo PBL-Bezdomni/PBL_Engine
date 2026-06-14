@@ -9,6 +9,7 @@
 #include "Engine/JSONImporter.h"
 #include "UI/UIManager.h"
 #include "Game/Scripts/Animal.h"
+#include "Engine/Events/AEvent.h"
 
 class ParticleSystem;
 class AssetManager;
@@ -46,6 +47,7 @@ public:
 	float GetTimeLimit();
 	float GetTimeLeft();
 
+	AEvent<> OnSceneLoaded; 
 private:
 	void UpdateShaderLight(GameObject* gameObject, Shader& shader, Shader& depthShader);
 	void AssignSceneGraph();

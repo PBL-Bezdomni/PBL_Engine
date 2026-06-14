@@ -5,6 +5,7 @@
 #include "imgui_impl/imgui_impl_opengl3.h"
 #include <spdlog/spdlog.h>
 #include "WindowManager.h"
+#include "Events/EventBinder.h"
 #include "Game/SceneManager.h"
 
 struct GameObjectData
@@ -59,6 +60,7 @@ private:
 	AssetManager* m_AssetMgr;
 	Camera* m_MainCamera;
 	int m_HighestID = 0;
+	EventBinder m_Binder;
 	
 	void ImGUIBegin();
 	void ImGUIRender();

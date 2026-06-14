@@ -189,7 +189,8 @@ void SceneManager::LoadScene()
 	AssetMgr->AnimatedShader->SetInt("shadowMap", 20);
 	AssetMgr->AnimatedShader->SetInt("staticShadowMap", 21);
 	// TODO create event here
-	Engine::GetInstance().GetDebugManager().RefreshGameObjectData();
+	// Engine::GetInstance().GetDebugManager().RefreshGameObjectData();
+	OnSceneLoaded.Invoke();
 
 	m_CameraManager.GetComponent<CameraManager>()->AssignCameraAndPlayer(MainCamera.get(), &m_Player1);
 }
