@@ -27,7 +27,8 @@ public:
 	
 	void Emit(ParticleEmitter& emitter, uint32_t count);
 private:
-	const uint32_t MAX_PARTICLES = 100;
+	bool m_IsCPU = false;
+	const uint32_t MAX_PARTICLES = 50000;
 
 	std::vector<Particle> m_Particles;
 	std::shared_ptr<Shader> m_ParticleGraphicShader;
@@ -39,4 +40,5 @@ private:
 
 	void InitialBuffers();
 	void Dispatch();
+	void DispatchCPU();
 };

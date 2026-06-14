@@ -30,7 +30,7 @@ void ParticleEmitter::Update()
 
 			if (m_ParticleSystem != nullptr)
 			{
-				m_ParticleSystem->Emit(*this, count);
+				m_ParticleSystem->Emit(*this, 500);
 			}
 		}
 	}

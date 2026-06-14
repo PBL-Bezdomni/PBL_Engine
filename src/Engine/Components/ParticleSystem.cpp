@@ -18,20 +18,6 @@ void ParticleSystem::Awake()
 	m_ParticleGraphicShader = am->GetShader("res/shaders/smokeParticles.vert", "res/shaders/smokeParticles.frag");
 	m_ParticleComputeShader = am->GetComputeShader("res/shaders/smokeParticles.comp");
 
-	m_Particles.resize(MAX_PARTICLES);
-
-	for (auto& particle : m_Particles)
-	{
-		particle.position = glm::vec4(0.0f);
-		particle.velocity = glm::vec4(0.0f);
-
-		particle.color = glm::vec4(0.0f);
-		particle.life = 0.0f;
-		particle.maxLife = 0.0f;
-		particle.size = 0.0f;
-		particle.alive = 0;
-	}
-
 	InitialBuffers();
 
 	// Create Model for shader
@@ -50,7 +36,14 @@ void ParticleSystem::Awake()
 void ParticleSystem::Update()
 {
 	Component::Update();
-	Dispatch();
+	if (m_IsCPU)
+	{
+		DispatchCPU();
+	}
+	else
+	{
+		Dispatch();
+	}
 }
 
 void ParticleSystem::DrawUpdate()
@@ -71,7 +64,7 @@ void ParticleSystem::DrawUpdate()
 }
 
 void ParticleSystem::Emit(ParticleEmitter& emitter, uint32_t count)
-{
+{	
 	// m_ParticlesShader->Use();
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_SSBO);
 
@@ -109,6 +102,20 @@ void ParticleSystem::Emit(ParticleEmitter& emitter, uint32_t count)
 
 void ParticleSystem::InitialBuffers()
 {
+	m_Particles.resize(MAX_PARTICLES);
+
+	for (auto& particle : m_Particles)
+	{
+		particle.position = glm::vec4(0.0f);
+		particle.velocity = glm::vec4(0.0f);
+
+		particle.color = glm::vec4(0.0f);
+		particle.life = 0.0f;
+		particle.maxLife = 0.0f;
+		particle.size = 0.0f;
+		particle.alive = 0;
+	}
+	
 	glGenBuffers(1, &m_SSBO);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_SSBO);
 	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(Particle) * MAX_PARTICLES, m_Particles.data(), GL_DYNAMIC_DRAW);
@@ -124,4 +131,45 @@ void ParticleSystem::Dispatch()
 	glDispatchCompute((MAX_PARTICLES + 255) / 256, 1, 1);
 	// glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
 	glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT |	GL_BUFFER_UPDATE_BARRIER_BIT);
+}
+
+void ParticleSystem::DispatchCPU()
+{
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_SSBO);
+	
+	Particle* particles = (Particle*)glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(Particle) * MAX_PARTICLES, GL_MAP_WRITE_BIT);
+
+	if (!particles) return;
+	
+	float dt = Time::GetDeltaTime();
+	for (int i = 0; i < MAX_PARTICLES; i++)
+	{
+
+		Particle& p = particles[i];
+
+		if(p.alive == 0)
+			continue;
+
+		p.life -= dt;
+
+		if(p.life <= 0.0)
+		{
+			p.alive = 0;
+			particles[i] = p;
+			continue;
+		}
+
+		// movement
+		p.position =  glm::vec4(glm::vec3(p.position) + glm::vec3(p.velocity) * dt, 1);
+
+		// smoke rises
+		p.velocity.y += 0.5f * dt;
+
+		// drag
+		p.velocity = glm::vec4(glm::vec3(p.velocity) * 0.98f, 1);
+
+		particles[i] = p;
+	}
+
+	glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 }
