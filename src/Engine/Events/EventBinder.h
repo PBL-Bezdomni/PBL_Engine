@@ -8,7 +8,7 @@ class EventBinder
 public:
 	~EventBinder()
 	{
-		UnbindAll();
+		// UnbindAll();
 	}
 
 	template<typename EventType, typename Callable>
