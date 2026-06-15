@@ -7,6 +7,7 @@
 #include "Engine/AssetManager.h"
 #include "Game/SceneManager.h"
 #include "AnimalInteractions.h"
+#include "AnimalStateController.h"
 
 class RigidBody;
 class GameObject;
@@ -18,16 +19,6 @@ enum class AnimalNeeds
     Towels,
     Sauna,
     Massage
-};
-
-enum class AnimalState
-{
-    None,
-    Idle,          
-    PickedUp,        
-    Throw,
-    Rest,
-    CheckIn
 };
 
 class Animal : public Behaviour
@@ -79,9 +70,6 @@ private:
 
     std::shared_ptr<Shader> m_CellShadingShader;
 
-    AnimalState m_CurrentState = AnimalState::None;
-    float m_StateTimer = 0.0f;
-
 	std::vector<AnimalNeeds> m_RequiredServices;
 	RigidBody* m_RB;
 
@@ -102,9 +90,6 @@ public:
 
     void EnterTable(GameObject* table);                
     void EnterPosition(glm::vec3 exactWorldPosition);
-
-    void ChangeState(AnimalState newState);
-    AnimalState GetState() { return m_CurrentState; }
 
     void Update() override;
     void UpdateIdle();
@@ -129,6 +114,8 @@ public:
     void StopFulfillingNeed();
     void FulfillNeed(AnimalNeeds need);
 
+    AnimalStateController m_StateController{ this };
+    EventBinder m_EventBinder;
 	GameObject* GetGameObject() { return m_Owner; }
     
 	const char* GetScriptName() const override { return "Animal"; }

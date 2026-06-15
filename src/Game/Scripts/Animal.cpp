@@ -86,11 +86,37 @@ void Animal::Awake()
 
     DrawRandomNeeds();
 
+    m_EventBinder.Bind(m_StateController.OnStateChanged, [this](AnimalState oldState, AnimalState newState)
+    {
+            Animator* animator = m_Owner->GetComponent<Animator>();
+
+            if (newState == AnimalState::Idle)
+            {
+                PickNewTargetPosition();
+                if (animator) animator->PlayAnimation("idle");
+            }
+            else if (newState == AnimalState::PickedUp)
+            {
+                if (animator) animator->PlayAnimation("idle");
+            }
+            else if (newState == AnimalState::Throw)
+            {
+                if (animator) animator->PlayAnimation("idle");
+            }
+            else if (newState == AnimalState::Rest)
+            {
+                if (animator) animator->PlayAnimation("idle");
+            }
+            else if (newState == AnimalState::CheckIn)
+            {
+                if (animator) animator->PlayAnimation("idle");
+            }  
+    });
+
 }
 
 void Animal::Start()
 {
-    ChangeState(AnimalState::CheckIn);
 	Behaviour::Start();
 }
 
@@ -179,31 +205,7 @@ void Animal::Update()
     RigidBody* rb = m_Owner->GetComponent<RigidBody>();
     if (rb == nullptr) return;
 
-    switch (m_CurrentState)
-    {
-    case AnimalState::None:
-        break;
-    case AnimalState::Idle:
-        UpdateIdle();        
-        if (animator) animator->PlayAnimation("idle");
-        break;
-    case AnimalState::PickedUp:
-        UpdatePickedUp();
-        if (animator) animator->PlayAnimation("idle");
-        break;
-    case AnimalState::Throw:
-        UpdateThrow();
-        if (animator) animator->PlayAnimation("idle");
-        break;
-    case AnimalState::Rest:
-        UpdateFulfillingNeed();
-        if (animator) animator->PlayAnimation("idle");
-        break;
-    case AnimalState::CheckIn:
-        UpdateCheckIn();
-        if (animator) animator->PlayAnimation("idle");
-        break;
-    }
+    m_StateController.Update();
 }
 
 
@@ -330,25 +332,12 @@ void Animal::UpdateIdle() {
 }
 
 void Animal::UpdatePickedUp() {
-
 }
 
 void Animal::UpdateThrow() {
-    m_StateTimer += Time::GetDeltaTime();
-
-    if (m_StateTimer >= 3.0f)
-    {
-        ChangeState(AnimalState::Idle);
-    }
 }
 
 void Animal::UpdateCheckIn() {
-    m_StateTimer += Time::GetDeltaTime();
-
-    if (m_StateTimer >= 1.5f)
-    {
-        ChangeState(AnimalState::Idle);
-    }
 }
 
 void Animal::UpdateFulfillingNeed() {
@@ -465,7 +454,7 @@ void Animal::DrawRandomNeeds()
 void Animal::StartFulfillingNeed(AnimalNeeds need)
 {
     m_ProgressBar->SetActive(true);
-    m_CurrentState = AnimalState::Rest;
+    m_StateController.RequestStateChange.Invoke(AnimalState::Rest);
     m_CurrentNeedBeingFulfilled = need;
     m_CurrentNeedProgress = 0.0f;
 }
@@ -478,7 +467,7 @@ void Animal::StopFulfillingNeed()
 
 void Animal::UpdateProgressBar()
 {
-    if (m_ProgressBarShader != nullptr && m_ProgressBar != nullptr && m_CurrentState == AnimalState::Rest)
+    if (m_ProgressBarShader != nullptr && m_ProgressBar != nullptr && m_StateController.GetCurrentState() == AnimalState::Rest)
     {
         m_ProgressBarShader->Use();
         m_ProgressBarShader->SetFloat("u_Progress", m_CurrentNeedProgress / 1);
@@ -514,7 +503,7 @@ void Animal::ResetEverythingSpawn(glm::vec3 spawnPosition)
     m_CurrentAngle = 0.0f;
     m_LastPosition = spawnPosition;
 
-    ChangeState(AnimalState::CheckIn);
+    m_StateController.RequestStateChange.Invoke(AnimalState::CheckIn);
 
     float angle = Random::GetRandomFloat(0.0f, 2.0f * glm::pi<float>());
     float radius = Random::GetRandomFloat(0.0f, m_MovingRadius);
@@ -530,18 +519,4 @@ void Animal::ResetEverythingSpawn(glm::vec3 spawnPosition)
 
     m_ShouldTeleport = false;
     m_CurrentNeedProgress = 0.0f;
-}
-
-
-void Animal::ChangeState(AnimalState newState)
-{
-    m_StateTimer = 0.0f;
-    m_CurrentState = newState;
-
-    Animator* animator = m_Owner->GetComponent<Animator>();
-
-    if (newState == AnimalState::Idle)
-    {
-        PickNewTargetPosition();
-    }
 }

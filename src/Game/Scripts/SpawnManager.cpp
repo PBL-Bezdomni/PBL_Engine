@@ -125,7 +125,7 @@ void SpawnManager::DespawnAnimal(GameObject* animal)
 				if (anScript != nullptr)
 				{
 					anScript->m_IsInitialized = false;
-					anScript->ChangeState(AnimalState::None);
+					anScript->m_StateController.RequestStateChange.Invoke(AnimalState::None);
 				}
 				RigidBody* rb = spawnedAnimal->GetComponent<RigidBody>();
 				if (rb != nullptr)
