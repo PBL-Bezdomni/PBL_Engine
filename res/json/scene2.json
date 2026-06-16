@@ -8886,7 +8886,7 @@
       "has_normal": false,
       "has_rigid_body": true,
       "id": 262,
-      "is_static": false,
+      "is_static": true,
       "is_trigger": false,
       "mesh": "",
       "name": "BathCollider",

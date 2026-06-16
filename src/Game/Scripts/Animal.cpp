@@ -27,15 +27,17 @@ void Animal::Awake()
     // TODO add scripts for every animal kind, that will override enum
     if (m_Owner->Name.find("bunny") != std::string::npos)
     {
+        m_Indicator->transform->Position = glm::vec3(0.f, -3.4f, 0.f);
+        m_Indicator->transform->Scale = glm::vec3(8.0f);
         if (m_RB != nullptr)
         {
             m_RB->PrepareInit(glm::vec3(0.5f));
         }
-        m_Indicator->transform->Scale = glm::vec3(3.0f);
     }
     else if (m_Owner->Name.find("bear") != std::string::npos)
     {
-        m_Indicator->transform->Scale = glm::vec3(10.0f);
+        m_Indicator->transform->Position = glm::vec3(5.0f, -8.4f, 0.0f);
+        m_Indicator->transform->Scale = glm::vec3(20.0f);
         if (m_RB != nullptr)
         {
             m_RB->PrepareInit(glm::vec3(2.f));
@@ -43,7 +45,8 @@ void Animal::Awake()
     }
     else if (m_Owner->Name.find("skunk") != std::string::npos)
     {
-        m_Indicator->transform->Scale = glm::vec3(4.0f);
+        m_Indicator->transform->Position = glm::vec3(0.0f, -4.5f, 2.5f);
+        m_Indicator->transform->Scale = glm::vec3(12.0f);
         if (m_RB != nullptr)
         {
             m_RB->PrepareInit(glm::vec3(1.f));
@@ -63,18 +66,18 @@ void Animal::Awake()
 
     m_ProgressBar = m_SceneMgr->Instantiate(m_Owner, "res/models/ProgressBarPlane.obj", m_AssetMgr->ProgressBarShader);
     m_ProgressBar->Name = "ProgressBar";
-    m_ProgressBar->transform->Position = glm::vec3(0.f, 8.0f, 0.f);
+    m_ProgressBar->transform->Position = glm::vec3(0.f, 10.0f, 0.f);
     m_ProgressBar->transform->EulerAngles = glm::vec3(90.0f, 0.0f, 0.0f);
-    m_ProgressBar->transform->Scale = glm::vec3(1.5f, 1.0f, 0.3f);
+    m_ProgressBar->transform->Scale = glm::vec3(45.0f, 1.0f, 9.0f); //am I stupid? why doesn't it work?
     m_ProgressBar->SetActive(false);
     SetProgressBarShader(m_AssetMgr->ProgressBarShader);
 
 
     m_Checkmark = m_SceneMgr->Instantiate(m_Owner, "res/models/CheckmarkPlane.obj", m_AssetMgr->WorldUIShader);
     m_Checkmark->Name = "Checkmark";
-    m_Checkmark->transform->Position = glm::vec3(0.f, 4.0f, 0.f);
+    m_Checkmark->transform->Position = glm::vec3(0.f, 10.0f, 0.f);
     m_Checkmark->transform->EulerAngles = glm::vec3(90.0f, 0.0f, 0.0f);
-    m_Checkmark->transform->Scale = glm::vec3(2.0f, 1.0f, 2.0f);
+    m_Checkmark->transform->Scale = glm::vec3(20.0f, 1.0f, 20.0f);
     Model* checkmarkModel = m_Checkmark->GetComponent<Model>();
     if (checkmarkModel != nullptr)
     {
@@ -419,7 +422,7 @@ void Animal::FulfillNeed(AnimalNeeds need) {
 
             if (m_Indicator != nullptr)
             {
-                m_Indicator->transform->Scale = glm::vec3(0.0f);
+                m_Indicator->SetActive(false);
             }
         }
     }
@@ -502,6 +505,10 @@ void Animal::ResetEverythingSpawn(glm::vec3 spawnPosition)
 
     m_CurrentAngle = 0.0f;
     m_LastPosition = spawnPosition;
+
+    m_Checkmark->SetActive(false);
+    m_Indicator->SetActive(true);
+    DrawRandomNeeds();
 
     m_StateController.RequestStateChange.Invoke(AnimalState::CheckIn);
 
