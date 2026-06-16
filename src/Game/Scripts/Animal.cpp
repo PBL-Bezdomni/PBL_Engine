@@ -68,16 +68,16 @@ void Animal::Awake()
     m_ProgressBar->Name = "ProgressBar";
     m_ProgressBar->transform->Position = glm::vec3(0.f, 10.0f, 0.f);
     m_ProgressBar->transform->EulerAngles = glm::vec3(90.0f, 0.0f, 0.0f);
-    m_ProgressBar->transform->Scale = glm::vec3(45.0f, 1.0f, 9.0f); //am I stupid? why doesn't it work?
+    m_ProgressBar->transform->Scale = glm::vec3(1.0f, 1.0f, 1.0f);
     m_ProgressBar->SetActive(false);
     SetProgressBarShader(m_AssetMgr->ProgressBarShader);
 
 
     m_Checkmark = m_SceneMgr->Instantiate(m_Owner, "res/models/CheckmarkPlane.obj", m_AssetMgr->WorldUIShader);
     m_Checkmark->Name = "Checkmark";
-    m_Checkmark->transform->Position = glm::vec3(0.f, 10.0f, 0.f);
+    m_Checkmark->transform->Position = glm::vec3(0.f, 15.0f, 0.f);
     m_Checkmark->transform->EulerAngles = glm::vec3(90.0f, 0.0f, 0.0f);
-    m_Checkmark->transform->Scale = glm::vec3(20.0f, 1.0f, 20.0f);
+    m_Checkmark->transform->Scale = glm::vec3(1.0f, 1.0f, 1.0f);
     Model* checkmarkModel = m_Checkmark->GetComponent<Model>();
     if (checkmarkModel != nullptr)
     {
@@ -476,8 +476,8 @@ void Animal::UpdateProgressBar()
         m_ProgressBarShader->SetFloat("u_Progress", m_CurrentNeedProgress / 1);
         m_ProgressBarShader->SetVec3("cameraRight", m_MainCamera->GetRight());
         m_ProgressBarShader->SetVec3("cameraUp", m_MainCamera->GetUp());
-    	m_ProgressBarShader->SetFloat("u_width", 1.0f);
-    	m_ProgressBarShader->SetFloat("u_height", 0.15f);
+    	m_ProgressBarShader->SetFloat("u_width", 3.0f);
+    	m_ProgressBarShader->SetFloat("u_height", 0.35f);
     }
 }
 
@@ -485,8 +485,8 @@ void Animal::UpdateCheckmark() {
     m_CheckmarkShader->Use();
     m_CheckmarkShader->SetVec3("cameraRight", m_MainCamera->GetRight());
     m_CheckmarkShader->SetVec3("cameraUp", -m_MainCamera->GetUp());
-    m_CheckmarkShader->SetFloat("u_width", 1.0f);
-    m_CheckmarkShader->SetFloat("u_height", 1.0f);
+    m_CheckmarkShader->SetFloat("u_width", 3.0f);
+    m_CheckmarkShader->SetFloat("u_height", 3.0f);
 }
 
 void Animal::ResetEverythingSpawn(glm::vec3 spawnPosition)
