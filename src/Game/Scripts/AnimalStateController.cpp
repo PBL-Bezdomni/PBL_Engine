@@ -35,6 +35,8 @@ void AnimalStateController::Update()
 	case AnimalState::Throw:
 		m_Owner->UpdateThrow();
 
+		if (m_CurrentState != AnimalState::None) return;
+
 		if (m_StateTimer >= 3.0f)
 		{
 			RequestStateChange.Invoke(AnimalState::Idle);

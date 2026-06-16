@@ -216,3 +216,34 @@ void RigidBody::MoveKinematic(const glm::vec3& newWorldPosition, const glm::quat
 
     bodyInterface.MoveKinematic(JPH::BodyID(m_BodyID), joltPos, joltRot, 1.0f / 60.0f);
 }
+
+void RigidBody::SetGravityFactor(float factor)
+{
+    if (!m_Initialized || !m_PhysicsEngine) return;
+
+    m_PhysicsEngine->GetSystem()->GetBodyInterface().SetGravityFactor(
+        JPH::BodyID(m_BodyID),
+        factor
+    );
+}
+
+void RigidBody::SetGhostMode(bool isGhost)
+{
+    if (!m_Initialized || !m_PhysicsEngine) return;
+
+    JPH::BodyInterface& bodyInterface = m_PhysicsEngine->GetSystem()->GetBodyInterface();
+    JPH::BodyID id(m_BodyID);
+
+    if (isGhost)
+    {
+        bodyInterface.SetGravityFactor(id, 0.0f);
+
+        bodyInterface.SetMotionType(id, JPH::EMotionType::Kinematic, JPH::EActivation::Activate);
+    }
+    else
+    {
+        bodyInterface.SetGravityFactor(id, 1.0f);
+
+        bodyInterface.SetMotionType(id, JPH::EMotionType::Dynamic, JPH::EActivation::Activate);
+    }
+}
