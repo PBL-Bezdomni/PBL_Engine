@@ -8,9 +8,10 @@ class CameraManager : public Behaviour
 {
 private:
 	Camera* m_Camera;
-	GameObject* m_Player;
+	GameObject* m_Player1;
+	GameObject* m_Player2;
 public:
-	void AssignCameraAndPlayer(Camera* cam, GameObject* player);
+	void AssignCameraAndPlayer(Camera* cam, GameObject* player1, GameObject* player2);
 
 	void Update() override;	
 };

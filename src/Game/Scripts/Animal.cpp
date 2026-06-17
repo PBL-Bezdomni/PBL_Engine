@@ -38,6 +38,7 @@ void Animal::Awake()
     {
         m_Indicator->transform->Position = glm::vec3(5.0f, -8.4f, 0.0f);
         m_Indicator->transform->Scale = glm::vec3(20.0f);
+        AssignBearTexture();
         if (m_RB != nullptr)
         {
             m_RB->PrepareInit(glm::vec3(2.f));
@@ -526,4 +527,40 @@ void Animal::ResetEverythingSpawn(glm::vec3 spawnPosition)
 
     m_ShouldTeleport = false;
     m_CurrentNeedProgress = 0.0f;
+
+    if (m_Owner->Name.find("bear") != std::string::npos) AssignBearTexture();
+}
+
+void Animal::AssignBearTexture() {
+    int randomTextureIndex = Random::GetRandomInt(0, 5);
+    std::string texturePath = "";
+
+    switch (randomTextureIndex)
+    {
+    case 0:
+        texturePath = "res/models/animals/bear-2/bear_textures_1500/bear_1500_bear1_BaseColor_White.png";
+        break;
+    case 1:
+        texturePath = "res/models/animals/bear-2/bear_textures_1500/bear_1500_bear1_BaseColor_Black.png";
+        break;
+    case 2:
+        texturePath = "res/models/animals/bear-2/bear_textures_1500/bear_1500_bear1_BaseColor_Brown.png";
+        break;
+    case 3:
+        texturePath = "res/models/animals/bear-2/bear_textures_1500/bear_1500_bear1_BaseColor_Grey.png";
+        break;
+    case 4:
+        texturePath = "res/models/animals/bear-2/bear_textures_1500/bear_1500_bear1_BaseColor_DarkBrown.png";
+        break;
+    case 5:
+    default:
+        texturePath = "res/models/animals/bear-2/bear_textures_1500/bear_1500_bear1_BaseColor.png";
+        break;
+    }
+
+    Model* model = m_Owner->GetComponent<Model>();
+    if (model != nullptr)
+    {
+        model->AssignTexture(*m_AssetMgr->GetTexture(texturePath.c_str()));
+    }
 }

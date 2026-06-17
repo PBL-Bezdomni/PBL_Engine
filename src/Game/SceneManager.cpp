@@ -192,7 +192,7 @@ void SceneManager::LoadScene()
 	// Engine::GetInstance().GetDebugManager().RefreshGameObjectData();
 	OnSceneLoaded.Invoke();
 
-	m_CameraManager.GetComponent<CameraManager>()->AssignCameraAndPlayer(MainCamera.get(), &m_Player1);
+	m_CameraManager.GetComponent<CameraManager>()->AssignCameraAndPlayer(MainCamera.get(), &m_Player1, &m_Player2);
 }
 
 void SceneManager::UpdateScene()

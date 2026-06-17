@@ -96,7 +96,6 @@ void Player::Update()
 
     if (m_IgnoreThrownAnimalTimer > 0.0f)
     {
-        //i'm sure there's a better way to do it
         m_IgnoreThrownAnimalTimer -= deltaTime;
         if (m_IgnoreThrownAnimalTimer <= 0.0f)
         {

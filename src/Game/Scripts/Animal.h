@@ -73,6 +73,8 @@ private:
 	std::vector<AnimalNeeds> m_RequiredServices;
 	RigidBody* m_RB;
 
+    void AssignBearTexture();
+
 public:
     AOnsenObject* m_CurrentOnsen = nullptr;
     bool m_IsInitialized = false;
