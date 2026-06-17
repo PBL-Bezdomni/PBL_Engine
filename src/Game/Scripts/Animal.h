@@ -12,6 +12,7 @@
 class RigidBody;
 class GameObject;
 class AOnsenObject;
+class Player;
 
 enum class AnimalNeeds
 {
@@ -28,6 +29,7 @@ private:
 	SceneManager*       m_SceneMgr;
 	AnimalInteractions m_AnimalInteractions;
 	Camera* m_MainCamera;
+    std::vector<Player*> m_PlayersInScene;
 
 	float m_TimeLimit;
 	float m_CurrTime;
@@ -35,10 +37,10 @@ private:
     int m_maxNeeds = 4;
 
     int m_numberOfNeeds = 1;
+    float m_CurrentNeedProgress = 0.0f;
 
     float m_SatisfactionSpeed = 0.1f;
     AnimalNeeds m_CurrentNeedBeingFulfilled;
-    float m_CurrentNeedProgress = 0.0f;
 
     bool m_ShouldTeleport = false;
     glm::vec3 m_TeleportTarget;
@@ -61,7 +63,6 @@ private:
     std::shared_ptr<GameObject> m_Indicator;
 
     std::shared_ptr<Shader> m_ProgressBarShader;
-    std::shared_ptr<GameObject> m_ProgressBar;
     void UpdateProgressBar();
 
     std::shared_ptr<Shader> m_CheckmarkShader;
@@ -76,6 +77,7 @@ private:
     void AssignBearTexture();
 
 public:
+    std::shared_ptr<GameObject> m_ProgressBar;
     AOnsenObject* m_CurrentOnsen = nullptr;
     bool m_IsInitialized = false;
     bool m_WasDroppedByPlayer = false;

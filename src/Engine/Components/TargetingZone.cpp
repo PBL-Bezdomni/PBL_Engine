@@ -47,5 +47,7 @@ float TargetingZone::GetAnimalScore(GameObject* animal)
         finalScore += 1000.0f;
     }
 
+    if (animalScript->m_ProgressBar->IsActive()) return -2;
+
     return finalScore;
 }

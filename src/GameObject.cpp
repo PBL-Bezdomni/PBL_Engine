@@ -236,3 +236,7 @@ void GameObject::SetActive(bool active)
 {
     m_IsActive = active;
 }
+
+bool GameObject::IsActive() {
+    return m_IsActive;
+}

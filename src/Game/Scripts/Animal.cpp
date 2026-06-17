@@ -9,6 +9,7 @@
 
 #include "Engine/AssetManager.h"
 #include <Engine/Animation/Animator.h>
+#include "Player.h"
 
 void Animal::Awake()
 {
@@ -89,6 +90,8 @@ void Animal::Awake()
     SetCheckmarkShader(m_AssetMgr->WorldUIShader);
 
     DrawRandomNeeds();
+
+    m_PlayersInScene = m_SceneMgr->GetLevelParent()->FindComponentsInChildren<Player>();
 
     m_EventBinder.Bind(m_StateController.OnStateChanged, [this](AnimalState oldState, AnimalState newState)
     {
@@ -415,6 +418,14 @@ void Animal::FulfillNeed(AnimalNeeds need) {
         m_RequiredServices.erase(it);
 
         UpdateIndicatorColors();
+
+        for (Player* player : m_PlayersInScene)
+        {
+            if (player != nullptr)
+            {
+                player->RecalculateBestTarget();
+            }
+        }
 
         if (m_RequiredServices.empty())
         {

@@ -37,6 +37,7 @@ public:
 	void DrawSelf(Shader* shader);
 	glm::vec3 GetWorldPosition();
 	void SetActive(bool active);
+	bool IsActive();
 	void StartSelfAndChild();
 	void AssignScript(string scriptName);
 	void RemoveScript(string scriptName);

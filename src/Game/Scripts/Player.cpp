@@ -100,7 +100,7 @@ void Player::Update()
         if (m_IgnoreThrownAnimalTimer <= 0.0f)
         {
             m_LastThrownAnimal = nullptr;
-            if (m_CarriedAnimal != nullptr) {
+            if (m_CarriedAnimal == nullptr) {
                 RecalculateBestTarget();
             }
         }
@@ -524,10 +524,19 @@ void Player::RecalculateBestTarget()
 {
     if (m_CarriedAnimal != nullptr) return;
 
+    if (m_BestAnimalTarget != nullptr) {
+        SetHighlight(m_BestAnimalTarget, false);
+    }
+    m_BestAnimalTarget = nullptr;
+    m_BestAnimalScore = -1.0f;
+
     for (TargetingZone* zone : m_TargetingZones)
     {
         for (GameObject* animal : zone->AnimalsInZone)
         {
+            Animal* animalScript = animal->GetDerivedComponent<Animal>();
+            if (animalScript == nullptr) continue;
+
             float score = zone->GetAnimalScore(animal);
             OnAnimalEnteredZone(animal, score);
         }
