@@ -6,7 +6,6 @@
 #include "Game/Scripts/SpawnManager.h"
 #include "Engine/AssetManager.h"
 #include "Engine/PhysicsEngine/PhysicsEngine.h"
-#include "Engine/DebugManager.h"
 #include "Engine/Time.h"
 #include "Engine/WindowManager.h"
 #include "Game/Scripts/Player.h"
@@ -188,8 +187,7 @@ void SceneManager::LoadScene()
 	AssetMgr->AnimatedShader->Use();
 	AssetMgr->AnimatedShader->SetInt("shadowMap", 20);
 	AssetMgr->AnimatedShader->SetInt("staticShadowMap", 21);
-	// TODO create event here
-	// Engine::GetInstance().GetDebugManager().RefreshGameObjectData();
+	
 	OnSceneLoaded.Invoke();
 
 	m_CameraManager.GetComponent<CameraManager>()->AssignCameraAndPlayer(MainCamera.get(), &m_Player1, &m_Player2);

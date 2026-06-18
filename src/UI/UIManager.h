@@ -8,7 +8,6 @@
 
 class AssetManager;
 class PhysicsEngine;
-class DebugManager;
 class WindowManager;
 
 struct UIPanel

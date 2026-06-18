@@ -9,7 +9,6 @@
 #include "Camera.h"
 #include <iostream>
 #include <fstream>
-#include "DebugManager.h"
 #include "EngineConsts.h"
 #include "Game/Scripts/Bath.h"
 
