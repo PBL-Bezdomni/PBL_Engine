@@ -44,7 +44,6 @@ public:
 	static Engine& GetInstance();
 	PhysicsEngine& GetPhysicsEngine();
 	WindowManager& GetWindowManager();
-	DebugManager& GetDebugManager();
 	AssetManager& GetAssetManager();
 	AudioManager& GetAudioManager();
 	GameManager& GetGameManager();

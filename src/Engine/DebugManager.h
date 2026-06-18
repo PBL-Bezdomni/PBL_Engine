@@ -7,44 +7,6 @@
 #include "Events/EventBinder.h"
 #include "Game/SceneManager.h"
 
-struct GameObjectData
-{
-	GameObject* gameObject;
-	string Name;
-	int ID;
-	string ParentName;
-	int ParentID;
-
-	string Mesh;
-	string DiffuseTex;
-	bool HasNormal;
-	string NormalTex;
-	
-	float PosX;
-	float PosY;
-	float PosZ;
-
-	float RotX;
-	float RotY;
-	float RotZ;
-
-	float ScaX;
-	float ScaY;
-	float ScaZ;
-
-	bool HasRigidBody;
-	bool IsStatic;
-	bool IsTrigger;
-
-	float ColliderSizeX;
-	float ColliderSizeY;
-	float ColliderSizeZ;
-
-	vector<string> Scripts;
-
-	vector<GameObjectData> Children;
-};
-
 class DebugManager
 {
 public:

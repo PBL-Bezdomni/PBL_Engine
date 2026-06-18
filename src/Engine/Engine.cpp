@@ -63,11 +63,6 @@ WindowManager& Engine::GetWindowManager()
 	return *m_WindowMgr;
 }
 
-DebugManager& Engine::GetDebugManager()
-{
-	return *m_DebugMgr;
-}
-
 AssetManager& Engine::GetAssetManager()
 {
 	return *m_AssetMgr;
