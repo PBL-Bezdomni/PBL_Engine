@@ -1,5 +1,4 @@
 #include "Animation.h"
-#include <spdlog/spdlog.h>
 #include <assimp/postprocess.h>
 
 static inline glm::mat4 ConvertMatrixToGLMFormat(const aiMatrix4x4& from)

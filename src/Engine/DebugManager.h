@@ -3,7 +3,6 @@
 #include "imgui.h"
 #include "imgui_impl/imgui_impl_glfw.h"
 #include "imgui_impl/imgui_impl_opengl3.h"
-#include <spdlog/spdlog.h>
 #include "WindowManager.h"
 #include "Events/EventBinder.h"
 #include "Game/SceneManager.h"

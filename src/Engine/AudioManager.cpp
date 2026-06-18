@@ -1,9 +1,6 @@
 #include "AudioManager.h"
-
 #include <iostream>
-
 #include "Loader.h"
-#include <spdlog/spdlog.h>
 
 int AudioManager::Initialize()
 {

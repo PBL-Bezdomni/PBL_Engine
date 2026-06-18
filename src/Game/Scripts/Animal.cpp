@@ -1,12 +1,10 @@
 #include "Animal.h"
 #include "GameObject.h"
 #include "Engine/Components/RigidBody.h"
-#include <spdlog/spdlog.h>
 #include <random>
 #include <Random.h>
 #include <Engine/Time.h>
 #include <Engine/Engine.h>
-
 #include "Engine/AssetManager.h"
 #include <Engine/Animation/Animator.h>
 #include "Player.h"
