@@ -24,7 +24,7 @@ void Engine::Initialize()
 	m_PhysicsEngine = std::make_unique<PhysicsEngine>();
 	m_PhysicsEngine->Init();
 
-	m_DebugMgr = std::make_unique<DebugManager>();
+	// m_DebugMgr = std::make_unique<DebugManager>();
 	// m_DebugMgr->InitializeImGUI(m_WindowMgr->GetWindowPointer(), GLSL_VERSION);
 	
 	m_AssetMgr = std::make_unique<AssetManager>();
@@ -40,7 +40,7 @@ void Engine::Initialize()
 void Engine::SecondPassInitialization()
 {
 	m_GameMgr->Initialize();
-	m_DebugMgr->InitializeImGUI(m_WindowMgr->GetWindowPointer(), GLSL_VERSION);
+	// m_DebugMgr->InitializeImGUI(m_WindowMgr->GetWindowPointer(), GLSL_VERSION);
 }
 
 bool Engine::GetIsDebugDrawn()
@@ -50,7 +50,7 @@ bool Engine::GetIsDebugDrawn()
 
 void Engine::ToggleDebugDraw()
 {
-	m_IsDebugDraw = !m_IsDebugDraw;
+	// m_IsDebugDraw = !m_IsDebugDraw;
 }
 
 PhysicsEngine& Engine::GetPhysicsEngine()
@@ -118,7 +118,7 @@ int Engine::MainLoop()
 
 		if (m_IsDebugDraw)
 		{
-			m_DebugMgr->RenderImgui(m_WindowMgr->GetWindowPointer());
+			// m_DebugMgr->RenderImgui(m_WindowMgr->GetWindowPointer());
 		}
 
 		// End frame and swap buffers (double buffering)

@@ -4,7 +4,7 @@
 #include "AssetManager.h"
 #include "AudioManager.h"
 #include "WindowManager.h"
-#include "DebugManager.h"
+// #include "DebugManager.h"
 #include "Game/GameManager.h"
 #include "PhysicsEngine/PhysicsEngine.h"
 
@@ -27,7 +27,7 @@ private:
 
 	std::unique_ptr<PhysicsEngine> m_PhysicsEngine;
 	std::unique_ptr<WindowManager> m_WindowMgr;
-	std::unique_ptr<DebugManager> m_DebugMgr;
+	// std::unique_ptr<DebugManager> m_DebugMgr;
 	std::unique_ptr<AssetManager> m_AssetMgr;
 	std::unique_ptr<AudioManager> m_AudioMgr;
 	std::unique_ptr<GameManager> m_GameMgr;

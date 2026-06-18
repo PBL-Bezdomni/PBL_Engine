@@ -32,7 +32,6 @@ CPMAddPackage(
 CPMAddPackage("gh:assimp/assimp@5.4.3")
 CPMAddPackage("gh:glfw/glfw#3.3.8")
 CPMAddPackage("gh:g-truc/glm#1.0.1")
-CPMAddPackage("gh:ocornut/imgui@1.88")
 CPMAddPackage(
 		NAME JoltPhysics
 		GITHUB_REPOSITORY jrouwe/JoltPhysics
@@ -47,17 +46,7 @@ CPMAddPackage(
 
 if(MSVC AND TARGET Jolt)
 	set_property(TARGET Jolt PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
-endif()
-
-set(imgui_SOURCE_DIR ${imgui_SOURCE_DIR} CACHE INTERNAL "")
-add_library(imgui STATIC ${imgui_SOURCE_DIR}/imgui.cpp
-					     ${imgui_SOURCE_DIR}/imgui_demo.cpp
-					     ${imgui_SOURCE_DIR}/imgui_draw.cpp
-						 ${imgui_SOURCE_DIR}/imgui_tables.cpp
-					     ${imgui_SOURCE_DIR}/imgui_widgets.cpp
-						 ${imgui_SOURCE_DIR}/misc/cpp/imgui_stdlib.cpp)
-						 
-target_include_directories(imgui PUBLIC ${imgui_SOURCE_DIR})						 
+endif()						 
 						 
 set_target_properties(glad
                       stb_image
@@ -65,8 +54,7 @@ set_target_properties(glad
 					  freetype
                       assimp 
                       glfw 
-                      glm 
-                      imgui PROPERTIES FOLDER "thirdparty")
+                      glm PROPERTIES FOLDER "thirdparty")
 
 if (TARGET zlibstatic)
     set_target_properties(zlibstatic PROPERTIES FOLDER "thirdparty")

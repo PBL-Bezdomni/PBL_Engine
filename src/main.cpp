@@ -12,9 +12,9 @@ int main(int, char**)
     engine.Start();
 
     // Cleanup
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
+    // ImGui_ImplOpenGL3_Shutdown();
+    // ImGui_ImplGlfw_Shutdown();
+    // ImGui::DestroyContext();
 
     glfwDestroyWindow(WindowMgr->GetWindowPointer());
     glfwTerminate();
