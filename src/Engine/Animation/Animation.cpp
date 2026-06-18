@@ -19,7 +19,7 @@ Animation::Animation(const string& animationPath, Model* model)
 
 	if (!scene || !scene->mRootNode)
 	{
-		spdlog::error("ERROR::ASSIMP:: {0}", importer.GetErrorString());
+		std::cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << std::endl;
 		return;
 	}
 
@@ -56,7 +56,7 @@ void Animation::ReadMissingBones(const aiAnimation* animation, Model& model)
 	{
 		auto channel = animation->mChannels[i];
 		string boneName = channel->mNodeName.data;
-		//spdlog::info("Animation needs bone, name: {}", boneName);
+		//std::cout << "Animation needs bone, name: " << boneName << std::endl;
 		if (boneInfoMap.find(boneName) == boneInfoMap.end())
 		{
 			boneInfoMap[boneName].id = boneCount;

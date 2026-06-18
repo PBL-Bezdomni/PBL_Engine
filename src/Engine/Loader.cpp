@@ -1,5 +1,7 @@
 #include "Loader.h"
 #include <filesystem>
+#include <iostream>
+
 #include "spdlog/spdlog.h"
 
 Loader Loader::m_Instance;
@@ -17,14 +19,13 @@ string Loader::RelativePath()
 
 void Loader::TestLoad()
 {
-	spdlog::info("Current path: {}",
-	std::filesystem::current_path().string());
+	std::cout << "Current path: " << std::filesystem::current_path().string() << std::endl;
 	int width, height, nrChannels;
 	unsigned char* data = stbi_load((VS_BUILD_RELATIVE_PATH + TEST_PATH).c_str(), &width, &height, &nrChannels, 0);
 	if (data)
 	{
 		m_RelativePath = VS_BUILD_RELATIVE_PATH;
-		spdlog::info("Loader established relative path");
+		std::cout << "Loader established relative path\n";
 	}
 	else
 	{
@@ -32,11 +33,11 @@ void Loader::TestLoad()
 		if (data)
 		{
 			m_RelativePath = EXE_BUILD_RELATIVE_PATH;
-			spdlog::info("Loader established relative path");
+			std::cout << "Loader established relative path\n";
 		}
 		else
 		{
-			spdlog::error("Loader couldn't establish relative path");
+			std::cout << "ERROR: Loader couldn't establish relative path\n";
 		}
 	}
 	stbi_image_free(data);

@@ -32,7 +32,7 @@ void DebugManager::InitializeImGUI(GLFWwindow* window, const char* glslVersion)
 	// Setup style
 	ImGui::StyleColorsDark();
 	// ImGui::StyleColorsClassic();
-	spdlog::info("Initialized ImGui.");
+	std::cout << "Initialized ImGui.\n";
 
 	Engine* engine = &Engine::GetInstance();
 	m_AssetMgr = &engine->GetAssetManager();
@@ -370,7 +370,7 @@ bool DebugManager::RenderGameObjectTree(GameObjectData& data)
 				Model* model = data.gameObject->GetComponent<Model>();
 				if (model == nullptr)
 				{
-					spdlog::info("Remove Model component successful");
+					std::cout << "Remove Model component successful\n";
 				}
 				m_RefreshObjects = true;
 			}
@@ -403,7 +403,7 @@ bool DebugManager::RenderGameObjectTree(GameObjectData& data)
 				RigidBody* rb = data.gameObject->GetComponent<RigidBody>();
 				if (rb == nullptr)
 				{
-					spdlog::info("Remove component successful");
+					std::cout << "Remove component successful\n";
 				}
 				m_RefreshObjects = true;
 			}

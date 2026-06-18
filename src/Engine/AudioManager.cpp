@@ -1,5 +1,7 @@
 #include "AudioManager.h"
 
+#include <iostream>
+
 #include "Loader.h"
 #include <spdlog/spdlog.h>
 
@@ -31,6 +33,6 @@ void AudioManager::PlaySound(const std::string& path)
 	ma_result result = ma_engine_play_sound(m_AudioEngine.get(), full.c_str(), NULL);
 	if (result != MA_SUCCESS)
 	{
-		spdlog::error("Failed to play sound: {}", full);
+		std::cout << "ERROR: Failed to play sound: " << full << std::endl;
 	}
 }

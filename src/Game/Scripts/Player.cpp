@@ -184,7 +184,7 @@ void Player::Update()
                 m_LastLookDir = glm::vec2(rotVector.x, rotVector.z);
                 if (glm::isnan(rotVector.x) || glm::isnan(rotVector.z))
                 {
-                    spdlog::warn("last look is nan");
+                    std::cout << "WARNING: Last look is nan\n";
                 }
             }
         }
@@ -347,7 +347,7 @@ void Player::HandleActionPressed()
 
         if (hitObject != nullptr)
         {
-            //spdlog::info("Check: {} {} {}", hitObject->transform->Position.x, hitObject->transform->Position.y, hitObject->transform->Position.z);
+            //std::cout << "Check: " << hitObject->transform->Position.x << " " << hitObject->transform->Position.y << " " << hitObject->transform->Position.z << std::endl;
 
             Animal* animalScript = hitObject->GetDerivedComponent<Animal>();
 
@@ -443,7 +443,7 @@ void Player::HandleThrowReleased()
             throwVelocity.y = m_ThrowCharge * 0.4f;
             if (glm::isnan(throwVelocity.x) || glm::isnan(throwVelocity.z))
             {
-                spdlog::warn("Throw Velocity was NaN");
+                std::cout << "WARNING: Throw Velocity was NaN\n";
                 throwVelocity = glm::vec3(1.0, 0, 0);
             }
             animalRb->SetLinearVelocity(throwVelocity);

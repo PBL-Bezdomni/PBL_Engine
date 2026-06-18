@@ -152,8 +152,8 @@ void Model::LoadModel(string path)
     const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_LimitBoneWeights);
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
-        spdlog::error("ERROR::ASSIMP::");
-        spdlog::error(importer.GetErrorString());
+        std::cout << "ERROR::ASSIMP::";
+        std::cout << importer.GetErrorString() << std::endl;
         return;
     }
 
@@ -401,7 +401,7 @@ void Model::SetVertexBoneDataToDefault(Vertex& vertex)
 
 void Model::ExtractBoneWeightForVertices(vector<Vertex>& vertices, aiMesh* mesh, const aiScene* scene)
 {
-    //spdlog::info("mesh loading: {}, bone found: {}", mesh->mName.C_Str(), mesh->mNumBones);
+    //std::cout << "mesh loading: " << mesh->mName.C_Str(), << " bone found: " << mesh->mNumBones << std::endl;
     for (unsigned int boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex)
     {
         int boneID = -1;
@@ -415,7 +415,7 @@ void Model::ExtractBoneWeightForVertices(vector<Vertex>& vertices, aiMesh* mesh,
             m_BoneInfoMap[boneName] = newBoneInfo;
             boneID = m_BoneCount;
             m_BoneCount++;
-            //spdlog::info("loaded bone: {} (ID: {})", boneName, boneID);
+            // std::cout << "loaded bone: " << boneName << " (ID: " << boneID << ")\n";
         }
         else
         {

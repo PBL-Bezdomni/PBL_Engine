@@ -41,7 +41,7 @@ void Animator::PlayAnimation(const std::string& name)
 	}
 	else
 	{
-		spdlog::warn("Animator: Animation not found: {}", name);
+		std::cout << "WARNING: Animator: Animation not found: " << name << std::endl;
 	}
 }
 

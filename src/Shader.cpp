@@ -37,7 +37,7 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath)
     }
     catch (std::ifstream::failure e)
     {
-        spdlog::error("ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ");
+        std::cout << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ\n";
     }
     const char* vShaderCode = vertexCode.c_str();
     const char* fShaderCode = fragmentCode.c_str();
@@ -85,7 +85,7 @@ Shader::Shader(const char* computePath)
     }
     catch (std::ifstream::failure e)
     {
-        spdlog::error("ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ");
+       std::cout << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ\n";
     }
     const char* cShaderCode = computeCode.c_str();
     // 2. compile shaders
@@ -173,9 +173,8 @@ void Shader::CheckCompileErrors(unsigned int shader, std::string type)
         if (!success)
         {
             glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-            spdlog::error("ERROR::SHADER_COMPILATION_ERROR of type: ");
-            spdlog::error(infoLog);
-            spdlog::error(" -- --------------------------------------------------- -- ");
+            std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: \n" << infoLog << std::endl;
+            std::cout << " -- --------------------------------------------------- -- \n";
         }
     }
     else
@@ -184,9 +183,8 @@ void Shader::CheckCompileErrors(unsigned int shader, std::string type)
         if (!success)
         {
             glGetProgramInfoLog(shader, 1024, NULL, infoLog);
-            spdlog::error("ERROR::PROGRAM_LINKING_ERROR of type: ");
-            spdlog::error(infoLog);
-            spdlog::error(" -- --------------------------------------------------- -- ");
+            std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: \n" << infoLog << std::endl;
+            std::cout << " -- --------------------------------------------------- -- \n";
         }
     }
 }

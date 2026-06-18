@@ -41,7 +41,7 @@ void SceneManager::Initialize()
 
 	if (!engine.GetWindowManager().GetIsInitialized())
 	{
-		spdlog::error("Failed to initialize project!");
+		std::cout << "ERROR: Failed to initialize project!\n";
 		return;
 	}
 	
@@ -60,7 +60,7 @@ void SceneManager::Initialize()
 
 	m_cl = new CelShading(WindowMgr->GetWindowPointer());
     
-	spdlog::info("Initialized project.");
+	std::cout << "Initialized project.\n";
 
 	std::string fontPath = Loader::RelativePath() + "res/fonts/Choko Regular_8337.otf";
 	
@@ -277,7 +277,7 @@ void SceneManager::RenderScene()
 	else
 	{
 		m_MoneyPanel.Text = L"Kasa: ERROR (nullptr)";
-		spdlog::error("SpawnManager::Instance is Null. Logic does not work.");
+		std::cout << "ERROR: SpawnManager::Instance is Null. Logic does not work.\n";
 	}
 	m_FpsPanel.Text = L"FPS: " + std::to_wstring(Time::GetFPS());
 
@@ -312,7 +312,7 @@ void SceneManager::RenderScene()
 		screenPos.y = static_cast<float>(windowH) - screenPos.y;
 		m_ALetterPanel.Position = glm::vec2(screenPos.x, screenPos.y);
 
-		// opcjonalnie: Mo¿esz dodaæ delikatne falowanie góra/dó³ za pomoc¹ funkcji sin i czasu gry
+		// Alternatively: dd gentle up and down animation using sin function and deltaTime
 		m_ALetterPanel.Position.y += sin(glfwGetTime() * 5.0f) * 5.0f;
 
 		m_UIManager.DrawPanelWithText(*AssetMgr->UIShader, *AssetMgr->TextShader, m_ALetterPanel);
@@ -626,9 +626,9 @@ void SceneManager::ScrollCallbackDispatcher(GLFWwindow* window, double xoffset, 
 
 void SceneManager::JoystickCallback(int jid, int event) {
 	if (event == GLFW_CONNECTED) {
-		spdlog::info("Joystick connected: {}", glfwGetJoystickName(jid));
+		std::cout << "Joystick connected: " << glfwGetJoystickName(jid) << std::endl;
 	}
 	else if (event == GLFW_DISCONNECTED) {
-		spdlog::warn("Joystick disconnected: {}", jid);
+		std::cout << "WARNING: Joystick disconnected: " << std::to_string(jid) << std::endl;
 	}
 }

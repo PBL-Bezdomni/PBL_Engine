@@ -8,7 +8,7 @@ void UIManager::Init(AssetManager* assetManager, WindowManager* windowManager, c
 
 	if (!m_AssetManager || !m_WindowManager)
 	{
-		spdlog::error("UIManager AssetManager or WindowManager is null");
+		std::cout << "ERROR: UIManager AssetManager or WindowManager is null\n";
 		return;
 	}
 
@@ -16,7 +16,7 @@ void UIManager::Init(AssetManager* assetManager, WindowManager* windowManager, c
 	InitRenderData();
 	if (!m_TextRenderer.Init(fontPath, 48))
 	{
-		spdlog::error("Font error");
+		std::cout << "ERROR: Font error\n";
 	}
 }
 

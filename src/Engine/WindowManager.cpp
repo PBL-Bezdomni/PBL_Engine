@@ -1,4 +1,6 @@
 #include "WindowManager.h"
+
+#include <iostream>
 #include <spdlog/spdlog.h>
 #include <glad/glad.h>
 
@@ -8,7 +10,7 @@ void WindowManager::Initialize(int32_t versionMajor, int32_t versionMinor)
 	glfwSetErrorCallback(GlfwErrorCallback);
 	if (!glfwInit())
 	{
-		spdlog::error("Failed to initalize GLFW!");
+		std::cout << "ERROR: Failed to initialize GLFW!\n";
 		m_IsInitialized = false;
 		return;
 	}
@@ -23,7 +25,7 @@ void WindowManager::Initialize(int32_t versionMajor, int32_t versionMinor)
 	m_Window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Bezdomni", NULL, NULL);
 	if (m_Window == NULL)
 	{
-		spdlog::error("Failed to create GLFW Window!");
+		std::cout << "ERROR: Failed to create GLFW Window!\n";
 		m_IsInitialized = false;
 		return;
 	}
@@ -35,7 +37,7 @@ void WindowManager::Initialize(int32_t versionMajor, int32_t versionMinor)
 
 	if (err)
 	{
-		spdlog::error("Failed to initialize OpenGL loader!");
+		std::cout << "ERROR: Failed to initialize OpenGL loader!\n";
 		m_IsInitialized = false;
 		return;
 	}
