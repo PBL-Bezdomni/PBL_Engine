@@ -2,8 +2,6 @@
 #include <filesystem>
 #include <iostream>
 
-#include "spdlog/spdlog.h"
-
 Loader Loader::m_Instance;
 
 void Loader::Initialize()

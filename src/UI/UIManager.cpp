@@ -1,5 +1,4 @@
 #include "UIManager.h"
-#include "spdlog/spdlog.h"
 
 void UIManager::Init(AssetManager* assetManager, WindowManager* windowManager, const char* fontPath)
 {
