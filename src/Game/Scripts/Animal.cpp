@@ -1,14 +1,13 @@
 #include "Animal.h"
 #include "GameObject.h"
 #include "Engine/Components/RigidBody.h"
-#include <spdlog/spdlog.h>
 #include <random>
 #include <Random.h>
 #include <Engine/Time.h>
 #include <Engine/Engine.h>
-
 #include "Engine/AssetManager.h"
 #include <Engine/Animation/Animator.h>
+#include "Player.h"
 
 void Animal::Awake()
 {
@@ -27,15 +26,18 @@ void Animal::Awake()
     // TODO add scripts for every animal kind, that will override enum
     if (m_Owner->Name.find("bunny") != std::string::npos)
     {
+        m_Indicator->transform->Position = glm::vec3(0.f, -3.4f, 0.f);
+        m_Indicator->transform->Scale = glm::vec3(8.0f);
         if (m_RB != nullptr)
         {
             m_RB->PrepareInit(glm::vec3(0.5f));
         }
-        m_Indicator->transform->Scale = glm::vec3(3.0f);
     }
     else if (m_Owner->Name.find("bear") != std::string::npos)
     {
-        m_Indicator->transform->Scale = glm::vec3(10.0f);
+        m_Indicator->transform->Position = glm::vec3(5.0f, -8.4f, 0.0f);
+        m_Indicator->transform->Scale = glm::vec3(20.0f);
+        AssignBearTexture();
         if (m_RB != nullptr)
         {
             m_RB->PrepareInit(glm::vec3(2.f));
@@ -43,7 +45,8 @@ void Animal::Awake()
     }
     else if (m_Owner->Name.find("skunk") != std::string::npos)
     {
-        m_Indicator->transform->Scale = glm::vec3(4.0f);
+        m_Indicator->transform->Position = glm::vec3(0.0f, -4.5f, 2.5f);
+        m_Indicator->transform->Scale = glm::vec3(12.0f);
         if (m_RB != nullptr)
         {
             m_RB->PrepareInit(glm::vec3(1.f));
@@ -63,18 +66,18 @@ void Animal::Awake()
 
     m_ProgressBar = m_SceneMgr->Instantiate(m_Owner, "res/models/ProgressBarPlane.obj", m_AssetMgr->ProgressBarShader);
     m_ProgressBar->Name = "ProgressBar";
-    m_ProgressBar->transform->Position = glm::vec3(0.f, 8.0f, 0.f);
+    m_ProgressBar->transform->Position = glm::vec3(0.f, 10.0f, 0.f);
     m_ProgressBar->transform->EulerAngles = glm::vec3(90.0f, 0.0f, 0.0f);
-    m_ProgressBar->transform->Scale = glm::vec3(1.5f, 1.0f, 0.3f);
+    m_ProgressBar->transform->Scale = glm::vec3(1.0f, 1.0f, 1.0f);
     m_ProgressBar->SetActive(false);
     SetProgressBarShader(m_AssetMgr->ProgressBarShader);
 
 
     m_Checkmark = m_SceneMgr->Instantiate(m_Owner, "res/models/CheckmarkPlane.obj", m_AssetMgr->WorldUIShader);
     m_Checkmark->Name = "Checkmark";
-    m_Checkmark->transform->Position = glm::vec3(0.f, 4.0f, 0.f);
+    m_Checkmark->transform->Position = glm::vec3(0.f, 15.0f, 0.f);
     m_Checkmark->transform->EulerAngles = glm::vec3(90.0f, 0.0f, 0.0f);
-    m_Checkmark->transform->Scale = glm::vec3(2.0f, 1.0f, 2.0f);
+    m_Checkmark->transform->Scale = glm::vec3(1.0f, 1.0f, 1.0f);
     Model* checkmarkModel = m_Checkmark->GetComponent<Model>();
     if (checkmarkModel != nullptr)
     {
@@ -86,11 +89,39 @@ void Animal::Awake()
 
     DrawRandomNeeds();
 
+    m_PlayersInScene = m_SceneMgr->GetLevelParent()->FindComponentsInChildren<Player>();
+
+    m_EventBinder.Bind(m_StateController.OnStateChanged, [this](AnimalState oldState, AnimalState newState)
+    {
+            Animator* animator = m_Owner->GetComponent<Animator>();
+
+            if (newState == AnimalState::Idle)
+            {
+                PickNewTargetPosition();
+                if (animator) animator->PlayAnimation("idle");
+            }
+            else if (newState == AnimalState::PickedUp)
+            {
+                if (animator) animator->PlayAnimation("idle");
+            }
+            else if (newState == AnimalState::Throw)
+            {
+                if (animator) animator->PlayAnimation("idle");
+            }
+            else if (newState == AnimalState::Rest)
+            {
+                if (animator) animator->PlayAnimation("idle");
+            }
+            else if (newState == AnimalState::CheckIn)
+            {
+                if (animator) animator->PlayAnimation("idle");
+            }  
+    });
+
 }
 
 void Animal::Start()
 {
-    ChangeState(AnimalState::CheckIn);
 	Behaviour::Start();
 }
 
@@ -179,31 +210,7 @@ void Animal::Update()
     RigidBody* rb = m_Owner->GetComponent<RigidBody>();
     if (rb == nullptr) return;
 
-    switch (m_CurrentState)
-    {
-    case AnimalState::None:
-        break;
-    case AnimalState::Idle:
-        UpdateIdle();        
-        if (animator) animator->PlayAnimation("idle");
-        break;
-    case AnimalState::PickedUp:
-        UpdatePickedUp();
-        if (animator) animator->PlayAnimation("idle");
-        break;
-    case AnimalState::Throw:
-        UpdateThrow();
-        if (animator) animator->PlayAnimation("idle");
-        break;
-    case AnimalState::Rest:
-        UpdateFulfillingNeed();
-        if (animator) animator->PlayAnimation("idle");
-        break;
-    case AnimalState::CheckIn:
-        UpdateCheckIn();
-        if (animator) animator->PlayAnimation("idle");
-        break;
-    }
+    m_StateController.Update();
 }
 
 
@@ -330,25 +337,12 @@ void Animal::UpdateIdle() {
 }
 
 void Animal::UpdatePickedUp() {
-
 }
 
 void Animal::UpdateThrow() {
-    m_StateTimer += Time::GetDeltaTime();
-
-    if (m_StateTimer >= 3.0f)
-    {
-        ChangeState(AnimalState::Idle);
-    }
 }
 
 void Animal::UpdateCheckIn() {
-    m_StateTimer += Time::GetDeltaTime();
-
-    if (m_StateTimer >= 1.5f)
-    {
-        ChangeState(AnimalState::Idle);
-    }
 }
 
 void Animal::UpdateFulfillingNeed() {
@@ -423,6 +417,14 @@ void Animal::FulfillNeed(AnimalNeeds need) {
 
         UpdateIndicatorColors();
 
+        for (Player* player : m_PlayersInScene)
+        {
+            if (player != nullptr)
+            {
+                player->RecalculateBestTarget();
+            }
+        }
+
         if (m_RequiredServices.empty())
         {
             UpdateCheckmark();
@@ -430,7 +432,7 @@ void Animal::FulfillNeed(AnimalNeeds need) {
 
             if (m_Indicator != nullptr)
             {
-                m_Indicator->transform->Scale = glm::vec3(0.0f);
+                m_Indicator->SetActive(false);
             }
         }
     }
@@ -465,7 +467,7 @@ void Animal::DrawRandomNeeds()
 void Animal::StartFulfillingNeed(AnimalNeeds need)
 {
     m_ProgressBar->SetActive(true);
-    m_CurrentState = AnimalState::Rest;
+    m_StateController.RequestStateChange.Invoke(AnimalState::Rest);
     m_CurrentNeedBeingFulfilled = need;
     m_CurrentNeedProgress = 0.0f;
 }
@@ -478,14 +480,14 @@ void Animal::StopFulfillingNeed()
 
 void Animal::UpdateProgressBar()
 {
-    if (m_ProgressBarShader != nullptr && m_ProgressBar != nullptr && m_CurrentState == AnimalState::Rest)
+    if (m_ProgressBarShader != nullptr && m_ProgressBar != nullptr && m_StateController.GetCurrentState() == AnimalState::Rest)
     {
         m_ProgressBarShader->Use();
         m_ProgressBarShader->SetFloat("u_Progress", m_CurrentNeedProgress / 1);
         m_ProgressBarShader->SetVec3("cameraRight", m_MainCamera->GetRight());
         m_ProgressBarShader->SetVec3("cameraUp", m_MainCamera->GetUp());
-    	m_ProgressBarShader->SetFloat("u_width", 1.0f);
-    	m_ProgressBarShader->SetFloat("u_height", 0.15f);
+    	m_ProgressBarShader->SetFloat("u_width", 3.0f);
+    	m_ProgressBarShader->SetFloat("u_height", 0.35f);
     }
 }
 
@@ -493,8 +495,8 @@ void Animal::UpdateCheckmark() {
     m_CheckmarkShader->Use();
     m_CheckmarkShader->SetVec3("cameraRight", m_MainCamera->GetRight());
     m_CheckmarkShader->SetVec3("cameraUp", -m_MainCamera->GetUp());
-    m_CheckmarkShader->SetFloat("u_width", 1.0f);
-    m_CheckmarkShader->SetFloat("u_height", 1.0f);
+    m_CheckmarkShader->SetFloat("u_width", 3.0f);
+    m_CheckmarkShader->SetFloat("u_height", 3.0f);
 }
 
 void Animal::ResetEverythingSpawn(glm::vec3 spawnPosition)
@@ -514,7 +516,11 @@ void Animal::ResetEverythingSpawn(glm::vec3 spawnPosition)
     m_CurrentAngle = 0.0f;
     m_LastPosition = spawnPosition;
 
-    ChangeState(AnimalState::CheckIn);
+    m_Checkmark->SetActive(false);
+    m_Indicator->SetActive(true);
+    DrawRandomNeeds();
+
+    m_StateController.RequestStateChange.Invoke(AnimalState::CheckIn);
 
     float angle = Random::GetRandomFloat(0.0f, 2.0f * glm::pi<float>());
     float radius = Random::GetRandomFloat(0.0f, m_MovingRadius);
@@ -530,18 +536,40 @@ void Animal::ResetEverythingSpawn(glm::vec3 spawnPosition)
 
     m_ShouldTeleport = false;
     m_CurrentNeedProgress = 0.0f;
+
+    if (m_Owner->Name.find("bear") != std::string::npos) AssignBearTexture();
 }
 
+void Animal::AssignBearTexture() {
+    int randomTextureIndex = Random::GetRandomInt(0, 5);
+    std::string texturePath = "";
 
-void Animal::ChangeState(AnimalState newState)
-{
-    m_StateTimer = 0.0f;
-    m_CurrentState = newState;
-
-    Animator* animator = m_Owner->GetComponent<Animator>();
-
-    if (newState == AnimalState::Idle)
+    switch (randomTextureIndex)
     {
-        PickNewTargetPosition();
+    case 0:
+        texturePath = "res/models/animals/bear-2/bear_textures_1500/bear_1500_bear1_BaseColor_White.png";
+        break;
+    case 1:
+        texturePath = "res/models/animals/bear-2/bear_textures_1500/bear_1500_bear1_BaseColor_Black.png";
+        break;
+    case 2:
+        texturePath = "res/models/animals/bear-2/bear_textures_1500/bear_1500_bear1_BaseColor_Brown.png";
+        break;
+    case 3:
+        texturePath = "res/models/animals/bear-2/bear_textures_1500/bear_1500_bear1_BaseColor_Grey.png";
+        break;
+    case 4:
+        texturePath = "res/models/animals/bear-2/bear_textures_1500/bear_1500_bear1_BaseColor_DarkBrown.png";
+        break;
+    case 5:
+    default:
+        texturePath = "res/models/animals/bear-2/bear_textures_1500/bear_1500_bear1_BaseColor.png";
+        break;
+    }
+
+    Model* model = m_Owner->GetComponent<Model>();
+    if (model != nullptr)
+    {
+        model->AssignTexture(*m_AssetMgr->GetTexture(texturePath.c_str()));
     }
 }

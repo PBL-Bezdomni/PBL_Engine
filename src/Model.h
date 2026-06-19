@@ -5,8 +5,6 @@
 #include <string>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
-#include <spdlog/spdlog.h>
-
 #include "Camera.h"
 #include "Engine/Components/Component.h"
 #include "Engine/Components/Transform.h"

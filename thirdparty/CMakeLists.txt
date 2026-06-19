@@ -33,7 +33,6 @@ CPMAddPackage("gh:assimp/assimp@5.4.3")
 CPMAddPackage("gh:glfw/glfw#3.3.8")
 CPMAddPackage("gh:g-truc/glm#1.0.1")
 CPMAddPackage("gh:ocornut/imgui@1.88")
-CPMAddPackage("gh:gabime/spdlog@1.10.0")
 CPMAddPackage(
 		NAME JoltPhysics
 		GITHUB_REPOSITORY jrouwe/JoltPhysics
@@ -67,8 +66,7 @@ set_target_properties(glad
                       assimp 
                       glfw 
                       glm 
-                      imgui 
-                      spdlog PROPERTIES FOLDER "thirdparty")
+                      imgui PROPERTIES FOLDER "thirdparty")
 
 if (TARGET zlibstatic)
     set_target_properties(zlibstatic PROPERTIES FOLDER "thirdparty")

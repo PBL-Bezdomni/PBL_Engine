@@ -10,6 +10,44 @@
 
 using namespace std;
 
+struct GameObjectData
+{
+	GameObject* gameObject;
+	string Name;
+	int ID;
+	string ParentName;
+	int ParentID;
+
+	string Mesh;
+	string DiffuseTex;
+	bool HasNormal;
+	string NormalTex;
+	
+	float PosX;
+	float PosY;
+	float PosZ;
+
+	float RotX;
+	float RotY;
+	float RotZ;
+
+	float ScaX;
+	float ScaY;
+	float ScaZ;
+
+	bool HasRigidBody;
+	bool IsStatic;
+	bool IsTrigger;
+
+	float ColliderSizeX;
+	float ColliderSizeY;
+	float ColliderSizeZ;
+
+	vector<string> Scripts;
+
+	vector<GameObjectData> Children;
+};
+
 class GameObject
 {
 private:
@@ -37,6 +75,7 @@ public:
 	void DrawSelf(Shader* shader);
 	glm::vec3 GetWorldPosition();
 	void SetActive(bool active);
+	bool IsActive();
 	void StartSelfAndChild();
 	void AssignScript(string scriptName);
 	void RemoveScript(string scriptName);

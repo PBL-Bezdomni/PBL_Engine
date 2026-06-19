@@ -1,6 +1,5 @@
 #include "PhysicsContactListener.h"
 #include "GameObject.h"
-#include <spdlog/spdlog.h>
 #include "../Components/Behaviour.h"
 #include "Game/Scripts/MassageTable.h"
 #include "Engine/Engine.h"

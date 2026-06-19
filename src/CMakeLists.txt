@@ -19,7 +19,7 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${HEADER_FILES})
 source_group(TREE ${CMAKE_SOURCE_DIR}         FILES ${ASSETS_FILES})
 
 # Define the executable
-add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES} ${ASSETS_FILES} "UI/FreeType.h" "UI/UIManager.cpp" "UI/UIManager.h" "Game/Scripts/AnimalInteractions.h" "Game/Scripts/AnimalInteractions.cpp" "Engine/Animation/Animation.cpp" "Engine/Animation/Animator.cpp")
+add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES} ${ASSETS_FILES} "UI/FreeType.h" "UI/UIManager.cpp" "UI/UIManager.h" "Game/Scripts/AnimalInteractions.h" "Game/Scripts/AnimalInteractions.cpp" "Engine/Animation/Animation.cpp" "Engine/Animation/Animator.cpp" "Game/Scripts/AnimalStateController.cpp" "Game/Scripts/AnimalStateController.h")
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE GLFW_INCLUDE_NONE)
 target_compile_definitions(${PROJECT_NAME} PRIVATE LIBRARY_SUFFIX="")
@@ -38,7 +38,6 @@ target_link_libraries(${PROJECT_NAME} stb_image)
 target_link_libraries(${PROJECT_NAME} assimp)
 target_link_libraries(${PROJECT_NAME} glfw)
 target_link_libraries(${PROJECT_NAME} imgui)
-target_link_libraries(${PROJECT_NAME} spdlog)
 target_link_libraries(${PROJECT_NAME} glm::glm)
 target_link_libraries(${PROJECT_NAME} miniaudio)
 target_link_libraries(${PROJECT_NAME} freetype)

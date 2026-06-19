@@ -1,6 +1,5 @@
 ﻿#include <GLFW/glfw3.h>
 #include "Engine/Engine.h"
-#include "Engine/DebugManager.h"
 
 WindowManager* WindowMgr = nullptr;
 

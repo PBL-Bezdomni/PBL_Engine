@@ -97,12 +97,11 @@ void Player::Update()
 
     if (m_IgnoreThrownAnimalTimer > 0.0f)
     {
-        //i'm sure there's a better way to do it
         m_IgnoreThrownAnimalTimer -= deltaTime;
         if (m_IgnoreThrownAnimalTimer <= 0.0f)
         {
             m_LastThrownAnimal = nullptr;
-            if (m_CarriedAnimal != nullptr) {
+            if (m_CarriedAnimal == nullptr) {
                 RecalculateBestTarget();
             }
         }
@@ -112,7 +111,7 @@ void Player::Update()
     {
         Animal* bestAnimalScript = m_BestAnimalTarget->GetDerivedComponent<Animal>();
 
-        if (bestAnimalScript != nullptr && bestAnimalScript->GetState() == AnimalState::PickedUp)
+        if (bestAnimalScript != nullptr && bestAnimalScript->m_StateController.GetCurrentState() == AnimalState::PickedUp)
         {
             SetHighlight(m_BestAnimalTarget, false);
             m_BestAnimalTarget = nullptr;
@@ -186,7 +185,7 @@ void Player::Update()
                 m_LastLookDir = glm::vec2(rotVector.x, rotVector.z);
                 if (glm::isnan(rotVector.x) || glm::isnan(rotVector.z))
                 {
-                    spdlog::warn("last look is nan");
+                    std::cout << "WARNING: Last look is nan\n";
                 }
             }
         }
@@ -231,7 +230,7 @@ void Player::Update()
             rb->SetLinearVelocity(glm::vec3(0.0f));
             rb->SetAngularVelocity(glm::vec3(0.0f));
             rb->Teleport(headPos);
-            a->ChangeState(AnimalState::PickedUp);
+            a->m_StateController.RequestStateChange.Invoke(AnimalState::PickedUp);
         }
     }
 
@@ -349,7 +348,7 @@ void Player::HandleActionPressed()
 
         if (hitObject != nullptr)
         {
-            //spdlog::info("Check: {} {} {}", hitObject->transform->Position.x, hitObject->transform->Position.y, hitObject->transform->Position.z);
+            //std::cout << "Check: " << hitObject->transform->Position.x << " " << hitObject->transform->Position.y << " " << hitObject->transform->Position.z << std::endl;
 
             Animal* animalScript = hitObject->GetDerivedComponent<Animal>();
 
@@ -370,7 +369,7 @@ void Player::HandleActionPressed()
             {
                 m_CarriedAnimal = hitObject;
                 m_HasPickUpReleased = false;
-                animalScript->ChangeState(AnimalState::PickedUp);
+                animalScript->m_StateController.RequestStateChange.Invoke(AnimalState::PickedUp);
                 hitObject->GetComponent<Model>()->m_IsHighlighted = false;
                 vector<AnimalNeeds> services = animalScript->GetRequiredServices();
                 // Play pickup sound
@@ -445,11 +444,11 @@ void Player::HandleThrowReleased()
             throwVelocity.y = m_ThrowCharge * 0.4f;
             if (glm::isnan(throwVelocity.x) || glm::isnan(throwVelocity.z))
             {
-                spdlog::warn("Throw Velocity was NaN");
+                std::cout << "WARNING: Throw Velocity was NaN\n";
                 throwVelocity = glm::vec3(1.0, 0, 0);
             }
             animalRb->SetLinearVelocity(throwVelocity);
-            animalScript->ChangeState(AnimalState::Throw);
+            animalScript->m_StateController.RequestStateChange.Invoke(AnimalState::Throw);
             m_LastThrownAnimal = animalScript->GetOwner();
             m_IgnoreThrownAnimalTimer = 1.5f;
         }
@@ -491,7 +490,7 @@ void Player::OnAnimalEnteredZone(GameObject* animal, float score)
     if (m_CarriedAnimal != nullptr) return;
 
     Animal* animalScript = animal->GetDerivedComponent<Animal>();
-    if (animalScript != nullptr && animalScript->GetState() == AnimalState::PickedUp) {
+    if (animalScript != nullptr && animalScript->m_StateController.GetCurrentState() == AnimalState::PickedUp) {
         return;
     }
 
@@ -526,10 +525,19 @@ void Player::RecalculateBestTarget()
 {
     if (m_CarriedAnimal != nullptr) return;
 
+    if (m_BestAnimalTarget != nullptr) {
+        SetHighlight(m_BestAnimalTarget, false);
+    }
+    m_BestAnimalTarget = nullptr;
+    m_BestAnimalScore = -1.0f;
+
     for (TargetingZone* zone : m_TargetingZones)
     {
         for (GameObject* animal : zone->AnimalsInZone)
         {
+            Animal* animalScript = animal->GetDerivedComponent<Animal>();
+            if (animalScript == nullptr) continue;
+
             float score = zone->GetAnimalScore(animal);
             OnAnimalEnteredZone(animal, score);
         }

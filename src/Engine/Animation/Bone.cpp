@@ -1,5 +1,4 @@
 #include "Bone.h"
-#include <spdlog/spdlog.h>
 
 static inline glm::vec3 GetGLMVec(const aiVector3D& vec) 
 {

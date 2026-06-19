@@ -73,7 +73,7 @@ shared_ptr<GameObject> SpawnManager::PickAnimal()
 	int index = Random::GetRandomInt(0, m_AnimalsPool.size() - 1);
 	if (index >= m_AnimalsPool.size())
 	{
-		spdlog::error("Animal spawner wanted bigger index, tweak random calculator");
+		std::cout << "ERROR: Animal spawner wanted bigger index, tweak random calculator\n";
 		return nullptr;
 	}
 			
@@ -125,7 +125,7 @@ void SpawnManager::DespawnAnimal(GameObject* animal)
 				if (anScript != nullptr)
 				{
 					anScript->m_IsInitialized = false;
-					anScript->ChangeState(AnimalState::None);
+					anScript->m_StateController.RequestStateChange.Invoke(AnimalState::None);
 				}
 				RigidBody* rb = spawnedAnimal->GetComponent<RigidBody>();
 				if (rb != nullptr)

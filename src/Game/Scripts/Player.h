@@ -41,7 +41,7 @@ private:
 public:
     glm::vec2 MoveInput{ 0.0f };
     glm::vec2 LookInput{ 0.0f };
-    float speed = 10.0f;
+    float speed = 20.0f;
     int deviceID;
 
     Player(int deviceid);

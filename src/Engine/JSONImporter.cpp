@@ -9,7 +9,6 @@
 #include "Camera.h"
 #include <iostream>
 #include <fstream>
-#include "DebugManager.h"
 #include "EngineConsts.h"
 #include "Game/Scripts/Bath.h"
 
@@ -24,12 +23,12 @@ shared_ptr<GameObject> JSONImporter::ImportObjectFromData(nlohmann::basic_json<>
     shared_ptr<GameObject> gameObject = make_shared<GameObject>();
     if (!gameObject)
     {
-        spdlog::error("Failed to create GameObject for: " + obj.value("name", "Unnamed"));
+        std::cout << "ERROR: Failed to create GameObject for: " << obj.value("name", "Unnamed") << std::endl;
         return nullptr;
     }
     else
     {
-        spdlog::info("Created GameObject for: " + obj.value("name", "Unnamed"));
+        std::cout << "Created GameObject for: " << obj.value("name", "Unnamed") << std::endl;
     }
     gameObject->Name = obj.value(gn.NAME, "NewObject");
     gameObject->ID = obj.value(gn.ID, 0);
@@ -153,7 +152,7 @@ json JSONImporter::GetData(const char* fileName)
 
     std::ifstream file(fullPath);
     if (!file.is_open()) {
-        spdlog::error("Failed to open JSON: " + fullPath);
+        std::cout << "ERROR: Failed to open JSON: " << fullPath << std::endl;
         return NULL;
     }
 
@@ -169,13 +168,13 @@ void JSONImporter::SaveData(string fileName, json data)
     std::ofstream file(fullPath);
     if (!file.is_open())
     {
-        spdlog::error("Failed to create JSON: " + fullPath);
+        std::cout << "ERROR: Failed to create JSON: " << fullPath << std::endl;
         return;
     }
 
     file << data.dump(4);
     file.close();
-    spdlog::info("Crated file: " + fullPath);
+    std::cout << "Created file: " << fullPath << std::endl;
 }
 
 void JSONImporter::SaveCameraData(const char*  fileName, Camera* camera)

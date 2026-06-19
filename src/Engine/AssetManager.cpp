@@ -62,7 +62,7 @@ shared_ptr<Model> AssetManager::GetModel(Shader& shader, const char* path, unsig
 	auto it = m_LoadedModels.find(key);
 	if (it != m_LoadedModels.end())
 	{
-		spdlog::info("Model from {} already was loaded", mPath);
+		std::cout << "Model from " << mPath <<" already was loaded\n";
 		return it->second;
 	}
 	
@@ -106,16 +106,16 @@ shared_ptr<Texture> AssetManager::GetTexture(const char* path, const char* type)
 		{
 			format = GL_RGBA;
 		}
-		spdlog::info("Loaded Texture: {} with {} channels", tPath, nrChannels);
+		std::cout << "Loaded Texture: " << tPath << " with " << std::to_string(nrChannels) << " channels\n";
 		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else
 	{
-		spdlog::error("Failed to load texture at path {}", tPath);
+		std::cout << "ERROR: Failed to load texture at path " << tPath << std::endl;
 		std::filesystem::path p = tPath;
-		spdlog::error("Absolute path: {}", std::filesystem::absolute(p).string());
-		spdlog::error(stbi_failure_reason());
+		std::cout << "Absolute path: " << std::filesystem::absolute(p).string() << std::endl;
+		std::cout << stbi_failure_reason() << std::endl;
 	}
 	stbi_image_free(data);
 

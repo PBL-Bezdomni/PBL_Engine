@@ -7,10 +7,12 @@
 #include "Engine/AssetManager.h"
 #include "Game/SceneManager.h"
 #include "AnimalInteractions.h"
+#include "AnimalStateController.h"
 
 class RigidBody;
 class GameObject;
 class AOnsenObject;
+class Player;
 
 enum class AnimalNeeds
 {
@@ -20,16 +22,6 @@ enum class AnimalNeeds
     Massage
 };
 
-enum class AnimalState
-{
-    None,
-    Idle,          
-    PickedUp,        
-    Throw,
-    Rest,
-    CheckIn
-};
-
 class Animal : public Behaviour
 {
 private:
@@ -37,6 +29,7 @@ private:
 	SceneManager*       m_SceneMgr;
 	AnimalInteractions m_AnimalInteractions;
 	Camera* m_MainCamera;
+    std::vector<Player*> m_PlayersInScene;
 
 	float m_TimeLimit;
 	float m_CurrTime;
@@ -44,10 +37,10 @@ private:
     int m_maxNeeds = 4;
 
     int m_numberOfNeeds = 1;
+    float m_CurrentNeedProgress = 0.0f;
 
     float m_SatisfactionSpeed = 0.1f;
     AnimalNeeds m_CurrentNeedBeingFulfilled;
-    float m_CurrentNeedProgress = 0.0f;
 
     bool m_ShouldTeleport = false;
     glm::vec3 m_TeleportTarget;
@@ -70,7 +63,6 @@ private:
     std::shared_ptr<GameObject> m_Indicator;
 
     std::shared_ptr<Shader> m_ProgressBarShader;
-    std::shared_ptr<GameObject> m_ProgressBar;
     void UpdateProgressBar();
 
     std::shared_ptr<Shader> m_CheckmarkShader;
@@ -79,13 +71,13 @@ private:
 
     std::shared_ptr<Shader> m_CellShadingShader;
 
-    AnimalState m_CurrentState = AnimalState::None;
-    float m_StateTimer = 0.0f;
-
 	std::vector<AnimalNeeds> m_RequiredServices;
 	RigidBody* m_RB;
 
+    void AssignBearTexture();
+
 public:
+    std::shared_ptr<GameObject> m_ProgressBar;
     AOnsenObject* m_CurrentOnsen = nullptr;
     bool m_IsInitialized = false;
     bool m_WasDroppedByPlayer = false;
@@ -102,9 +94,6 @@ public:
 
     void EnterTable(GameObject* table);                
     void EnterPosition(glm::vec3 exactWorldPosition);
-
-    void ChangeState(AnimalState newState);
-    AnimalState GetState() { return m_CurrentState; }
 
     void Update() override;
     void UpdateIdle();
@@ -129,6 +118,8 @@ public:
     void StopFulfillingNeed();
     void FulfillNeed(AnimalNeeds need);
 
+    AnimalStateController m_StateController{ this };
+    EventBinder m_EventBinder;
 	GameObject* GetGameObject() { return m_Owner; }
     
 	const char* GetScriptName() const override { return "Animal"; }

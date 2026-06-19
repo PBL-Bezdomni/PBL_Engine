@@ -11,14 +11,14 @@ bool FreeType::Init(const char* fontPath, unsigned int fontSize) {
 	FT_Library ft;
 	if (FT_Init_FreeType(&ft))
 	{
-		spdlog::error("FREETYPE: Nie uda³o siê zainicjowaæ bibliteki FreeType");
+		std::cout << "FREETYPE ERROR: Failed to initialize FreeType library\n";
 		return false;
 	}
 
 	FT_Face face;
 	if (FT_New_Face(ft, fontPath, 0, &face))
 	{
-		spdlog::error("FREETYPE: Nie uda³o siê za³adowaæ czcionki.");
+		std::cout << "FREETYPE ERROR: Failed to load font.\n";
 		return false;
 	}
 	
@@ -30,7 +30,7 @@ bool FreeType::Init(const char* fontPath, unsigned int fontSize) {
 	{
 		if (FT_Load_Char(face, c, FT_LOAD_RENDER))
 		{
-			spdlog::error("FREETYPE: Nie uda³o siê za³adowaæ glifu.");
+			std::cout << "FREETYPE ERROR: Failed to load glyph.\n";
 			continue;
 		}
 

@@ -36,6 +36,9 @@ public:
     bool GetIsStatic();
     bool GetIsTrigger();
 
+    void SetGravityFactor(float factor);
+    void SetGhostMode(bool isGhost);
+
 private:
     glm::vec3 m_HalfExtents;
     glm::vec3 m_Offset = glm::vec3(0.0f);

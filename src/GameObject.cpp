@@ -7,6 +7,7 @@
 #include "Game/Scripts/Sauna.h"
 #include "Game/Scripts/SpawnManager.h"
 #include "Game/Scripts/Towels.h"
+#include "Game/Scripts/River.h"
 
 GameObject::GameObject()
 {
@@ -87,6 +88,10 @@ void GameObject::AssignScript(string scriptName)
     else if (scriptName == "Sauna")
     {
         if (!GetComponent<Sauna>()) AddComponent<Sauna>();
+    }
+    else if (scriptName == "River")
+    {
+        if (!GetComponent<River>()) AddComponent<River>();
     }
 }
 
@@ -230,4 +235,8 @@ void GameObject::DrawSelf(Shader* shader)
 void GameObject::SetActive(bool active)
 {
     m_IsActive = active;
+}
+
+bool GameObject::IsActive() {
+    return m_IsActive;
 }

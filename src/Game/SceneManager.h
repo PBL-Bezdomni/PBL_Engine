@@ -14,7 +14,6 @@
 class ParticleSystem;
 class AssetManager;
 class PhysicsEngine;
-class DebugManager;
 class WindowManager;
 class Player;
 class CelShading;

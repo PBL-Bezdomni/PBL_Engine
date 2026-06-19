@@ -40,7 +40,7 @@ CelShading::CelShading(GLFWwindow* window) {
     glDrawBuffers(3, attachments);
 
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-        spdlog::error("Post Process Framebuffer not complete!");
+        std::cout << "ERROR: Post Process Framebuffer not complete!\n";
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
