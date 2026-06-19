@@ -8,6 +8,7 @@
 #include "Engine/AssetManager.h"
 #include <Engine/Animation/Animator.h>
 #include "Player.h"
+#include "Engine/Components/ParticleEmitter.h"
 
 void Animal::Awake()
 {
@@ -51,6 +52,14 @@ void Animal::Awake()
         {
             m_RB->PrepareInit(glm::vec3(1.f));
         }
+        ParticleEmitter* emitter = m_Owner->AddComponent<ParticleEmitter>();
+        emitter->Initialize("res/shaders/basicParticles.vert", "res/shaders/basicParticles.frag", "res/shaders/basicParticles.comp", "res/models/PieChartPlane.obj", "res/textures/UI/bubble.png");
+        emitter->SetSpawnRate(10);
+        emitter->SetBulk(3);
+        emitter->MaxVelocity = glm::vec3(1.f, 3.f, 1.f);
+        emitter->MaxLife = 0.9f;
+        emitter->Color = glm::vec4(0.211f, 0.578f, 0.234f, 1.f);
+        emitter->Play();
     }
     else
     {

@@ -15,9 +15,6 @@ void ParticleSystem::Awake()
 
 	m_Owner->Name = "ParticleSystem";
 
-	// m_ParticleGraphicShader = am->GetShader("res/shaders/smokeParticles.vert", "res/shaders/smokeParticles.frag");
-	// m_ParticleComputeShader = am->GetComputeShader("res/shaders/smokeParticles.comp");
-
 	m_Particles.resize(MAX_PARTICLES);
 
 	for (auto& particle : m_Particles)
@@ -31,18 +28,6 @@ void ParticleSystem::Awake()
 		particle.size = 0.0f;
 		particle.alive = 0;
 	}
-	
-	// InitialBuffers();
-
-	// Create Model for shader
-	// not used, but I do it, because I don't know what will happen without it and don't want to test it now
-	// vector<glm::mat4> instanceMatrix(MAX_PARTICLES);
-	// Model billboard = Model(*m_ParticleGraphicShader, (Loader::RelativePath() + "res/models/PieChartPlane.obj").c_str(), MAX_PARTICLES, instanceMatrix);
-	// m_Owner->AddComponent<Model>(billboard);
-	// // Just to be sure
-	// m_Owner->GetComponent<Model>()->ReassignShader(*m_ParticleGraphicShader);
-	// Texture tex = *am->GetTexture("res/textures/UI/smoke.png");
-	// m_Owner->GetComponent<Model>()->AssignTexture(tex);
 
 	m_MainCamera = sm->GetMainCamera().get();
 }
@@ -53,33 +38,10 @@ void ParticleSystem::Update()
 	Dispatch();
 }
 
-void ParticleSystem::DrawUpdate()
-{
-	Component::DrawUpdate();
-	// for (auto [id, shader] : m_GraphicalShaderMap)
-	// {
-	// 	GLuint ssbo = m_BuffersMap.at(id);
-	// 	shader->Use();
-	// 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, ssbo);
-	// 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
-	// 	shader->SetVec3("cameraRight", m_MainCamera->GetRight());
-	// 	shader->SetVec3("cameraUp", m_MainCamera->GetUp());
-	// }
-
-	// Particle* data = (Particle*)glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_WRITE_ONLY);
-	//
-	// data[0].alive = 0;
-	// data[1].alive = 0;
-	//
-	// glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
-}
-
 uint64_t ParticleSystem::CreateEmitter(const char* vertPath, const char* fragPath, const char* compPath, const char* modelPath, const char* texPath)
 {
 	m_NextEmitterID++;
-
-	// m_ParticleGraphicShader = m_AssetMgr->GetShader("res/shaders/smokeParticles.vert", "res/shaders/smokeParticles.frag");
-	// m_ParticleComputeShader = m_AssetMgr->GetComputeShader("res/shaders/smokeParticles.comp");
+	
 	m_GraphicalShaderMap[m_NextEmitterID] = m_AssetMgr->GetShader(vertPath, fragPath);
 	m_ComputeGraphicalShaderMap[m_NextEmitterID] = m_AssetMgr->GetComputeShader(compPath);
 	m_BuffersMap[m_NextEmitterID] = InitialBuffers();
@@ -104,7 +66,14 @@ void ParticleSystem::Emit(ParticleEmitter& emitter, uint32_t count)
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
 
 	glm::vec3 position = emitter.GetPosition();
-	
+	if (emitter.IsRandomPosition)
+	{
+		float offsetX = Random::GetRandomFloat(-1, 1);
+		float offsetY = Random::GetRandomFloat(-1, 1);
+		float offsetZ = Random::GetRandomFloat(-1, 1);
+		position += glm::vec3(emitter.RandomPositionOffset.x * offsetX, emitter.RandomPositionOffset.y * offsetY, emitter.RandomPositionOffset.z * offsetZ);
+	}
+
 	Particle* particles = (Particle*)glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(Particle) * MAX_PARTICLES, GL_MAP_WRITE_BIT);
 
 	if (!particles) return;

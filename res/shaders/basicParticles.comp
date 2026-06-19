@@ -41,9 +41,6 @@ void main()
     // movement
     p.position.xyz += p.velocity.xyz * deltaTime;
 
-    // smoke rises
-    p.velocity.y += 0.5 * deltaTime;
-
     // drag
     p.velocity.xyz *= 0.98;
 

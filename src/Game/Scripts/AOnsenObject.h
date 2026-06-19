@@ -26,6 +26,8 @@ protected:
 	};
 
 	AnimalNeeds m_ObjectNeed = AnimalNeeds::Bath;
+
+	virtual void AssignParticles();
 public:
 	void Awake() override;
 

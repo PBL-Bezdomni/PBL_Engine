@@ -1,5 +1,6 @@
 #include "ParticleEmitter.h"
 #include "ParticleSystem.h"
+#include "Random.h"
 #include "Engine/Engine.h"
 #include "Engine/Time.h"
 
@@ -33,7 +34,7 @@ void ParticleEmitter::Update()
 		m_Accumulator += m_SpawnRate * deltaTime;
 		uint32_t count = static_cast<uint32_t>(m_Accumulator);
 
-		if (count >= Bulk)
+		if (count >= m_Bulk)
 		{
 			m_Accumulator -= count;
 
@@ -77,6 +78,16 @@ void ParticleEmitter::SetPositionOffset(glm::vec3 offset)
 uint64_t ParticleEmitter::GetID()
 {
 	return m_ID;
+}
+
+void ParticleEmitter::SetBulk(float bulk)
+{
+	m_Bulk = bulk;
+}
+
+void ParticleEmitter::SetSpawnRate(float spawnRate)
+{
+	m_SpawnRate = spawnRate;
 }
 
 void ParticleEmitter::FetchParticleSystem()

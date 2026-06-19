@@ -10,4 +10,7 @@ public:
 	// void OnTriggerExit(GameObject* other) override;
 	
 	const char* GetScriptName() const override { return "Sauna"; }
+
+protected:
+	void AssignParticles() override;
 };

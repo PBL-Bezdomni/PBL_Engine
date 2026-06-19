@@ -8,7 +8,7 @@ class ParticleSystem;
 class ParticleEmitter : public Component
 {
 public:
-	glm::vec3 MaxVelocity = glm::vec3(2.f, 0.2f, 2.f);
+	glm::vec3 MaxVelocity = glm::vec3(2.f, 0.7f, 2.f);
 	float VelocityMult = 4;
 	glm::vec4 Color = glm::vec4(0.9f);
 	glm::vec4 ColorVelocity = glm::vec4(0);
@@ -21,7 +21,8 @@ public:
 	float MinSize = 0.01f;
 	bool IsRandomSize = false;
 
-	int Bulk = 5;
+	bool IsRandomPosition = false;
+	glm::vec3 RandomPositionOffset;
 
 	void Initialize(const char* vertPath, const char* fragPath, const char* compPath, const char* modelPath, const char* texPath);
 	
@@ -39,12 +40,16 @@ public:
 
 	uint64_t GetID();
 
+	void SetBulk(float bulk);
+	void SetSpawnRate(float spawnRate);
+
 private:
 	uint64_t m_ID;
 	bool m_IsEmitting = false;
 
 	float m_SpawnRate = 30.0f; // particles per second
 	float m_Accumulator = 0.0f;
+	float m_Bulk = 5;
 
 	ParticleSystem* m_ParticleSystem;
 
