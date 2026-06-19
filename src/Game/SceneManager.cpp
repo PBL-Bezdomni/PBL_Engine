@@ -50,6 +50,9 @@ void SceneManager::Initialize()
 	MainCamera = make_shared<Camera>(glm::vec3(0.f, 25.f, 47.f), glm::vec3(0.0, 1.0, 0.0), -90.f, -25.f);
 	MainCamera->SetAspect(float(WindowMgr->WINDOW_WIDTH) / float(WindowMgr->WINDOW_HEIGHT));
 	m_JSONImporter->LoadCameraData("camera", MainCamera.get());
+
+	m_ParticleSystem = GameObject();
+	m_ParticleSystem.AddComponent<ParticleSystem>();
 	
 	// glfwSetInputMode(WindowMgr->GetWindowPointer(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetWindowUserPointer(WindowMgr->GetWindowPointer(), this);
@@ -84,9 +87,6 @@ void SceneManager::LoadScene()
 
 	m_WorldParent.UpdateSelfAndChild();
 	m_WorldParent.StartSelfAndChild();
-
-	m_ParticleSystem = GameObject();
-	m_ParticleSystem.AddComponent<ParticleSystem>();
 	
 	m_Player1 = GameObject();
 	m_Player1.AddComponent<Player>(0);

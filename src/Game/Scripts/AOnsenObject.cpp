@@ -1,6 +1,7 @@
 #include "AOnsenObject.h"
 #include "Animal.h"
 #include "TutorialArrow.h"
+#include "Engine/Components/ParticleEmitter.h"
 #include "glm/vec3.hpp"
 
 void AOnsenObject::Awake()
@@ -14,6 +15,7 @@ void AOnsenObject::Awake()
 	}
 
 	m_TutorialArrow = m_Owner->AddComponent<TutorialArrow>();
+	AssignParticles();
 }
 
 void AOnsenObject::OnTriggerEnter(GameObject* other)
@@ -138,4 +140,8 @@ AnimalNeeds AOnsenObject::GetNeed()
 TutorialArrow* AOnsenObject::GetTutorialArrow()
 {
 	return m_TutorialArrow;
+}
+
+void AOnsenObject::AssignParticles()
+{
 }

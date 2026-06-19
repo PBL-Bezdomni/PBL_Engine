@@ -44,6 +44,7 @@ void Player::Awake()
     m_Owner->AddComponent<Model>(bodyModel);
 
     m_ParticleEmitter = m_Owner->AddComponent<ParticleEmitter>();
+    m_ParticleEmitter->Initialize("res/shaders/basicParticles.vert", "res/shaders/basicParticles.frag", "res/shaders/basicParticles.comp", "res/models/PieChartPlane.obj", "res/textures/UI/smoke.png");
 
     m_ChargeMeterShader = am->GetShader("res/shaders/powerMeter.vert", "res/shaders/ProgressBar.frag");
     m_ChargeMeter = m_SceneMgr->Instantiate(m_Owner, "res/models/CheckmarkPlane.obj", m_ChargeMeterShader);

@@ -1,12 +1,22 @@
 #include "ParticleEmitter.h"
 #include "ParticleSystem.h"
+#include "Random.h"
 #include "Engine/Engine.h"
 #include "Engine/Time.h"
+
+void ParticleEmitter::Initialize(const char* vertPath, const char* fragPath, const char* compPath, const char* modelPath, const char* texPath)
+{
+	FetchParticleSystem();
+	if (m_ParticleSystem != nullptr)
+	{
+		m_ID = m_ParticleSystem->CreateEmitter(vertPath, fragPath, compPath, modelPath, texPath);
+	}
+}
 
 void ParticleEmitter::Awake()
 {
 	Component::Awake();
-	m_ParticleSystem = Engine::GetInstance().GetGameManager().GetSceneManager().GetParticleSystem();
+	FetchParticleSystem();
 }
 
 void ParticleEmitter::Start()
@@ -24,7 +34,7 @@ void ParticleEmitter::Update()
 		m_Accumulator += m_SpawnRate * deltaTime;
 		uint32_t count = static_cast<uint32_t>(m_Accumulator);
 
-		if (count >= Bulk)
+		if (count >= m_Bulk)
 		{
 			m_Accumulator -= count;
 
@@ -41,7 +51,7 @@ void ParticleEmitter::Play()
 	m_IsEmitting = true;
 	if (m_ParticleSystem == nullptr)
 	{
-		m_ParticleSystem = Engine::GetInstance().GetGameManager().GetSceneManager().GetParticleSystem();
+		FetchParticleSystem();
 	}
 }
 
@@ -63,4 +73,27 @@ glm::vec3 ParticleEmitter::GetPositionOffset()
 void ParticleEmitter::SetPositionOffset(glm::vec3 offset)
 {
 	m_PositionOffset = offset;
+}
+
+uint64_t ParticleEmitter::GetID()
+{
+	return m_ID;
+}
+
+void ParticleEmitter::SetBulk(float bulk)
+{
+	m_Bulk = bulk;
+}
+
+void ParticleEmitter::SetSpawnRate(float spawnRate)
+{
+	m_SpawnRate = spawnRate;
+}
+
+void ParticleEmitter::FetchParticleSystem()
+{
+	if (m_ParticleSystem == nullptr)
+	{
+		m_ParticleSystem = Engine::GetInstance().GetGameManager().GetSceneManager().GetParticleSystem();
+	}
 }
