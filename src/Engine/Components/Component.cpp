@@ -27,6 +27,10 @@ void Component::DrawUpdate()
 {
 }
 
+void Component::AfterDrawUpdate()
+{
+}
+
 void Component::SetActive(bool active)
 {
 	m_IsActive = active;

@@ -17,7 +17,7 @@ void Sauna::AssignParticles()
 	emitter->MaxVelocity = glm::vec3(0.f, 5.f, 0.f);
 	emitter->MaxLife = 1.2f;
 	emitter->MaxSize = 1.f;
-	emitter->Color = glm::vec4(0.804f, 0.804f, 0.804f, .2f);
+	emitter->Color = glm::vec4(0.804f, 0.804f, 0.804f, .5f);
 	emitter->SetPositionOffset(glm::vec3(0, -4, 0));
 	emitter->IsRandomPosition = true;
 	emitter->RandomPositionOffset = glm::vec3(3, 0, 3);

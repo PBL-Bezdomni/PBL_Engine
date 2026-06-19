@@ -21,6 +21,7 @@ public:
 	virtual void Update();
 	// Used to update special shaders before draw
 	virtual void DrawUpdate();
+	virtual void AfterDrawUpdate();
 	
 	void SetActive(bool active);
 	bool IsActive();
