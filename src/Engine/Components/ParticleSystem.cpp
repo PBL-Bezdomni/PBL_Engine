@@ -55,16 +55,16 @@ void ParticleSystem::Update()
 
 void ParticleSystem::DrawUpdate()
 {
-	for (auto [id, shader] : m_GraphicalShaderMap)
-	{
-		GLuint ssbo = m_BuffersMap.at(id);
-		Component::DrawUpdate();
-		shader->Use();
-		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, ssbo);
-		glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
-		shader->SetVec3("cameraRight", m_MainCamera->GetRight());
-		shader->SetVec3("cameraUp", m_MainCamera->GetUp());
-	}
+	Component::DrawUpdate();
+	// for (auto [id, shader] : m_GraphicalShaderMap)
+	// {
+	// 	GLuint ssbo = m_BuffersMap.at(id);
+	// 	shader->Use();
+	// 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, ssbo);
+	// 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+	// 	shader->SetVec3("cameraRight", m_MainCamera->GetRight());
+	// 	shader->SetVec3("cameraUp", m_MainCamera->GetUp());
+	// }
 
 	// Particle* data = (Particle*)glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_WRITE_ONLY);
 	//
@@ -84,18 +84,14 @@ uint64_t ParticleSystem::CreateEmitter(const char* vertPath, const char* fragPat
 	m_ComputeGraphicalShaderMap[m_NextEmitterID] = m_AssetMgr->GetComputeShader(compPath);
 	m_BuffersMap[m_NextEmitterID] = InitialBuffers();
 
-	vector<glm::mat4> instanceMatrix(MAX_PARTICLES);
-	shared_ptr<Shader> shader = m_GraphicalShaderMap.at(m_NextEmitterID);
-	Model billboard = Model(*shader, (Loader::RelativePath() + modelPath).c_str(), MAX_PARTICLES, instanceMatrix);
-	shared_ptr<GameObject> emitter = make_shared<GameObject>();
+	vector<glm::mat4>      instanceMatrix(MAX_PARTICLES);
+	shared_ptr<Shader>     shader = m_GraphicalShaderMap.at(m_NextEmitterID);
+	std::shared_ptr<GameObject> emitter = make_shared<GameObject>();
 	emitter->Name = compPath;
 	m_Owner->AddChild(emitter.get());
-	emitter->AddComponent<Model>(billboard);
-	// Just to be sure
-	emitter->GetComponent<Model>()->ReassignShader(*shader);
-	Texture tex = *m_AssetMgr->GetTexture(texPath);
-	emitter->GetComponent<Model>()->AssignTexture(tex);
-	m_Emitters.push_back(emitter);
+	ParticleRenderer* pr = emitter->AddComponent<ParticleRenderer>();
+	m_Renderers.push_back(emitter);
+	pr->Initialize(shader, modelPath, texPath, MAX_PARTICLES, instanceMatrix, m_BuffersMap[m_NextEmitterID]);
 
 	return m_NextEmitterID;
 }

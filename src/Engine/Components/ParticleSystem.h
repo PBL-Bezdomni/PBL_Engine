@@ -5,6 +5,7 @@
 #include "Camera.h"
 #include "Component.h"
 #include "ParticleEmitter.h"
+#include "ParticleRenderer.h"
 #include "Shader.h"
 
 class AssetManager;
@@ -43,7 +44,7 @@ private:
 	std::map<uint64_t, GLuint> m_BuffersMap;
 	std::map<uint64_t, std::shared_ptr<Shader>> m_GraphicalShaderMap;
 	std::map<uint64_t, std::shared_ptr<Shader>> m_ComputeGraphicalShaderMap;
-	std::vector<std::shared_ptr<GameObject>> m_Emitters;
+	std::vector<std::shared_ptr<GameObject>> m_Renderers;
 	// GLuint m_SSBO;
 	uint32_t m_NextParticle = 0;
 
