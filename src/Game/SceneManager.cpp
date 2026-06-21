@@ -48,7 +48,7 @@ void SceneManager::Initialize()
 	m_JSONImporter->Initialize();
 
 	MainCamera = make_shared<Camera>(glm::vec3(0.f, 25.f, 47.f), glm::vec3(0.0, 1.0, 0.0), -90.f, -25.f);
-	MainCamera->SetAspect(float(WindowMgr->WINDOW_WIDTH) / float(WindowMgr->WINDOW_HEIGHT));
+	MainCamera->SetAspect(WindowMgr->GetWindowAspectRatio());
 	m_JSONImporter->LoadCameraData("camera", MainCamera.get());
 
 	m_ParticleSystem = GameObject();
@@ -71,8 +71,8 @@ void SceneManager::Initialize()
 
 void SceneManager::LoadScene()
 {
-	m_MouseLastX = WindowMgr->WINDOW_WIDTH / 2; 
-	m_MouseLastY = WindowMgr->WINDOW_HEIGHT / 2;
+	m_MouseLastX = WindowMgr->GetWindowWidth() / 2; 
+	m_MouseLastY = WindowMgr->GetWindowHeight() / 2;
 	
 	LoadModels();
 	AssignSceneGraph();
@@ -469,7 +469,7 @@ void SceneManager::LoadModels()
 
 void SceneManager::InitializeUI()
 {
-	m_TextProjection = glm::ortho(0.0f, static_cast<float>(WindowMgr->WINDOW_WIDTH), static_cast<float>(WindowMgr->WINDOW_HEIGHT), 0.0f);
+	m_TextProjection = glm::ortho(0.0f, WindowMgr->GetWindowWidth(), WindowMgr->GetWindowHeight(), 0.0f);
 	AssetMgr->TextShader->Use();
 	AssetMgr->TextShader->SetMat4("projection", m_TextProjection);
 
@@ -484,19 +484,19 @@ void SceneManager::InitializeUI()
 	m_ALetterPanel.TextureID = m_UIPanelTex.ID;
 	m_ALetterPanel.HasTexture = true;
 	m_ALetterPanel.Size = glm::vec2(50.0f, 50.0f);
-	m_ALetterPanel.Position = glm::vec2((WindowMgr->WINDOW_WIDTH / 2.0f) - 50.0f, (WindowMgr->WINDOW_HEIGHT / 2.0f) - 50.0f);
+	m_ALetterPanel.Position = glm::vec2((WindowMgr->GetWindowWidth() / 2.0f) - 50.0f, (WindowMgr->GetWindowHeight() / 2.0f) - 50.0f);
 	m_ALetterPanel.Text = L"A";
 	m_ALetterPanel.TextScale = 1.0f;
 	m_ALetterPanel.TextColor = glm::vec3(0.333f, 0.227f, 0.196f);
 
 	m_TimerPanel.TextureID = m_UIPanelTex.ID;
 	m_TimerPanel.Size = glm::vec2(300.0f, 100.0f);
-	m_TimerPanel.Position = glm::vec2((WindowMgr->WINDOW_WIDTH / 2.0f) - 150.0f, 10.0f);
+	m_TimerPanel.Position = glm::vec2((WindowMgr->GetWindowWidth() / 2.0f) - 150.0f, 10.0f);
 	m_TimerPanel.TextColor = glm::vec3(0.333f, 0.227f, 0.196f);
 
 	m_FpsPanel.HasTexture = false;
 	m_FpsPanel.Size = glm::vec2(300.0f, 100.0f);
-	m_FpsPanel.Position = glm::vec2((WindowMgr->WINDOW_WIDTH) - 300.0f, 10.0f);
+	m_FpsPanel.Position = glm::vec2(WindowMgr->GetWindowWidth() - 300.0f, 10.0f);
 	m_FpsPanel.TextColor = glm::vec3(0.333f, 0.227f, 0.196f);
 
 }
