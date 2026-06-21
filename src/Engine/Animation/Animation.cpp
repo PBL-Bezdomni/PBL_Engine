@@ -1,5 +1,6 @@
 #include "Animation.h"
 #include <assimp/postprocess.h>
+#include "Engine/Loader.h"
 
 static inline glm::mat4 ConvertMatrixToGLMFormat(const aiMatrix4x4& from)
 {
@@ -14,7 +15,7 @@ static inline glm::mat4 ConvertMatrixToGLMFormat(const aiMatrix4x4& from)
 Animation::Animation(const string& animationPath, Model* model)
 {
 	Assimp::Importer importer;
-	const aiScene* scene = importer.ReadFile(animationPath, aiProcess_Triangulate);
+	const aiScene* scene = importer.ReadFile(Loader::RelativePath() + animationPath, aiProcess_Triangulate);
 
 	if (!scene || !scene->mRootNode)
 	{
