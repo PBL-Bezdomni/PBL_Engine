@@ -42,16 +42,24 @@ void ParticleEmitter::Update()
 			{
 				m_ParticleSystem->Emit(*this, count);
 			}
+			// If emitter is not set to loop, stop it after first bulk is emitted.
+			if (!m_Loop)
+			{
+				Stop();
+			}
 		}
 	}
 }
 
 void ParticleEmitter::Play()
 {
-	m_IsEmitting = true;
-	if (m_ParticleSystem == nullptr)
+	if (!m_IsEmitting)
 	{
-		FetchParticleSystem();
+		m_IsEmitting = true;
+		if (m_ParticleSystem == nullptr)
+		{
+			FetchParticleSystem();
+		}
 	}
 }
 
@@ -88,6 +96,11 @@ void ParticleEmitter::SetBulk(float bulk)
 void ParticleEmitter::SetSpawnRate(float spawnRate)
 {
 	m_SpawnRate = spawnRate;
+}
+
+void ParticleEmitter::SetLoop(bool loop)
+{
+	m_Loop = loop;
 }
 
 void ParticleEmitter::FetchParticleSystem()
