@@ -22,24 +22,27 @@ void WindowManager::Initialize(int32_t versionMajor, int32_t versionMinor)
 	// Default values
 	m_Width = WINDOW_WIDTH;
 	m_Height = WINDOW_HEIGHT;
-	
-	m_Monitor = glfwGetPrimaryMonitor();
-	if (m_Monitor != nullptr)
+
+	if (m_IsFullWindow)
 	{
-		m_VideoMode = glfwGetVideoMode(m_Monitor);
-
-		if (m_VideoMode != nullptr)
+		m_Monitor = glfwGetPrimaryMonitor();
+		if (m_Monitor != nullptr)
 		{
-			glfwWindowHint(GLFW_RED_BITS, m_VideoMode->redBits);
-			glfwWindowHint(GLFW_GREEN_BITS, m_VideoMode->greenBits);
-			glfwWindowHint(GLFW_BLUE_BITS, m_VideoMode->blueBits);
-			glfwWindowHint(GLFW_REFRESH_RATE, m_VideoMode->refreshRate);
+			m_VideoMode = glfwGetVideoMode(m_Monitor);
 
-			m_Width = m_VideoMode->width;
-			m_Height = m_VideoMode->height;
+			if (m_VideoMode != nullptr)
+			{
+				glfwWindowHint(GLFW_RED_BITS, m_VideoMode->redBits);
+				glfwWindowHint(GLFW_GREEN_BITS, m_VideoMode->greenBits);
+				glfwWindowHint(GLFW_BLUE_BITS, m_VideoMode->blueBits);
+				glfwWindowHint(GLFW_REFRESH_RATE, m_VideoMode->refreshRate);
+
+				m_Width = m_VideoMode->width;
+				m_Height = m_VideoMode->height;
+			}
 		}
 	}
-	
+
 	// Create window with graphics context
 	m_Window = glfwCreateWindow(m_Width, m_Height, "Druid's Onsen", m_Monitor, NULL);
 	if (m_Window == NULL)

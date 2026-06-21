@@ -18,6 +18,8 @@ private:
 	int32_t m_Height;
 	
 	static void GlfwErrorCallback(int error, const char* description);
+
+	bool m_IsFullWindow = true;
 	
 public:
 	float GetWindowWidth();
