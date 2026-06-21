@@ -182,6 +182,14 @@ void GameObject::DrawSelfAndChild()
             model->Draw(transform->ModelMatrix);
         }
 
+        for (auto& [type, vec] : m_Components)
+        {
+            for (auto& comp : vec)
+            {
+                comp->AfterDrawUpdate();
+            }
+        }
+
         for (auto&& child : Children)
         {
             child->DrawSelfAndChild();

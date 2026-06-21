@@ -27,8 +27,15 @@ void ParticleRenderer::DrawUpdate()
 {
 	Component::DrawUpdate();
 	m_GraphicShader->Use();
+	glEnable(GL_BLEND);
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_SSBO);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_SSBO);
 	m_GraphicShader->SetVec3("cameraRight", m_MainCamera->GetRight());
 	m_GraphicShader->SetVec3("cameraUp", m_MainCamera->GetUp());
+}
+
+void ParticleRenderer::AfterDrawUpdate()
+{
+	Component::AfterDrawUpdate();
+	glDisable(GL_BLEND);
 }
