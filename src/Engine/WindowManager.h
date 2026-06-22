@@ -19,7 +19,7 @@ private:
 	
 	static void GlfwErrorCallback(int error, const char* description);
 
-	bool m_IsFullWindow = false;
+	bool m_IsFullWindow = true;
 	
 public:
 	float GetWindowWidth();
