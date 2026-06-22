@@ -42,4 +42,5 @@ public:
 	shared_ptr<Texture> GetTexture(const char* path, const char* type = "texture_diffuse");
 	shared_ptr<Model> GetSphereModel();
 	void SetShadersViewProjection(glm::mat4 view, glm::mat4 projection);
+	shared_ptr<Shader> GetNewWorldUIShader();
 };

@@ -111,7 +111,7 @@ void Player::Update()
     {
         Animal* bestAnimalScript = m_BestAnimalTarget->GetDerivedComponent<Animal>();
 
-        if (bestAnimalScript != nullptr && bestAnimalScript->m_StateController.GetCurrentState() == AnimalState::PickedUp)
+        if (bestAnimalScript != nullptr && bestAnimalScript->GetStateController()->GetCurrentState() == AnimalState::PickedUp)
         {
             SetHighlight(m_BestAnimalTarget, false);
             m_BestAnimalTarget = nullptr;
@@ -122,6 +122,11 @@ void Player::Update()
         {
             SetHighlight(m_BestAnimalTarget, true);
         }
+    }
+
+    if (m_BestAnimalInObject != nullptr)
+    {
+        // I don't know if it's necessary. #PG
     }
 
     RigidBody* rb = m_Owner->GetComponent<RigidBody>();
@@ -230,7 +235,7 @@ void Player::Update()
             rb->SetLinearVelocity(glm::vec3(0.0f));
             rb->SetAngularVelocity(glm::vec3(0.0f));
             rb->Teleport(headPos);
-            a->m_StateController.RequestStateChange.Invoke(AnimalState::PickedUp);
+            a->GetStateController()->RequestStateChange.Invoke(AnimalState::PickedUp);
         }
     }
 
@@ -331,6 +336,12 @@ void Player::BindInput()
             this->HandleThrowReleased();
         }
     });
+
+    im->subscribe(deviceID, m_InputName.INTERACTION, [this](float val, InputEventType type, int id)
+    {
+        if (id == deviceID && type == InputEventType::Started)
+            this->HandleInteractionPressed();
+    });
 }
 
 void Player::HandleActionPressed()
@@ -369,7 +380,7 @@ void Player::HandleActionPressed()
             {
                 m_CarriedAnimal = hitObject;
                 m_HasPickUpReleased = false;
-                animalScript->m_StateController.RequestStateChange.Invoke(AnimalState::PickedUp);
+                animalScript->GetStateController()->RequestStateChange.Invoke(AnimalState::PickedUp);
                 hitObject->GetComponent<Model>()->m_IsHighlighted = false;
                 vector<AnimalNeeds> services = animalScript->GetRequiredServices();
                 // Play pickup sound
@@ -448,7 +459,7 @@ void Player::HandleThrowReleased()
                 throwVelocity = glm::vec3(1.0, 0, 0);
             }
             animalRb->SetLinearVelocity(throwVelocity);
-            animalScript->m_StateController.RequestStateChange.Invoke(AnimalState::Throw);
+            animalScript->GetStateController()->RequestStateChange.Invoke(AnimalState::Throw);
             m_LastThrownAnimal = animalScript->GetOwner();
             m_IgnoreThrownAnimalTimer = 1.5f;
         }
@@ -478,6 +489,14 @@ void Player::HandleThrowReleased()
     }
 }
 
+void Player::HandleInteractionPressed()
+{
+    if (m_BestAnimalInObject != nullptr)
+    {
+        m_BestAnimalInObject->PlayerFulfillNeed();
+    }
+}
+
 void Player::SetHighlight(GameObject* animal, bool isHighlighted)
 {
     if (animal == nullptr) return;
@@ -490,7 +509,7 @@ void Player::OnAnimalEnteredZone(GameObject* animal, float score)
     if (m_CarriedAnimal != nullptr) return;
 
     Animal* animalScript = animal->GetDerivedComponent<Animal>();
-    if (animalScript != nullptr && animalScript->m_StateController.GetCurrentState() == AnimalState::PickedUp) {
+    if (animalScript != nullptr && animalScript->GetStateController()->GetCurrentState() == AnimalState::PickedUp) {
         return;
     }
 
@@ -506,6 +525,10 @@ void Player::OnAnimalEnteredZone(GameObject* animal, float score)
 
         SetHighlight(m_BestAnimalTarget, true);
     }
+    else if (score <= -5)
+    {
+        m_BestAnimalInObject = animalScript;
+    }
 }
 
 void Player::OnAnimalExitedZone(GameObject* animal)
@@ -518,6 +541,12 @@ void Player::OnAnimalExitedZone(GameObject* animal)
         m_BestAnimalScore = -1.0f;
 
         RecalculateBestTarget();
+    }
+
+    Animal* animalScript = animal->GetDerivedComponent<Animal>();
+    if (animalScript == m_BestAnimalInObject)
+    {
+        m_BestAnimalInObject = nullptr;
     }
 }
 

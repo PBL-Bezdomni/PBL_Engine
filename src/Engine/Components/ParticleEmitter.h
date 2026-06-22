@@ -8,6 +8,7 @@ class ParticleSystem;
 class ParticleEmitter : public Component
 {
 public:
+	bool AllowMultiple() const override { return true; }
 	glm::vec3 MaxVelocity = glm::vec3(2.f, 0.7f, 2.f);
 	float VelocityMult = 4;
 	glm::vec4 Color = glm::vec4(0.9f);

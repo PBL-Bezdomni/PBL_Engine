@@ -3,6 +3,9 @@
 #include "TutorialArrow.h"
 #include "Engine/Components/ParticleEmitter.h"
 #include "glm/vec3.hpp"
+#include <Engine/Engine.h>
+#include "GameObject.h"
+#include "Engine/AssetManager.h"
 
 void AOnsenObject::Awake()
 {
@@ -16,6 +19,24 @@ void AOnsenObject::Awake()
 
 	m_TutorialArrow = m_Owner->AddComponent<TutorialArrow>();
 	AssignParticles();
+
+	m_AssetMgr = &Engine::GetInstance().GetAssetManager();
+	m_SceneMgr = &Engine::GetInstance().GetGameManager().GetSceneManager();
+
+	m_PieShader = m_AssetMgr->PieChartShader;
+
+	m_Indicator = m_SceneMgr->Instantiate(m_Owner, "res/models/PieChartPlane.obj", m_AssetMgr->PieChartShader);
+	m_Indicator->Name = "ObjectIndicator";
+	m_Indicator->transform->Position = m_IndicatorOffset;
+
+	m_Indicator->transform->Scale = glm::vec3(m_IndicatorScale);
+
+	m_PieShader->Use();
+	m_PieShader->SetInt("u_IsHollow", 1);
+	m_PieShader->SetInt("u_IsSquare", m_IsSquareIndicator);
+	m_PieShader->SetInt("u_NumNeeds", 1);
+
+	m_PieShader->SetIVec4("u_Needs", static_cast<int>(m_ObjectNeed), -1, -1, -1);
 }
 
 void AOnsenObject::OnTriggerEnter(GameObject* other)
@@ -144,4 +165,21 @@ TutorialArrow* AOnsenObject::GetTutorialArrow()
 
 void AOnsenObject::AssignParticles()
 {
+}
+
+void AOnsenObject::DrawUpdate()
+{
+	Behaviour::DrawUpdate();
+
+	if (m_PieShader != nullptr && m_Indicator != nullptr && m_Indicator->IsActive())
+	{
+		m_PieShader->Use();
+
+		m_PieShader->SetInt("u_IsHollow", 1);
+
+		m_PieShader->SetInt("u_IsSquare", m_IsSquareIndicator);
+
+		m_PieShader->SetInt("u_NumNeeds", 1);
+		m_PieShader->SetIVec4("u_Needs", static_cast<int>(m_ObjectNeed), -1, -1, -1);
+	}
 }

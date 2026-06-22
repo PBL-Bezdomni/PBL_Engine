@@ -138,6 +138,11 @@ void AssetManager::SetShadersViewProjection(glm::mat4 view, glm::mat4 projection
 	}	
 }
 
+shared_ptr<Shader> AssetManager::GetNewWorldUIShader()
+{
+	return GetShader("res/shaders/worldUIShader.vert", "res/shaders/worldUIShader.frag");
+}
+
 string AssetManager::GetPathWithRelativePrefix(const char* cPath)
 {
 	string relativePath = Loader::RelativePath();
