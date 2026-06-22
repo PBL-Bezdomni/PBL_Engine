@@ -6,6 +6,12 @@ void Sauna::Awake()
 {
 	m_ObjectNeed = AnimalNeeds::Sauna;
 	AOnsenObject::Awake();
+
+	m_IsSquareIndicator = false;
+	m_IndicatorScale = 50.0f;
+	m_IndicatorOffset = glm::vec3(0.0f, -20.0f, 0.0f);
+	m_Indicator->transform->Scale = glm::vec3(m_IndicatorScale);
+	m_Indicator->transform->Position = m_IndicatorOffset;
 }
 
 void Sauna::AssignParticles()
