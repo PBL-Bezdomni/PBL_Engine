@@ -2,6 +2,7 @@
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec2 aTexCoord;
+layout (location = 3) in mat4 aInstanceMatrix;
 
 out vec2 TexCoord;
 out vec3 Normal;
@@ -13,13 +14,18 @@ uniform mat4 view;
 uniform mat4 projection;
 uniform mat4 lightSpaceMatrix;
 
+uniform bool u_IsInstanced;
+
 void main()
 {
-	gl_Position = projection * view * model * vec4(aPos, 1.0);
+
+	mat4 finalModel = u_IsInstanced ? (model * aInstanceMatrix) : model;
+
+	gl_Position = projection * view * finalModel * vec4(aPos, 1.0);
 	TexCoord = aTexCoord;
-	FragPos = vec3(model * vec4(aPos, 1.0f));
+	FragPos = vec3(finalModel * vec4(aPos, 1.0f));
 	//FragPos = aPos;
-	Normal = mat3(transpose(inverse(model))) * aNormal;
+	Normal = mat3(transpose(inverse(finalModel))) * aNormal;
 	//Normal = aNormal;
 	FragPosLightSpace = lightSpaceMatrix * vec4(FragPos, 1.0);
 }

@@ -448,6 +448,7 @@ void SceneManager::LoadModels()
 	m_WorldParent = GameObject();
 	vector<shared_ptr<GameObject>> objs = m_JSONImporter->ImportScene("scene2", &m_WorldParent);
 	m_GameObjects.insert(m_GameObjects.end(), objs.begin(), objs.end());
+	m_WorldParent.UpdateSelfAndChild();
 
 	m_LightSourceObject = GameObject();
 	Model lightModel = *AssetMgr->GetModel(*AssetMgr->LightSourceShader, "res/models/sphere/ball.obj");
@@ -458,6 +459,16 @@ void SceneManager::LoadModels()
 
 	m_LightSource.transform->Position = glm::vec3(0.f, 15.0f, 0.0f);
 	//m_LightSource.transform->Position = glm::vec3(0.f, 15.0f, -30.0f);
+
+	LoadGrass();
+
+	Grass = GameObject();
+	Model grassModel(*AssetMgr->BasicShader, "res/models/Grass1.fbx", grassMatrices.size(), grassMatrices);
+	grassModel.AssignTexture(*AssetMgr->GetTexture("res/textures/scene_textures/Grass1_DefaultMaterial_BaseColor.png"));
+
+	Grass.AddComponent<Model>(grassModel);
+
+	m_WorldParent.GetChildByName("Ground")->AddChild(&Grass);
 
 	m_UIPanelTex = *AssetMgr->GetTexture("res/textures/UI/UI_panel.png");
 	m_UICoinTex = *AssetMgr->GetTexture("res/textures/UI/coin.png");
@@ -629,4 +640,107 @@ void SceneManager::JoystickCallback(int jid, int event) {
 	else if (event == GLFW_DISCONNECTED) {
 		std::cout << "WARNING: Joystick disconnected: " << std::to_string(jid) << std::endl;
 	}
+}
+
+void SceneManager::LoadGrass()
+{
+	grassMatrices.clear();
+
+	GameObject* groundObj = m_WorldParent.GetChildByName("Ground");
+	if (!groundObj) {
+		std::cout << "ERROR LoadGrass: Ground is not found" << std::endl;
+		return;
+	}
+
+	Model* terrainModel = groundObj->GetComponent<Model>();
+	if (!terrainModel || terrainModel->Meshes.empty()) {
+		std::cout << "ERROR LoadGrass: Ground has no model component" << std::endl;
+		return;
+	}
+
+	Mesh& terrainMesh = terrainModel->Meshes[0];
+
+	int width, height, nrChannels;
+
+	unsigned char* data = stbi_load("res/textures/scene_textures/GrassPosition.png", &width, &height, &nrChannels, 1);
+	if (!data) {
+		std::cout << "ERROR LoadGrass: Can't load Grass Mask" << std::endl;
+		return;
+	}
+
+	float grassDensityPerUnit = 0.05f;
+
+	for (size_t i = 0; i < terrainMesh.Indices.size(); i += 3)
+	{
+
+		Vertex v0 = terrainMesh.Vertices[terrainMesh.Indices[i]];
+		Vertex v1 = terrainMesh.Vertices[terrainMesh.Indices[i + 1]];
+		Vertex v2 = terrainMesh.Vertices[terrainMesh.Indices[i + 2]];
+
+		glm::vec3 p0 = v0.Position;
+		glm::vec3 p1 = v1.Position;
+		glm::vec3 p2 = v2.Position;
+
+		glm::vec3 edge1 = p1 - p0;
+		glm::vec3 edge2 = p2 - p0;
+		float area = glm::length(glm::cross(edge1, edge2)) * 0.5f;
+
+		int attempts = (int)(area * grassDensityPerUnit);
+		if (((float)rand() / RAND_MAX) < (area * grassDensityPerUnit - attempts)) {
+			attempts++;
+		}
+
+		for (int j = 0; j < attempts; j++)
+		{
+
+			float u1 = (float)rand() / RAND_MAX;
+			float u2 = (float)rand() / RAND_MAX;
+
+			if (u1 + u2 > 1.0f) {
+				u1 = 1.0f - u1;
+				u2 = 1.0f - u2;
+			}
+
+			float w0 = 1.0f - u1 - u2;
+			float w1 = u1;
+			float w2 = u2;
+
+
+			glm::vec2 finalUV = w0 * v0.TexCoords + w1 * v1.TexCoords + w2 * v2.TexCoords;
+
+			float texU = glm::clamp(finalUV.x, 0.0f, 1.0f);
+			float texV = glm::clamp(finalUV.y, 0.0f, 1.0f);
+
+			int pixelX = (int)(texU * (width - 1));
+			int pixelY = (int)(texV * (height - 1));
+
+			unsigned char pixelColor = data[pixelY * width + pixelX];
+			float density = pixelColor / 255.0f;
+
+			if (density > 0.5f)
+			{
+
+				glm::vec3 localPos = w0 * p0 + w1 * p1 + w2 * p2;
+				localPos.z += 5.5f;
+
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, localPos);
+
+
+				//model = glm::rotate(model, glm::radians((float)(rand() % 360)), glm::vec3(0.0f, 1.0f, 0.0f));
+				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+				model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+				model = glm::rotate(model, glm::radians(-30.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+
+				float randomScale = 0.8f + ((float)rand() / RAND_MAX) * 0.4f;
+				model = glm::scale(model, glm::vec3(randomScale));
+
+				grassMatrices.push_back(model);
+			}
+		}
+	}
+	stbi_image_free(data);
+
+	std::cout << "Grass Generated: " << grassMatrices.size() << std::endl;
 }

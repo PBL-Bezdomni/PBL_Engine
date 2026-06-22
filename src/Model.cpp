@@ -103,7 +103,14 @@ void Model::Draw(glm::mat4 modelMatrix, Shader* shader)
         shaderToUse = m_Shader;
     }
     shaderToUse.Use();
+    shaderToUse.SetBool("u_IsInstanced", false);
+    if (Instancing > 1)
+    {
+        shaderToUse.SetBool("u_IsInstanced", true);
+    }
+
     shaderToUse.SetMat4("model", modelMatrix);
+
     shaderToUse.SetBool("useNormal", m_HasNormal);
 
     if (m_IsHighlighted) {

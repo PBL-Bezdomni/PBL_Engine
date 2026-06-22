@@ -144,6 +144,8 @@ public:
 		return result;
 	}
 
+	GameObject* GetChildByName(const string& findName);
+
 	template<typename T>
 	vector<T*> FindComponentsInChildren(bool getFirst = false)
 	{

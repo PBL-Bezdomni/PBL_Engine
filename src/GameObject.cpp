@@ -197,6 +197,8 @@ void GameObject::DrawSelfAndChild()
     }
 }
 
+void DrawSelfAndChildShaded(bool shaded){}
+
 void GameObject::DrawSekfAndChildShadow(Shader* shader, bool drawOnlyDynamic)
 {
     if (m_IsActive)
@@ -247,4 +249,23 @@ void GameObject::SetActive(bool active)
 
 bool GameObject::IsActive() {
     return m_IsActive;
+}
+
+GameObject* GameObject::GetChildByName(const string& findName) {
+    if (this->Name == findName) {
+        return this;
+    }
+    
+    for (auto* child : Children)
+    {
+        if (child != nullptr)
+        {
+            GameObject* found = child->GetChildByName(findName);
+            if (found != nullptr)
+            {
+                return found;
+            }
+        }
+    }
+    return nullptr;
 }

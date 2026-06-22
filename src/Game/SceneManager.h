@@ -11,6 +11,8 @@
 #include "Game/Scripts/Animal.h"
 #include "Engine/Events/AEvent.h"
 
+#include <vector>
+
 class ParticleSystem;
 class AssetManager;
 class PhysicsEngine;
@@ -60,6 +62,7 @@ private:
 	void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
 	static void ScrollCallbackDispatcher(GLFWwindow* window, double xoffset, double yoffset);
 	static void JoystickCallback(int jid, int event);
+	void LoadGrass();
 
 	shared_ptr<Camera> MainCamera;
 	glm::mat4 m_TextProjection;
@@ -104,4 +107,7 @@ private:
 	float m_TimeLeft = TIME_LIMIT;
 
 	GameObject bath;
+
+	GameObject Grass;
+	std::vector<glm::mat4> grassMatrices;
 };
