@@ -13,9 +13,9 @@ newmtl bunny_Material__25
 	Pcr 0.0000
 	Ni 1.5000
 	illum 2
-	map_Kd bunny.fbm\bunny_all_final_1_default_BaseColor.png
-	map_Pr bunny.fbm\bunny_all_final_1_default_Roughness.png
-	map_Pm bunny.fbm\bunny_all_final_1_default_Metallic.png
-	map_Ke bunny.fbm\bunny_all_final_1_default_Emissive.png
-	disp bunny.fbm\bunny_all_final_1_default_Height.png
-	norm bunny.fbm\bunny_all_final_1_default_Normal.png
+	map_Kd bunny_textures_512\bunny_all_final_1_default_BaseColor.png
+	map_Pr bunny_textures_512\bunny_all_final_1_default_Roughness.png
+	map_Pm bunny_textures_512\bunny_all_final_1_default_Metallic.png
+	map_Ke bunny_textures_512\bunny_all_final_1_default_Emissive.png
+	disp bunny_textures_512\bunny_all_final_1_default_Height.png
+	norm bunny_textures_512\bunny_all_final_1_default_Normal.png
