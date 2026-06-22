@@ -111,7 +111,7 @@ void Player::Update()
     {
         Animal* bestAnimalScript = m_BestAnimalTarget->GetDerivedComponent<Animal>();
 
-        if (bestAnimalScript != nullptr && bestAnimalScript->m_StateController.GetCurrentState() == AnimalState::PickedUp)
+        if (bestAnimalScript != nullptr && bestAnimalScript->GetStateController()->GetCurrentState() == AnimalState::PickedUp)
         {
             SetHighlight(m_BestAnimalTarget, false);
             m_BestAnimalTarget = nullptr;
@@ -230,7 +230,7 @@ void Player::Update()
             rb->SetLinearVelocity(glm::vec3(0.0f));
             rb->SetAngularVelocity(glm::vec3(0.0f));
             rb->Teleport(headPos);
-            a->m_StateController.RequestStateChange.Invoke(AnimalState::PickedUp);
+            a->GetStateController()->RequestStateChange.Invoke(AnimalState::PickedUp);
         }
     }
 
@@ -369,7 +369,7 @@ void Player::HandleActionPressed()
             {
                 m_CarriedAnimal = hitObject;
                 m_HasPickUpReleased = false;
-                animalScript->m_StateController.RequestStateChange.Invoke(AnimalState::PickedUp);
+                animalScript->GetStateController()->RequestStateChange.Invoke(AnimalState::PickedUp);
                 hitObject->GetComponent<Model>()->m_IsHighlighted = false;
                 vector<AnimalNeeds> services = animalScript->GetRequiredServices();
                 // Play pickup sound
@@ -448,7 +448,7 @@ void Player::HandleThrowReleased()
                 throwVelocity = glm::vec3(1.0, 0, 0);
             }
             animalRb->SetLinearVelocity(throwVelocity);
-            animalScript->m_StateController.RequestStateChange.Invoke(AnimalState::Throw);
+            animalScript->GetStateController()->RequestStateChange.Invoke(AnimalState::Throw);
             m_LastThrownAnimal = animalScript->GetOwner();
             m_IgnoreThrownAnimalTimer = 1.5f;
         }
@@ -490,7 +490,7 @@ void Player::OnAnimalEnteredZone(GameObject* animal, float score)
     if (m_CarriedAnimal != nullptr) return;
 
     Animal* animalScript = animal->GetDerivedComponent<Animal>();
-    if (animalScript != nullptr && animalScript->m_StateController.GetCurrentState() == AnimalState::PickedUp) {
+    if (animalScript != nullptr && animalScript->GetStateController()->GetCurrentState() == AnimalState::PickedUp) {
         return;
     }
 

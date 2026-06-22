@@ -78,6 +78,8 @@ private:
 	std::vector<AnimalNeeds> m_RequiredServices;
 	RigidBody* m_RB;
 
+    AnimalStateController m_StateController;
+
     void AssignBearTexture();
 	virtual void AssignWalkEmitter();
 	virtual void AssignLandEmitter();
@@ -103,6 +105,9 @@ public:
 
     void Update() override;
     void UpdateIdle();
+    void UpdateWalking();
+    void UpdateChasing();
+    void UpdateEating();
     void UpdatePickedUp();
     void UpdateThrow();
     void UpdateFulfillingNeed();
@@ -123,8 +128,8 @@ public:
     void StartFulfillingNeed(AnimalNeeds need);
     void StopFulfillingNeed();
     void FulfillNeed(AnimalNeeds need);
-
-    AnimalStateController m_StateController{ this };
+    Animal() : m_StateController(this) {}
+    AnimalStateController* GetStateController() { return &m_StateController; }
     EventBinder m_EventBinder;
 	GameObject* GetGameObject() { return m_Owner; }
     
