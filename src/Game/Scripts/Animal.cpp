@@ -410,6 +410,8 @@ void Animal::UpdateIndicatorColors()
 
     int numNeeds = m_RequiredServices.size();
     m_PieShader->SetInt("u_NumNeeds", numNeeds);
+    m_PieShader->SetInt("u_IsHollow", 0);
+    m_PieShader->SetInt("u_IsSquare", 0);
 
     glm::ivec4 shaderNeeds(-1, -1, -1, -1);
 
