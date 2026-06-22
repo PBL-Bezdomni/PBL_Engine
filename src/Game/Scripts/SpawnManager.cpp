@@ -125,7 +125,7 @@ void SpawnManager::DespawnAnimal(GameObject* animal)
 				if (anScript != nullptr)
 				{
 					anScript->m_IsInitialized = false;
-					anScript->m_StateController.RequestStateChange.Invoke(AnimalState::None);
+					anScript->GetStateController()->RequestStateChange.Invoke(AnimalState::None);
 				}
 				RigidBody* rb = spawnedAnimal->GetComponent<RigidBody>();
 				if (rb != nullptr)
@@ -170,7 +170,7 @@ shared_ptr<GameObject> SpawnManager::CreateBunny(shared_ptr<Shader> shader, int 
 
 shared_ptr<GameObject> SpawnManager::CreateBear(shared_ptr<Shader> shader, std::shared_ptr<Shader> animShader, int index)
 {
-	shared_ptr<GameObject> animal = CreateAnimal(animShader, "res/models/animations/animals/bear-animations/bear-eating.glb", "bear", index, "res/models/animations/animals/bear-animations/bear-eating.glb");
+	shared_ptr<GameObject> animal = CreateAnimal(animShader, "res/models/animations/animals/bear-animations/bear-waiting.glb", "bear", index, "res/models/animations/animals/bear-animations/bear-waiting.glb");
 	Animator* animator = animal->GetComponent<Animator>();
 	Model* model = animal->GetComponent<Model>();
 

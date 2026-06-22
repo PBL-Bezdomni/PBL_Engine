@@ -7,6 +7,9 @@ enum class AnimalState
 {
 	None,
 	Idle,
+	Walking,
+	Chasing,
+	Eating,
 	PickedUp,
 	Throw,
 	Rest,
