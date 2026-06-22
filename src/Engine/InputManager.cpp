@@ -19,7 +19,9 @@ void InputManager::Initialize()
     addBinding(InputName.THROW, { BindingType::Button, GLFW_GAMEPAD_BUTTON_LEFT_BUMPER });
     addBinding(InputName.THROW, { BindingType::Button, GLFW_GAMEPAD_BUTTON_A });
     addBinding(InputName.THROW, { BindingType::TriggerButton, GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER, 1.0f});
-    //addBinding(InputName.THROW, { BindingType::Trigger, GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER });
+
+    addBinding(InputName.ACTION, { BindingType::TriggerButton, GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER, 0.0f });
+    addBinding(InputName.THROW, { BindingType::TriggerButton, GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER, 0.0f });
 }
 
 void InputManager::createAction(const std::string& name) {
