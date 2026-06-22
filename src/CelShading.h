@@ -18,6 +18,7 @@ private:
 	int windowWidth, windowHeight;
 public:
 	CelShading(GLFWwindow* window);
+	unsigned int GetFBO();
 	void FBOInit();
 	void RenderQuad(Shader& shader);
 	void CheckScreenSize(GLFWwindow* window);

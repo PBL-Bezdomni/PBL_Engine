@@ -117,3 +117,7 @@ void CelShading::RenderQuad(Shader& shader) {
     glDrawArrays(GL_TRIANGLES, 0, 6);
     glBindVertexArray(0);
 }
+
+unsigned int CelShading::GetFBO() {
+    return m_PostProcessFBO;
+}

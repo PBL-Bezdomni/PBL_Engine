@@ -233,7 +233,7 @@ void SceneManager::RenderScene()
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    m_WorldParent.DrawSelfAndChild();
+    m_WorldParent.DrawSelfAndChildFiltered(true);
 
 	m_Skybox.DrawSkybox(skyboxView, projection);
 
@@ -248,6 +248,14 @@ void SceneManager::RenderScene()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	m_cl->RenderQuad(*AssetMgr->CelShadingShader);
+
+	glBindFramebuffer(GL_READ_FRAMEBUFFER, m_cl->GetFBO());
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+	glBlitFramebuffer(0, 0, windowW, windowH, 0, 0, windowW, windowH, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0); 
+
+	glEnable(GL_DEPTH_TEST);
+	m_WorldParent.DrawSelfAndChildFiltered(false);
 
 	// IMPORTANT: Do not write things below Freetype/UI, if you do not know what you are doing, thanks :)
 	// Draw UI
@@ -467,6 +475,7 @@ void SceneManager::LoadModels()
 	grassModel.AssignTexture(*AssetMgr->GetTexture("res/textures/scene_textures/Grass1_DefaultMaterial_BaseColor.png"));
 
 	Grass.AddComponent<Model>(grassModel);
+	Grass.m_isVisible = false;
 
 	m_WorldParent.GetChildByName("Ground")->AddChild(&Grass);
 

@@ -60,6 +60,7 @@ public:
 	Transform* transform;
 	string Name;
 	int ID;
+	bool m_isVisible = true;
 	GameObject();
 	vector<GameObject*> Children;
 	
@@ -71,6 +72,7 @@ public:
 	void AddChild(GameObject* child);
 	void RemoveChild(GameObject* child);
 	void DrawSelfAndChild();
+	void DrawSelfAndChildFiltered(bool filter);
 	void DrawSekfAndChildShadow(Shader* shader, bool drawOnlyDynamic);
 	void DrawSelf(Shader* shader);
 	glm::vec3 GetWorldPosition();

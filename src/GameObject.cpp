@@ -197,7 +197,37 @@ void GameObject::DrawSelfAndChild()
     }
 }
 
-void DrawSelfAndChildShaded(bool shaded){}
+void GameObject::DrawSelfAndChildFiltered(bool filter) {
+    if (m_IsActive)
+    {
+        for (auto& [type, vec] : m_Components)
+        {
+            for (auto& comp : vec)
+            {
+                comp->DrawUpdate();
+            }
+        }
+
+        Model* model = GetComponent<Model>();
+        if (model != nullptr && model->IsActive() && m_isVisible == filter)
+        {
+            model->Draw(transform->ModelMatrix);
+        }
+
+        for (auto& [type, vec] : m_Components)
+        {
+            for (auto& comp : vec)
+            {
+                comp->AfterDrawUpdate();
+            }
+        }
+
+        for (auto&& child : Children)
+        {
+            child->DrawSelfAndChildFiltered(filter);
+        }
+    }
+}
 
 void GameObject::DrawSekfAndChildShadow(Shader* shader, bool drawOnlyDynamic)
 {
