@@ -169,7 +169,8 @@ void Animal::EnterTable(GameObject* table)
     m_TeleportTarget = tablePos + glm::vec3(0.0f, 2.0f, 0.0f);
 
     m_ShouldTeleport = true;
-    
+
+    RigidBody* rb = m_Owner->GetComponent<RigidBody>();
 }
 
 void Animal::Update()
@@ -188,29 +189,27 @@ void Animal::Update()
         m_ShouldTeleport = false;
 
         m_Owner->transform->Position = m_TeleportTarget;
-        
-        if (m_RB != nullptr)
+
+        RigidBody* rb = m_Owner->GetComponent<RigidBody>();
+        if (rb != nullptr)
         {
-            m_RB->SetLinearVelocity(glm::vec3(0.0f));
+            rb->SetLinearVelocity(glm::vec3(0.0f));
 
-            m_RB->SetAngularVelocity(glm::vec3(0.0f));
+            rb->SetAngularVelocity(glm::vec3(0.0f));
 
-            m_RB->Teleport(m_TeleportTarget);
+            rb->Teleport(m_TeleportTarget);
         }
     }
-    
-    if (m_RB == nullptr) return;
+
+    RigidBody* rb = m_Owner->GetComponent<RigidBody>();
+    if (rb == nullptr) return;
 
     m_StateController.Update();
-
-    if (m_InteractionMark->IsActive())
-    {
-        m_InteractionMark->transform->Position.y ;
-    }
 }
 
 
-void Animal::UpdateIdle() {
+void Animal::UpdateIdle() 
+{
     RigidBody* rb = m_Owner->GetComponent<RigidBody>();
 
     if (rb != nullptr)
@@ -255,8 +254,6 @@ void Animal::UpdateWalking()
     m_LastPosition = currentPos;
     if (m_StuckTimer > 1.0f)
     {
-        rb->SetLinearVelocity(glm::vec3(0.0f, rb->GetLinearVelocity().y, 0.0f));
-        PickNewTargetPosition();
         m_WaitTime = 1.0f;
         m_CurrentWaitTime = 0.0f;
         m_StuckTimer = 0.0f;
@@ -287,20 +284,15 @@ void Animal::UpdateWalking()
         //while (m_CurrentAngle > 360.0f) m_CurrentAngle -= 360.0f;
         //while (m_CurrentAngle < -360.0f) m_CurrentAngle += 360.0f;
 
-        while (m_CurrentAngle > 360.0f) m_CurrentAngle -= 360.0f;
-        while (m_CurrentAngle < -360.0f) m_CurrentAngle += 360.0f;
-
         rb->SetRotation(glm::vec3(0.0f, m_CurrentAngle, 0.0f));
 
         glm::vec3 rayStart = currentPos + glm::vec3(0.0f, 0.5f, 0.0f);
         float lookAheadDistance = 1.5f;
 
-        GameObject* obstacle = Engine::GetInstance().GetPhysicsEngine().CastRay(rayStart, direction, lookAheadDistance, m_RB->GetBodyID());
+        GameObject* obstacle = Engine::GetInstance().GetPhysicsEngine().CastRay(rayStart, direction, lookAheadDistance, rb->GetBodyID());
 
         if (obstacle != nullptr)
         {
-            rb->SetLinearVelocity(glm::vec3(0.0f, rb->GetLinearVelocity().y, 0.0f));
-            PickNewTargetPosition();
             m_WaitTime = Random::GetRandomFloat(1.0f, 3.0f);
             m_CurrentWaitTime = 0.0f;
             m_StuckTimer = 0.0f;
@@ -316,7 +308,7 @@ void Animal::UpdateWalking()
             speedMultiplier = std::max(0.3f, distance / slowDownDistance);
         }
 
-        glm::vec3 currentVelocity = m_RB->GetLinearVelocity();
+        glm::vec3 currentVelocity = rb->GetLinearVelocity();
         float currentMoveSpeed = m_MoveSpeed * speedMultiplier;
         float newVelY = currentVelocity.y;
 
@@ -362,23 +354,15 @@ void Animal::UpdateWalking()
         float newVelX = glm::mix(currentVelocity.x, targetVelocity.x, accel * Time::GetDeltaTime());
         float newVelZ = glm::mix(currentVelocity.z, targetVelocity.z, accel * Time::GetDeltaTime());
 
-        m_RB->SetLinearVelocity(glm::vec3(newVelX, newVelY, newVelZ));
+        rb->SetLinearVelocity(glm::vec3(newVelX, newVelY, newVelZ));
     }
     else
     {
-        rb->SetLinearVelocity(glm::vec3(0.0f, rb->GetLinearVelocity().y, 0.0f));
-
-        m_CurrentWaitTime += Time::GetDeltaTime();
-
-        if (m_CurrentWaitTime >= m_WaitTime)
-        {
-            PickNewTargetPosition();
-
-            m_WaitTime = Random::GetRandomFloat(1.0f, 3.0f);
-            m_CurrentWaitTime = 0.0f;
-            m_StuckTimer = 0.0f;
-            m_JumpTimer = 0.0f;
-        }
+        m_WaitTime = Random::GetRandomFloat(1.0f, 3.0f);
+        m_CurrentWaitTime = 0.0f;
+        m_StuckTimer = 0.0f;
+        m_JumpTimer = 0.0f;
+        m_StateController.RequestStateChange.Invoke(AnimalState::Idle);
     }
 }
 
@@ -592,14 +576,15 @@ void Animal::UpdateCheckmark() {
 void Animal::ResetEverythingSpawn(glm::vec3 spawnPosition)
 {
     m_Owner->transform->Position = spawnPosition;
-    
-    if (m_RB != nullptr)
-    {
-        m_RB->RequestTeleport(spawnPosition);
 
-        m_RB->SetLinearVelocity(glm::vec3(0.0f));
-        m_RB->SetAngularVelocity(glm::vec3(0.0f));
-        m_RB->SetRotation(glm::vec3(0.0f));
+    RigidBody* rb = m_Owner->GetComponent<RigidBody>();
+    if (rb != nullptr)
+    {
+        rb->RequestTeleport(spawnPosition);
+
+        rb->SetLinearVelocity(glm::vec3(0.0f));
+        rb->SetAngularVelocity(glm::vec3(0.0f));
+        rb->SetRotation(glm::vec3(0.0f));
     }
 
     m_CurrentAngle = 0.0f;
