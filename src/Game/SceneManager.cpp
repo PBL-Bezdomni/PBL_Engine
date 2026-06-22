@@ -254,8 +254,12 @@ void SceneManager::RenderScene()
 	glBlitFramebuffer(0, 0, windowW, windowH, 0, 0, windowW, windowH, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0); 
 
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_DEPTH_TEST);
+	glDepthMask(GL_FALSE);
 	m_WorldParent.DrawSelfAndChildFiltered(false);
+	glDepthMask(GL_TRUE);
 
 	// IMPORTANT: Do not write things below Freetype/UI, if you do not know what you are doing, thanks :)
 	// Draw UI
@@ -470,14 +474,32 @@ void SceneManager::LoadModels()
 
 	LoadGrass();
 
-	Grass = GameObject();
-	Model grassModel(*AssetMgr->BasicShader, "res/models/Grass1.fbx", grassMatrices.size(), grassMatrices);
-	grassModel.AssignTexture(*AssetMgr->GetTexture("res/textures/scene_textures/Grass1_DefaultMaterial_BaseColor.png"));
+	for (int i = 0; i < 3; i++) {
+		Grass[i] = GameObject();
+		Model grassModel(*AssetMgr->BasicShader, "res/models/scene_models/Grass.fbx", grassMatrices[i].size(), grassMatrices[i]);
+		if (i == 0) {
+			grassModel.AssignTexture(*AssetMgr->GetTexture("res/textures/scene_textures/Grass1_DefaultMaterial_BaseColor.png"));
+			Grass[i].AddComponent<Model>(grassModel);
+		}
+		else if (i == 1) {
+			grassModel.AssignTexture(*AssetMgr->GetTexture("res/textures/scene_textures/Grass2_DefaultMaterial_BaseColor.png"));
+			Grass[i].AddComponent<Model>(grassModel);
+		}
+		else if (i == 2) {
+			grassModel.AssignTexture(*AssetMgr->GetTexture("res/textures/scene_textures/Grass3_DefaultMaterial_BaseColor.png"));
+			Grass[i].AddComponent<Model>(grassModel);
+		}
 
-	Grass.AddComponent<Model>(grassModel);
-	Grass.m_isVisible = false;
+		Grass[i].m_isVisible = false;
+		m_WorldParent.GetChildByName("Ground")->AddChild(&Grass[i]);
+	}
+	//Model grassModel(*AssetMgr->BasicShader, "res/models/Grass1.fbx", grassMatrices.size(), grassMatrices);
+	
 
-	m_WorldParent.GetChildByName("Ground")->AddChild(&Grass);
+	//Grass.AddComponent<Model>(grassModel);
+	//Grass.m_isVisible = false;
+
+	//m_WorldParent.GetChildByName("Ground")->AddChild(&Grass);
 
 	m_UIPanelTex = *AssetMgr->GetTexture("res/textures/UI/UI_panel.png");
 	m_UICoinTex = *AssetMgr->GetTexture("res/textures/UI/coin.png");
@@ -653,8 +675,7 @@ void SceneManager::JoystickCallback(int jid, int event) {
 
 void SceneManager::LoadGrass()
 {
-	grassMatrices.clear();
-
+	int numOfMatrix = 0;
 	GameObject* groundObj = m_WorldParent.GetChildByName("Ground");
 	if (!groundObj) {
 		std::cout << "ERROR LoadGrass: Ground is not found" << std::endl;
@@ -677,7 +698,7 @@ void SceneManager::LoadGrass()
 		return;
 	}
 
-	float grassDensityPerUnit = 0.05f;
+	float grassDensityPerUnit = 0.1f;
 
 	for (size_t i = 0; i < terrainMesh.Indices.size(); i += 3)
 	{
@@ -742,14 +763,19 @@ void SceneManager::LoadGrass()
 				model = glm::rotate(model, glm::radians(-30.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
 
-				float randomScale = 0.8f + ((float)rand() / RAND_MAX) * 0.4f;
+				float randomScale = 0.3f + ((float)rand() / RAND_MAX) * 0.4f;
 				model = glm::scale(model, glm::vec3(randomScale));
 
-				grassMatrices.push_back(model);
+				if(numOfMatrix < 10)
+					grassMatrices[0].push_back(model);
+				else 
+					grassMatrices[numOfMatrix-9].push_back(model);
+				numOfMatrix++;
+				if (numOfMatrix >= 12) numOfMatrix = 0;
 			}
 		}
 	}
 	stbi_image_free(data);
 
-	std::cout << "Grass Generated: " << grassMatrices.size() << std::endl;
+	//std::cout << "Grass Generated: " << grassMatrices.size() << std::endl;
 }
