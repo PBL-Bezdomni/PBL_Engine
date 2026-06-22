@@ -35,14 +35,12 @@ Animation::Animation(const string& animationPath, Model* model)
 
 Bone* Animation::FindBone(const string& name)
 {
-	auto iter = find_if(m_Bones.begin(), m_Bones.end(),
-		[&](const Bone& bone)
-		{
-			return bone.GetBoneName() == name;
-		}
-	);
-	if (iter == m_Bones.end()) return nullptr;
-	else return &(*iter);
+	auto it = m_BoneLookup.find(name);
+	if (it != m_BoneLookup.end())
+	{
+		return &m_Bones[it->second];
+	}
+	return nullptr;
 }
 
 void Animation::ReadMissingBones(const aiAnimation* animation, Model& model)
@@ -63,8 +61,10 @@ void Animation::ReadMissingBones(const aiAnimation* animation, Model& model)
 			boneCount++;
 		}
 		m_Bones.push_back(Bone(boneName, boneInfoMap[boneName].id, channel));
+		m_BoneLookup[boneName] = m_Bones.size() - 1;
 	}
-	m_BoneInfoMap = boneInfoMap;
+	m_BoneInfoMap.clear();
+	m_BoneInfoMap.insert(boneInfoMap.begin(), boneInfoMap.end());
 }
 
 void Animation::ReadHierarchyData(AssimpNodeData& dest, const aiNode* src)

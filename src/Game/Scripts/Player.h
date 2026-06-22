@@ -8,6 +8,13 @@ class AOnsenObject;
 class ParticleEmitter;
 class GameObject;
 
+enum class PlayerAnimState
+{
+    Idle,
+    Walking,
+    Action
+};
+
 class Player : public Behaviour
 {
 private:
@@ -39,6 +46,11 @@ private:
     std::vector<class TargetingZone*> m_TargetingZones;
     GameObject* m_LastThrownAnimal = nullptr;
     float m_IgnoreThrownAnimalTimer = 0.0f;
+
+    PlayerAnimState m_CurrentState = PlayerAnimState::Idle;
+    float m_ActionAnimTimer = 0.0f;
+
+    void PlayActionAnimation(const std::string& animName, float duration);
 
 public:
     glm::vec2 MoveInput{ 0.0f };

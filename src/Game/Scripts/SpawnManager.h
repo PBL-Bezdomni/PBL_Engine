@@ -40,9 +40,9 @@ public:
 	SpawnManager() = default;
 	void CreateEntities(shared_ptr<Shader> shader);
 	shared_ptr<GameObject> CreateAnimal(shared_ptr<Shader> shader, const char* path, const char* name, int index = 0, std::string animPat = "");
-	shared_ptr<GameObject> CreateBunny(shared_ptr<Shader> shader, int index = 0);
+	shared_ptr<GameObject> CreateBunny(shared_ptr<Shader> shader, std::shared_ptr<Shader> animShader, int index = 0);
 	shared_ptr<GameObject> CreateBear(shared_ptr<Shader> shader, std::shared_ptr<Shader> animShader, int index = 0);
-	shared_ptr<GameObject> CreateSkunk(shared_ptr<Shader> shader, int index = 0);
+	shared_ptr<GameObject> CreateSkunk(shared_ptr<Shader> shader, std::shared_ptr<Shader> animShader, int index = 0);
 
 	shared_ptr<GameObject> PickAnimal();
 	void SetSpawnValue(GameObject* animal);
