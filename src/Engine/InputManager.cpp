@@ -1,4 +1,5 @@
 #include "InputManager.h"
+#include <iostream>
 
 void InputManager::Initialize()
 {
@@ -17,6 +18,8 @@ void InputManager::Initialize()
     addBinding(InputName.THROW, {BindingType::Button, GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER});
     addBinding(InputName.THROW, { BindingType::Button, GLFW_GAMEPAD_BUTTON_LEFT_BUMPER });
     addBinding(InputName.THROW, { BindingType::Button, GLFW_GAMEPAD_BUTTON_A });
+    addBinding(InputName.THROW, { BindingType::TriggerButton, GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER, 1.0f});
+    //addBinding(InputName.THROW, { BindingType::Trigger, GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER });
 }
 
 void InputManager::createAction(const std::string& name) {
@@ -64,6 +67,14 @@ void InputManager::update() {
                             {
                                 maxValue = 1.0f;
                             }
+                        }
+                        else if(bind.type == BindingType::TriggerButton){
+                            if (state.axes[bind.code] >= bind.maxPressure) {
+                                maxValue = 1.0f;
+                            }
+                        }
+                        else if (bind.type == BindingType::Trigger) {
+                            maxValue = (state.axes[bind.code] + 1) / 2;
                         }
                         else {
                             float axisVal = state.axes[bind.code];

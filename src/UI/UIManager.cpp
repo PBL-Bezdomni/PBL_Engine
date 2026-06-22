@@ -130,8 +130,8 @@ void UIManager::UpdateProjection()
 {
 	if (m_WindowManager)
 	{
-		float width = static_cast<float>(m_WindowManager->WINDOW_WIDTH);
-		float height = static_cast<float>(m_WindowManager->WINDOW_HEIGHT);
+		float width = m_WindowManager->GetWindowWidth();
+		float height = m_WindowManager->GetWindowHeight();
 
 		m_Projection = glm::ortho(0.0f, width, height, 0.0f, -1.0f, 1.0f);
 	}

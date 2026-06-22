@@ -24,6 +24,7 @@ void Animal::Awake()
 	m_Indicator = m_SceneMgr->Instantiate(m_Owner, "res/models/PieChartPlane.obj", m_AssetMgr->PieChartShader);
 	m_Indicator->Name = "NeedsIndicator";
 	m_Indicator->transform->Position = glm::vec3(0.f, -0.8f, 0.f);
+    AssignWalkEmitter();
     // TODO add scripts for every animal kind, that will override enum
     if (m_Owner->Name.find("bunny") != std::string::npos)
     {
@@ -32,6 +33,10 @@ void Animal::Awake()
         if (m_RB != nullptr)
         {
             m_RB->PrepareInit(glm::vec3(0.5f));
+        }
+        if (m_WalkEmitter != nullptr)
+        {
+            m_WalkEmitter->SetLoop(false);
         }
     }
     else if (m_Owner->Name.find("bear") != std::string::npos)
@@ -312,6 +317,10 @@ void Animal::UpdateIdle() {
                 {
                     newVelY = m_JumpForce;
                     m_JumpTimer = 0.0f;
+                    if (m_WalkEmitter != nullptr)
+                    {
+                        m_WalkEmitter->Play();
+                    }
                 }
             }
             else
@@ -581,4 +590,23 @@ void Animal::AssignBearTexture() {
     {
         model->AssignTexture(*m_AssetMgr->GetTexture(texturePath.c_str()));
     }
+}
+
+void Animal::AssignWalkEmitter()
+{
+    m_WalkEmitter = m_Owner->AddComponent<ParticleEmitter>();
+    m_WalkEmitter->Initialize("res/shaders/basicParticles.vert", "res/shaders/basicParticles.frag", "res/shaders/basicParticles.comp", "res/models/PieChartPlane.obj", "res/textures/UI/smoke.png");
+    // m_WalkEmitter->SetSpawnRate(30);
+    // m_WalkEmitter->SetBulk(1);
+    // m_WalkEmitter->MaxVelocity = glm::vec3(0.f, 0.3f, 0.f);
+    // m_WalkEmitter->MaxLife = 0.5f;
+    // m_WalkEmitter->Color = glm::vec4(0.258f, 0.59f, 0.711f, .2f);
+    // m_WalkEmitter->SetPositionOffset(glm::vec3(0, -6.2, 0));
+    // m_WalkEmitter->IsRandomPosition = true;
+    // m_WalkEmitter->RandomPositionOffset = glm::vec3(5, 0, 5);
+    // m_WalkEmitter->Play();
+}
+
+void Animal::AssignLandEmitter()
+{
 }

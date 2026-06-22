@@ -8,6 +8,7 @@
 #include "Game/SceneManager.h"
 #include "AnimalInteractions.h"
 #include "AnimalStateController.h"
+#include "Engine/Components/ParticleEmitter.h"
 
 class RigidBody;
 class GameObject;
@@ -57,6 +58,9 @@ private:
 	glm::vec3 m_TargetPosition;
     glm::vec3 m_LastPosition;
 
+	ParticleEmitter* m_WalkEmitter;
+	ParticleEmitter* m_LandEmitter;
+
 	void PickNewTargetPosition();
 
     std::shared_ptr<Shader> m_PieShader;
@@ -75,6 +79,8 @@ private:
 	RigidBody* m_RB;
 
     void AssignBearTexture();
+	virtual void AssignWalkEmitter();
+	virtual void AssignLandEmitter();
 
 public:
     std::shared_ptr<GameObject> m_ProgressBar;

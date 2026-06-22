@@ -19,8 +19,32 @@ void WindowManager::Initialize(int32_t versionMajor, int32_t versionMinor)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // 3.2+ only
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);           // 3.0+ only
 
+	// Default values
+	m_Width = WINDOW_WIDTH;
+	m_Height = WINDOW_HEIGHT;
+
+	if (m_IsFullWindow)
+	{
+		m_Monitor = glfwGetPrimaryMonitor();
+		if (m_Monitor != nullptr)
+		{
+			m_VideoMode = glfwGetVideoMode(m_Monitor);
+
+			if (m_VideoMode != nullptr)
+			{
+				glfwWindowHint(GLFW_RED_BITS, m_VideoMode->redBits);
+				glfwWindowHint(GLFW_GREEN_BITS, m_VideoMode->greenBits);
+				glfwWindowHint(GLFW_BLUE_BITS, m_VideoMode->blueBits);
+				glfwWindowHint(GLFW_REFRESH_RATE, m_VideoMode->refreshRate);
+
+				m_Width = m_VideoMode->width;
+				m_Height = m_VideoMode->height;
+			}
+		}
+	}
+
 	// Create window with graphics context
-	m_Window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Bezdomni", NULL, NULL);
+	m_Window = glfwCreateWindow(m_Width, m_Height, "Druid's Onsen", m_Monitor, NULL);
 	if (m_Window == NULL)
 	{
 		std::cout << "ERROR: Failed to create GLFW Window!\n";
@@ -56,6 +80,20 @@ void WindowManager::GlfwErrorCallback(int error, const char* description)
 	fprintf(stderr, "Glfw Error %d: %s\n", error, description);
 }
 
+float WindowManager::GetWindowWidth()
+{
+	return static_cast<float>(m_Width);
+}
+
+float WindowManager::GetWindowHeight()
+{
+	return static_cast<float>(m_Height);
+}
+
+float WindowManager::GetWindowAspectRatio()
+{
+	return static_cast<float>(m_Width) / static_cast<float>(m_Height);
+}
 
 GLFWwindow* WindowManager::GetWindowPointer()
 {

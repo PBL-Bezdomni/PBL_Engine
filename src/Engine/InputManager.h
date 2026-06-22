@@ -6,12 +6,12 @@
 #include <functional>
 #include <algorithm>
 
-enum class BindingType { Button, Axis };
+enum class BindingType { Button, Axis, Trigger, TriggerButton };
 
 struct Binding {
     BindingType type;
     int code;        
-    float threshold; 
+    float maxPressure;
 };
 
 enum class InputEventType { Started, Performed, Ended };

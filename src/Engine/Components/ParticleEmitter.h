@@ -42,6 +42,7 @@ public:
 
 	void SetBulk(float bulk);
 	void SetSpawnRate(float spawnRate);
+	void SetLoop(bool loop);
 
 private:
 	uint64_t m_ID;
@@ -50,6 +51,7 @@ private:
 	float m_SpawnRate = 30.0f; // particles per second
 	float m_Accumulator = 0.0f;
 	float m_Bulk = 5;
+	bool m_Loop = true;
 
 	ParticleSystem* m_ParticleSystem;
 
