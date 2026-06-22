@@ -53,13 +53,18 @@ void ParticleEmitter::Update()
 
 void ParticleEmitter::Play()
 {
+	if (m_ParticleSystem == nullptr)
+	{
+		FetchParticleSystem();
+	}
+	if (!m_Loop)
+	{
+		m_ParticleSystem->Emit(*this, m_Bulk);
+		return;
+	}
 	if (!m_IsEmitting)
 	{
 		m_IsEmitting = true;
-		if (m_ParticleSystem == nullptr)
-		{
-			FetchParticleSystem();
-		}
 	}
 }
 

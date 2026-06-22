@@ -124,6 +124,11 @@ void Player::Update()
         }
     }
 
+    if (m_BestAnimalInObject != nullptr)
+    {
+        // I don't know if it's necessary. #PG
+    }
+
     RigidBody* rb = m_Owner->GetComponent<RigidBody>();
 
 	glm::vec3 direction = glm::vec3(MoveInput.x, 0.0f, MoveInput.y);
@@ -331,6 +336,12 @@ void Player::BindInput()
             this->HandleThrowReleased();
         }
     });
+
+    im->subscribe(deviceID, m_InputName.INTERACTION, [this](float val, InputEventType type, int id)
+    {
+        if (id == deviceID && type == InputEventType::Started)
+            this->HandleInteractionPressed();
+    });
 }
 
 void Player::HandleActionPressed()
@@ -478,6 +489,14 @@ void Player::HandleThrowReleased()
     }
 }
 
+void Player::HandleInteractionPressed()
+{
+    if (m_BestAnimalInObject != nullptr)
+    {
+        m_BestAnimalInObject->PlayerFulfillNeed();
+    }
+}
+
 void Player::SetHighlight(GameObject* animal, bool isHighlighted)
 {
     if (animal == nullptr) return;
@@ -506,6 +525,10 @@ void Player::OnAnimalEnteredZone(GameObject* animal, float score)
 
         SetHighlight(m_BestAnimalTarget, true);
     }
+    else if (score <= -5)
+    {
+        m_BestAnimalInObject = animalScript;
+    }
 }
 
 void Player::OnAnimalExitedZone(GameObject* animal)
@@ -518,6 +541,12 @@ void Player::OnAnimalExitedZone(GameObject* animal)
         m_BestAnimalScore = -1.0f;
 
         RecalculateBestTarget();
+    }
+
+    Animal* animalScript = animal->GetDerivedComponent<Animal>();
+    if (animalScript == m_BestAnimalInObject)
+    {
+        m_BestAnimalInObject = nullptr;
     }
 }
 

@@ -34,6 +34,7 @@ struct InputName
     const char* LOOK_STRAFE = "LookStrafe";
     const char* ACTION = "Action";
     const char* THROW = "Throw";
+    const char* INTERACTION = "Interaction";
 };
 
 class InputManager {

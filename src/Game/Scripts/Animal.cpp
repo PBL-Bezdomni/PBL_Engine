@@ -7,6 +7,8 @@
 #include <Engine/Engine.h>
 #include "Engine/AssetManager.h"
 #include <Engine/Animation/Animator.h>
+
+#include "InteractionGlyph.h"
 #include "Player.h"
 #include "Engine/Components/ParticleEmitter.h"
 
@@ -25,6 +27,7 @@ void Animal::Awake()
 	m_Indicator->Name = "NeedsIndicator";
 	m_Indicator->transform->Position = glm::vec3(0.f, -0.8f, 0.f);
     AssignWalkEmitter();
+    AssignInteractionEmitter();
     // TODO add scripts for every animal kind, that will override enum
     if (m_Owner->Name.find("bunny") != std::string::npos)
     {
@@ -101,6 +104,11 @@ void Animal::Awake()
     m_Checkmark->SetActive(false);
     SetCheckmarkShader(m_AssetMgr->WorldUIShader);
 
+    std::shared_ptr<Shader> interactionShader = m_AssetMgr->GetNewWorldUIShader();
+    m_InteractionMark = m_SceneMgr->Instantiate(m_Owner, "res/models/CheckmarkPlane.obj", interactionShader);
+    InteractionGlyph* glyph = m_InteractionMark->AddComponent<InteractionGlyph>();
+    glyph->Initialize(interactionShader, *m_AssetMgr->GetTexture("res/textures/UI/x_button_color.png"));
+
     DrawRandomNeeds();
 
     m_PlayersInScene = m_SceneMgr->GetLevelParent()->FindComponentsInChildren<Player>();
@@ -161,8 +169,7 @@ void Animal::EnterTable(GameObject* table)
     m_TeleportTarget = tablePos + glm::vec3(0.0f, 2.0f, 0.0f);
 
     m_ShouldTeleport = true;
-
-    RigidBody* rb = m_Owner->GetComponent<RigidBody>();
+    
 }
 
 void Animal::Update()
@@ -181,27 +188,29 @@ void Animal::Update()
         m_ShouldTeleport = false;
 
         m_Owner->transform->Position = m_TeleportTarget;
-
-        RigidBody* rb = m_Owner->GetComponent<RigidBody>();
-        if (rb != nullptr)
+        
+        if (m_RB != nullptr)
         {
-            rb->SetLinearVelocity(glm::vec3(0.0f));
+            m_RB->SetLinearVelocity(glm::vec3(0.0f));
 
-            rb->SetAngularVelocity(glm::vec3(0.0f));
+            m_RB->SetAngularVelocity(glm::vec3(0.0f));
 
-            rb->Teleport(m_TeleportTarget);
+            m_RB->Teleport(m_TeleportTarget);
         }
     }
-
-    RigidBody* rb = m_Owner->GetComponent<RigidBody>();
-    if (rb == nullptr) return;
+    
+    if (m_RB == nullptr) return;
 
     m_StateController.Update();
+
+    if (m_InteractionMark->IsActive())
+    {
+        m_InteractionMark->transform->Position.y ;
+    }
 }
 
 
-void Animal::UpdateIdle() 
-{
+void Animal::UpdateIdle() {
     RigidBody* rb = m_Owner->GetComponent<RigidBody>();
 
     if (rb != nullptr)
@@ -246,6 +255,8 @@ void Animal::UpdateWalking()
     m_LastPosition = currentPos;
     if (m_StuckTimer > 1.0f)
     {
+        rb->SetLinearVelocity(glm::vec3(0.0f, rb->GetLinearVelocity().y, 0.0f));
+        PickNewTargetPosition();
         m_WaitTime = 1.0f;
         m_CurrentWaitTime = 0.0f;
         m_StuckTimer = 0.0f;
@@ -276,15 +287,20 @@ void Animal::UpdateWalking()
         //while (m_CurrentAngle > 360.0f) m_CurrentAngle -= 360.0f;
         //while (m_CurrentAngle < -360.0f) m_CurrentAngle += 360.0f;
 
+        while (m_CurrentAngle > 360.0f) m_CurrentAngle -= 360.0f;
+        while (m_CurrentAngle < -360.0f) m_CurrentAngle += 360.0f;
+
         rb->SetRotation(glm::vec3(0.0f, m_CurrentAngle, 0.0f));
 
         glm::vec3 rayStart = currentPos + glm::vec3(0.0f, 0.5f, 0.0f);
         float lookAheadDistance = 1.5f;
 
-        GameObject* obstacle = Engine::GetInstance().GetPhysicsEngine().CastRay(rayStart, direction, lookAheadDistance, rb->GetBodyID());
+        GameObject* obstacle = Engine::GetInstance().GetPhysicsEngine().CastRay(rayStart, direction, lookAheadDistance, m_RB->GetBodyID());
 
         if (obstacle != nullptr)
         {
+            rb->SetLinearVelocity(glm::vec3(0.0f, rb->GetLinearVelocity().y, 0.0f));
+            PickNewTargetPosition();
             m_WaitTime = Random::GetRandomFloat(1.0f, 3.0f);
             m_CurrentWaitTime = 0.0f;
             m_StuckTimer = 0.0f;
@@ -300,7 +316,7 @@ void Animal::UpdateWalking()
             speedMultiplier = std::max(0.3f, distance / slowDownDistance);
         }
 
-        glm::vec3 currentVelocity = rb->GetLinearVelocity();
+        glm::vec3 currentVelocity = m_RB->GetLinearVelocity();
         float currentMoveSpeed = m_MoveSpeed * speedMultiplier;
         float newVelY = currentVelocity.y;
 
@@ -346,15 +362,23 @@ void Animal::UpdateWalking()
         float newVelX = glm::mix(currentVelocity.x, targetVelocity.x, accel * Time::GetDeltaTime());
         float newVelZ = glm::mix(currentVelocity.z, targetVelocity.z, accel * Time::GetDeltaTime());
 
-        rb->SetLinearVelocity(glm::vec3(newVelX, newVelY, newVelZ));
+        m_RB->SetLinearVelocity(glm::vec3(newVelX, newVelY, newVelZ));
     }
     else
     {
-        m_WaitTime = Random::GetRandomFloat(1.0f, 3.0f);
-        m_CurrentWaitTime = 0.0f;
-        m_StuckTimer = 0.0f;
-        m_JumpTimer = 0.0f;
-        m_StateController.RequestStateChange.Invoke(AnimalState::Idle);
+        rb->SetLinearVelocity(glm::vec3(0.0f, rb->GetLinearVelocity().y, 0.0f));
+
+        m_CurrentWaitTime += Time::GetDeltaTime();
+
+        if (m_CurrentWaitTime >= m_WaitTime)
+        {
+            PickNewTargetPosition();
+
+            m_WaitTime = Random::GetRandomFloat(1.0f, 3.0f);
+            m_CurrentWaitTime = 0.0f;
+            m_StuckTimer = 0.0f;
+            m_JumpTimer = 0.0f;
+        }
     }
 }
 
@@ -376,16 +400,27 @@ void Animal::UpdateThrow() {
 void Animal::UpdateCheckIn() {
 }
 
-void Animal::UpdateFulfillingNeed() {
-
-    RigidBody* rb = m_Owner->GetComponent<RigidBody>();
-    if (rb != nullptr)
+void Animal::UpdateFulfillingNeed()
+{
+    if (m_RB != nullptr)
     {
-        rb->SetLinearVelocity(glm::vec3(0.0f));
-        rb->SetAngularVelocity(glm::vec3(0.0f));
+        m_RB->SetLinearVelocity(glm::vec3(0.0f));
+        m_RB->SetAngularVelocity(glm::vec3(0.0f));
     }
 
-    m_CurrentNeedProgress += m_SatisfactionSpeed * Time::GetDeltaTime();
+    float dt = Time::GetDeltaTime();
+    if (IsCurrentNeedInteractible())
+    {
+        m_CurrentNeedProgress -= m_SatisfactionDecreaseSpeed * dt;
+        if (m_CurrentNeedProgress < 0)
+        {
+            m_CurrentNeedProgress = 0;
+        }
+    }
+    else
+    {
+        m_CurrentNeedProgress += m_SatisfactionSpeed * dt;
+    }
 
     UpdateProgressBar();
 
@@ -471,6 +506,23 @@ void Animal::FulfillNeed(AnimalNeeds need) {
     }
 }
 
+void Animal::PlayerFulfillNeed()
+{
+    if (m_StateController.GetCurrentState() == AnimalState::Rest)
+    {
+        if (IsCurrentNeedInteractible() && m_CurrentNeedProgress < 1)
+        {
+            m_CurrentNeedProgress += m_PlayerFulfillSpeed;
+            m_InteractionEmitter->Play();
+        }
+    }
+}
+
+bool Animal::IsCurrentNeedInteractible()
+{
+    return m_CurrentNeedBeingFulfilled == AnimalNeeds::Massage;
+}
+
 void Animal::EnterPosition(glm::vec3 exactWorldPosition)
 {
     m_TeleportTarget = exactWorldPosition;
@@ -503,11 +555,16 @@ void Animal::StartFulfillingNeed(AnimalNeeds need)
     m_StateController.RequestStateChange.Invoke(AnimalState::Rest);
     m_CurrentNeedBeingFulfilled = need;
     m_CurrentNeedProgress = 0.0f;
+    if (IsCurrentNeedInteractible())
+    {
+        m_InteractionMark->SetActive(true);
+    }
 }
 
 void Animal::StopFulfillingNeed()
 {
     m_ProgressBar->SetActive(false);
+    m_InteractionMark->SetActive(false);
     m_CurrentNeedProgress = 0.0f;
 }
 
@@ -535,15 +592,14 @@ void Animal::UpdateCheckmark() {
 void Animal::ResetEverythingSpawn(glm::vec3 spawnPosition)
 {
     m_Owner->transform->Position = spawnPosition;
-
-    RigidBody* rb = m_Owner->GetComponent<RigidBody>();
-    if (rb != nullptr)
+    
+    if (m_RB != nullptr)
     {
-        rb->RequestTeleport(spawnPosition);
+        m_RB->RequestTeleport(spawnPosition);
 
-        rb->SetLinearVelocity(glm::vec3(0.0f));
-        rb->SetAngularVelocity(glm::vec3(0.0f));
-        rb->SetRotation(glm::vec3(0.0f));
+        m_RB->SetLinearVelocity(glm::vec3(0.0f));
+        m_RB->SetAngularVelocity(glm::vec3(0.0f));
+        m_RB->SetRotation(glm::vec3(0.0f));
     }
 
     m_CurrentAngle = 0.0f;
@@ -624,4 +680,19 @@ void Animal::AssignWalkEmitter()
 
 void Animal::AssignLandEmitter()
 {
+}
+
+void Animal::AssignInteractionEmitter()
+{
+    m_InteractionEmitter = m_Owner->AddComponent<ParticleEmitter>();
+    m_InteractionEmitter->Initialize("res/shaders/basicParticles.vert", "res/shaders/basicParticles.frag", "res/shaders/basicParticles.comp", "res/models/PieChartPlane.obj", "res/textures/UI/smoke.png");
+    m_InteractionEmitter->SetSpawnRate(60);
+    m_InteractionEmitter->SetBulk(20);
+    m_InteractionEmitter->MaxVelocity = glm::vec3(3.f, .8f, 3.f);
+    m_InteractionEmitter->MaxLife = 0.4f;
+    // m_InteractionEmitter->Color = glm::vec4(0.258f, 0.59f, 0.711f, .2f);
+    // m_InteractionEmitter->SetPositionOffset(glm::vec3(0, -6.2, 0));
+    // m_InteractionEmitter->IsRandomPosition = true;
+    // m_InteractionEmitter->RandomPositionOffset = glm::vec3(5, 0, 5);
+    m_InteractionEmitter->SetLoop(false);
 }

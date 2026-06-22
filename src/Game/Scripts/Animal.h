@@ -31,6 +31,7 @@ private:
 	AnimalInteractions m_AnimalInteractions;
 	Camera* m_MainCamera;
     std::vector<Player*> m_PlayersInScene;
+	RigidBody* m_RB;
 
 	float m_TimeLimit;
 	float m_CurrTime;
@@ -41,6 +42,8 @@ private:
     float m_CurrentNeedProgress = 0.0f;
 
     float m_SatisfactionSpeed = 0.1f;
+    float m_PlayerFulfillSpeed = 0.2f;
+    float m_SatisfactionDecreaseSpeed = 0.03f;
     AnimalNeeds m_CurrentNeedBeingFulfilled;
 
     bool m_ShouldTeleport = false;
@@ -60,6 +63,7 @@ private:
 
 	ParticleEmitter* m_WalkEmitter;
 	ParticleEmitter* m_LandEmitter;
+	ParticleEmitter* m_InteractionEmitter;
 
 	void PickNewTargetPosition();
 
@@ -71,18 +75,20 @@ private:
 
     std::shared_ptr<Shader> m_CheckmarkShader;
     std::shared_ptr<GameObject> m_Checkmark;
+    std::shared_ptr<GameObject> m_InteractionMark;
     void UpdateCheckmark();
 
     std::shared_ptr<Shader> m_CellShadingShader;
 
 	std::vector<AnimalNeeds> m_RequiredServices;
-	RigidBody* m_RB;
+	// RigidBody* m_RB;
 
     AnimalStateController m_StateController;
 
     void AssignBearTexture();
 	virtual void AssignWalkEmitter();
 	virtual void AssignLandEmitter();
+	virtual void AssignInteractionEmitter();
 
 public:
     std::shared_ptr<GameObject> m_ProgressBar;
@@ -128,6 +134,9 @@ public:
     void StartFulfillingNeed(AnimalNeeds need);
     void StopFulfillingNeed();
     void FulfillNeed(AnimalNeeds need);
+    void PlayerFulfillNeed();
+    bool IsCurrentNeedInteractible();
+
     Animal() : m_StateController(this) {}
     AnimalStateController* GetStateController() { return &m_StateController; }
     EventBinder m_EventBinder;

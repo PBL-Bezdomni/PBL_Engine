@@ -3,6 +3,7 @@
 #include "Engine/InputManager.h"
 #include "Game/Scripts/SpawnManager.h"
 
+class Animal;
 class AOnsenObject;
 class ParticleEmitter;
 class GameObject;
@@ -24,6 +25,7 @@ private:
     void HandleActionPressed();
     void HandleThrowPressed();
     void HandleThrowReleased();
+    void HandleInteractionPressed();
 
     shared_ptr<GameObject> m_ChargeMeter;
     shared_ptr<Shader> m_ChargeMeterShader;
@@ -61,6 +63,7 @@ public:
 
     GameObject* GetBestAnimalTarget() const { return m_BestAnimalTarget; }
     GameObject* m_BestAnimalTarget = nullptr;
+    Animal* m_BestAnimalInObject = nullptr;
     float m_BestAnimalScore = -1.0f;
 
     void OnAnimalEnteredZone(GameObject* animal, float score);
