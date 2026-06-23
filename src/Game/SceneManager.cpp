@@ -270,11 +270,11 @@ void SceneManager::RenderScene()
 	}
 	if (SpawnManager::Instance != nullptr)
 	{
-		m_MoneyPanel.Text = std::to_wstring(SpawnManager::Instance->GetMoney());
+		m_MoneyPanel.Text = std::to_wstring(SpawnManager::Instance->GetMoneyAnimated());
 	}
 	else
 	{
-		m_MoneyPanel.Text = L"Kasa: ERROR (nullptr)";
+		m_MoneyPanel.Text = L"ERROR (nullptr)";
 		std::cout << "ERROR: SpawnManager::Instance is Null. Logic does not work.\n";
 	}
 	m_FpsPanel.Text = L"FPS: " + std::to_wstring(Time::GetFPS());

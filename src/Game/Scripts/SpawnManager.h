@@ -17,6 +17,7 @@ private:
 	
 	float m_SpawnCounter;
 	float m_SpawnTime = 2.f;
+	float m_AnimatedMoney = 0.0f;
 
 	int m_BunnyLimit = 1; //7
 	int m_BearLimit = 1; //3
@@ -37,6 +38,8 @@ public:
 
 	void AddMoney(int money);
 	int GetMoney() const { return m_EarnedMoney; }
+	int GetMoneyAnimated() const { return static_cast<int>(m_AnimatedMoney); }
+	bool IsMoneyAnimating() const { return m_AnimatedMoney < m_EarnedMoney; }
 	SpawnManager() = default;
 	void CreateEntities(shared_ptr<Shader> shader);
 	shared_ptr<GameObject> CreateAnimal(shared_ptr<Shader> shader, const char* path, const char* name, int index = 0, std::string animPat = "");

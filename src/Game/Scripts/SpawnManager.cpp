@@ -44,6 +44,8 @@ void SpawnManager::Start()
 void SpawnManager::Update()
 {
 	Behaviour::Update();
+
+	// 1. Sekcja odpowiedzialna za odliczanie czasu do spawnu zwierząt
 	m_SpawnCounter += Time::GetDeltaTime();
 	if (m_SpawnCounter >= m_SpawnTime)
 	{
@@ -55,7 +57,18 @@ void SpawnManager::Update()
 			SpawnAnimal(animal.get());
 		}
 	}
+	if (m_AnimatedMoney < m_EarnedMoney)
+	{
+		m_AnimatedMoney += (m_EarnedMoney - m_AnimatedMoney) * 2.0f * Time::GetDeltaTime();
+
+		if (m_EarnedMoney - m_AnimatedMoney < 0.1f)
+		{
+			m_AnimatedMoney = static_cast<float>(m_EarnedMoney);
+		}
+	}
+
 }
+
 void SpawnManager::AddMoney(int money)
 {
 	m_EarnedMoney += money;
@@ -71,7 +84,7 @@ void SpawnManager::OnTriggerEnter(GameObject* other)
 		if (animal->GetRequiredServices().empty())
 		{
 			Engine::GetInstance().GetAudioManager().PlaySound("res/audio/1.wav");
-			AddMoney(10); 
+			AddMoney(100);
 		}
 		DespawnAnimal(other);
 	}
