@@ -62,7 +62,7 @@ private:
 	void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
 	static void ScrollCallbackDispatcher(GLFWwindow* window, double xoffset, double yoffset);
 	static void JoystickCallback(int jid, int event);
-	void LoadGrass();
+	void SetByMask(std::vector<glm::mat4>* matrices, int arraySize, string mapPath, float density);
 
 	shared_ptr<Camera> MainCamera;
 	glm::mat4 m_TextProjection;
@@ -109,6 +109,7 @@ private:
 	GameObject bath;
 
 	GameObject Bamboo;
+	std::vector<glm::mat4> bambooMatrices;
 	GameObject Grass[3];
 	std::vector<glm::mat4> grassMatrices[3];
 };

@@ -71,8 +71,11 @@ void CelShading::FBOInit() {
     glBindFramebuffer(GL_FRAMEBUFFER, m_PostProcessFBO);
 }
 
-void CelShading::RenderQuad(Shader& shader) {
+void CelShading::RenderQuad(Shader& shader, bool isCellShaded) {
     shader.Use();
+    if (isCellShaded) {
+        shader.SetBool("isCellShaded", true);
+    }
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, m_ScreenColorTex);

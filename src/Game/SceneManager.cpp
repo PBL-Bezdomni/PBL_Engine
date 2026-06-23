@@ -247,7 +247,7 @@ void SceneManager::RenderScene()
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	m_cl->RenderQuad(*AssetMgr->CelShadingShader);
+	m_cl->RenderQuad(*AssetMgr->CelShadingShader, true);
 
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, m_cl->GetFBO());
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
@@ -458,17 +458,17 @@ void SceneManager::AssignSceneGraph()
 void SceneManager::LoadModels()
 {
 	m_WorldParent = GameObject();
-	vector<shared_ptr<GameObject>> objs = m_JSONImporter->ImportScene("scene2", &m_WorldParent);
+	vector<shared_ptr<GameObject>> objs = m_JSONImporter->ImportScene("sceneexp", &m_WorldParent);
 	m_GameObjects.insert(m_GameObjects.end(), objs.begin(), objs.end());
 	m_WorldParent.UpdateSelfAndChild();
 
-	LoadGrass();
+	
+	SetByMask(grassMatrices, 3, "res/textures/scene_textures/GrassPosition.png", 0.1f);
 	for (int i = 0; i < 3; i++) {
+		m_WorldParent.GetChildByName("Ground")->RemoveChild(m_WorldParent.GetChildByName("Grass" + to_string(i)));
 		Grass[i] = GameObject();
 		Grass[i].ID = 999 - i;
-		Grass[i].Name = "Grass" + i + 1;
-		//Grass[i].AddComponent<RigidBody>();
-		//Grass[i].GetComponent<RigidBody>()->Init(glm::vec3(1.0f), true, false, glm::vec3(0.0f));
+		Grass[i].Name = "Grass" + to_string(i);
 		Model grassModel(*AssetMgr->BasicShader, "res/models/scene_models/Grass.fbx", grassMatrices[i].size(), grassMatrices[i]);
 		if (i == 0) {
 			grassModel.AssignTexture(*AssetMgr->GetTexture("res/textures/scene_textures/Grass1_DefaultMaterial_BaseColor.png"));
@@ -499,13 +499,16 @@ void SceneManager::LoadModels()
 	//m_LightSource.transform->Position = glm::vec3(0.f, 15.0f, -30.0f);
 
 	
-
-	//Bamboo = GameObject();
-	//Bamboo.ID = 996;
-	//Bamboo.Name = "Bamboo";
-	//Model b_model(*AssetMgr->BasicShader, "res/models/scene_models/Bb.fbx");
-	//Bamboo.AddComponent<Model>(b_model);
-	//m_WorldParent.GetChildByName("Ground")->AddChild(&Bamboo);
+	//m_WorldParent.GetChildByName("Bamboo")->m_isVisible = false;
+	m_WorldParent.GetChildByName("Ground")->RemoveChild(m_WorldParent.GetChildByName("Bamboo"));
+	SetByMask(&bambooMatrices, 0, "res/textures/scene_textures/BambooPosition.png", 0.01f);
+	Bamboo = GameObject();
+	Bamboo.ID = 996;
+	Bamboo.Name = "Bamboo";
+	Bamboo.m_isVisible = false;
+	Model b_model(*AssetMgr->BasicShader, "res/models/scene_models/Bambooes.fbx", bambooMatrices.size(), bambooMatrices);
+	Bamboo.AddComponent<Model>(b_model);
+	m_WorldParent.GetChildByName("Ground")->AddChild(&Bamboo);
 
 	m_UIPanelTex = *AssetMgr->GetTexture("res/textures/UI/UI_panel.png");
 	m_UICoinTex = *AssetMgr->GetTexture("res/textures/UI/coin.png");
@@ -679,18 +682,18 @@ void SceneManager::JoystickCallback(int jid, int event) {
 	}
 }
 
-void SceneManager::LoadGrass()
+void SceneManager::SetByMask(std::vector<glm::mat4>* matrices, int arraySize, string mapPath, float density)
 {
 	int numOfMatrix = 0;
 	GameObject* groundObj = m_WorldParent.GetChildByName("Ground");
 	if (!groundObj) {
-		std::cout << "ERROR LoadGrass: Ground is not found" << std::endl;
+		std::cout << "ERROR SetByMap: Ground is not found" << std::endl;
 		return;
 	}
 
 	Model* terrainModel = groundObj->GetComponent<Model>();
 	if (!terrainModel || terrainModel->Meshes.empty()) {
-		std::cout << "ERROR LoadGrass: Ground has no model component" << std::endl;
+		std::cout << "ERROR SetByMap: Ground has no model component" << std::endl;
 		return;
 	}
 
@@ -698,13 +701,12 @@ void SceneManager::LoadGrass()
 
 	int width, height, nrChannels;
 
-	unsigned char* data = stbi_load("res/textures/scene_textures/GrassPosition.png", &width, &height, &nrChannels, 1);
+	unsigned char* data = stbi_load((const char*)mapPath.c_str(), &width, &height, &nrChannels, 1);
 	if (!data) {
-		std::cout << "ERROR LoadGrass: Can't load Grass Mask" << std::endl;
+		std::cout << "ERROR SetByMap: Can't load Mask" << std::endl;
 		return;
 	}
 
-	float grassDensityPerUnit = 0.1f;
 
 	for (size_t i = 0; i < terrainMesh.Indices.size(); i += 3)
 	{
@@ -721,8 +723,8 @@ void SceneManager::LoadGrass()
 		glm::vec3 edge2 = p2 - p0;
 		float area = glm::length(glm::cross(edge1, edge2)) * 0.5f;
 
-		int attempts = (int)(area * grassDensityPerUnit);
-		if (((float)rand() / RAND_MAX) < (area * grassDensityPerUnit - attempts)) {
+		int attempts = (int)(area * density);
+		if (((float)rand() / RAND_MAX) < (area * density - attempts)) {
 			attempts++;
 		}
 
@@ -757,12 +759,13 @@ void SceneManager::LoadGrass()
 			{
 
 				glm::vec3 localPos = w0 * p0 + w1 * p1 + w2 * p2;
-				localPos.z += 2.5f;
+				if (arraySize != 0)
+					localPos.z += 2.5f;
 
 				glm::mat4 model = glm::mat4(1.0f);
 				model = glm::translate(model, localPos);
 
-
+				if(arraySize !=0){
 				//model = glm::rotate(model, glm::radians((float)(rand() % 360)), glm::vec3(0.0f, 1.0f, 0.0f));
 				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 				model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -772,16 +775,21 @@ void SceneManager::LoadGrass()
 				float randomScale = 0.3f + ((float)rand() / RAND_MAX) * 0.4f;
 				model = glm::scale(model, glm::vec3(randomScale));
 
-				if(numOfMatrix < 10)
-					grassMatrices[0].push_back(model);
-				else 
-					grassMatrices[numOfMatrix-9].push_back(model);
-				numOfMatrix++;
-				if (numOfMatrix >= 12) numOfMatrix = 0;
+					if (numOfMatrix < 10)
+						matrices[0].push_back(model);
+					else
+						matrices[numOfMatrix - 9].push_back(model);
+					numOfMatrix++;
+					if (numOfMatrix >= 12) numOfMatrix = 0;
+				}
+				else {
+					float randomScale = 0.7f + ((float)rand() / RAND_MAX) * 0.3f;
+					model = glm::scale(model, glm::vec3(0.3f, 0.4f, 1.0f));
+					matrices->push_back(model);
+				}
 			}
 		}
 	}
 	stbi_image_free(data);
 
-	//std::cout << "Grass Generated: " << grassMatrices.size() << std::endl;
 }
