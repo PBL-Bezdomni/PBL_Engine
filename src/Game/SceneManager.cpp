@@ -310,7 +310,6 @@ void SceneManager::RenderScene()
 		screenPos.y = static_cast<float>(windowH) - screenPos.y;
 		m_ALetterPanel.Position = glm::vec2(screenPos.x, screenPos.y);
 
-		// Alternatively: dd gentle up and down animation using sin function and deltaTime
 		m_ALetterPanel.Position.y += sin(glfwGetTime() * 5.0f) * 5.0f;
 
 		m_UIManager.DrawPanelWithText(*AssetMgr->UIShader, *AssetMgr->TextShader, m_ALetterPanel);
@@ -461,6 +460,7 @@ void SceneManager::LoadModels()
 
 	m_UIPanelTex = *AssetMgr->GetTexture("res/textures/UI/UI_panel.png");
 	m_UICoinTex = *AssetMgr->GetTexture("res/textures/UI/coin.png");
+	m_UILetterTex = *AssetMgr->GetTexture("res/textures/UI/Xbox_button_A.png");
 
 	m_CameraManager = GameObject();
 	m_CameraManager.Name = "CameraManager";
@@ -481,13 +481,13 @@ void SceneManager::InitializeUI()
 	m_MoneyPanel.InconTextureID = m_UICoinTex.ID;
 	m_MoneyPanel.IconSize = glm::vec2(40.0f, 40.0f);
 
-	m_ALetterPanel.TextureID = m_UIPanelTex.ID;
+	m_ALetterPanel.TextureID = m_UILetterTex.ID;
 	m_ALetterPanel.HasTexture = true;
 	m_ALetterPanel.Size = glm::vec2(50.0f, 50.0f);
 	m_ALetterPanel.Position = glm::vec2((WindowMgr->GetWindowWidth() / 2.0f) - 50.0f, (WindowMgr->GetWindowHeight() / 2.0f) - 50.0f);
-	m_ALetterPanel.Text = L"A";
+	m_ALetterPanel.HasIcon = true;
+	m_ALetterPanel.InconTextureID = m_UILetterTex.ID;
 	m_ALetterPanel.TextScale = 1.0f;
-	m_ALetterPanel.TextColor = glm::vec3(0.333f, 0.227f, 0.196f);
 
 	m_TimerPanel.TextureID = m_UIPanelTex.ID;
 	m_TimerPanel.Size = glm::vec2(300.0f, 100.0f);
