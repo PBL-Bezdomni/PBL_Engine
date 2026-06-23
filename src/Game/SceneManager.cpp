@@ -257,7 +257,7 @@ void SceneManager::RenderScene()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_DEPTH_TEST);
-	glDepthMask(GL_FALSE);
+	glDepthMask(GL_TRUE);
 	m_WorldParent.DrawSelfAndChildFiltered(false);
 	glDepthMask(GL_TRUE);
 
@@ -462,20 +462,13 @@ void SceneManager::LoadModels()
 	m_GameObjects.insert(m_GameObjects.end(), objs.begin(), objs.end());
 	m_WorldParent.UpdateSelfAndChild();
 
-	m_LightSourceObject = GameObject();
-	Model lightModel = *AssetMgr->GetModel(*AssetMgr->LightSourceShader, "res/models/sphere/ball.obj");
-	m_LightSourceObject.AddComponent<Model>(lightModel);
-	
-	m_LightSource = GameObject();
-	m_LightSource.AddComponent<DirectionalLight>(MainCamera, m_LightSource.transform, glm::vec3(0.0f, -1.0f, -1.0f));
-
-	m_LightSource.transform->Position = glm::vec3(0.f, 15.0f, 0.0f);
-	//m_LightSource.transform->Position = glm::vec3(0.f, 15.0f, -30.0f);
-
 	LoadGrass();
-
 	for (int i = 0; i < 3; i++) {
 		Grass[i] = GameObject();
+		Grass[i].ID = 999 - i;
+		Grass[i].Name = "Grass" + i + 1;
+		//Grass[i].AddComponent<RigidBody>();
+		//Grass[i].GetComponent<RigidBody>()->Init(glm::vec3(1.0f), true, false, glm::vec3(0.0f));
 		Model grassModel(*AssetMgr->BasicShader, "res/models/scene_models/Grass.fbx", grassMatrices[i].size(), grassMatrices[i]);
 		if (i == 0) {
 			grassModel.AssignTexture(*AssetMgr->GetTexture("res/textures/scene_textures/Grass1_DefaultMaterial_BaseColor.png"));
@@ -493,13 +486,26 @@ void SceneManager::LoadModels()
 		Grass[i].m_isVisible = false;
 		m_WorldParent.GetChildByName("Ground")->AddChild(&Grass[i]);
 	}
-	//Model grassModel(*AssetMgr->BasicShader, "res/models/Grass1.fbx", grassMatrices.size(), grassMatrices);
+
+
+	m_LightSourceObject = GameObject();
+	Model lightModel = *AssetMgr->GetModel(*AssetMgr->LightSourceShader, "res/models/sphere/ball.obj");
+	m_LightSourceObject.AddComponent<Model>(lightModel);
+	
+	m_LightSource = GameObject();
+	m_LightSource.AddComponent<DirectionalLight>(MainCamera, m_LightSource.transform, glm::vec3(0.0f, -1.0f, -1.0f));
+
+	m_LightSource.transform->Position = glm::vec3(0.f, 15.0f, 0.0f);
+	//m_LightSource.transform->Position = glm::vec3(0.f, 15.0f, -30.0f);
+
 	
 
-	//Grass.AddComponent<Model>(grassModel);
-	//Grass.m_isVisible = false;
-
-	//m_WorldParent.GetChildByName("Ground")->AddChild(&Grass);
+	//Bamboo = GameObject();
+	//Bamboo.ID = 996;
+	//Bamboo.Name = "Bamboo";
+	//Model b_model(*AssetMgr->BasicShader, "res/models/scene_models/Bb.fbx");
+	//Bamboo.AddComponent<Model>(b_model);
+	//m_WorldParent.GetChildByName("Ground")->AddChild(&Bamboo);
 
 	m_UIPanelTex = *AssetMgr->GetTexture("res/textures/UI/UI_panel.png");
 	m_UICoinTex = *AssetMgr->GetTexture("res/textures/UI/coin.png");
@@ -751,7 +757,7 @@ void SceneManager::LoadGrass()
 			{
 
 				glm::vec3 localPos = w0 * p0 + w1 * p1 + w2 * p2;
-				localPos.z += 5.5f;
+				localPos.z += 2.5f;
 
 				glm::mat4 model = glm::mat4(1.0f);
 				model = glm::translate(model, localPos);

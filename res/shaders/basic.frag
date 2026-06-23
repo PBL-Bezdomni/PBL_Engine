@@ -82,10 +82,10 @@ void main()
     vec3 viewDir = normalize(viewPos - FragPos);
 
     vec4 texColor = texture(texture_diffuse1, TexCoord);
-    //if (texColor.a < 0.1)
-    //{
-    //    discard;
-    //}
+    if (texColor.a < 0.1)
+    {
+        discard;
+    }
     vec3 result = vec3(0.0);
     if (useDirLight)
     {
@@ -206,7 +206,7 @@ float ShadowCalculation(vec4 fragPosLightSpace, sampler2D map)
     vec3 normal = normalize(Normal);
 
     vec3 lightDir = normalize(-dirLight.direction); 
-    float bias = max(0.005 * (1.0 - dot(normal, lightDir)), 0.005);
+    float bias = max(0.0005 * (1.0 - dot(normal, lightDir)), 0.0005);
 
     float shadow = 0.0;
     vec2 texelSize = 1.0 / textureSize(map, 0);

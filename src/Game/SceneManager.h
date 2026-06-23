@@ -108,6 +108,7 @@ private:
 
 	GameObject bath;
 
+	GameObject Bamboo;
 	GameObject Grass[3];
 	std::vector<glm::mat4> grassMatrices[3];
 };
