@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <map>
+#include <unordered_map>
 #include <string>
 #include "Bone.h"
 #include <assimp/scene.h>
@@ -29,7 +30,8 @@ private:
 	int m_TicksPerSecond;
 	vector<Bone> m_Bones;
 	AssimpNodeData m_RootNode;
-	map<string, BoneInfo> m_BoneInfoMap;
+	unordered_map<string, int> m_BoneLookup;
+	unordered_map<string, BoneInfo> m_BoneInfoMap;
 
 public:
 	Animation() = default;
@@ -40,5 +42,6 @@ public:
 	inline float GetTicksPerSecond() { return m_TicksPerSecond; }
 	inline float GetDuration() { return m_Duration; }
 	inline const AssimpNodeData& GetRootNode() { return m_RootNode; }
-	inline const map<string, BoneInfo>& GetBoneIDMap() { return m_BoneInfoMap; }
+	inline const unordered_map<string, BoneInfo>& GetBoneIDMap() { return m_BoneInfoMap; }
+	
 };

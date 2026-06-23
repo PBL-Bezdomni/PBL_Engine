@@ -75,6 +75,7 @@ private:
 	
 	Texture m_UIPanelTex;
 	Texture m_UICoinTex;
+	Texture m_UILetterTex;
 
 	vector<shared_ptr<GameObject>> m_GameObjects;
 

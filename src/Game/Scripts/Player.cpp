@@ -16,6 +16,8 @@
 #include "Engine/Loader.h"
 #include <cstdlib>
 #include <ctime>
+#include "Model.h"
+#include <Engine/Animation/Animator.h>
 
 Player::Player(int deviceid)
 {
@@ -31,17 +33,34 @@ void Player::Awake()
     Engine& engine = Engine::GetInstance();
     AssetManager* am = &engine.GetAssetManager();
     m_SceneMgr = &engine.GetGameManager().GetSceneManager();
-    string path = "res/models/players/";
-    if (deviceID == 0)
-    {
-        path += "druid1/druid1.fbx";
-    }
-    else
-    {
-        path += "druid2/druid2.fbx";
-    }
-    Model bodyModel = *am->GetModel(*am->BasicShader, path.c_str());
+    string path = "res/models/animations/players/";
+    string druidDir = (deviceID == 0) ? "druid1/" : "druid2/";
+
+    Model bodyModel = *am->GetModel(*am->AnimatedShader, (path + druidDir + "druid-walking.glb").c_str());
     m_Owner->AddComponent<Model>(bodyModel);
+
+    m_Owner->transform->Scale = glm::vec3(8.0f);
+
+    Model* modelPtr = m_Owner->GetComponent<Model>();
+    if (modelPtr != nullptr)
+    {
+        string animPath = path + druidDir;
+
+        Animation* startAnimation = new Animation(animPath + "druid-walking.glb", modelPtr);
+        Animator* animator = m_Owner->AddComponent<Animator>(startAnimation);
+
+        if (animator != nullptr)
+        {
+            animator->AddAnimation("idle", new Animation(animPath + "druid-walking.glb", modelPtr));
+            animator->AddAnimation("walk", new Animation(animPath + "druid-walking.glb", modelPtr));
+            animator->AddAnimation("pickup", new Animation(animPath + "druid-pickup.glb", modelPtr));
+            animator->AddAnimation("massage", new Animation(animPath + "druid-massage.glb", modelPtr));
+            animator->AddAnimation("throw", new Animation(animPath + "druid-throwing.glb", modelPtr));
+            
+            animator->PlayAnimation("idle");
+        }
+        m_CurrentState = PlayerAnimState::Idle;
+    }
 
     m_ParticleEmitter = m_Owner->AddComponent<ParticleEmitter>();
     m_ParticleEmitter->Initialize("res/shaders/basicParticles.vert", "res/shaders/basicParticles.frag", "res/shaders/basicParticles.comp", "res/models/PieChartPlane.obj", "res/textures/UI/smoke.png");
@@ -87,6 +106,15 @@ void Player::Update()
 {
     float deltaTime = Time::GetDeltaTime();
 	if (!m_Owner) return;
+
+    Animator* animator = m_Owner->GetComponent<Animator>();
+    if (animator != nullptr)
+    {
+        if (m_CurrentState != PlayerAnimState::Idle)
+        {
+            animator->UpdateAnimation(deltaTime);
+        }
+    }
 
     if (m_TargetingZones.empty()) {
         m_TargetingZones = m_Owner->FindComponentsInChildren<TargetingZone>();
@@ -154,6 +182,35 @@ void Player::Update()
     {
         m_ParticleEmitter->Stop();
         m_FootstepTimer = 0.0f;
+    }
+
+    if (m_CurrentState == PlayerAnimState::Action)
+    {
+        m_ActionAnimTimer -= deltaTime;
+        if (m_ActionAnimTimer <= 0.0f)
+        {
+            m_CurrentState = PlayerAnimState::Idle;
+        }
+    }
+
+    if (m_CurrentState != PlayerAnimState::Action)
+    {
+        if (glm::length(direction) > 0.01f)
+        {
+            if (m_CurrentState != PlayerAnimState::Walking)
+            {
+                if (animator) animator->PlayAnimation("walk");
+                m_CurrentState = PlayerAnimState::Walking;
+            }
+        }
+        else
+        {
+            if (m_CurrentState != PlayerAnimState::Idle)
+            {
+                if (animator) animator->PlayAnimation("idle");
+                m_CurrentState = PlayerAnimState::Idle;
+            }
+        }
     }
 
     if (rb != nullptr)
@@ -378,6 +435,8 @@ void Player::HandleActionPressed()
             }
             if (animalScript != nullptr)
             {
+                PlayActionAnimation("pickup", 1.0f);
+
                 m_CarriedAnimal = hitObject;
                 m_HasPickUpReleased = false;
                 animalScript->GetStateController()->RequestStateChange.Invoke(AnimalState::PickedUp);
@@ -441,6 +500,8 @@ void Player::HandleThrowReleased()
     }
     if (m_CarriedAnimal != nullptr && m_IsChargingThrow)
     {
+        PlayActionAnimation("throw", 1.0f);
+
         Engine::GetInstance().GetAudioManager().PlaySound("res/audio/4.wav");
         RigidBody* animalRb = m_CarriedAnimal->GetComponent<RigidBody>();
         Animal* animalScript = m_CarriedAnimal->GetDerivedComponent<Animal>();
@@ -570,5 +631,16 @@ void Player::RecalculateBestTarget()
             float score = zone->GetAnimalScore(animal);
             OnAnimalEnteredZone(animal, score);
         }
+    }
+}
+
+void Player::PlayActionAnimation(const std::string& animName, float duration)
+{
+    Animator* animator = m_Owner->GetComponent<Animator>();
+    if (animator != nullptr)
+    {
+        animator->PlayAnimation(animName);
+        m_CurrentState = PlayerAnimState::Action;
+        m_ActionAnimTimer = duration;
     }
 }

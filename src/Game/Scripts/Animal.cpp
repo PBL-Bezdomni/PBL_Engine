@@ -178,12 +178,18 @@ void Animal::Update()
     Behaviour::Update();
     m_CurrTime = m_SceneMgr->GetTimeLeft();
 
-    Animator* animator = m_Owner->GetComponent<Animator>();
-    if (animator != nullptr)
-    {
-        animator->UpdateAnimation(Time::GetDeltaTime());
-    }
+    glm::vec3 cameraPos = m_MainCamera->GetPosition();
+    glm::vec3 animalPos = m_Owner->transform->GetGlobalPosition();
+    float distance = glm::length(cameraPos - animalPos);
 
+    if (distance < 140.0f)
+    {
+        Animator* animator = m_Owner->GetComponent<Animator>();
+        if (animator != nullptr)
+        {
+            animator->UpdateAnimation(Time::GetDeltaTime());
+        }
+    }
     if (m_ShouldTeleport)
     {
         m_ShouldTeleport = false;
@@ -272,7 +278,7 @@ void Animal::UpdateWalking()
 
 
         float targetAngle = glm::degrees(atan2(direction.x, direction.z));
-        if (m_Owner->Name.find("bear") != std::string::npos) targetAngle -= 90.0f;
+        targetAngle -= 90.0f;
 
         float deltaAngle = targetAngle - m_CurrentAngle;
 
@@ -280,9 +286,6 @@ void Animal::UpdateWalking()
         while (deltaAngle < -180.0f) deltaAngle += 360.0f;
 
         m_CurrentAngle += deltaAngle * m_RotationSpeed * Time::GetDeltaTime();
-        // moze
-        //while (m_CurrentAngle > 360.0f) m_CurrentAngle -= 360.0f;
-        //while (m_CurrentAngle < -360.0f) m_CurrentAngle += 360.0f;
 
         rb->SetRotation(glm::vec3(0.0f, m_CurrentAngle, 0.0f));
 
@@ -341,7 +344,6 @@ void Animal::UpdateWalking()
                 currentMoveSpeed *= 1.5f;
             }
         }
-        //glm::vec3 targetVelocity = direction * (m_MoveSpeed * speedMultiplier);
         glm::vec3 targetVelocity = direction * currentMoveSpeed;
 
         float accel = (m_Owner->Name.find("bunny") != std::string::npos) ? m_Acceleration * 4.0f : m_Acceleration;
