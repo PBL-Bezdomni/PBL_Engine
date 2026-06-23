@@ -39,7 +39,7 @@ void Player::Awake()
     Model bodyModel = *am->GetModel(*am->AnimatedShader, (path + druidDir + "druid-walking.glb").c_str());
     m_Owner->AddComponent<Model>(bodyModel);
 
-    m_Owner->transform->Scale = glm::vec3(8.0f);
+    m_Owner->transform->Scale = glm::vec3(m_ModelScaler);
 
     Model* modelPtr = m_Owner->GetComponent<Model>();
     if (modelPtr != nullptr)
@@ -70,9 +70,9 @@ void Player::Awake()
     m_ChargeMeter->GetComponent<Model>()->ReassignShader(*m_ChargeMeterShader);
     // Maybe custom texture for meter
     // m_ChargeMeter->GetComponent<Model>()->AssignTexture();
-    m_ChargeMeter->transform->Position = glm::vec3(0.f, -0.7f, 4.f);
+    m_ChargeMeter->transform->Position = glm::vec3(0.f, -0.1f, 4.f / m_ModelScaler);
     m_ChargeMeter->transform->EulerAngles = glm::vec3(0.f, -90.f, 0.f);
-    m_ChargeMeter->transform->Scale = glm::vec3(2.6f, 1.0f, 0.5f);
+    m_ChargeMeter->transform->Scale = glm::vec3(2.6f / m_ModelScaler, 1.0f, 0.5f / m_ModelScaler);
     m_ChargeMeter->SetActive(false);
 
     BindInput();
