@@ -458,7 +458,7 @@ void SceneManager::AssignSceneGraph()
 void SceneManager::LoadModels()
 {
 	m_WorldParent = GameObject();
-	vector<shared_ptr<GameObject>> objs = m_JSONImporter->ImportScene("sceneexp", &m_WorldParent);
+	vector<shared_ptr<GameObject>> objs = m_JSONImporter->ImportScene("scene2", &m_WorldParent);
 	m_GameObjects.insert(m_GameObjects.end(), objs.begin(), objs.end());
 	m_WorldParent.UpdateSelfAndChild();
 
@@ -500,6 +500,7 @@ void SceneManager::LoadModels()
 
 	
 	//m_WorldParent.GetChildByName("Bamboo")->m_isVisible = false;
+	
 	m_WorldParent.GetChildByName("Ground")->RemoveChild(m_WorldParent.GetChildByName("Bamboo"));
 	SetByMask(&bambooMatrices, 0, "res/textures/scene_textures/BambooPosition.png", 0.01f);
 	Bamboo = GameObject();
