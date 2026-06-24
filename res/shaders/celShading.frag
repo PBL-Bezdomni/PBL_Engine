@@ -56,7 +56,7 @@ void main() {
 
         float depthEdge = abs(depthLaplacian);
 
-        float depthThreshold = 0.8; 
+        float depthThreshold = 0.1; 
         depthEdge = (depthEdge > depthThreshold) ? 1.0 : 0.0;
 
 
