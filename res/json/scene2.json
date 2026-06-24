@@ -5987,28 +5987,28 @@
         {
             "base_color_texture": "",
             "collider_size": [
-                10.0,
-                1.0,
-                15.0
+                0.0,
+                0.0,
+                0.0
             ],
             "has_normal": false,
-            "has_rigid_body": true,
-            "id": 177,
-            "is_static": true,
-            "is_trigger": true,
+            "has_rigid_body": false,
+            "id": 800,
+            "is_static": false,
+            "is_trigger": false,
             "mesh": "",
             "name": "SpawnManager",
             "normal_texture": "",
             "parent": "Level",
             "parentID": 1,
             "position": [
-                -70.0,
-                60.00001525878906,
-                -280.0
+                0.0,
+                0.0,
+                0.0
             ],
             "rotation": [
-                90.0,
-                -89.9720230102539,
+                0.0,
+                0.0,
                 0.0
             ],
             "scale": [
@@ -6018,6 +6018,114 @@
             ],
             "scripts": [
                 "SpawnManager"
+            ]
+        },
+        {
+            "base_color_texture": "",
+            "collider_size": [
+                25.0,
+                20.0,
+                1.0
+            ],
+            "has_normal": false,
+            "has_rigid_body": true,
+            "id": 801,
+            "is_static": true,
+            "is_trigger": true,
+            "mesh": "",
+            "name": "Spawner1",
+            "normal_texture": "",
+            "parent": "SpawnManager",
+            "parentID": 800,
+            "position": [
+                -65.0,
+                50.0,
+                -300.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "scripts": [
+                "Spawner"
+            ]
+        },
+        {
+            "base_color_texture": "",
+            "collider_size": [
+                1.0,
+                20.0,
+                25.0
+            ],
+            "has_normal": false,
+            "has_rigid_body": true,
+            "id": 802,
+            "is_static": true,
+            "is_trigger": true,
+            "mesh": "",
+            "name": "Spawner2",
+            "normal_texture": "",
+            "parent": "SpawnManager",
+            "parentID": 800,
+            "position": [
+                54.99587631225586,
+                50.0,
+                -170.01649475097656
+            ],
+            "rotation": [
+                0.0,
+                -4.325711870478699e-06,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "scripts": [
+                "Spawner"
+            ]
+        },
+        {
+            "base_color_texture": "",
+            "collider_size": [
+                25.0,
+                20.0,
+                1.0
+            ],
+            "has_normal": false,
+            "has_rigid_body": true,
+            "id": 803,
+            "is_static": true,
+            "is_trigger": true,
+            "mesh": "",
+            "name": "Spawner3",
+            "normal_texture": "",
+            "parent": "SpawnManager",
+            "parentID": 800,
+            "position": [
+                -65.0,
+                50.000030517578125,
+                260.0
+            ],
+            "rotation": [
+                0.0,
+                -4.325711870478699e-06,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "scripts": [
+                "Spawner"
             ]
         },
         {
