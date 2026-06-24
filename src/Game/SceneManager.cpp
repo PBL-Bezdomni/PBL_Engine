@@ -511,6 +511,16 @@ void SceneManager::LoadModels()
 	Bamboo.AddComponent<Model>(b_model);
 	m_WorldParent.GetChildByName("Ground")->AddChild(&Bamboo);
 
+	m_WorldParent.GetChildByName("Ground")->RemoveChild(m_WorldParent.GetChildByName("Bush"));
+	SetByMask(&bushMatrices, 0, "res/textures/scene_textures/BushPosition.png", 0.001f);
+	Bush = GameObject();
+	Bush.ID = 995;
+	Bush.Name = "Bush";
+	Bush.m_isVisible = false;
+	Model bu_model(*AssetMgr->BasicShader, "res/models/scene_models/Bush.fbx", bushMatrices.size(), bushMatrices);
+	Bush.AddComponent<Model>(bu_model);
+	m_WorldParent.GetChildByName("Ground")->AddChild(&Bush);
+
 	m_UIPanelTex = *AssetMgr->GetTexture("res/textures/UI/UI_panel.png");
 	m_UICoinTex = *AssetMgr->GetTexture("res/textures/UI/coin.png");
 

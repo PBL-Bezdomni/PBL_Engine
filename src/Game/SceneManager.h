@@ -108,6 +108,8 @@ private:
 
 	GameObject bath;
 
+	GameObject Bush;
+	std::vector<glm::mat4> bushMatrices;
 	GameObject Bamboo;
 	std::vector<glm::mat4> bambooMatrices;
 	GameObject Grass[3];
