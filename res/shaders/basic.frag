@@ -132,7 +132,7 @@ void main()
 
 vec3 CalcDirLight(vec3 norm, vec3 viewDir, vec3 objectColor)
 {
-    float sunIntensity = 1.5f;
+    float sunIntensity = 2.5f;
     vec3 lightDir = normalize(-dirLight.direction);
     vec3 reflectDir = reflect(-lightDir, norm);
 
@@ -148,12 +148,20 @@ vec3 CalcDirLight(vec3 norm, vec3 viewDir, vec3 objectColor)
 
     float shadow = ShadowCalculation(FragPosLightSpace, shadowMap);                      
     float staticShadow = ShadowCalculation(FragPosLightSpace, staticShadowMap);
-
-    
-    
     // Comments left for demonstration purpose
     // Both static and dynamic shadow maps
-    return  (ambient + (1.0 - (shadow + staticShadow)) * (diffuse + specular)) * objectColor;
+
+    float combinedShadow = max(shadow, staticShadow);
+    vec3 shadowColorTint = vec3(0.15, 0.20, 0.35) * diffuse;
+    vec3 finalLight = ambient + mix(diffuse + specular, shadowColorTint, combinedShadow);
+    float rimFactor = 1.0 - max(dot(viewDir, norm), 0.0);
+    rimFactor = smoothstep(0.6, 1.0, rimFactor); 
+    vec3 rimLight = rimFactor * vec3(0.3, 0.5, 0.6) * diff;
+    
+    return (finalLight + rimLight) * objectColor;
+
+
+    //return (ambient + (1.0 - combinedShadow) * (diffuse + specular)) * objectColor;
     // Only static shadow map
 //    return  (ambient + (1.0 - staticShadow) * (diffuse + specular)) * objectColor;
     // Only dynamic shadow map
@@ -218,35 +226,38 @@ vec3 CalcSpotLight(Light light, vec3 norm, vec3 viewDir, vec3 objectColor)
 
 float ShadowCalculation(vec4 fragPosLightSpace, sampler2D map)
 {
-    
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
-    
     projCoords = projCoords * 0.5 + 0.5;
     
-    float closestDepth = texture(map, projCoords.xy).r; 
-    
-    float currentDepth = projCoords.z;
-    
-    vec3 normal = normalize(Normal);
+    // Защита от теней за пределами источника света
+    if(projCoords.z > 1.0)
+        return 0.0;
 
+    float currentDepth = projCoords.z;
+    vec3 normal = normalize(Normal);
     vec3 lightDir = normalize(-dirLight.direction); 
-    float bias = max(0.0006 * (1.0 - dot(normal, lightDir)), 0.0006);
+    
+    // Немного смягчили bias для мягких теней
+    float bias = max(0.001 * (1.0 - dot(normal, lightDir)), 0.0005);
 
     float shadow = 0.0;
     vec2 texelSize = 1.0 / textureSize(map, 0);
-    for(int x = -1; x <= 1; ++x)
+    
+    // Настройки мягкости
+    int radius = 2;          // Радиус размытия (2 = 5x5, 3 = 7x7)
+    float spread = 2.0;      // Насколько сильно пиксели отступают друг от друга
+    
+    float samples = pow((radius * 2.0 + 1.0), 2.0); // Общее количество сэмплов
+
+    for(int x = -radius; x <= radius; ++x)
     {
-        for(int y = -1; y <= 1; ++y)
+        for(int y = -radius; y <= radius; ++y)
         {
-            float pcfDepth = texture(map, projCoords.xy + vec2(x, y) * texelSize).r; 
-            shadow += currentDepth - bias > pcfDepth  ? 1.0 : 0.0;        
+            float pcfDepth = texture(map, projCoords.xy + vec2(x, y) * texelSize * spread).r; 
+            shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;        
         }    
     }
-    shadow /= 9.0;
-    
-   
-    if(projCoords.z > 1.0)
-        shadow = 0.0;
+    shadow /= samples;
         
     return shadow;
 }

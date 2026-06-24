@@ -466,6 +466,9 @@ void SceneManager::LoadModels()
 	m_WorldParent.UpdateSelfAndChild();
 	m_WorldParent.GetChildByName("Bonsai")->m_isVisible = false;
 	m_WorldParent.GetChildByName("Water")->m_isWater = true;
+
+	for(int i = 1; i < 4; i++)
+		m_WorldParent.GetChildByName("LillyPot" + to_string(i))->m_isBambooWinded = true;
 	
 	SetByMask(grassMatrices, 3, "res/textures/scene_textures/GrassPosition.png", 0.1f);
 	for (int i = 0; i < 3; i++) {
@@ -518,7 +521,7 @@ void SceneManager::LoadModels()
 	m_WorldParent.GetChildByName("Ground")->AddChild(&Bamboo);
 
 	m_WorldParent.GetChildByName("Ground")->RemoveChild(m_WorldParent.GetChildByName("Bush"));
-	SetByMask(&bushMatrices, 0, "res/textures/scene_textures/BushPosition.png", 0.001f);
+	SetByMask(&bushMatrices, 0, "res/textures/scene_textures/BushPosition.png", 0.005f);
 	Bush = GameObject();
 	Bush.ID = 995;
 	Bush.Name = "Bush";
