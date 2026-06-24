@@ -31,7 +31,7 @@ void Animal::Awake()
     // TODO add scripts for every animal kind, that will override enum
     if (m_Owner->Name.find("bunny") != std::string::npos)
     {
-        m_Indicator->transform->Position = glm::vec3(0.f, -3.4f, 0.f);
+        m_Indicator->transform->Position = glm::vec3(0.f, -1.0, 0.f);
         m_Indicator->transform->Scale = glm::vec3(8.0f);
         if (m_RB != nullptr)
         {
@@ -44,7 +44,7 @@ void Animal::Awake()
     }
     else if (m_Owner->Name.find("bear") != std::string::npos)
     {
-        m_Indicator->transform->Position = glm::vec3(5.0f, -8.4f, 0.0f);
+        m_Indicator->transform->Position = glm::vec3(5.0f, -5.5f, 0.0f);
         m_Indicator->transform->Scale = glm::vec3(20.0f);
         AssignBearTexture();
         if (m_RB != nullptr)
@@ -54,7 +54,7 @@ void Animal::Awake()
     }
     else if (m_Owner->Name.find("skunk") != std::string::npos)
     {
-        m_Indicator->transform->Position = glm::vec3(0.0f, -4.5f, 2.5f);
+        m_Indicator->transform->Position = glm::vec3(0.0f, -2.0f, 2.5f);
         m_Indicator->transform->Scale = glm::vec3(12.0f);
         if (m_RB != nullptr)
         {
