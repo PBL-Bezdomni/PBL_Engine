@@ -11,7 +11,7 @@ void Sauna::Awake()
 	m_IndicatorOffset = glm::vec3(0.0f, -20.0f, 0.0f);
 
 	m_IconTexturePath = "res/textures/UI/objects/sauna.png";
-	m_IconScale = glm::vec3(3.0f);
+	m_IconScale = glm::vec3(2.5f);
 	m_IconOffset = glm::vec3(0.0f, 50.0f, -10.0f);
 
 	AOnsenObject::Awake();
