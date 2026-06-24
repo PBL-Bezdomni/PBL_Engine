@@ -97,6 +97,7 @@ void main()
     { 
         texColor = texture(texture_diffuse1, TexCoord);
     }
+    texColor.rgb = pow(texColor.rgb, vec3(2.2));
     if (texColor.a < 0.1)
     {
         discard;
@@ -115,6 +116,9 @@ void main()
         result += CalcSpotLight(spotLight, norm, viewDir, vec3(texColor));
     }
 
+    result = result / (result + vec3(1.0));
+    result = pow(result, vec3(1.0 / 2.2));
+
     FragColor = vec4(result, texColor.a);
     NormalColor = normalize(Normal);
 
@@ -128,19 +132,24 @@ void main()
 
 vec3 CalcDirLight(vec3 norm, vec3 viewDir, vec3 objectColor)
 {
+    float sunIntensity = 1.5f;
     vec3 lightDir = normalize(-dirLight.direction);
     vec3 reflectDir = reflect(-lightDir, norm);
 
-    vec3 ambient = ambientStrength * dirLight.color;
+    vec3 actualLightColor = dirLight.color * sunIntensity;
+
+    vec3 ambient = ambientStrength * actualLightColor;
 
     float diff = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse = diff * dirLight.color;
+    vec3 diffuse = diff * actualLightColor;
 
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 256);
-    vec3 specular = specularStrength * spec * dirLight.color;
+    vec3 specular = specularStrength * spec * actualLightColor;
 
     float shadow = ShadowCalculation(FragPosLightSpace, shadowMap);                      
     float staticShadow = ShadowCalculation(FragPosLightSpace, staticShadowMap);
+
+    
     
     // Comments left for demonstration purpose
     // Both static and dynamic shadow maps
@@ -221,7 +230,7 @@ float ShadowCalculation(vec4 fragPosLightSpace, sampler2D map)
     vec3 normal = normalize(Normal);
 
     vec3 lightDir = normalize(-dirLight.direction); 
-    float bias = max(0.0005 * (1.0 - dot(normal, lightDir)), 0.0005);
+    float bias = max(0.0006 * (1.0 - dot(normal, lightDir)), 0.0006);
 
     float shadow = 0.0;
     vec2 texelSize = 1.0 / textureSize(map, 0);

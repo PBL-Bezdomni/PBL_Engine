@@ -76,7 +76,7 @@ glm::mat4 ShadowMap::ConfigureShaderAndMatrices() {
 	lightProjection = glm::ortho(-250.0f, 250.0f, -250.0f, 250.0f, near_plane, far_plane);
 
 	glm::vec3 sceneCenter = glm::vec3(0.0f, 0.0f, -30.0f);
-	glm::vec3 lightDir = glm::normalize(glm::vec3(0.0f, -1.0f, -1.0f));
+	glm::vec3 lightDir = glm::normalize(glm::vec3(0.9f, -1.0f, -0.7f));
 	glm::vec3 lightPos = sceneCenter - (lightDir * 60.0f);
 
 	lightView = glm::lookAt(lightPos, sceneCenter, glm::vec3(0.0f, 1.0f, 0.0f));
