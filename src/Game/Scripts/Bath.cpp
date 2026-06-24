@@ -16,7 +16,7 @@ void Bath::Awake()
 void Bath::AssignParticles()
 {
     ParticleEmitter* emitter = m_Owner->AddComponent<ParticleEmitter>();
-    emitter->Initialize("res/shaders/basicParticles.vert", "res/shaders/basicParticles.frag", "res/shaders/basicParticles.comp", "res/models/PieChartPlane.obj", "res/textures/UI/bubble.png");
+    emitter->Initialize("res/shaders/basicParticles.vert", "res/shaders/basicParticles.frag", "res/shaders/basicParticles.comp", "res/models/primitives/plane.obj", "res/textures/UI/bubble.png");
     emitter->SetSpawnRate(30);
     emitter->SetBulk(1);
     emitter->MaxVelocity = glm::vec3(0.f, 0.3f, 0.f);

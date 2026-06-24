@@ -17,7 +17,7 @@ void TutorialArrow::Awake()
     m_MainCamera = m_SceneMgr->GetMainCamera().get();
 
     m_ArrowShader = m_AssetMgr->TutorialArrowShader;
-    m_ArrowObject = m_SceneMgr->Instantiate(m_Owner, "res/models/ProgressBarPlane.obj", m_ArrowShader);
+    m_ArrowObject = m_SceneMgr->Instantiate(m_Owner, "res/models/primitives/plane.obj", m_ArrowShader);
     m_ArrowObject->Name = "TestArrow";
 
     Model* arrowModel = m_ArrowObject->GetComponent<Model>();
