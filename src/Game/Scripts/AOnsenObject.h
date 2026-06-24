@@ -36,6 +36,12 @@ protected:
 	glm::vec3 m_IndicatorOffset = glm::vec3(0.0f, 0.0f, 0.0f);
 	std::shared_ptr<GameObject> m_Indicator;
 
+	std::string m_IconTexturePath = "";
+	glm::vec3 m_IconScale = glm::vec3(2.0f);
+	glm::vec3 m_IconOffset = glm::vec3(0.0f, 4.0f, 0.0f);
+	std::shared_ptr<GameObject> m_IconObject = nullptr;
+	std::shared_ptr<Shader> m_IconShader = nullptr;
+
 public:
 	void Awake() override;
 

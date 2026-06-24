@@ -145,6 +145,12 @@ void GameObject::UpdateSelfAndChild()
     {
         child->UpdateSelfAndChild();
     }
+
+    Children.erase(std::remove_if(Children.begin(), Children.end(),
+        [](GameObject* child) {
+            return child == nullptr || child->IsPendingDestroy();
+        }),
+        Children.end());
 }
 
 void GameObject::UpdateSelfAndChildInstanceMatrix(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale, int index, Shader& shader, bool saveNew)
@@ -247,4 +253,18 @@ void GameObject::SetActive(bool active)
 
 bool GameObject::IsActive() {
     return m_IsActive;
+}
+
+void GameObject::Destroy()
+{
+    m_PendingDestroy = true;
+    SetActive(false);
+
+    for (auto&& child : Children)
+    {
+        if (child != nullptr)
+        {
+            child->Destroy();
+        }
+    }
 }

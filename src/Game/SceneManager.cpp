@@ -239,6 +239,12 @@ void SceneManager::RenderScene()
 		m_WorldParent.UpdateSelfAndChild();
 	}
 
+	m_GameObjects.erase(std::remove_if(m_GameObjects.begin(), m_GameObjects.end(),
+		[](const std::shared_ptr<GameObject>& obj) {
+			return obj == nullptr || obj->IsPendingDestroy();
+		}),
+		m_GameObjects.end());
+
 	int windowH, windowW;
 	glfwGetWindowSize(WindowMgr->GetWindowPointer(), &windowW, &windowH);
 	glViewport(0, 0, windowW, windowH);

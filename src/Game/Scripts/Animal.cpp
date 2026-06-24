@@ -124,6 +124,7 @@ void Animal::DrawUpdate()
 	Behaviour::DrawUpdate();
 	UpdateIndicatorColors();
     UpdateProgressBar();
+    UpdateObjectIcons();
 }
 
 void Animal::PickNewTargetPosition()
@@ -216,6 +217,10 @@ void Animal::Update()
 
 void Animal::UpdateIdle() 
 {
+    for (auto icon : m_NeedIcons) {
+        if (icon) icon->SetActive(false);
+    }
+
     RigidBody* rb = m_Owner->GetComponent<RigidBody>();
 
     if (rb != nullptr)
@@ -239,6 +244,10 @@ void Animal::UpdateIdle()
 
 void Animal::UpdateWalking() 
 {
+    for (auto icon : m_NeedIcons) {
+        if (icon) icon->SetActive(false);
+    }
+
     RigidBody* rb = m_Owner->GetComponent<RigidBody>();
     if (rb == nullptr) return;
 
@@ -378,16 +387,31 @@ void Animal::UpdateEating()
     RigidBody* rb = m_Owner->GetComponent<RigidBody>();
 }
 void Animal::UpdatePickedUp() {
+    for (int i = 0; i < m_NeedIcons.size(); i++) {
+        if (m_NeedIcons[i] != nullptr) {
+            m_NeedIcons[i]->SetActive(i < m_RequiredServices.size());
+        }
+    }
 }
 
 void Animal::UpdateThrow() {
+    for (auto icon : m_NeedIcons) {
+        if (icon) icon->SetActive(false);
+    }
 }
 
 void Animal::UpdateCheckIn() {
+    for (auto icon : m_NeedIcons) {
+        if (icon) icon->SetActive(false);
+    }
 }
 
 void Animal::UpdateFulfillingNeed()
 {
+    for (auto icon : m_NeedIcons) {
+        if (icon) icon->SetActive(false);
+    }
+
     if (m_RB != nullptr)
     {
         m_RB->SetLinearVelocity(glm::vec3(0.0f));
@@ -469,6 +493,8 @@ void Animal::FulfillNeed(AnimalNeeds need) {
     {       
         m_RequiredServices.erase(it);
 
+        SetObjectIcons();
+
         UpdateIndicatorColors();
 
         for (Player* player : m_PlayersInScene)
@@ -517,22 +543,56 @@ void Animal::EnterPosition(glm::vec3 exactWorldPosition)
 
 void Animal::DrawRandomNeeds()
 {
-	m_RequiredServices.clear();
-	float progress = (m_TimeLimit - m_CurrTime) / m_TimeLimit;
-	int min = lerp(m_minNeeds, m_maxNeeds - 1, progress);
-	int max = lerp(m_minNeeds, m_maxNeeds, progress * 1.3f);
-	m_numberOfNeeds = Random::GetRandomInt(min, max);
-	std::vector<int> possibleNeeds = { 0, 1, 2, 3 };
+    m_RequiredServices.clear();
+    float progress = (m_TimeLimit - m_CurrTime) / m_TimeLimit;
+    int min = lerp(m_minNeeds, m_maxNeeds - 1, progress);
+    int max = lerp(m_minNeeds, m_maxNeeds, progress * 1.3f);
+    m_numberOfNeeds = Random::GetRandomInt(min, max);
+    std::vector<int> possibleNeeds = { 0, 1, 2, 3 };
 
-	Random::Shuffle(possibleNeeds);
+    Random::Shuffle(possibleNeeds);
 
-	for (int i = 0; i < m_numberOfNeeds; i++)
-	{
-		int randomType = possibleNeeds[i];
-		m_RequiredServices.push_back(static_cast<AnimalNeeds>(randomType));
-	}
+    for (int i = 0; i < m_numberOfNeeds; i++)
+    {
+        int randomType = possibleNeeds[i];
+        m_RequiredServices.push_back(static_cast<AnimalNeeds>(randomType));
+    }
 
-	UpdateIndicatorColors();
+    UpdateIndicatorColors();
+    SetObjectIcons();
+}
+
+void Animal::SetObjectIcons() {
+
+    for (auto icon : m_NeedIcons)
+    {
+        if (icon) icon->Destroy();
+    }
+    m_NeedIcons.clear();
+
+    for (int i = 0; i < m_RequiredServices.size(); i++) {
+        m_ObjectNeedsShader = m_AssetMgr->WorldUIShader;
+        std::shared_ptr<GameObject> newIcon = m_SceneMgr->Instantiate(m_Owner, "res/models/primitives/plane.obj", m_ObjectNeedsShader);
+        newIcon->Name = "NeedIcon_" + std::to_string(i);
+        newIcon->transform->EulerAngles = glm::vec3(90.0f, 0.0f, 0.0f);
+
+        newIcon->transform->Position = glm::vec3(0.0f, m_IconYOffset, 0.0f);
+
+        std::string texturePath = "";
+        if (m_RequiredServices[i] == AnimalNeeds::Sauna) texturePath = "res/textures/UI/objects/sauna.png";
+        else if (m_RequiredServices[i] == AnimalNeeds::Bath) texturePath = "res/textures/UI/objects/bath.png";
+        else if (m_RequiredServices[i] == AnimalNeeds::Massage) texturePath = "res/textures/UI/objects/massage.png";
+        else if (m_RequiredServices[i] == AnimalNeeds::Towels) texturePath = "res/textures/UI/objects/towel.png";
+
+        Model* iconModel = newIcon->GetComponent<Model>();
+        if (iconModel != nullptr && !texturePath.empty())
+        {
+            iconModel->AssignTexture(*m_AssetMgr->GetTexture(texturePath.c_str()));
+        }
+
+        newIcon->SetActive(false);
+        m_NeedIcons.push_back(newIcon);
+    }
 }
 
 void Animal::StartFulfillingNeed(AnimalNeeds need)
@@ -574,6 +634,41 @@ void Animal::UpdateCheckmark() {
     m_CheckmarkShader->SetVec3("cameraUp", -m_MainCamera->GetUp());
     m_CheckmarkShader->SetFloat("u_width", 3.0f);
     m_CheckmarkShader->SetFloat("u_height", 3.0f);
+}
+
+void Animal::UpdateObjectIcons() {
+    if (m_NeedIcons.empty() || m_ObjectNeedsShader == nullptr) return;
+
+    m_ObjectNeedsShader->Use();
+    m_ObjectNeedsShader->SetVec3("cameraRight", m_MainCamera->GetRight());
+    m_ObjectNeedsShader->SetVec3("cameraUp", -m_MainCamera->GetUp());
+    m_ObjectNeedsShader->SetFloat("u_width", m_IconScale);
+    m_ObjectNeedsShader->SetFloat("u_height", m_IconScale);
+
+    AnimalState currentState = m_StateController.GetCurrentState();
+    if (currentState == AnimalState::PickedUp)
+    {
+        int activeIconsCount = m_NeedIcons.size();
+
+        float totalWidth = (activeIconsCount - 1) * m_IconSpacing;
+
+        float startXOffset = -(totalWidth / 2.0f);
+
+        glm::vec3 rightVector = m_MainCamera->GetRight();
+
+        glm::mat3 invRotation = glm::inverse(glm::mat3(m_Owner->transform->ModelMatrix));
+        glm::vec3 localRight = invRotation * rightVector;
+
+        for (int i = 0; i < activeIconsCount; i++)
+        {
+            std::shared_ptr<GameObject> icon = m_NeedIcons[i];
+            if (icon == nullptr) continue;
+
+            float currentXOffset = startXOffset + (i * m_IconSpacing);
+
+            icon->transform->Position = glm::vec3(0.0f, m_IconYOffset, 0.0f) + (localRight * currentXOffset);
+        }
+    }
 }
 
 void Animal::ResetEverythingSpawn(glm::vec3 spawnPosition)

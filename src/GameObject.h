@@ -50,6 +50,8 @@ struct GameObjectData
 
 class GameObject
 {
+protected:
+	bool m_PendingDestroy = false;
 private:
 	unordered_map<type_index, vector<unique_ptr<Component>>> m_Components;
 	bool m_IsActive = true;
@@ -79,6 +81,9 @@ public:
 	void StartSelfAndChild();
 	void AssignScript(string scriptName);
 	void RemoveScript(string scriptName);
+
+	void Destroy();
+	bool IsPendingDestroy() const { return m_PendingDestroy; }
 
 	// template methods, must be in header apparently
 	template<typename T, typename... Args>
