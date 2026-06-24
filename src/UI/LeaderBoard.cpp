@@ -83,25 +83,53 @@ bool LeaderBoard::LoadFromFile(const std::string& path)
 	m_Scores.clear();
 	std::ifstream ifs(path);
 	if (!ifs.is_open()) return false;
+
 	std::string line;
 	while (std::getline(ifs, line))
 	{
 		if (line.empty()) continue;
+
 		auto pos = line.find(',');
 		if (pos == std::string::npos) continue;
+
 		std::string name = line.substr(0, pos);
-		int score = std::stoi(line.substr(pos + 1));
-		m_Scores.emplace_back(name, score);
+		std::string scoreStr = line.substr(pos + 1);
+
+		if (!scoreStr.empty() && scoreStr.back() == '\r') {
+			scoreStr.pop_back();
+		}
+
+		try
+		{
+			int score = std::stoi(scoreStr);
+			m_Scores.emplace_back(name, score);
+		}
+		catch (const std::exception& e)
+		{
+			std::cout << "Bezdomni_Engine WARNING: Skipping corrupted leaderboard line: " << line << "\n";
+			continue;
+		}
 	}
 	ifs.close();
-	std::sort(m_Scores.begin(), m_Scores.end(), [](const auto &a, const auto &b) { return a.second > b.second; });
-	if (m_Scores.size() > 10) m_Scores.resize(10);
+
+	std::sort(m_Scores.begin(), m_Scores.end(), [](const auto& a, const auto& b) {
+		return a.second > b.second;
+		});
+
+	if (m_Scores.size() > 10) {
+		m_Scores.resize(10);
+	}
+
 	m_Entries.clear();
-	for (const auto &p : m_Scores)
+	m_Entries.reserve(m_Scores.size());
+	for (const auto& p : m_Scores)
 	{
 		std::string s = p.first + " - " + std::to_string(p.second);
-		m_Entries.emplace_back(s.begin(), s.end());
+
+		std::wstring ws(s.begin(), s.end());
+		m_Entries.push_back(ws);
 	}
+
 	m_FilePath = path;
 	return true;
 }
