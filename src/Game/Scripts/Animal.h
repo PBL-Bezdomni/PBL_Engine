@@ -91,6 +91,8 @@ private:
 	virtual void AssignInteractionEmitter();
 
 public:
+	AEvent<AnimalNeeds> OnEnteredOnsenObject;
+	
     std::shared_ptr<GameObject> m_ProgressBar;
     AOnsenObject* m_CurrentOnsen = nullptr;
     bool m_IsInitialized = false;

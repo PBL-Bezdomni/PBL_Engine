@@ -46,6 +46,7 @@ public:
 	shared_ptr<Camera> GetMainCamera();
 	float GetTimeLimit();
 	float GetTimeLeft();
+	float GetTimeProgressRatio();
 
 	AEvent<> OnSceneLoaded; 
 private:

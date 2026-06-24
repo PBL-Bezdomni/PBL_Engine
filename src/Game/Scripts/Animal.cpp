@@ -537,6 +537,7 @@ void Animal::DrawRandomNeeds()
 
 void Animal::StartFulfillingNeed(AnimalNeeds need)
 {
+    OnEnteredOnsenObject.Invoke(need);
     m_ProgressBar->SetActive(true);
     m_StateController.RequestStateChange.Invoke(AnimalState::Rest);
     m_CurrentNeedBeingFulfilled = need;
