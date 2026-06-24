@@ -25,7 +25,7 @@ void AOnsenObject::Awake()
 
 	m_PieShader = m_AssetMgr->PieChartShader;
 
-	m_Indicator = m_SceneMgr->Instantiate(m_Owner, "res/models/PieChartPlane.obj", m_AssetMgr->PieChartShader);
+	m_Indicator = m_SceneMgr->Instantiate(m_Owner, "res/models/primitives/plane.obj", m_AssetMgr->PieChartShader);
 	m_Indicator->Name = "ObjectIndicator";
 	m_Indicator->transform->Position = m_IndicatorOffset;
 

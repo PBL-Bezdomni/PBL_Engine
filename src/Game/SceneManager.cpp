@@ -387,6 +387,11 @@ float SceneManager::GetTimeLeft()
 	return m_TimeLeft;
 }
 
+float SceneManager::GetTimeProgressRatio()
+{
+	return m_TimeLeft / TIME_LIMIT;
+}
+
 void SceneManager::UpdateShaderLight(GameObject* gameObject, Shader& shader, Shader& depthShader)
 {
 	if (gameObject == nullptr)
