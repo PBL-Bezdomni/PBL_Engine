@@ -564,6 +564,8 @@ void Player::HandleInteractionPressed()
 {
     if (m_BestAnimalInObject != nullptr)
     {
+        PlayActionAnimation("massage", 0.5f);
+
         m_BestAnimalInObject->PlayerFulfillNeed();
     }
 }
