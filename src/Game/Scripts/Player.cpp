@@ -64,14 +64,14 @@ void Player::Awake()
     }
 
     m_ParticleEmitter = m_Owner->AddComponent<ParticleEmitter>();
-    m_ParticleEmitter->Initialize("res/shaders/basicParticles.vert", "res/shaders/basicParticles.frag", "res/shaders/basicParticles.comp", "res/models/primitives/plane.obj", "res/textures/UI/smoke.png");
+    m_ParticleEmitter->Initialize("res/shaders/basicParticles.vert", "res/shaders/basicParticles.frag", "res/shaders/basicParticles.comp", "res/models/primitives/plane.obj", "res/textures/UI/particle/footSteam/neutralSteam2.png");
 
     m_ChargeMeterShader = am->GetShader("res/shaders/powerMeter.vert", "res/shaders/ProgressBar.frag");
     m_ChargeMeter = m_SceneMgr->Instantiate(m_Owner, "res/models/primitives/plane.obj", m_ChargeMeterShader);
     m_ChargeMeter->GetComponent<Model>()->ReassignShader(*m_ChargeMeterShader);
     // Maybe custom texture for meter
     // m_ChargeMeter->GetComponent<Model>()->AssignTexture();
-    m_ChargeMeter->transform->Position = glm::vec3(0.f, -0.1f, 4.f / m_ModelScaler);
+    m_ChargeMeter->transform->Position = glm::vec3(0.f, 1.f, 4.f / m_ModelScaler);
     m_ChargeMeter->transform->EulerAngles = glm::vec3(0.f, -90.f, 0.f);
     m_ChargeMeter->transform->Scale = glm::vec3(2.6f / m_ModelScaler, 1.0f, 0.5f / m_ModelScaler);
     m_ChargeMeter->SetActive(false);
@@ -564,6 +564,8 @@ void Player::HandleInteractionPressed()
 {
     if (m_BestAnimalInObject != nullptr)
     {
+        PlayActionAnimation("massage", 0.5f);
+
         m_BestAnimalInObject->PlayerFulfillNeed();
     }
 }

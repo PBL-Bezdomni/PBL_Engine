@@ -25,13 +25,14 @@ void Animal::Awake()
     m_RB = m_Owner->AddComponent<RigidBody>();
 	m_Indicator = m_SceneMgr->Instantiate(m_Owner, "res/models/primitives/plane.obj", m_AssetMgr->PieChartShader);
 	m_Indicator->Name = "NeedsIndicator";
+    m_Indicator->isShadowed = false;
 	m_Indicator->transform->Position = glm::vec3(0.f, -0.8f, 0.f);
     AssignWalkEmitter();
     AssignInteractionEmitter();
     // TODO add scripts for every animal kind, that will override enum
     if (m_Owner->Name.find("bunny") != std::string::npos)
     {
-        m_Indicator->transform->Position = glm::vec3(0.f, -3.4f, 0.f);
+        m_Indicator->transform->Position = glm::vec3(0.f, -1.0, 0.f);
         m_Indicator->transform->Scale = glm::vec3(8.0f);
         if (m_RB != nullptr)
         {
@@ -44,7 +45,7 @@ void Animal::Awake()
     }
     else if (m_Owner->Name.find("bear") != std::string::npos)
     {
-        m_Indicator->transform->Position = glm::vec3(5.0f, -8.4f, 0.0f);
+        m_Indicator->transform->Position = glm::vec3(5.0f, -5.5f, 0.0f);
         m_Indicator->transform->Scale = glm::vec3(20.0f);
         AssignBearTexture();
         if (m_RB != nullptr)
@@ -54,7 +55,7 @@ void Animal::Awake()
     }
     else if (m_Owner->Name.find("skunk") != std::string::npos)
     {
-        m_Indicator->transform->Position = glm::vec3(0.0f, -4.5f, 2.5f);
+        m_Indicator->transform->Position = glm::vec3(0.0f, -2.0f, 2.5f);
         m_Indicator->transform->Scale = glm::vec3(12.0f);
         m_Owner->transform->Scale = glm::vec3(2.0f);
         if (m_RB != nullptr)
@@ -62,7 +63,7 @@ void Animal::Awake()
             m_RB->PrepareInit(glm::vec3(1.f));
         }
         ParticleEmitter* emitter = m_Owner->AddComponent<ParticleEmitter>();
-        emitter->Initialize("res/shaders/basicParticles.vert", "res/shaders/basicParticles.frag", "res/shaders/basicParticles.comp", "res/models/primitives/plane.obj", "res/textures/UI/bubble.png");
+        emitter->Initialize("res/shaders/basicParticles.vert", "res/shaders/basicParticles.frag", "res/shaders/basicParticles.comp", "res/models/primitives/plane.obj", "res/textures/UI/particle/stink/stink.png");
         emitter->SetSpawnRate(10);
         emitter->SetBulk(3);
         emitter->MaxVelocity = glm::vec3(1.f, 3.f, 1.f);
@@ -84,6 +85,7 @@ void Animal::Awake()
 
     m_ProgressBar = m_SceneMgr->Instantiate(m_Owner, "res/models/primitives/plane.obj", m_AssetMgr->ProgressBarShader);
     m_ProgressBar->Name = "ProgressBar";
+    m_ProgressBar->isShadowed = false;
     m_ProgressBar->transform->Position = glm::vec3(0.f, 10.0f, 0.f);
     m_ProgressBar->transform->EulerAngles = glm::vec3(90.0f, 0.0f, 0.0f);
     m_ProgressBar->transform->Scale = glm::vec3(1.0f, 1.0f, 1.0f);
@@ -93,6 +95,7 @@ void Animal::Awake()
 
     m_Checkmark = m_SceneMgr->Instantiate(m_Owner, "res/models/primitives/plane.obj", m_AssetMgr->WorldUIShader);
     m_Checkmark->Name = "Checkmark";
+    m_Checkmark->isShadowed = false;
     m_Checkmark->transform->Position = glm::vec3(0.f, 15.0f, 0.f);
     m_Checkmark->transform->EulerAngles = glm::vec3(90.0f, 0.0f, 0.0f);
     m_Checkmark->transform->Scale = glm::vec3(1.0f, 1.0f, 1.0f);
@@ -107,6 +110,7 @@ void Animal::Awake()
 
     std::shared_ptr<Shader> interactionShader = m_AssetMgr->GetNewWorldUIShader();
     m_InteractionMark = m_SceneMgr->Instantiate(m_Owner, "res/models/primitives/plane.obj", interactionShader);
+    m_InteractionMark->isShadowed = false;
     InteractionGlyph* glyph = m_InteractionMark->AddComponent<InteractionGlyph>();
     glyph->Initialize(interactionShader, *m_AssetMgr->GetTexture("res/textures/UI/x_button_color.png"));
 
@@ -587,6 +591,8 @@ void Animal::SetObjectIcons() {
         m_ObjectNeedsShader = m_AssetMgr->WorldUIShader;
         std::shared_ptr<GameObject> newIcon = m_SceneMgr->Instantiate(m_Owner, "res/models/primitives/plane.obj", m_ObjectNeedsShader);
         newIcon->Name = "NeedIcon_" + std::to_string(i);
+        newIcon->isShadowed = false;
+        newIcon->m_isVisible = false;
         newIcon->transform->EulerAngles = glm::vec3(90.0f, 0.0f, 0.0f);
 
         newIcon->transform->Position = glm::vec3(0.0f, m_IconYOffset, 0.0f);

@@ -203,13 +203,45 @@ void GameObject::DrawSelfAndChild()
     }
 }
 
+void GameObject::DrawSelfAndChildFiltered(bool filter) {
+    if (m_IsActive)
+    {
+        for (auto& [type, vec] : m_Components)
+        {
+            for (auto& comp : vec)
+            {
+                comp->DrawUpdate();
+            }
+        }
+
+        Model* model = GetComponent<Model>();
+        if (model != nullptr && model->IsActive() && m_isVisible == filter)
+        {
+            model->Draw(transform->ModelMatrix);
+        }
+
+        for (auto& [type, vec] : m_Components)
+        {
+            for (auto& comp : vec)
+            {
+                comp->AfterDrawUpdate();
+            }
+        }
+
+        for (auto&& child : Children)
+        {
+            child->DrawSelfAndChildFiltered(filter);
+        }
+    }
+}
+
 void GameObject::DrawSekfAndChildShadow(Shader* shader, bool drawOnlyDynamic)
 {
     if (m_IsActive)
     {
         RigidBody* rb = GetComponent<RigidBody>();
         bool isDynamic = rb != nullptr && !rb->GetIsStatic();
-        if (isDynamic == drawOnlyDynamic)
+        if (isDynamic == drawOnlyDynamic && isShadowed == true)
         {
             Model* model = GetComponent<Model>();
             if (model != nullptr && model->IsActive())
@@ -253,6 +285,25 @@ void GameObject::SetActive(bool active)
 
 bool GameObject::IsActive() {
     return m_IsActive;
+}
+
+GameObject* GameObject::GetChildByName(const string& findName) {
+    if (this->Name == findName) {
+        return this;
+    }
+    
+    for (auto* child : Children)
+    {
+        if (child != nullptr)
+        {
+            GameObject* found = child->GetChildByName(findName);
+            if (found != nullptr)
+            {
+                return found;
+            }
+        }
+    }
+    return nullptr;
 }
 
 void GameObject::Destroy()
