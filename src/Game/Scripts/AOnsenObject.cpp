@@ -26,6 +26,7 @@ void AOnsenObject::Awake()
 	m_PieShader = m_AssetMgr->PieChartShader;
 
 	m_Indicator = m_SceneMgr->Instantiate(m_Owner, "res/models/primitives/plane.obj", m_AssetMgr->PieChartShader);
+	m_Indicator->isShadowed = false;
 	m_Indicator->Name = "ObjectIndicator";
 	m_Indicator->transform->Position = m_IndicatorOffset;
 
@@ -43,6 +44,8 @@ void AOnsenObject::Awake()
 		m_IconShader = m_AssetMgr->WorldUIShader;
 		m_IconObject = m_SceneMgr->Instantiate(m_Owner, "res/models/primitives/plane.obj", m_IconShader);
 		m_IconObject->Name = "ObjectIcon";
+		m_IconObject->m_isVisible = false;
+		m_IconObject->isShadowed = false;
 
 		m_IconObject->transform->Position = m_IconOffset;
 		m_IconObject->transform->Scale = m_IconScale;

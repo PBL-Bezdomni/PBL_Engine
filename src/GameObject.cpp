@@ -241,7 +241,7 @@ void GameObject::DrawSekfAndChildShadow(Shader* shader, bool drawOnlyDynamic)
     {
         RigidBody* rb = GetComponent<RigidBody>();
         bool isDynamic = rb != nullptr && !rb->GetIsStatic();
-        if (isDynamic == drawOnlyDynamic)
+        if (isDynamic == drawOnlyDynamic && isShadowed == true)
         {
             Model* model = GetComponent<Model>();
             if (model != nullptr && model->IsActive())
