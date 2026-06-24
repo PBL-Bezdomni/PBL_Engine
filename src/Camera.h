@@ -35,6 +35,7 @@ struct Plane
 
 struct Frustum
 {
+
 	Plane TopFace = Plane();
 	Plane BottomFace = Plane();
 

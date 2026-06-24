@@ -505,9 +505,6 @@ void SceneManager::LoadModels()
 
 	m_LightSource.transform->Position = glm::vec3(0.f, 15.0f, 0.0f);
 	//m_LightSource.transform->Position = glm::vec3(0.f, 15.0f, -30.0f);
-
-	
-	//m_WorldParent.GetChildByName("Bamboo")->m_isVisible = false;
 	
 	m_WorldParent.GetChildByName("Ground")->RemoveChild(m_WorldParent.GetChildByName("Bamboo"));
 	SetByMask(&bambooMatrices, 0, "res/textures/scene_textures/BambooPosition.png", 0.01f);
@@ -521,7 +518,7 @@ void SceneManager::LoadModels()
 	m_WorldParent.GetChildByName("Ground")->AddChild(&Bamboo);
 
 	m_WorldParent.GetChildByName("Ground")->RemoveChild(m_WorldParent.GetChildByName("Bush"));
-	SetByMask(&bushMatrices, 0, "res/textures/scene_textures/BushPosition.png", 0.005f);
+	SetByMask(&bushMatrices, 0, "res/textures/scene_textures/BushPosition.png", 0.002f);
 	Bush = GameObject();
 	Bush.ID = 995;
 	Bush.Name = "Bush";

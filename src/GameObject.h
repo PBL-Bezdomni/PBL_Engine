@@ -46,6 +46,7 @@ struct GameObjectData
 	vector<string> Scripts;
 
 	vector<GameObjectData> Children;
+
 };
 
 class GameObject
