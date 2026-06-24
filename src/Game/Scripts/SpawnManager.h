@@ -1,11 +1,14 @@
 #pragma once
 #include <list>
 #include <memory>
+
+#include "Spawner.h"
 #include "Engine/AssetManager.h"
 #include "Engine/Loader.h"
 #include "Engine/Components/Behaviour.h"
 #include "Engine/Events/EventBinder.h"
 
+class Animal;
 enum class AnimalNeeds;
 class GameObject;
 class Shader;
@@ -54,6 +57,7 @@ private:
 	vector<shared_ptr<GameObject>> m_AnimalsPool;
 	vector<shared_ptr<GameObject>> m_SpawnedAnimalsPool;
 	vector<SleepingAnimal> m_SleepAnimalsPool;
+	vector<Spawner*> m_Spawners;
 
 	glm::vec3 m_ExiledPos = glm::vec3(1000, 5, -1000);
 
@@ -75,15 +79,16 @@ public:
 	shared_ptr<GameObject> CreateSkunk(shared_ptr<Shader> shader, std::shared_ptr<Shader> animShader, int index = 0);
 
 	shared_ptr<GameObject> PickAnimal();
-	void SetSpawnValue(GameObject* animal);
-	void SpawnAnimal(GameObject* animal);
+	void SetSpawnValue(GameObject* animal, int spawnerID);
+	void SpawnAnimal(GameObject* animal, int spawnerID);
 	void DespawnAnimal(GameObject* animal);
 	
 	void Awake() override;
 	void Start() override;
 	void Update() override;
 
-	void OnTriggerEnter(GameObject* other) override;
+	// void OnTriggerEnter(GameObject* other) override;
+	void DespawnAnimalWithReward(Animal* animal);
 
 	const char* GetScriptName() const override { return "SpawnManager"; }
 };

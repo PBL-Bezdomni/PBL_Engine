@@ -43,6 +43,16 @@ void SpawnManager::Start()
 	CreateEntities(m_AssetMgr->BasicShader);
 
 	m_SpawnWaitTimer = m_SpawnWait * 0.75f;
+
+	m_Spawners = m_Owner->FindComponentsInChildren<Spawner>();
+	for (int i = 0; i < m_Spawners.size(); i++)
+	{
+		m_Spawners[i]->Initialize(i);
+		m_Binder.Bind(m_Spawners[i]->OnAnimalEntered, [this](Animal* animal)
+		{
+			DespawnAnimalWithReward(animal);
+		});
+	}
 }
 
 void SpawnManager::Update()
@@ -61,8 +71,9 @@ void SpawnManager::Update()
 			if (m_AnimalsPool.size() > 0)
 			{
 				shared_ptr<GameObject> animal = PickAnimal();
-				SetSpawnValue(animal.get());
-				SpawnAnimal(animal.get());
+				int spawnerID = Random::GetRandomInt(0, m_Spawners.size() - 1);
+				SetSpawnValue(animal.get(), spawnerID);
+				SpawnAnimal(animal.get(), spawnerID);
 			}
 		}
 	}
@@ -117,21 +128,16 @@ void SpawnManager::AddMoney(int money)
 	m_EarnedMoney += money;
 }
 
-void SpawnManager::OnTriggerEnter(GameObject* other)
+void SpawnManager::DespawnAnimalWithReward(Animal* animal)
 {
-	Behaviour::OnTriggerEnter(other);
-
-	Animal* animal = other->GetComponent<Animal>();
-	if (animal != nullptr)
+	if (animal->GetRequiredServices().empty())
 	{
-		if (animal->GetRequiredServices().empty())
-		{
-			Engine::GetInstance().GetAudioManager().PlaySound("res/audio/1.wav");
-			AddMoney(100);
-		}
-		DespawnAnimal(other);
+		Engine::GetInstance().GetAudioManager().PlaySound("res/audio/1.wav");
+		AddMoney(100);
 	}
+	DespawnAnimal(animal->GetOwner());
 }
+
 shared_ptr<GameObject> SpawnManager::PickAnimal()
 {
 	int index = Random::GetRandomInt(0, m_AnimalsPool.size() - 1);
@@ -149,10 +155,10 @@ shared_ptr<GameObject> SpawnManager::PickAnimal()
 	return animal;
 }
 
-void SpawnManager::SetSpawnValue(GameObject* animal)
+void SpawnManager::SetSpawnValue(GameObject* animal, int spawnerID)
 {
-	glm::vec3 spawnPosition = m_Owner->transform->GetGlobalPosition();
-	spawnPosition.x -= 5;
+	glm::vec3 spawnPosition = m_Spawners[spawnerID]->GetSpawnPosition();
+	// spawnPosition.x -= 5;
 	//spawnedEntity->transform->Scale = glm::vec3(2, 2, 2);
 	if (animal != nullptr)
 	{
@@ -165,10 +171,10 @@ void SpawnManager::SetSpawnValue(GameObject* animal)
 	}
 }
 
-void SpawnManager::SpawnAnimal(GameObject* animal)
+void SpawnManager::SpawnAnimal(GameObject* animal, int spawnerID)
 {
 	RigidBody* animalRB = animal->GetComponent<RigidBody>();
-	glm::vec3 throwVelocity = glm::vec3(-1, 0, 0) * 40.f;
+	glm::vec3 throwVelocity = m_Spawners[spawnerID]->GetSpawnerVelocity() * 40.f;
 	animalRB->SetLinearVelocity(throwVelocity);
 }
 

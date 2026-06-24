@@ -8,6 +8,7 @@
 #include "Game/Scripts/SpawnManager.h"
 #include "Game/Scripts/Towels.h"
 #include "Game/Scripts/River.h"
+#include "Game/Scripts/Spawner.h"
 
 GameObject::GameObject()
 {
@@ -93,6 +94,10 @@ void GameObject::AssignScript(string scriptName)
     {
         if (!GetComponent<River>()) AddComponent<River>();
     }
+    else if (scriptName == "Spawner")
+    {
+        if (!GetComponent<Spawner>()) AddComponent<Spawner>();
+    }
 }
 
 void GameObject::RemoveScript(string scriptName)
@@ -116,6 +121,10 @@ void GameObject::RemoveScript(string scriptName)
     else if (scriptName == "Sauna")
     {
         RemoveComponent<Sauna>();
+    }
+    else if (scriptName == "Spawner")
+    {
+        RemoveComponent<Spawner>();
     }
 }
 
