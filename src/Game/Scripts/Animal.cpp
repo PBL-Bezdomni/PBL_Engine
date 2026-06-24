@@ -23,7 +23,7 @@ void Animal::Awake()
 	m_MainCamera = m_SceneMgr->GetMainCamera().get();
 
     m_RB = m_Owner->AddComponent<RigidBody>();
-	m_Indicator = m_SceneMgr->Instantiate(m_Owner, "res/models/PieChartPlane.obj", m_AssetMgr->PieChartShader);
+	m_Indicator = m_SceneMgr->Instantiate(m_Owner, "res/models/primitives/plane.obj", m_AssetMgr->PieChartShader);
 	m_Indicator->Name = "NeedsIndicator";
 	m_Indicator->transform->Position = glm::vec3(0.f, -0.8f, 0.f);
     AssignWalkEmitter();
@@ -61,7 +61,7 @@ void Animal::Awake()
             m_RB->PrepareInit(glm::vec3(1.f));
         }
         ParticleEmitter* emitter = m_Owner->AddComponent<ParticleEmitter>();
-        emitter->Initialize("res/shaders/basicParticles.vert", "res/shaders/basicParticles.frag", "res/shaders/basicParticles.comp", "res/models/PieChartPlane.obj", "res/textures/UI/bubble.png");
+        emitter->Initialize("res/shaders/basicParticles.vert", "res/shaders/basicParticles.frag", "res/shaders/basicParticles.comp", "res/models/primitives/plane.obj", "res/textures/UI/bubble.png");
         emitter->SetSpawnRate(10);
         emitter->SetBulk(3);
         emitter->MaxVelocity = glm::vec3(1.f, 3.f, 1.f);
@@ -81,7 +81,7 @@ void Animal::Awake()
     SetIndicatorShader(m_AssetMgr->PieChartShader);
 
 
-    m_ProgressBar = m_SceneMgr->Instantiate(m_Owner, "res/models/ProgressBarPlane.obj", m_AssetMgr->ProgressBarShader);
+    m_ProgressBar = m_SceneMgr->Instantiate(m_Owner, "res/models/primitives/plane.obj", m_AssetMgr->ProgressBarShader);
     m_ProgressBar->Name = "ProgressBar";
     m_ProgressBar->transform->Position = glm::vec3(0.f, 10.0f, 0.f);
     m_ProgressBar->transform->EulerAngles = glm::vec3(90.0f, 0.0f, 0.0f);
@@ -90,7 +90,7 @@ void Animal::Awake()
     SetProgressBarShader(m_AssetMgr->ProgressBarShader);
 
 
-    m_Checkmark = m_SceneMgr->Instantiate(m_Owner, "res/models/CheckmarkPlane.obj", m_AssetMgr->WorldUIShader);
+    m_Checkmark = m_SceneMgr->Instantiate(m_Owner, "res/models/primitives/plane.obj", m_AssetMgr->WorldUIShader);
     m_Checkmark->Name = "Checkmark";
     m_Checkmark->transform->Position = glm::vec3(0.f, 15.0f, 0.f);
     m_Checkmark->transform->EulerAngles = glm::vec3(90.0f, 0.0f, 0.0f);
@@ -105,7 +105,7 @@ void Animal::Awake()
     SetCheckmarkShader(m_AssetMgr->WorldUIShader);
 
     std::shared_ptr<Shader> interactionShader = m_AssetMgr->GetNewWorldUIShader();
-    m_InteractionMark = m_SceneMgr->Instantiate(m_Owner, "res/models/CheckmarkPlane.obj", interactionShader);
+    m_InteractionMark = m_SceneMgr->Instantiate(m_Owner, "res/models/primitives/plane.obj", interactionShader);
     InteractionGlyph* glyph = m_InteractionMark->AddComponent<InteractionGlyph>();
     glyph->Initialize(interactionShader, *m_AssetMgr->GetTexture("res/textures/UI/x_button_color.png"));
 
@@ -654,7 +654,7 @@ void Animal::AssignBearTexture() {
 void Animal::AssignWalkEmitter()
 {
     m_WalkEmitter = m_Owner->AddComponent<ParticleEmitter>();
-    m_WalkEmitter->Initialize("res/shaders/basicParticles.vert", "res/shaders/basicParticles.frag", "res/shaders/basicParticles.comp", "res/models/PieChartPlane.obj", "res/textures/UI/smoke.png");
+    m_WalkEmitter->Initialize("res/shaders/basicParticles.vert", "res/shaders/basicParticles.frag", "res/shaders/basicParticles.comp", "res/models/primitives/plane.obj", "res/textures/UI/smoke.png");
     // m_WalkEmitter->SetSpawnRate(30);
     // m_WalkEmitter->SetBulk(1);
     // m_WalkEmitter->MaxVelocity = glm::vec3(0.f, 0.3f, 0.f);
@@ -673,7 +673,7 @@ void Animal::AssignLandEmitter()
 void Animal::AssignInteractionEmitter()
 {
     m_InteractionEmitter = m_Owner->AddComponent<ParticleEmitter>();
-    m_InteractionEmitter->Initialize("res/shaders/basicParticles.vert", "res/shaders/basicParticles.frag", "res/shaders/basicParticles.comp", "res/models/PieChartPlane.obj", "res/textures/UI/smoke.png");
+    m_InteractionEmitter->Initialize("res/shaders/basicParticles.vert", "res/shaders/basicParticles.frag", "res/shaders/basicParticles.comp", "res/models/primitives/plane.obj", "res/textures/UI/smoke.png");
     m_InteractionEmitter->SetSpawnRate(60);
     m_InteractionEmitter->SetBulk(20);
     m_InteractionEmitter->MaxVelocity = glm::vec3(3.f, .8f, 3.f);
