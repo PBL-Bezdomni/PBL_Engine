@@ -13,6 +13,7 @@ int AudioManager::Initialize()
 		return result;  // Failed to initialize the engine.
 	}
 	// ma_engine_play_sound(m_AudioEngine.get(), (Loader::RelativePath() + "res/audio/pipe.mp3").c_str(), NULL);
+	ma_engine_set_volume(m_AudioEngine.get(), 0.5f);
 	return MA_SUCCESS;
 }
 
@@ -24,16 +25,31 @@ AudioManager::~AudioManager()
 	}
 }
 
-void AudioManager::PlaySound(const std::string& path)
+void AudioManager::PlaySound(const std::string& path, float volume)
 {
 	if (!m_AudioEngine) return;
 
 	std::string full = Loader::RelativePath() + path;
-	ma_result result = ma_engine_play_sound(m_AudioEngine.get(), full.c_str(), NULL);
+
+	ma_sound* sound = new ma_sound();
+
+	ma_result result = ma_sound_init_from_file(
+		m_AudioEngine.get(),
+		full.c_str(),
+		0,
+		NULL,
+		NULL,
+		sound
+	);
+
 	if (result != MA_SUCCESS)
 	{
-		std::cout << "ERROR: Failed to play sound: " << full << std::endl;
+		delete sound;
+		return;
 	}
+
+	ma_sound_set_volume(sound, volume);
+	ma_sound_start(sound);
 }
 
 void AudioManager::PlayLoop(const std::string& path)

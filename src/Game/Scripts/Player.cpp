@@ -56,7 +56,8 @@ void Player::Awake()
             animator->AddAnimation("pickup", new Animation(animPath + "druid-pickup.glb", modelPtr));
             animator->AddAnimation("massage", new Animation(animPath + "druid-massage.glb", modelPtr));
             animator->AddAnimation("throw", new Animation(animPath + "druid-throwing.glb", modelPtr));
-            
+            animator->AddAnimation("handsup", new Animation(animPath + "druid-walking-handsup.glb", modelPtr));
+
             animator->PlayAnimation("idle");
         }
         m_CurrentState = PlayerAnimState::Idle;
@@ -92,6 +93,7 @@ void Player::Awake()
                 {
                     std::string name = p.path().filename().string();
                     m_FootstepClips.push_back(relDir + "/" + name);
+					//ma_sound_set_volume(&Engine::GetInstance().GetAudioManager().m_AudioEngine->sound, 0.5f); // Set volume to 50%
                 }
             }
         }
@@ -173,7 +175,7 @@ void Player::Update()
             if (m_FootstepTimer <= 0.0f)
             {
                 int idx = std::rand() % m_FootstepClips.size();
-                Engine::GetInstance().GetAudioManager().PlaySound(m_FootstepClips[idx]);
+                Engine::GetInstance().GetAudioManager().PlaySound(m_FootstepClips[idx], 0.3f);
                 m_FootstepTimer = m_FootstepInterval;
             }
         }
@@ -199,7 +201,17 @@ void Player::Update()
         {
             if (m_CurrentState != PlayerAnimState::Walking)
             {
-                if (animator) animator->PlayAnimation("walk");
+                if (animator)
+                {
+                    if (m_CarriedAnimal != nullptr)
+                    {
+                        animator->PlayAnimation("handsup");
+                    }
+                    else
+                    {
+                        animator->PlayAnimation("walk");
+                    }
+                }
                 m_CurrentState = PlayerAnimState::Walking;
             }
         }
@@ -207,9 +219,16 @@ void Player::Update()
         {
             if (m_CurrentState != PlayerAnimState::Idle)
             {
-                if (animator) animator->PlayAnimation("idle");
-                m_CurrentState = PlayerAnimState::Idle;
+                if (m_CarriedAnimal != nullptr)
+                {
+                    animator->PlayAnimation("handsup");
+                }
+                else
+                {
+                    animator->PlayAnimation("idle");
+                }
             }
+            m_CurrentState = PlayerAnimState::Idle;
         }
     }
 
@@ -443,7 +462,7 @@ void Player::HandleActionPressed()
                 hitObject->GetComponent<Model>()->m_IsHighlighted = false;
                 vector<AnimalNeeds> services = animalScript->GetRequiredServices();
                 // Play pickup sound
-                Engine::GetInstance().GetAudioManager().PlaySound("res/audio/2.wav");
+                Engine::GetInstance().GetAudioManager().PlaySound("res/audio/2.wav", 1.f);
                 for (AOnsenObject* obj : m_OnsenObjects)
                 {
                     bool isNeeded = false;
@@ -493,7 +512,7 @@ void Player::HandleThrowReleased()
     {
         PlayActionAnimation("throw", 1.0f);
 
-        Engine::GetInstance().GetAudioManager().PlaySound("res/audio/4.wav");
+        Engine::GetInstance().GetAudioManager().PlaySound("res/audio/throw.wav", 2.f);
         RigidBody* animalRb = m_CarriedAnimal->GetComponent<RigidBody>();
         Animal* animalScript = m_CarriedAnimal->GetDerivedComponent<Animal>();
 

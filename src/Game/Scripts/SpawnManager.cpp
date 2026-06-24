@@ -45,6 +45,41 @@ void SpawnManager::Start()
 	m_SpawnWaitTimer = m_SpawnWait * 0.75f;
 }
 
+void SpawnManager::Reset()
+{
+	// Reset scores and animation
+	m_EarnedMoney = 0;
+	m_AnimatedMoney = 0.0f;
+
+	// Reset spawn timer
+	m_SpawnWaitTimer = m_SpawnWait * 0.75f;
+
+	// Despawn all currently spawned animals (they will be moved to sleep pool)
+	while (!m_SpawnedAnimalsPool.empty())
+	{
+		auto animal = m_SpawnedAnimalsPool.back();
+		DespawnAnimal(animal.get());
+	}
+
+	// Clear sleep pool timers
+	m_SleepAnimalsPool.clear();
+
+	// Exile all animals in pool
+	for (auto &a : m_AnimalsPool)
+	{
+		if (a != nullptr)
+		{
+			a->SetActive(false);
+			RigidBody* rb = a->GetComponent<RigidBody>();
+			if (rb != nullptr)
+			{
+				rb->RequestTeleport(m_ExiledPos);
+			}
+		}
+	}
+}
+
+
 void SpawnManager::Update()
 {
 	Behaviour::Update();
@@ -126,7 +161,7 @@ void SpawnManager::OnTriggerEnter(GameObject* other)
 	{
 		if (animal->GetRequiredServices().empty())
 		{
-			Engine::GetInstance().GetAudioManager().PlaySound("res/audio/1.wav");
+			Engine::GetInstance().GetAudioManager().PlaySound("res/audio/money.wav", 1.f);
 			AddMoney(100);
 		}
 		DespawnAnimal(other);

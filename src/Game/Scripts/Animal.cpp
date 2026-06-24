@@ -56,6 +56,7 @@ void Animal::Awake()
     {
         m_Indicator->transform->Position = glm::vec3(0.0f, -4.5f, 2.5f);
         m_Indicator->transform->Scale = glm::vec3(12.0f);
+        m_Owner->transform->Scale = glm::vec3(2.0f);
         if (m_RB != nullptr)
         {
             m_RB->PrepareInit(glm::vec3(1.f));
@@ -217,6 +218,8 @@ void Animal::Update()
 
 void Animal::UpdateIdle() 
 {
+    m_MoveSpeed = m_DefaultSpeed;
+
     for (auto icon : m_NeedIcons) {
         if (icon) icon->SetActive(false);
     }
@@ -398,6 +401,14 @@ void Animal::UpdateThrow() {
     for (auto icon : m_NeedIcons) {
         if (icon) icon->SetActive(false);
     }
+
+    m_CurrentWaitTime += Time::GetDeltaTime();
+
+    if (m_CurrentWaitTime >= m_WaitTime)
+    {
+        m_CurrentWaitTime = 0.0f;
+        m_StateController.RequestStateChange.Invoke(AnimalState::Idle);
+    }
 }
 
 void Animal::UpdateCheckIn() {
@@ -408,6 +419,8 @@ void Animal::UpdateCheckIn() {
 
 void Animal::UpdateFulfillingNeed()
 {
+    m_AnimalInteractions.Update(this);
+
     for (auto icon : m_NeedIcons) {
         if (icon) icon->SetActive(false);
     }

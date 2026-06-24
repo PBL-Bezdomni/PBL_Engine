@@ -15,6 +15,14 @@ private:
 	float m_HungerCooldown = 10.0f;
 
 	bool m_IsChasing = false;
+	float m_ChasingSpeed = 5.3f;
+
+	bool m_IsFleeing = false;
+	float m_FleeSpeed = 5.3f;
+
+	float m_OnsenTimer = 0.0f;
+	bool m_IsOnsenTimerActive = false;
+	
 
 	GameObject* m_TargetAnimal = nullptr;
 	GameObject* FindClosestAnimal(Animal* self, const std::string& targetName, float radius);
@@ -22,6 +30,7 @@ private:
 	void HandleBear(Animal* animal);
 	void HandleBunny(Animal* animal);
 	bool HandleSkunk(Animal* animal);
+	void HandleOnsenInteractions(Animal* animal);
 
 public:
 	void Update(Animal* animal);

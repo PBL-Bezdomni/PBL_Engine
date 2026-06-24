@@ -37,6 +37,7 @@ private:
 	std::string m_LeaderInputName;
 	bool m_WaitingForLeaderName = false;
 	std::string m_LeaderFilePath = "res/leaderboard.txt";
+	bool m_ConsumeShowConfirm = false;
 
 	std::vector<shared_ptr<GameObject>> m_AnimalsList;
 	
@@ -54,6 +55,8 @@ public:
 	float GetTimeLimit();
 	float GetTimeLeft();
 	float GetTimeProgressRatio();
+
+	void RestartGame();
 
 	AEvent<> OnSceneLoaded; 
 private:

@@ -327,13 +327,28 @@ void SceneManager::RenderScene()
 	if (m_WaitingForLeaderName)
 	{
 		UIPanel inputPanel;
-		inputPanel.HasTexture = false;
-		inputPanel.Position = glm::vec2((WindowMgr->GetWindowWidth() / 2.0f) - 150.0f, (WindowMgr->GetWindowHeight() / 2.0f) + 110.0f);
-		inputPanel.Size = glm::vec2(300.0f, 40.0f);
+		inputPanel.HasTexture = true;
+
+		auto uiTex = AssetMgr->GetTexture("res/textures/UI/UI_panel.png");
+		if (uiTex != nullptr)
+		{
+			inputPanel.TextureID = uiTex->ID; 
+		}
+		else
+		{
+			std::cout << "Bezdomni_Engine ERROR: Could not find res/textures/UI/UI_panel.png!\n";
+			inputPanel.TextureID = 0;
+		}
+
+		glm::vec2 panelSize = glm::vec2(600.0f, 290.0f);
+		inputPanel.Position = glm::vec2((WindowMgr->GetWindowWidth() - panelSize.x) / 2.0f, (WindowMgr->GetWindowHeight() - panelSize.y) / 2.0f);
+		inputPanel.Size = panelSize;
+
 		std::string prompt = std::string("Enter name: ") + m_LeaderInputName;
 		inputPanel.Text = std::wstring(prompt.begin(), prompt.end());
 		inputPanel.TextScale = 1.0f;
-		inputPanel.TextColor = glm::vec3(0.1f, 0.1f, 0.1f);
+		inputPanel.TextColor = glm::vec3(0.333f, 0.227f, 0.196f);
+
 		m_UIManager.DrawPanelWithText(*AssetMgr->UIShader, *AssetMgr->TextShader, inputPanel);
 	}
 
@@ -375,11 +390,55 @@ void SceneManager::RenderScene()
 		m_WaitingForLeaderName = true;
 		m_LeaderInputName = ""; 
 
-		glm::vec2 lbSize = glm::vec2(600.0f, 400.0f);
+		// Play ending music
+		Engine::GetInstance().GetAudioManager().PlayLoop("res/audio/ending_song.mp3");
+
+		glm::vec2 lbSize = glm::vec2(800.0f, 450.0f);
 		glm::vec2 lbPos = glm::vec2((WindowMgr->GetWindowWidth() - lbSize.x) / 2.0f, (WindowMgr->GetWindowHeight() - lbSize.y) / 2.0f);
 		m_LeaderBoard.Init(&m_UIManager, m_UIPanelTex.ID, lbPos, lbSize, 1.0f);
 	}
 
+}
+
+void SceneManager::RestartGame()
+{
+	// Reset timers and flags
+	m_TimeLeft = TIME_LIMIT;
+	m_GameOverTriggered = false;
+	m_WaitingForLeaderName = false;
+	m_ShowLeaderBoard = false;
+	m_LeaderInputName.clear();
+	m_LeaderBoard.Show(false);
+
+	// Reset spawn manager
+	if (SpawnManager::Instance != nullptr)
+	{
+		SpawnManager::Instance->Reset();
+	}
+
+	// Restore background music
+	Engine::GetInstance().GetAudioManager().PlayLoop("res/audio/runAmok.mp3");
+
+	// Reset players positions and rigidbodies
+	m_Player1.transform->Position = glm::vec3(10.0f, 0.0f, -20.0f);
+	if (m_Player1.GetComponent<RigidBody>() != nullptr)
+	{
+		m_Player1.GetComponent<RigidBody>()->Teleport(m_Player1.transform->Position);
+	}
+
+	m_Player2.transform->Position = glm::vec3(10.0f, 0.0f, -25.0f);
+	if (m_Player2.GetComponent<RigidBody>() != nullptr)
+	{
+		m_Player2.GetComponent<RigidBody>()->Teleport(m_Player2.transform->Position);
+	}
+
+	// Reset UI
+	m_MoneyPanel.Text = std::to_wstring(0);
+	{
+		int minutes = static_cast<int>(TIME_LIMIT) / 60;
+		int seconds = static_cast<int>(TIME_LIMIT) % 60;
+		m_TimerPanel.Text = std::to_wstring(minutes) + L":" + (seconds < 10 ? L"0" : L"") + std::to_wstring(seconds);
+	}
 }
 
 void SceneManager::AddAnimal(shared_ptr<GameObject> spawnedEntity)
@@ -588,6 +647,10 @@ void SceneManager::input(GLFWwindow* window)
 {
 	if (m_WaitingForLeaderName)
 	{
+		if (m_LeaderInputName.length() > 10)
+		{
+			m_LeaderInputName.resize(10);
+		}
 		if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS)
 		{
 			int score = 0;
@@ -610,6 +673,8 @@ void SceneManager::input(GLFWwindow* window)
 			m_WaitingForLeaderName = false;
 			m_ShowLeaderBoard = true;
 			m_LeaderBoard.Show(true);
+			// Consume the current Enter key so it doesn't immediately trigger restart
+			m_ConsumeShowConfirm = true;
 		}
 
 		if (glfwGetKey(window, GLFW_KEY_BACKSPACE) == GLFW_PRESS)
@@ -621,8 +686,28 @@ void SceneManager::input(GLFWwindow* window)
 		}
 	}
 
-	if (m_WaitingForLeaderName || m_ShowLeaderBoard)
+	if (m_WaitingForLeaderName)
 	{
+		return;
+	}
+
+	if (m_ShowLeaderBoard)
+	{
+		// If we just transitioned to leaderboard, wait for key release to avoid immediate restart
+		if (m_ConsumeShowConfirm)
+		{
+			if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_RELEASE && glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE)
+			{
+				m_ConsumeShowConfirm = false;
+			}
+			return;
+		}
+
+		// Restart when player acknowledges leaderboard
+		if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+		{
+			RestartGame();
+		}
 		return;
 	}
 
@@ -731,7 +816,6 @@ void SceneManager::MouseCallbackDispatcher(GLFWwindow* window, double xpos, doub
 
 void SceneManager::CharCallback(GLFWwindow* window, unsigned int codepoint)
 {
-	// member handler: append UTF-8 chars to m_LeaderInputName
 	if (!m_WaitingForLeaderName) return;
 	if (codepoint < 32) return;
 
