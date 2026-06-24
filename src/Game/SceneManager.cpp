@@ -327,13 +327,28 @@ void SceneManager::RenderScene()
 	if (m_WaitingForLeaderName)
 	{
 		UIPanel inputPanel;
-		inputPanel.HasTexture = false;
-		inputPanel.Position = glm::vec2((WindowMgr->GetWindowWidth() / 2.0f) - 150.0f, (WindowMgr->GetWindowHeight() / 2.0f) + 110.0f);
-		inputPanel.Size = glm::vec2(300.0f, 40.0f);
+		inputPanel.HasTexture = true;
+
+		auto uiTex = AssetMgr->GetTexture("res/textures/UI/UI_panel.png");
+		if (uiTex != nullptr)
+		{
+			inputPanel.TextureID = uiTex->ID; 
+		}
+		else
+		{
+			std::cout << "Bezdomni_Engine ERROR: Could not find res/textures/UI/UI_panel.png!\n";
+			inputPanel.TextureID = 0;
+		}
+
+		glm::vec2 panelSize = glm::vec2(600.0f, 290.0f);
+		inputPanel.Position = glm::vec2((WindowMgr->GetWindowWidth() - panelSize.x) / 2.0f, (WindowMgr->GetWindowHeight() - panelSize.y) / 2.0f);
+		inputPanel.Size = panelSize;
+
 		std::string prompt = std::string("Enter name: ") + m_LeaderInputName;
 		inputPanel.Text = std::wstring(prompt.begin(), prompt.end());
 		inputPanel.TextScale = 1.0f;
-		inputPanel.TextColor = glm::vec3(0.1f, 0.1f, 0.1f);
+		inputPanel.TextColor = glm::vec3(0.333f, 0.227f, 0.196f);
+
 		m_UIManager.DrawPanelWithText(*AssetMgr->UIShader, *AssetMgr->TextShader, inputPanel);
 	}
 
@@ -375,7 +390,7 @@ void SceneManager::RenderScene()
 		m_WaitingForLeaderName = true;
 		m_LeaderInputName = ""; 
 
-		glm::vec2 lbSize = glm::vec2(600.0f, 400.0f);
+		glm::vec2 lbSize = glm::vec2(800.0f, 450.0f);
 		glm::vec2 lbPos = glm::vec2((WindowMgr->GetWindowWidth() - lbSize.x) / 2.0f, (WindowMgr->GetWindowHeight() - lbSize.y) / 2.0f);
 		m_LeaderBoard.Init(&m_UIManager, m_UIPanelTex.ID, lbPos, lbSize, 1.0f);
 	}
@@ -588,6 +603,10 @@ void SceneManager::input(GLFWwindow* window)
 {
 	if (m_WaitingForLeaderName)
 	{
+		if (m_LeaderInputName.length() > 10)
+		{
+			m_LeaderInputName.resize(10);
+		}
 		if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS)
 		{
 			int score = 0;
@@ -731,7 +750,6 @@ void SceneManager::MouseCallbackDispatcher(GLFWwindow* window, double xpos, doub
 
 void SceneManager::CharCallback(GLFWwindow* window, unsigned int codepoint)
 {
-	// member handler: append UTF-8 chars to m_LeaderInputName
 	if (!m_WaitingForLeaderName) return;
 	if (codepoint < 32) return;
 
