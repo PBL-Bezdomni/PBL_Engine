@@ -56,7 +56,8 @@ void Player::Awake()
             animator->AddAnimation("pickup", new Animation(animPath + "druid-pickup.glb", modelPtr));
             animator->AddAnimation("massage", new Animation(animPath + "druid-massage.glb", modelPtr));
             animator->AddAnimation("throw", new Animation(animPath + "druid-throwing.glb", modelPtr));
-            
+            animator->AddAnimation("handsup", new Animation(animPath + "druid-walking-handsup.glb", modelPtr));
+
             animator->PlayAnimation("idle");
         }
         m_CurrentState = PlayerAnimState::Idle;
@@ -200,7 +201,17 @@ void Player::Update()
         {
             if (m_CurrentState != PlayerAnimState::Walking)
             {
-                if (animator) animator->PlayAnimation("walk");
+                if (animator)
+                {
+                    if (m_CarriedAnimal != nullptr)
+                    {
+                        animator->PlayAnimation("handsup");
+                    }
+                    else
+                    {
+                        animator->PlayAnimation("walk");
+                    }
+                }
                 m_CurrentState = PlayerAnimState::Walking;
             }
         }
@@ -208,9 +219,16 @@ void Player::Update()
         {
             if (m_CurrentState != PlayerAnimState::Idle)
             {
-                if (animator) animator->PlayAnimation("idle");
-                m_CurrentState = PlayerAnimState::Idle;
+                if (m_CarriedAnimal != nullptr)
+                {
+                    animator->PlayAnimation("handsup");
+                }
+                else
+                {
+                    animator->PlayAnimation("idle");
+                }
             }
+            m_CurrentState = PlayerAnimState::Idle;
         }
     }
 
