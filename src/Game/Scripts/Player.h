@@ -52,7 +52,7 @@ private:
 
     void PlayActionAnimation(const std::string& animName, float duration);
 
-    float m_ModelScaler = 8.f;
+    float m_ModelScaler = 1.f;
 
 public:
     glm::vec2 MoveInput{ 0.0f };
