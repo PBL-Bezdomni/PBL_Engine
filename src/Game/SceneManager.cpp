@@ -390,6 +390,9 @@ void SceneManager::RenderScene()
 		m_WaitingForLeaderName = true;
 		m_LeaderInputName = ""; 
 
+		// Play ending music
+		Engine::GetInstance().GetAudioManager().PlayLoop("res/audio/ending_song.mp3");
+
 		glm::vec2 lbSize = glm::vec2(800.0f, 450.0f);
 		glm::vec2 lbPos = glm::vec2((WindowMgr->GetWindowWidth() - lbSize.x) / 2.0f, (WindowMgr->GetWindowHeight() - lbSize.y) / 2.0f);
 		m_LeaderBoard.Init(&m_UIManager, m_UIPanelTex.ID, lbPos, lbSize, 1.0f);
@@ -412,6 +415,9 @@ void SceneManager::RestartGame()
 	{
 		SpawnManager::Instance->Reset();
 	}
+
+	// Restore background music
+	Engine::GetInstance().GetAudioManager().PlayLoop("res/audio/runAmok.mp3");
 
 	// Reset players positions and rigidbodies
 	m_Player1.transform->Position = glm::vec3(10.0f, 0.0f, -20.0f);
