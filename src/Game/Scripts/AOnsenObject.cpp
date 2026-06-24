@@ -44,7 +44,7 @@ void AOnsenObject::OnTriggerEnter(GameObject* other)
 	Animal* animal = other->GetComponent<Animal>();
 	if (animal == nullptr) return;
 	if (!animal->m_WasDroppedByPlayer) return;
-	animal->m_WasDroppedByPlayer = false;
+
 	for (int i = 0; i < m_MaxSlots; i++)
 	{
 		if (m_Slots[i].OccupyingAnimal == animal)
@@ -73,6 +73,8 @@ void AOnsenObject::OnTriggerEnter(GameObject* other)
 	{
 		if (!m_Slots[i].IsOccupied)
 		{
+			animal->m_WasDroppedByPlayer = false;
+
 			m_Slots[i].IsOccupied = true;
 			m_Slots[i].OccupyingAnimal = animal;
 
