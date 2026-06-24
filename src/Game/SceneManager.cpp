@@ -43,6 +43,12 @@ void SceneManager::Initialize()
 		std::cout << "ERROR: Failed to initialize project!\n";
 		return;
 	}
+
+	if (m_WaitingForLeaderName || m_ShowLeaderBoard)
+	{
+		return;
+	}
+
 	
 	m_JSONImporter = make_unique<JSONImporter>();
 	m_JSONImporter->Initialize();
@@ -57,6 +63,7 @@ void SceneManager::Initialize()
 	// glfwSetInputMode(WindowMgr->GetWindowPointer(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetWindowUserPointer(WindowMgr->GetWindowPointer(), this);
 	glfwSetCursorPosCallback(WindowMgr->GetWindowPointer(), SceneManager::MouseCallbackDispatcher);
+	glfwSetCharCallback(WindowMgr->GetWindowPointer(), SceneManager::CharCallbackDispatcher);
 	glfwSetScrollCallback(WindowMgr->GetWindowPointer(), ScrollCallbackDispatcher);
 	glfwSetJoystickCallback(SceneManager::JoystickCallback);
 
@@ -67,6 +74,9 @@ void SceneManager::Initialize()
 	std::string fontPath = Loader::RelativePath() + "res/fonts/Choko Regular_8337.otf";
 	
 	m_UIManager.Init(AssetMgr, WindowMgr, fontPath.c_str());
+
+	m_LeaderBoard.Init(&m_UIManager, m_UIPanelTex.ID, glm::vec2(50.0f,50.0f), glm::vec2(400.0f,200.0f), 1.0f);
+	m_LeaderBoard.LoadFromFile(m_LeaderFilePath);
 }
 
 void SceneManager::LoadScene()
@@ -224,7 +234,10 @@ void SceneManager::RenderScene()
 
 	AssetMgr->SetShadersViewProjection(view, projection);
 
-    m_WorldParent.UpdateSelfAndChild();
+	if (!m_GameOverTriggered)
+	{
+		m_WorldParent.UpdateSelfAndChild();
+	}
 
 	int windowH, windowW;
 	glfwGetWindowSize(WindowMgr->GetWindowPointer(), &windowW, &windowH);
@@ -283,6 +296,41 @@ void SceneManager::RenderScene()
 	m_UIManager.DrawPanelWithText(*AssetMgr->UIShader, *AssetMgr->TextShader, m_TimerPanel);
 	m_UIManager.DrawPanelWithText(*AssetMgr->UIShader, *AssetMgr->TextShader, m_FpsPanel);
 
+	if (m_ShowLeaderBoard || m_WaitingForLeaderName || m_GameOverTriggered)
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		UIPanel fullScreenDim;
+		fullScreenDim.HasTexture = true;
+		fullScreenDim.TextureID = m_DimTex.ID;
+		fullScreenDim.Position = glm::vec2(0.0f, 0.0f);
+		fullScreenDim.Size = glm::vec2(WindowMgr->GetWindowWidth(), WindowMgr->GetWindowHeight());
+		fullScreenDim.Text = L"";
+
+		m_UIManager.DrawPanelWithText(*AssetMgr->UIShader, *AssetMgr->TextShader, fullScreenDim);
+
+		if (m_ShowLeaderBoard)
+		{
+			m_LeaderBoard.Draw(*AssetMgr->UIShader, *AssetMgr->TextShader);
+		}
+
+		glDisable(GL_BLEND);
+	}
+
+	if (m_WaitingForLeaderName)
+	{
+		UIPanel inputPanel;
+		inputPanel.HasTexture = false;
+		inputPanel.Position = glm::vec2((WindowMgr->GetWindowWidth() / 2.0f) - 150.0f, (WindowMgr->GetWindowHeight() / 2.0f) + 110.0f);
+		inputPanel.Size = glm::vec2(300.0f, 40.0f);
+		std::string prompt = std::string("Enter name: ") + m_LeaderInputName;
+		inputPanel.Text = std::wstring(prompt.begin(), prompt.end());
+		inputPanel.TextScale = 1.0f;
+		inputPanel.TextColor = glm::vec3(0.1f, 0.1f, 0.1f);
+		m_UIManager.DrawPanelWithText(*AssetMgr->UIShader, *AssetMgr->TextShader, inputPanel);
+	}
+
 	GameObject* targetAnimal = nullptr;
 
 	Player* player1Script = m_Player1.GetDerivedComponent<Player>();
@@ -313,6 +361,17 @@ void SceneManager::RenderScene()
 		m_ALetterPanel.Position.y += sin(glfwGetTime() * 5.0f) * 5.0f;
 
 		m_UIManager.DrawPanelWithText(*AssetMgr->UIShader, *AssetMgr->TextShader, m_ALetterPanel);
+	}
+
+	if (m_TimeLeft <= 0.0f && !m_GameOverTriggered)
+	{
+		m_GameOverTriggered = true; 
+		m_WaitingForLeaderName = true;
+		m_LeaderInputName = ""; 
+
+		glm::vec2 lbSize = glm::vec2(600.0f, 400.0f);
+		glm::vec2 lbPos = glm::vec2((WindowMgr->GetWindowWidth() - lbSize.x) / 2.0f, (WindowMgr->GetWindowHeight() - lbSize.y) / 2.0f);
+		m_LeaderBoard.Init(&m_UIManager, m_UIPanelTex.ID, lbPos, lbSize, 1.0f);
 	}
 
 }
@@ -467,6 +526,19 @@ void SceneManager::LoadModels()
 	m_UICoinTex = *AssetMgr->GetTexture("res/textures/UI/coin.png");
 	m_UILetterTex = *AssetMgr->GetTexture("res/textures/UI/Xbox_button_A.png");
 
+	{
+		unsigned char pixel[4] = { 0, 0, 0, 128 };
+		unsigned int texId = 0;
+		glGenTextures(1, &texId);
+		glBindTexture(GL_TEXTURE_2D, texId);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixel);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		m_DimTex.ID = texId;
+	}
+
 	m_CameraManager = GameObject();
 	m_CameraManager.Name = "CameraManager";
 	m_CameraManager.AddComponent<CameraManager>();
@@ -508,6 +580,46 @@ void SceneManager::InitializeUI()
 
 void SceneManager::input(GLFWwindow* window)
 {
+	if (m_WaitingForLeaderName)
+	{
+		if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS)
+		{
+			int score = 0;
+			if (SpawnManager::Instance != nullptr)
+			{
+				score = SpawnManager::Instance->GetMoney();
+			}
+
+			if (m_LeaderInputName.empty())
+			{
+				m_LeaderInputName = "ANON";
+			}
+
+			m_LeaderBoard.LoadFromFile(m_LeaderFilePath);
+
+			m_LeaderBoard.AddScore(m_LeaderInputName, score);
+
+			m_LeaderBoard.SaveToFile(m_LeaderFilePath);
+
+			m_WaitingForLeaderName = false;
+			m_ShowLeaderBoard = true;
+			m_LeaderBoard.Show(true);
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_BACKSPACE) == GLFW_PRESS)
+		{
+			if (!m_LeaderInputName.empty())
+			{
+				m_LeaderInputName.pop_back();
+			}
+		}
+	}
+
+	if (m_WaitingForLeaderName || m_ShowLeaderBoard)
+	{
+		return;
+	}
+
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
 		MainCamera->ProcessKeyboard(FORWARD, Time::GetDeltaTime());
@@ -609,6 +721,41 @@ void SceneManager::MouseCallbackDispatcher(GLFWwindow* window, double xpos, doub
 	if (self) {
 		self->MouseCallback(window, xpos, ypos);
 	}
+}
+
+void SceneManager::CharCallback(GLFWwindow* window, unsigned int codepoint)
+{
+	// member handler: append UTF-8 chars to m_LeaderInputName
+	if (!m_WaitingForLeaderName) return;
+	if (codepoint < 32) return;
+
+	char buf[5] = {0};
+	int len = 0;
+	if (codepoint <= 0x7F) {
+		buf[0] = static_cast<char>(codepoint); len = 1;
+	} else if (codepoint <= 0x7FF) {
+		buf[0] = static_cast<char>(0xC0 | ((codepoint >> 6) & 0x1F));
+		buf[1] = static_cast<char>(0x80 | (codepoint & 0x3F)); len = 2;
+	} else if (codepoint <= 0xFFFF) {
+		buf[0] = static_cast<char>(0xE0 | ((codepoint >> 12) & 0x0F));
+		buf[1] = static_cast<char>(0x80 | ((codepoint >> 6) & 0x3F));
+		buf[2] = static_cast<char>(0x80 | (codepoint & 0x3F)); len = 3;
+	} else if (codepoint <= 0x10FFFF) {
+		buf[0] = static_cast<char>(0xF0 | ((codepoint >> 18) & 0x07));
+		buf[1] = static_cast<char>(0x80 | ((codepoint >> 12) & 0x3F));
+		buf[2] = static_cast<char>(0x80 | ((codepoint >> 6) & 0x3F));
+		buf[3] = static_cast<char>(0x80 | (codepoint & 0x3F)); len = 4;
+	}
+
+	if (len > 0) {
+		m_LeaderInputName.append(buf, buf + len);
+	}
+}
+
+void SceneManager::CharCallbackDispatcher(GLFWwindow* window, unsigned int codepoint)
+{
+	SceneManager* self = static_cast<SceneManager*>(glfwGetWindowUserPointer(window));
+	if (self) self->CharCallback(window, codepoint);
 }
 
 void SceneManager::ScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
