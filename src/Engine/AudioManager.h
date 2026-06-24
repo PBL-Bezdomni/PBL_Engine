@@ -10,7 +10,7 @@ public:
 	~AudioManager();
 	int Initialize();
 
-	void PlaySound(const std::string& path);
+	void PlaySound(const std::string& path, float volume);
 
 	// Play a sound in loop (background music). Call StopLoop() to stop.
 	void PlayLoop(const std::string& path);

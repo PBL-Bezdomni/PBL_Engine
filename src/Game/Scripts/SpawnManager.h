@@ -90,5 +90,7 @@ public:
 	// void OnTriggerEnter(GameObject* other) override;
 	void DespawnAnimalWithReward(Animal* animal);
 
+	void Reset();
+
 	const char* GetScriptName() const override { return "SpawnManager"; }
 };

@@ -33,17 +33,43 @@ void LeaderBoard::Draw(Shader& uiShader, Shader& textShader)
 	if (!m_IsVisible || !m_UIManager)
 		return;
 
+	// Draw background panel
 	m_UIManager->DrawPanelWithText(uiShader, textShader, m_BackPanel);
 
-	float startX = m_BackPanel.Position.x + m_EntryPadding.x;
+	// Draw header above the panel
+	UIPanel headerPanel;
+	headerPanel.HasTexture = false;
+	float headerHeight = 36.0f;
+	headerPanel.Position = glm::vec2(m_BackPanel.Position.x, m_BackPanel.Position.y - headerHeight - m_EntryPadding.y);
+	headerPanel.Size = glm::vec2(m_BackPanel.Size.x, headerHeight);
+	headerPanel.Text = L"LEADERBOARD";
+	headerPanel.TextScale = m_TextScale * 1.2f;
+	headerPanel.TextColor = glm::vec3(0.9f, 0.9f, 0.9f);
+	m_UIManager->DrawPanelWithText(uiShader, textShader, headerPanel);
+
+	float startX = m_BackPanel.Position.x + m_EntryPadding.x + 50.0f;
 	float startY = m_BackPanel.Position.y + m_EntryPadding.y;
+
+	float numberWidth = 30.0f;
+	float numberSpacing = 10.0f;
 
 	for (size_t i = 0; i < m_Entries.size(); ++i)
 	{
+		// Number panel
+		UIPanel numberPanel;
+		numberPanel.HasTexture = false;
+		numberPanel.Position = glm::vec2(startX, startY + i * (m_EntryHeight + m_EntryPadding.y));
+		numberPanel.Size = glm::vec2(numberWidth, m_EntryHeight);
+		numberPanel.Text = std::to_wstring(i + 1);
+		numberPanel.TextScale = m_TextScale;
+		numberPanel.TextColor = glm::vec3(0.15f, 0.15f, 0.15f);
+		m_UIManager->DrawPanelWithText(uiShader, textShader, numberPanel);
+
+		// Entry panel (shifted right)
 		UIPanel entryPanel;
 		entryPanel.HasTexture = false;
-		entryPanel.Position = glm::vec2(startX, startY + i * (m_EntryHeight + m_EntryPadding.y));
-		entryPanel.Size = glm::vec2(m_BackPanel.Size.x - 2.0f * m_EntryPadding.x, m_EntryHeight);
+		entryPanel.Position = glm::vec2(startX + numberWidth + numberSpacing, startY + i * (m_EntryHeight + m_EntryPadding.y));
+		entryPanel.Size = glm::vec2(m_BackPanel.Size.x - 2.0f * m_EntryPadding.x - numberWidth - numberSpacing, m_EntryHeight);
 		entryPanel.Text = m_Entries[i];
 		entryPanel.TextScale = m_TextScale;
 		entryPanel.TextColor = glm::vec3(0.15f, 0.15f, 0.15f);

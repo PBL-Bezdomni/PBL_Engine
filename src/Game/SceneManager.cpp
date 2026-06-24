@@ -211,6 +211,11 @@ void SceneManager::UpdateScene()
 
 void SceneManager::RenderScene()
 {
+	int windowH, windowW;
+	glfwGetWindowSize(WindowMgr->GetWindowPointer(), &windowW, &windowH);
+	if (windowW == 0 || windowH == 0) {
+		return;
+	}
 
 	AssetMgr->BasicShader->Use();
 	AssetMgr->BasicShader->SetBool("useDirLight", false);
@@ -245,14 +250,12 @@ void SceneManager::RenderScene()
 		}),
 		m_GameObjects.end());
 
-	int windowH, windowW;
-	glfwGetWindowSize(WindowMgr->GetWindowPointer(), &windowW, &windowH);
 	glViewport(0, 0, windowW, windowH);
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    m_WorldParent.DrawSelfAndChild();
+    m_WorldParent.DrawSelfAndChildFiltered(true);
 
 	m_Skybox.DrawSkybox(skyboxView, projection);
 
@@ -266,7 +269,19 @@ void SceneManager::RenderScene()
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	m_cl->RenderQuad(*AssetMgr->CelShadingShader);
+	m_cl->RenderQuad(*AssetMgr->CelShadingShader, true);
+
+	glBindFramebuffer(GL_READ_FRAMEBUFFER, m_cl->GetFBO());
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+	glBlitFramebuffer(0, 0, windowW, windowH, 0, 0, windowW, windowH, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0); 
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_DEPTH_TEST);
+	glDepthMask(GL_TRUE);
+	m_WorldParent.DrawSelfAndChildFiltered(false);
+	glDepthMask(GL_TRUE);
 
 	// IMPORTANT: Do not write things below Freetype/UI, if you do not know what you are doing, thanks :)
 	// Draw UI
@@ -327,13 +342,28 @@ void SceneManager::RenderScene()
 	if (m_WaitingForLeaderName)
 	{
 		UIPanel inputPanel;
-		inputPanel.HasTexture = false;
-		inputPanel.Position = glm::vec2((WindowMgr->GetWindowWidth() / 2.0f) - 150.0f, (WindowMgr->GetWindowHeight() / 2.0f) + 110.0f);
-		inputPanel.Size = glm::vec2(300.0f, 40.0f);
+		inputPanel.HasTexture = true;
+
+		auto uiTex = AssetMgr->GetTexture("res/textures/UI/UI_panel.png");
+		if (uiTex != nullptr)
+		{
+			inputPanel.TextureID = uiTex->ID; 
+		}
+		else
+		{
+			std::cout << "Bezdomni_Engine ERROR: Could not find res/textures/UI/UI_panel.png!\n";
+			inputPanel.TextureID = 0;
+		}
+
+		glm::vec2 panelSize = glm::vec2(600.0f, 290.0f);
+		inputPanel.Position = glm::vec2((WindowMgr->GetWindowWidth() - panelSize.x) / 2.0f, (WindowMgr->GetWindowHeight() - panelSize.y) / 2.0f);
+		inputPanel.Size = panelSize;
+
 		std::string prompt = std::string("Enter name: ") + m_LeaderInputName;
 		inputPanel.Text = std::wstring(prompt.begin(), prompt.end());
 		inputPanel.TextScale = 1.0f;
-		inputPanel.TextColor = glm::vec3(0.1f, 0.1f, 0.1f);
+		inputPanel.TextColor = glm::vec3(0.333f, 0.227f, 0.196f);
+
 		m_UIManager.DrawPanelWithText(*AssetMgr->UIShader, *AssetMgr->TextShader, inputPanel);
 	}
 
@@ -375,11 +405,55 @@ void SceneManager::RenderScene()
 		m_WaitingForLeaderName = true;
 		m_LeaderInputName = ""; 
 
-		glm::vec2 lbSize = glm::vec2(600.0f, 400.0f);
+		// Play ending music
+		Engine::GetInstance().GetAudioManager().PlayLoop("res/audio/ending_song.mp3");
+
+		glm::vec2 lbSize = glm::vec2(800.0f, 450.0f);
 		glm::vec2 lbPos = glm::vec2((WindowMgr->GetWindowWidth() - lbSize.x) / 2.0f, (WindowMgr->GetWindowHeight() - lbSize.y) / 2.0f);
 		m_LeaderBoard.Init(&m_UIManager, m_UIPanelTex.ID, lbPos, lbSize, 1.0f);
 	}
 
+}
+
+void SceneManager::RestartGame()
+{
+	// Reset timers and flags
+	m_TimeLeft = TIME_LIMIT;
+	m_GameOverTriggered = false;
+	m_WaitingForLeaderName = false;
+	m_ShowLeaderBoard = false;
+	m_LeaderInputName.clear();
+	m_LeaderBoard.Show(false);
+
+	// Reset spawn manager
+	if (SpawnManager::Instance != nullptr)
+	{
+		SpawnManager::Instance->Reset();
+	}
+
+	// Restore background music
+	Engine::GetInstance().GetAudioManager().PlayLoop("res/audio/runAmok.mp3");
+
+	// Reset players positions and rigidbodies
+	m_Player1.transform->Position = glm::vec3(10.0f, 0.0f, -20.0f);
+	if (m_Player1.GetComponent<RigidBody>() != nullptr)
+	{
+		m_Player1.GetComponent<RigidBody>()->Teleport(m_Player1.transform->Position);
+	}
+
+	m_Player2.transform->Position = glm::vec3(10.0f, 0.0f, -25.0f);
+	if (m_Player2.GetComponent<RigidBody>() != nullptr)
+	{
+		m_Player2.GetComponent<RigidBody>()->Teleport(m_Player2.transform->Position);
+	}
+
+	// Reset UI
+	m_MoneyPanel.Text = std::to_wstring(0);
+	{
+		int minutes = static_cast<int>(TIME_LIMIT) / 60;
+		int seconds = static_cast<int>(TIME_LIMIT) % 60;
+		m_TimerPanel.Text = std::to_wstring(minutes) + L":" + (seconds < 10 ? L"0" : L"") + std::to_wstring(seconds);
+	}
 }
 
 void SceneManager::AddAnimal(shared_ptr<GameObject> spawnedEntity)
@@ -517,9 +591,41 @@ void SceneManager::LoadModels()
 	m_WorldParent = GameObject();
 	vector<shared_ptr<GameObject>> objs = m_JSONImporter->ImportScene("scene2", &m_WorldParent);
 	m_GameObjects.insert(m_GameObjects.end(), objs.begin(), objs.end());
+	m_WorldParent.UpdateSelfAndChild();
+	m_WorldParent.GetChildByName("Bonsai")->m_isVisible = false;
+	m_WorldParent.GetChildByName("Water")->m_isWater = true;
+
+	for(int i = 1; i < 4; i++)
+		m_WorldParent.GetChildByName("LillyPot" + to_string(i))->m_isBambooWinded = true;
+	
+	SetByMask(grassMatrices, 3, Loader::RelativePath() +"res/textures/scene_textures/GrassPosition.png", 0.1f);
+	for (int i = 0; i < 3; i++) {
+		m_WorldParent.GetChildByName("Ground")->RemoveChild(m_WorldParent.GetChildByName("Grass" + to_string(i)));
+		Grass[i] = GameObject();
+		Grass[i].ID = 999 - i;
+		Grass[i].Name = "Grass" + to_string(i);
+		Grass[i].m_isGrassWinded = true;
+		Model grassModel(*AssetMgr->BasicShader, (Loader::RelativePath() + "res/models/scene_models/Grass.fbx").c_str(), grassMatrices[i].size(), grassMatrices[i]);
+		if (i == 0) {
+			grassModel.AssignTexture(*AssetMgr->GetTexture("res/textures/scene_textures/Grass1_DefaultMaterial_BaseColor.png"));
+			Grass[i].AddComponent<Model>(grassModel);
+		}
+		else if (i == 1) {
+			grassModel.AssignTexture(*AssetMgr->GetTexture("res/textures/scene_textures/Grass2_DefaultMaterial_BaseColor.png"));
+			Grass[i].AddComponent<Model>(grassModel);
+		}
+		else if (i == 2) {
+			grassModel.AssignTexture(*AssetMgr->GetTexture("res/textures/scene_textures/Grass3_DefaultMaterial_BaseColor.png"));
+			Grass[i].AddComponent<Model>(grassModel);
+		}
+
+		Grass[i].m_isVisible = false;
+		m_WorldParent.GetChildByName("Ground")->AddChild(&Grass[i]);
+	}
+
 
 	m_LightSourceObject = GameObject();
-	Model lightModel = *AssetMgr->GetModel(*AssetMgr->LightSourceShader, "res/models/sphere/ball.obj");
+	Model lightModel = *AssetMgr->GetModel(*AssetMgr->LightSourceShader,  "res/models/sphere/ball.obj");
 	m_LightSourceObject.AddComponent<Model>(lightModel);
 	
 	m_LightSource = GameObject();
@@ -527,6 +633,27 @@ void SceneManager::LoadModels()
 
 	m_LightSource.transform->Position = glm::vec3(0.f, 15.0f, 0.0f);
 	//m_LightSource.transform->Position = glm::vec3(0.f, 15.0f, -30.0f);
+	
+	m_WorldParent.GetChildByName("Ground")->RemoveChild(m_WorldParent.GetChildByName("Bamboo"));
+	SetByMask(&bambooMatrices, 0, Loader::RelativePath() + "res/textures/scene_textures/BambooPosition.png", 0.01f);
+	Bamboo = GameObject();
+	Bamboo.ID = 996;
+	Bamboo.Name = "Bamboo";
+	Bamboo.m_isVisible = false;
+	Bamboo.m_isBambooWinded = true;
+	Model b_model(*AssetMgr->BasicShader, (Loader::RelativePath()+"res/models/scene_models/Bambooes.fbx").c_str(), bambooMatrices.size(), bambooMatrices);
+	Bamboo.AddComponent<Model>(b_model);
+	m_WorldParent.GetChildByName("Ground")->AddChild(&Bamboo);
+
+	m_WorldParent.GetChildByName("Ground")->RemoveChild(m_WorldParent.GetChildByName("Bush"));
+	SetByMask(&bushMatrices, 0, Loader::RelativePath()+"res/textures/scene_textures/BushPosition.png", 0.002f);
+	Bush = GameObject();
+	Bush.ID = 995;
+	Bush.Name = "Bush";
+	Bush.m_isVisible = false;
+	Model bu_model(*AssetMgr->BasicShader, (Loader::RelativePath()+"res/models/scene_models/Bush.fbx").c_str(), bushMatrices.size(), bushMatrices);
+	Bush.AddComponent<Model>(bu_model);
+	m_WorldParent.GetChildByName("Ground")->AddChild(&Bush);
 
 	m_UIPanelTex = *AssetMgr->GetTexture("res/textures/UI/UI_panel.png");
 	m_UICoinTex = *AssetMgr->GetTexture("res/textures/UI/coin.png");
@@ -588,6 +715,10 @@ void SceneManager::input(GLFWwindow* window)
 {
 	if (m_WaitingForLeaderName)
 	{
+		if (m_LeaderInputName.length() > 10)
+		{
+			m_LeaderInputName.resize(10);
+		}
 		if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS)
 		{
 			int score = 0;
@@ -610,6 +741,8 @@ void SceneManager::input(GLFWwindow* window)
 			m_WaitingForLeaderName = false;
 			m_ShowLeaderBoard = true;
 			m_LeaderBoard.Show(true);
+			// Consume the current Enter key so it doesn't immediately trigger restart
+			m_ConsumeShowConfirm = true;
 		}
 
 		if (glfwGetKey(window, GLFW_KEY_BACKSPACE) == GLFW_PRESS)
@@ -621,8 +754,28 @@ void SceneManager::input(GLFWwindow* window)
 		}
 	}
 
-	if (m_WaitingForLeaderName || m_ShowLeaderBoard)
+	if (m_WaitingForLeaderName)
 	{
+		return;
+	}
+
+	if (m_ShowLeaderBoard)
+	{
+		// If we just transitioned to leaderboard, wait for key release to avoid immediate restart
+		if (m_ConsumeShowConfirm)
+		{
+			if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_RELEASE && glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE)
+			{
+				m_ConsumeShowConfirm = false;
+			}
+			return;
+		}
+
+		// Restart when player acknowledges leaderboard
+		if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+		{
+			RestartGame();
+		}
 		return;
 	}
 
@@ -731,7 +884,6 @@ void SceneManager::MouseCallbackDispatcher(GLFWwindow* window, double xpos, doub
 
 void SceneManager::CharCallback(GLFWwindow* window, unsigned int codepoint)
 {
-	// member handler: append UTF-8 chars to m_LeaderInputName
 	if (!m_WaitingForLeaderName) return;
 	if (codepoint < 32) return;
 
@@ -787,4 +939,116 @@ void SceneManager::JoystickCallback(int jid, int event) {
 	else if (event == GLFW_DISCONNECTED) {
 		std::cout << "WARNING: Joystick disconnected: " << std::to_string(jid) << std::endl;
 	}
+}
+
+void SceneManager::SetByMask(std::vector<glm::mat4>* matrices, int arraySize, string mapPath, float density)
+{
+	int numOfMatrix = 0;
+	GameObject* groundObj = m_WorldParent.GetChildByName("Ground");
+	if (!groundObj) {
+		std::cout << "ERROR SetByMap: Ground is not found" << std::endl;
+		return;
+	}
+
+	Model* terrainModel = groundObj->GetComponent<Model>();
+	if (!terrainModel || terrainModel->Meshes.empty()) {
+		std::cout << "ERROR SetByMap: Ground has no model component" << std::endl;
+		return;
+	}
+
+	Mesh& terrainMesh = terrainModel->Meshes[0];
+
+	int width, height, nrChannels;
+
+	unsigned char* data = stbi_load((const char*)mapPath.c_str(), &width, &height, &nrChannels, 1);
+	if (!data) {
+		std::cout << "ERROR SetByMap: Can't load Mask" << std::endl;
+		return;
+	}
+
+
+	for (size_t i = 0; i < terrainMesh.Indices.size(); i += 3)
+	{
+
+		Vertex v0 = terrainMesh.Vertices[terrainMesh.Indices[i]];
+		Vertex v1 = terrainMesh.Vertices[terrainMesh.Indices[i + 1]];
+		Vertex v2 = terrainMesh.Vertices[terrainMesh.Indices[i + 2]];
+
+		glm::vec3 p0 = v0.Position;
+		glm::vec3 p1 = v1.Position;
+		glm::vec3 p2 = v2.Position;
+
+		glm::vec3 edge1 = p1 - p0;
+		glm::vec3 edge2 = p2 - p0;
+		float area = glm::length(glm::cross(edge1, edge2)) * 0.5f;
+
+		int attempts = (int)(area * density);
+		if (((float)rand() / RAND_MAX) < (area * density - attempts)) {
+			attempts++;
+		}
+
+		for (int j = 0; j < attempts; j++)
+		{
+
+			float u1 = (float)rand() / RAND_MAX;
+			float u2 = (float)rand() / RAND_MAX;
+
+			if (u1 + u2 > 1.0f) {
+				u1 = 1.0f - u1;
+				u2 = 1.0f - u2;
+			}
+
+			float w0 = 1.0f - u1 - u2;
+			float w1 = u1;
+			float w2 = u2;
+
+
+			glm::vec2 finalUV = w0 * v0.TexCoords + w1 * v1.TexCoords + w2 * v2.TexCoords;
+
+			float texU = glm::clamp(finalUV.x, 0.0f, 1.0f);
+			float texV = glm::clamp(finalUV.y, 0.0f, 1.0f);
+
+			int pixelX = (int)(texU * (width - 1));
+			int pixelY = (int)(texV * (height - 1));
+
+			unsigned char pixelColor = data[pixelY * width + pixelX];
+			float density = pixelColor / 255.0f;
+
+			if (density > 0.5f)
+			{
+
+				glm::vec3 localPos = w0 * p0 + w1 * p1 + w2 * p2;
+				if (arraySize != 0)
+					localPos.z += 2.5f;
+
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, localPos);
+
+				if(arraySize !=0){
+				//model = glm::rotate(model, glm::radians((float)(rand() % 360)), glm::vec3(0.0f, 1.0f, 0.0f));
+				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+				model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+				model = glm::rotate(model, glm::radians(-30.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+
+				float randomScale = 0.3f + ((float)rand() / RAND_MAX) * 0.4f;
+				model = glm::scale(model, glm::vec3(randomScale));
+
+					if (numOfMatrix < 10)
+						matrices[0].push_back(model);
+					else
+						matrices[numOfMatrix - 9].push_back(model);
+					numOfMatrix++;
+					if (numOfMatrix >= 12) numOfMatrix = 0;
+				}
+				else {
+					float randomScale = 0.7f + ((float)rand() / RAND_MAX) * 0.3f;
+					model = glm::scale(model, glm::vec3(0.3f, 0.4f, 1.0f));
+					matrices->push_back(model);
+				}
+			}
+		}
+	}
+	stbi_image_free(data);
+
 }
