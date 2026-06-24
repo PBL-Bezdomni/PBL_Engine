@@ -461,7 +461,7 @@ void SceneManager::LoadModels()
 	vector<shared_ptr<GameObject>> objs = m_JSONImporter->ImportScene("scene2", &m_WorldParent);
 	m_GameObjects.insert(m_GameObjects.end(), objs.begin(), objs.end());
 	m_WorldParent.UpdateSelfAndChild();
-
+	m_WorldParent.GetChildByName("Bonsai")->m_isVisible = false;
 	
 	SetByMask(grassMatrices, 3, "res/textures/scene_textures/GrassPosition.png", 0.1f);
 	for (int i = 0; i < 3; i++) {
