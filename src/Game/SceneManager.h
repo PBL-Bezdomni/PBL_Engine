@@ -10,6 +10,7 @@
 #include "UI/UIManager.h"
 #include "Game/Scripts/Animal.h"
 #include "Engine/Events/AEvent.h"
+#include "UI/LeaderBoard.h"
 
 #include <vector>
 
@@ -23,7 +24,7 @@ class CelShading;
 class SceneManager
 {
 private:
-	const float TIME_LIMIT = 60.f;
+	const float TIME_LIMIT = 300.f;
 	unique_ptr<JSONImporter> m_JSONImporter;
 	GameObject m_WorldParent;
 	GameObject m_UIParent;
@@ -32,6 +33,12 @@ private:
 	UIPanel m_MoneyPanel;
 	UIPanel m_FpsPanel;
 	UIPanel m_ALetterPanel;
+
+	LeaderBoard m_LeaderBoard;
+	bool m_ShowLeaderBoard = false;
+	std::string m_LeaderInputName;
+	bool m_WaitingForLeaderName = false;
+	std::string m_LeaderFilePath = "res/leaderboard.txt";
 
 	std::vector<shared_ptr<GameObject>> m_AnimalsList;
 	
@@ -48,6 +55,7 @@ public:
 	shared_ptr<Camera> GetMainCamera();
 	float GetTimeLimit();
 	float GetTimeLeft();
+	float GetTimeProgressRatio();
 
 	AEvent<> OnSceneLoaded; 
 private:
@@ -59,6 +67,8 @@ private:
 	
 	void MouseCallback(GLFWwindow* window, double xpos, double ypos);
 	static void MouseCallbackDispatcher(GLFWwindow* window, double xpos, double ypos);
+	void CharCallback(GLFWwindow* window, unsigned int codepoint);
+	static void CharCallbackDispatcher(GLFWwindow* window, unsigned int codepoint);
 	void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
 	static void ScrollCallbackDispatcher(GLFWwindow* window, double xoffset, double yoffset);
 	static void JoystickCallback(int jid, int event);
@@ -78,12 +88,16 @@ private:
 	
 	Texture m_UIPanelTex;
 	Texture m_UICoinTex;
+	Texture m_UILetterTex;
+
+	Texture m_DimTex;
 
 	vector<shared_ptr<GameObject>> m_GameObjects;
 
 	unsigned int m_DynamicDepthMap;
 	unsigned int m_StaticDepthMap;
 	bool m_HasStaticMapLoaded = false;
+	bool m_GameOverTriggered = false;
 	
 	GameObject skybox;
 

@@ -72,11 +72,12 @@ void Animator::CalculateBoneTransform(const AssimpNodeData* node, const glm::mat
 
 	glm::mat4 globalInverse = glm::inverse(m_CurrentAnimation->GetRootNode().transformation);
 
-	auto boneInfoMap = m_CurrentAnimation->GetBoneIDMap();
-	if (boneInfoMap.find(nodeName) != boneInfoMap.end())
+	const auto& boneInfoMap = m_CurrentAnimation->GetBoneIDMap();
+	auto it = boneInfoMap.find(nodeName);
+	if (it != boneInfoMap.end())
 	{
-		int index = boneInfoMap[nodeName].id;
-		glm::mat4 offset = boneInfoMap[nodeName].offset;
+		int index = it->second.id;
+		glm::mat4 offset = it->second.offset;
 		if (index < m_FinalBoneMatrices.size())
 		{
 			m_FinalBoneMatrices[index] = globalInverse * globalTransformation * offset;

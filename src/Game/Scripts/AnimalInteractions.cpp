@@ -3,7 +3,7 @@
 #include "Animal.h"
 #include "GameObject.h"
 #include "SpawnManager.h"
-#include <Engine/Animation/Animator.h>
+#include <Engine/Components/RigidBody.h>
 
 void AnimalInteractions::Update(Animal* animal)
 {
@@ -42,18 +42,29 @@ void AnimalInteractions::HandleBear(Animal* animal)
 	GameObject* bunny = FindClosestAnimal(animal, "bunny", m_DetectionRadius);
 	if (bunny != nullptr)
 	{
-		Animator* animator = animal->GetGameObject()->GetComponent<Animator>();
-		if (animator) animator->PlayAnimation("run");
+		animal->GetStateController()->RequestStateChange.Invoke(AnimalState::Chasing);
 		m_IsChasing = true;
-		animal->SetSpeed(5.3f);
-		animal->SetTargetPosition(bunny->transform->GetGlobalPosition());
 
-		float dist = glm::length(bunny->transform->GetGlobalPosition() - animal->GetGameObject()->transform->GetGlobalPosition());
+		RigidBody* rb = animal->GetGameObject()->GetComponent<RigidBody>();
+		glm::vec3 currentPos = animal->GetGameObject()->transform->GetGlobalPosition();
+		glm::vec3 bunnyPos = bunny->transform->GetGlobalPosition();
+
+		glm::vec3 dir = glm::normalize(bunnyPos - currentPos);
+		dir.y = 0.0f;
+
+		if (rb != nullptr)
+		{
+			rb->SetLinearVelocity(dir * 5.3f + glm::vec3(0.0f, rb->GetLinearVelocity().y, 0.0f));
+			float targetAngle = glm::degrees(atan2(dir.x, dir.z));
+			rb->SetRotation(glm::vec3(0.0f, targetAngle, 0.0f));
+		}
+
+		float dist = glm::length(bunnyPos - currentPos);
 		if (dist <= m_EatDistance)
 		{
 			if (SpawnManager::Instance != nullptr)
 			{
-				if (animator) animator->PlayAnimation("eat");
+				animal->GetStateController()->RequestStateChange.Invoke(AnimalState::Eating);
 				SpawnManager::Instance->DespawnAnimal(bunny);
 				m_IsChasing = false;
 				m_HungerTimer = m_HungerCooldown;
@@ -63,7 +74,11 @@ void AnimalInteractions::HandleBear(Animal* animal)
 	}
 	else
 	{
-		m_IsChasing = false;
+		if (m_IsChasing)
+		{
+			m_IsChasing = false;
+			animal->GetStateController()->RequestStateChange.Invoke(AnimalState::Idle);
+		}
 	}
 }
 

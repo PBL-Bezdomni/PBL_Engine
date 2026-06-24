@@ -5,13 +5,22 @@
 void Sauna::Awake()
 {
 	m_ObjectNeed = AnimalNeeds::Sauna;
+
+	m_IsSquareIndicator = false;
+	m_IndicatorScale = 50.0f;
+	m_IndicatorOffset = glm::vec3(0.0f, -20.0f, 0.0f);
+
+	m_IconTexturePath = "res/textures/UI/objects/sauna.png";
+	m_IconScale = glm::vec3(3.0f);
+	m_IconOffset = glm::vec3(0.0f, 50.0f, -10.0f);
+
 	AOnsenObject::Awake();
 }
 
 void Sauna::AssignParticles()
 {
 	ParticleEmitter* emitter = m_Owner->AddComponent<ParticleEmitter>();
-	emitter->Initialize("res/shaders/basicParticles.vert", "res/shaders/basicParticles.frag", "res/shaders/basicParticles.comp", "res/models/PieChartPlane.obj", "res/textures/UI/smoke.png");
+	emitter->Initialize("res/shaders/basicParticles.vert", "res/shaders/basicParticles.frag", "res/shaders/basicParticles.comp", "res/models/primitives/plane.obj", "res/textures/UI/smoke.png");
 	emitter->SetSpawnRate(20);
 	emitter->SetBulk(3);
 	emitter->MaxVelocity = glm::vec3(0.f, 5.f, 0.f);

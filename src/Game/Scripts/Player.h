@@ -3,9 +3,17 @@
 #include "Engine/InputManager.h"
 #include "Game/Scripts/SpawnManager.h"
 
+class Animal;
 class AOnsenObject;
 class ParticleEmitter;
 class GameObject;
+
+enum class PlayerAnimState
+{
+    Idle,
+    Walking,
+    Action
+};
 
 class Player : public Behaviour
 {
@@ -24,6 +32,7 @@ private:
     void HandleActionPressed();
     void HandleThrowPressed();
     void HandleThrowReleased();
+    void HandleInteractionPressed();
 
     shared_ptr<GameObject> m_ChargeMeter;
     shared_ptr<Shader> m_ChargeMeterShader;
@@ -37,6 +46,13 @@ private:
     std::vector<class TargetingZone*> m_TargetingZones;
     GameObject* m_LastThrownAnimal = nullptr;
     float m_IgnoreThrownAnimalTimer = 0.0f;
+
+    PlayerAnimState m_CurrentState = PlayerAnimState::Idle;
+    float m_ActionAnimTimer = 0.0f;
+
+    void PlayActionAnimation(const std::string& animName, float duration);
+
+    float m_ModelScaler = 1.f;
 
 public:
     glm::vec2 MoveInput{ 0.0f };
@@ -53,14 +69,15 @@ public:
 
     bool m_IsChargingThrow = false;
     float m_ThrowCharge = 0.0f;
-    const float m_MinThrowForce = 5.0f;
+    const float m_MinThrowForce = 10.0f;
     const float m_MaxThrowForce = 40.0f;
-    const float m_ChargeSpeed = 10.0f;
+    const float m_ChargeSpeed = 30.0f;
 
     const char* GetScriptName() const override { return "Player"; }
 
     GameObject* GetBestAnimalTarget() const { return m_BestAnimalTarget; }
     GameObject* m_BestAnimalTarget = nullptr;
+    Animal* m_BestAnimalInObject = nullptr;
     float m_BestAnimalScore = -1.0f;
 
     void OnAnimalEnteredZone(GameObject* animal, float score);

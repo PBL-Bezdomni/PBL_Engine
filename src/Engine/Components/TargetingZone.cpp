@@ -42,12 +42,22 @@ float TargetingZone::GetAnimalScore(GameObject* animal)
 
     Animal* animalScript = animal->GetDerivedComponent<Animal>();
 
-    if (animalScript->m_StateController.GetCurrentState() == AnimalState::Throw)
+    if (animalScript->GetStateController()->GetCurrentState() == AnimalState::Throw)
     {
         finalScore += 1000.0f;
     }
 
-    if (animalScript->m_ProgressBar->IsActive()) return -2;
+    if (animalScript->m_ProgressBar->IsActive())
+    {
+        if (animalScript->IsCurrentNeedInteractible())
+        {
+            return -5;
+        }
+        else
+        {
+            return -2;
+        }
+    }
 
     return finalScore;
 }

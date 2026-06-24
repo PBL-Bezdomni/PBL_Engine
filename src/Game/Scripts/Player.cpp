@@ -16,6 +16,8 @@
 #include "Engine/Loader.h"
 #include <cstdlib>
 #include <ctime>
+#include "Model.h"
+#include <Engine/Animation/Animator.h>
 
 Player::Player(int deviceid)
 {
@@ -31,29 +33,46 @@ void Player::Awake()
     Engine& engine = Engine::GetInstance();
     AssetManager* am = &engine.GetAssetManager();
     m_SceneMgr = &engine.GetGameManager().GetSceneManager();
-    string path = "res/models/players/";
-    if (deviceID == 0)
-    {
-        path += "druid1/druid1.fbx";
-    }
-    else
-    {
-        path += "druid2/druid2.fbx";
-    }
-    Model bodyModel = *am->GetModel(*am->BasicShader, path.c_str());
+    string path = "res/models/animations/players/";
+    string druidDir = (deviceID == 0) ? "druid1/" : "druid2/";
+
+    Model bodyModel = *am->GetModel(*am->AnimatedShader, (path + druidDir + "druid-walking.glb").c_str());
     m_Owner->AddComponent<Model>(bodyModel);
 
+    m_Owner->transform->Scale = glm::vec3(m_ModelScaler);
+
+    Model* modelPtr = m_Owner->GetComponent<Model>();
+    if (modelPtr != nullptr)
+    {
+        string animPath = path + druidDir;
+
+        Animation* startAnimation = new Animation(animPath + "druid-walking.glb", modelPtr);
+        Animator* animator = m_Owner->AddComponent<Animator>(startAnimation);
+
+        if (animator != nullptr)
+        {
+            animator->AddAnimation("idle", new Animation(animPath + "druid-walking.glb", modelPtr));
+            animator->AddAnimation("walk", new Animation(animPath + "druid-walking.glb", modelPtr));
+            animator->AddAnimation("pickup", new Animation(animPath + "druid-pickup.glb", modelPtr));
+            animator->AddAnimation("massage", new Animation(animPath + "druid-massage.glb", modelPtr));
+            animator->AddAnimation("throw", new Animation(animPath + "druid-throwing.glb", modelPtr));
+            
+            animator->PlayAnimation("idle");
+        }
+        m_CurrentState = PlayerAnimState::Idle;
+    }
+
     m_ParticleEmitter = m_Owner->AddComponent<ParticleEmitter>();
-    m_ParticleEmitter->Initialize("res/shaders/basicParticles.vert", "res/shaders/basicParticles.frag", "res/shaders/basicParticles.comp", "res/models/PieChartPlane.obj", "res/textures/UI/smoke.png");
+    m_ParticleEmitter->Initialize("res/shaders/basicParticles.vert", "res/shaders/basicParticles.frag", "res/shaders/basicParticles.comp", "res/models/primitives/plane.obj", "res/textures/UI/smoke.png");
 
     m_ChargeMeterShader = am->GetShader("res/shaders/powerMeter.vert", "res/shaders/ProgressBar.frag");
-    m_ChargeMeter = m_SceneMgr->Instantiate(m_Owner, "res/models/CheckmarkPlane.obj", m_ChargeMeterShader);
+    m_ChargeMeter = m_SceneMgr->Instantiate(m_Owner, "res/models/primitives/plane.obj", m_ChargeMeterShader);
     m_ChargeMeter->GetComponent<Model>()->ReassignShader(*m_ChargeMeterShader);
     // Maybe custom texture for meter
     // m_ChargeMeter->GetComponent<Model>()->AssignTexture();
-    m_ChargeMeter->transform->Position = glm::vec3(0.f, -0.7f, 4.f);
+    m_ChargeMeter->transform->Position = glm::vec3(0.f, -0.1f, 4.f / m_ModelScaler);
     m_ChargeMeter->transform->EulerAngles = glm::vec3(0.f, -90.f, 0.f);
-    m_ChargeMeter->transform->Scale = glm::vec3(2.6f, 1.0f, 0.5f);
+    m_ChargeMeter->transform->Scale = glm::vec3(2.6f / m_ModelScaler, 1.0f, 0.5f / m_ModelScaler);
     m_ChargeMeter->SetActive(false);
 
     BindInput();
@@ -88,6 +107,15 @@ void Player::Update()
     float deltaTime = Time::GetDeltaTime();
 	if (!m_Owner) return;
 
+    Animator* animator = m_Owner->GetComponent<Animator>();
+    if (animator != nullptr)
+    {
+        if (m_CurrentState != PlayerAnimState::Idle)
+        {
+            animator->UpdateAnimation(deltaTime);
+        }
+    }
+
     if (m_TargetingZones.empty()) {
         m_TargetingZones = m_Owner->FindComponentsInChildren<TargetingZone>();
         for (TargetingZone* zone : m_TargetingZones) {
@@ -111,7 +139,7 @@ void Player::Update()
     {
         Animal* bestAnimalScript = m_BestAnimalTarget->GetDerivedComponent<Animal>();
 
-        if (bestAnimalScript != nullptr && bestAnimalScript->m_StateController.GetCurrentState() == AnimalState::PickedUp)
+        if (bestAnimalScript != nullptr && bestAnimalScript->GetStateController()->GetCurrentState() == AnimalState::PickedUp)
         {
             SetHighlight(m_BestAnimalTarget, false);
             m_BestAnimalTarget = nullptr;
@@ -122,6 +150,11 @@ void Player::Update()
         {
             SetHighlight(m_BestAnimalTarget, true);
         }
+    }
+
+    if (m_BestAnimalInObject != nullptr)
+    {
+        // I don't know if it's necessary. #PG
     }
 
     RigidBody* rb = m_Owner->GetComponent<RigidBody>();
@@ -149,6 +182,35 @@ void Player::Update()
     {
         m_ParticleEmitter->Stop();
         m_FootstepTimer = 0.0f;
+    }
+
+    if (m_CurrentState == PlayerAnimState::Action)
+    {
+        m_ActionAnimTimer -= deltaTime;
+        if (m_ActionAnimTimer <= 0.0f)
+        {
+            m_CurrentState = PlayerAnimState::Idle;
+        }
+    }
+
+    if (m_CurrentState != PlayerAnimState::Action)
+    {
+        if (glm::length(direction) > 0.01f)
+        {
+            if (m_CurrentState != PlayerAnimState::Walking)
+            {
+                if (animator) animator->PlayAnimation("walk");
+                m_CurrentState = PlayerAnimState::Walking;
+            }
+        }
+        else
+        {
+            if (m_CurrentState != PlayerAnimState::Idle)
+            {
+                if (animator) animator->PlayAnimation("idle");
+                m_CurrentState = PlayerAnimState::Idle;
+            }
+        }
     }
 
     if (rb != nullptr)
@@ -230,7 +292,7 @@ void Player::Update()
             rb->SetLinearVelocity(glm::vec3(0.0f));
             rb->SetAngularVelocity(glm::vec3(0.0f));
             rb->Teleport(headPos);
-            a->m_StateController.RequestStateChange.Invoke(AnimalState::PickedUp);
+            a->GetStateController()->RequestStateChange.Invoke(AnimalState::PickedUp);
         }
     }
 
@@ -331,6 +393,12 @@ void Player::BindInput()
             this->HandleThrowReleased();
         }
     });
+
+    im->subscribe(deviceID, m_InputName.INTERACTION, [this](float val, InputEventType type, int id)
+    {
+        if (id == deviceID && type == InputEventType::Started)
+            this->HandleInteractionPressed();
+    });
 }
 
 void Player::HandleActionPressed()
@@ -367,9 +435,11 @@ void Player::HandleActionPressed()
             }
             if (animalScript != nullptr)
             {
+                PlayActionAnimation("pickup", 1.0f);
+
                 m_CarriedAnimal = hitObject;
                 m_HasPickUpReleased = false;
-                animalScript->m_StateController.RequestStateChange.Invoke(AnimalState::PickedUp);
+                animalScript->GetStateController()->RequestStateChange.Invoke(AnimalState::PickedUp);
                 hitObject->GetComponent<Model>()->m_IsHighlighted = false;
                 vector<AnimalNeeds> services = animalScript->GetRequiredServices();
                 // Play pickup sound
@@ -390,16 +460,7 @@ void Player::HandleActionPressed()
                         TutorialArrow* arrow = obj->GetTutorialArrow();
                         if (arrow != nullptr)
                         {
-                            if (deviceID == 0) {
-                                arrow->m_ArrowColor = glm::vec3(0.18f, 0.36f, 0.54f);
-                            }
-                            else if (deviceID == 1) {
-                                arrow->m_ArrowColor = glm::vec3(0.25f, 0.42f, 0.31f);
-                            }
-                            else {
-                                arrow->m_ArrowColor = glm::vec3(1.0f, 1.0f, 1.0f);
-                            }
-                            arrow->SetActive(true);
+                            arrow->SetActive(true, deviceID);
                         }
                     }
                 }
@@ -430,6 +491,8 @@ void Player::HandleThrowReleased()
     }
     if (m_CarriedAnimal != nullptr && m_IsChargingThrow)
     {
+        PlayActionAnimation("throw", 1.0f);
+
         Engine::GetInstance().GetAudioManager().PlaySound("res/audio/4.wav");
         RigidBody* animalRb = m_CarriedAnimal->GetComponent<RigidBody>();
         Animal* animalScript = m_CarriedAnimal->GetDerivedComponent<Animal>();
@@ -448,7 +511,7 @@ void Player::HandleThrowReleased()
                 throwVelocity = glm::vec3(1.0, 0, 0);
             }
             animalRb->SetLinearVelocity(throwVelocity);
-            animalScript->m_StateController.RequestStateChange.Invoke(AnimalState::Throw);
+            animalScript->GetStateController()->RequestStateChange.Invoke(AnimalState::Throw);
             m_LastThrownAnimal = animalScript->GetOwner();
             m_IgnoreThrownAnimalTimer = 1.5f;
         }
@@ -472,9 +535,17 @@ void Player::HandleThrowReleased()
             TutorialArrow* arrow = obj->GetTutorialArrow();
             if (arrow != nullptr)
             {
-                arrow->SetActive(false);
+                arrow->SetActive(false, deviceID);
             }
         }
+    }
+}
+
+void Player::HandleInteractionPressed()
+{
+    if (m_BestAnimalInObject != nullptr)
+    {
+        m_BestAnimalInObject->PlayerFulfillNeed();
     }
 }
 
@@ -490,7 +561,7 @@ void Player::OnAnimalEnteredZone(GameObject* animal, float score)
     if (m_CarriedAnimal != nullptr) return;
 
     Animal* animalScript = animal->GetDerivedComponent<Animal>();
-    if (animalScript != nullptr && animalScript->m_StateController.GetCurrentState() == AnimalState::PickedUp) {
+    if (animalScript != nullptr && animalScript->GetStateController()->GetCurrentState() == AnimalState::PickedUp) {
         return;
     }
 
@@ -506,6 +577,10 @@ void Player::OnAnimalEnteredZone(GameObject* animal, float score)
 
         SetHighlight(m_BestAnimalTarget, true);
     }
+    else if (score <= -5)
+    {
+        m_BestAnimalInObject = animalScript;
+    }
 }
 
 void Player::OnAnimalExitedZone(GameObject* animal)
@@ -518,6 +593,12 @@ void Player::OnAnimalExitedZone(GameObject* animal)
         m_BestAnimalScore = -1.0f;
 
         RecalculateBestTarget();
+    }
+
+    Animal* animalScript = animal->GetDerivedComponent<Animal>();
+    if (animalScript == m_BestAnimalInObject)
+    {
+        m_BestAnimalInObject = nullptr;
     }
 }
 
@@ -541,5 +622,16 @@ void Player::RecalculateBestTarget()
             float score = zone->GetAnimalScore(animal);
             OnAnimalEnteredZone(animal, score);
         }
+    }
+}
+
+void Player::PlayActionAnimation(const std::string& animName, float duration)
+{
+    Animator* animator = m_Owner->GetComponent<Animator>();
+    if (animator != nullptr)
+    {
+        animator->PlayAnimation(animName);
+        m_CurrentState = PlayerAnimState::Action;
+        m_ActionAnimTimer = duration;
     }
 }

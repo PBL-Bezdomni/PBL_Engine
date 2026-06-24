@@ -33,6 +33,10 @@ void Engine::Initialize()
 	m_AudioMgr = std::make_unique<AudioManager>();
 	m_AudioMgr->Initialize();
 
+	// Start background music if available
+	// Note: file extension must match an actual file in res/audio, e.g. runAmok.mp3 or runAmok.wav
+	m_AudioMgr->PlayLoop("res/audio/runAmok.mp3");
+
 	m_GameMgr = std::make_unique<GameManager>();
 	// m_GameMgr->Initialize();
 }

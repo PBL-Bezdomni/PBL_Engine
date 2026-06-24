@@ -4,6 +4,8 @@
 #include "ObjectSlot.h"
 #include "Engine/Components/Behaviour.h"
 #include "glm/vec3.hpp"
+#include "Engine/AssetManager.h"
+#include "Game/SceneManager.h"
 
 class TutorialArrow;
 class Animal;
@@ -28,6 +30,18 @@ protected:
 	AnimalNeeds m_ObjectNeed = AnimalNeeds::Bath;
 
 	virtual void AssignParticles();
+
+	bool m_IsSquareIndicator = false;
+	float m_IndicatorScale = 20.0f;
+	glm::vec3 m_IndicatorOffset = glm::vec3(0.0f, 0.0f, 0.0f);
+	std::shared_ptr<GameObject> m_Indicator;
+
+	std::string m_IconTexturePath = "";
+	glm::vec3 m_IconScale = glm::vec3(2.0f);
+	glm::vec3 m_IconOffset = glm::vec3(0.0f, 4.0f, 0.0f);
+	std::shared_ptr<GameObject> m_IconObject = nullptr;
+	std::shared_ptr<Shader> m_IconShader = nullptr;
+
 public:
 	void Awake() override;
 
@@ -40,4 +54,9 @@ public:
 	AnimalNeeds GetNeed();
 
 	TutorialArrow* GetTutorialArrow();
+	void DrawUpdate() override;
+private:
+	AssetManager* m_AssetMgr;
+	SceneManager* m_SceneMgr;
+	std::shared_ptr<Shader> m_PieShader;
 };

@@ -17,7 +17,7 @@ void TutorialArrow::Awake()
     m_MainCamera = m_SceneMgr->GetMainCamera().get();
 
     m_ArrowShader = m_AssetMgr->TutorialArrowShader;
-    m_ArrowObject = m_SceneMgr->Instantiate(m_Owner, "res/models/ProgressBarPlane.obj", m_ArrowShader);
+    m_ArrowObject = m_SceneMgr->Instantiate(m_Owner, "res/models/primitives/plane.obj", m_ArrowShader);
     m_ArrowObject->Name = "TestArrow";
 
     Model* arrowModel = m_ArrowObject->GetComponent<Model>();
@@ -29,7 +29,8 @@ void TutorialArrow::Awake()
 
     m_ArrowObject->transform->Scale = glm::vec3(1.0f);
     m_ArrowObject->transform->Position = m_StartPosition;
-    SetActive(false);
+    SetActive(false, 0);
+    SetActive(false, 1);
 }
 
 
@@ -40,8 +41,8 @@ void TutorialArrow::DrawUpdate()
     if (m_ArrowObject == nullptr || m_Owner == nullptr) return;
 
     m_ArrowShader->Use();
-    m_ArrowShader->SetFloat("u_width", 1.0);
-    m_ArrowShader->SetFloat("u_height", 1.0);
+    m_ArrowShader->SetFloat("u_width", 1.5);
+    m_ArrowShader->SetFloat("u_height", 1.5);
     m_ArrowShader->SetVec3("cameraRight", m_MainCamera->GetRight());
     m_ArrowShader->SetVec3("cameraUp", m_MainCamera->GetUp());
     m_ArrowShader->SetFloat("rotationAngle", glm::pi<float>() / 2);
@@ -79,8 +80,85 @@ void TutorialArrow::SetStartPosition(glm::vec3 pos)
     
 }
 
-void TutorialArrow::SetActive(bool active)
+void TutorialArrow::SetActive(bool active, int id)
 {
-    m_ArrowObject->SetActive(active);
-    m_AnimateArrow = active;
+    if (active)
+    {
+        SetGivenPlayerColor(id);
+        m_ArrowObject->SetActive(true);
+        m_AnimateArrow = true;
+    }
+    else if (IsOtherPlayerActive(id))
+    {
+        SetOtherPlayerColor(id);
+    }
+    else
+    {
+        m_ArrowObject->SetActive(false);
+        m_AnimateArrow = false;
+    }
+    
+    SetGivenPlayerActive(active, id);
+}
+
+bool TutorialArrow::IsGivenPlayerActive(int id)
+{
+    if (id == 0)
+    {
+        return m_Is1Active;
+    }
+    else
+    {
+        return m_Is2Active;
+    }
+}
+
+bool TutorialArrow::IsOtherPlayerActive(int id)
+{
+    if (id == 1)
+    {
+        return m_Is1Active;
+    }
+    else
+    {
+        return m_Is2Active;
+    }
+}
+
+void TutorialArrow::SetGivenPlayerActive(bool active, int id)
+{
+    if (id == 0)
+    {
+        m_Is1Active = active;
+    }
+    else
+    {
+        m_Is2Active = active;
+    }
+}
+
+void TutorialArrow::SetGivenPlayerColor(int id)
+{
+    if (id == 0) {
+        m_ArrowColor = m_Player1Color;
+    }
+    else if (id == 1) {
+        m_ArrowColor = m_Player2Color;
+    }
+    else {
+        m_ArrowColor = glm::vec3(1.0f, 1.0f, 1.0f);
+    }
+}
+
+void TutorialArrow::SetOtherPlayerColor(int id)
+{
+    if (id == 1) {
+        m_ArrowColor = m_Player1Color;
+    }
+    else if (id == 0) {
+        m_ArrowColor = m_Player2Color;
+    }
+    else {
+        m_ArrowColor = glm::vec3(1.0f, 1.0f, 1.0f);
+    }
 }
