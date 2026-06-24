@@ -90,6 +90,14 @@ private:
 	virtual void AssignLandEmitter();
 	virtual void AssignInteractionEmitter();
 
+    std::shared_ptr<Shader> m_ObjectNeedsShader;
+    std::vector<std::shared_ptr<GameObject>> m_NeedIcons;
+    float m_IconYOffset = 40.0f;
+    float m_IconSpacing = 5.0f;
+    float m_IconScale = 2.0f;
+    void UpdateObjectIcons();
+    void SetObjectIcons();
+
 public:
 	AEvent<AnimalNeeds> OnEnteredOnsenObject;
 	

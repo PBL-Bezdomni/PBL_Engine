@@ -37,6 +37,24 @@ void AOnsenObject::Awake()
 	m_PieShader->SetInt("u_NumNeeds", 1);
 
 	m_PieShader->SetIVec4("u_Needs", static_cast<int>(m_ObjectNeed), -1, -1, -1);
+
+	if (!m_IconTexturePath.empty())
+	{
+		m_IconShader = m_AssetMgr->WorldUIShader;
+		m_IconObject = m_SceneMgr->Instantiate(m_Owner, "res/models/primitives/plane.obj", m_IconShader);
+		m_IconObject->Name = "ObjectIcon";
+
+		m_IconObject->transform->Position = m_IconOffset;
+		m_IconObject->transform->Scale = m_IconScale;
+		m_IconObject->transform->EulerAngles = glm::vec3(90.0f, 0.0f, 0.0f);
+
+		Model* iconModel = m_IconObject->GetComponent<Model>();
+		if (iconModel != nullptr)
+		{
+			iconModel->ReassignShader(*m_IconShader);
+			iconModel->AssignTexture(*m_AssetMgr->GetTexture(m_IconTexturePath.c_str()));
+		}
+	}
 }
 
 void AOnsenObject::OnTriggerEnter(GameObject* other)
@@ -44,7 +62,7 @@ void AOnsenObject::OnTriggerEnter(GameObject* other)
 	Animal* animal = other->GetComponent<Animal>();
 	if (animal == nullptr) return;
 	if (!animal->m_WasDroppedByPlayer) return;
-	animal->m_WasDroppedByPlayer = false;
+
 	for (int i = 0; i < m_MaxSlots; i++)
 	{
 		if (m_Slots[i].OccupyingAnimal == animal)
@@ -73,6 +91,8 @@ void AOnsenObject::OnTriggerEnter(GameObject* other)
 	{
 		if (!m_Slots[i].IsOccupied)
 		{
+			animal->m_WasDroppedByPlayer = false;
+
 			m_Slots[i].IsOccupied = true;
 			m_Slots[i].OccupyingAnimal = animal;
 
@@ -181,5 +201,18 @@ void AOnsenObject::DrawUpdate()
 
 		m_PieShader->SetInt("u_NumNeeds", 1);
 		m_PieShader->SetIVec4("u_Needs", static_cast<int>(m_ObjectNeed), -1, -1, -1);
+	}
+
+	if (m_IconShader != nullptr && m_IconObject != nullptr && m_IconObject->IsActive())
+	{
+		m_IconShader->Use();
+		Camera* cam = m_SceneMgr->GetMainCamera().get();
+		if (cam != nullptr)
+		{
+			m_IconShader->SetVec3("cameraRight", cam->GetRight());
+			m_IconShader->SetVec3("cameraUp", -cam->GetUp());
+		}
+		m_IconShader->SetFloat("u_width", m_IconScale.x);
+		m_IconShader->SetFloat("u_height", m_IconScale.y);
 	}
 }
