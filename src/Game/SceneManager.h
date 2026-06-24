@@ -22,7 +22,7 @@ class CelShading;
 class SceneManager
 {
 private:
-	const float TIME_LIMIT = 20.f;
+	const float TIME_LIMIT = 300.f;
 	unique_ptr<JSONImporter> m_JSONImporter;
 	GameObject m_WorldParent;
 	GameObject m_UIParent;

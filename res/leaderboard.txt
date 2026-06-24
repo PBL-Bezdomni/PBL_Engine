@@ -1,3 +1,4 @@
+crystal ronaldos,800
 Malina,0
 kapi,0
 ada,0
