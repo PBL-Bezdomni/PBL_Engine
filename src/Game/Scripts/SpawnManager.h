@@ -85,5 +85,7 @@ public:
 
 	void OnTriggerEnter(GameObject* other) override;
 
+	void Reset();
+
 	const char* GetScriptName() const override { return "SpawnManager"; }
 };

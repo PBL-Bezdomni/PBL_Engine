@@ -22,7 +22,7 @@ class CelShading;
 class SceneManager
 {
 private:
-	const float TIME_LIMIT = 20.f;
+	const float TIME_LIMIT = 10.f;
 	unique_ptr<JSONImporter> m_JSONImporter;
 	GameObject m_WorldParent;
 	GameObject m_UIParent;
@@ -37,6 +37,7 @@ private:
 	std::string m_LeaderInputName;
 	bool m_WaitingForLeaderName = false;
 	std::string m_LeaderFilePath = "res/leaderboard.txt";
+	bool m_ConsumeShowConfirm = false;
 
 	std::vector<shared_ptr<GameObject>> m_AnimalsList;
 	
@@ -54,6 +55,8 @@ public:
 	float GetTimeLimit();
 	float GetTimeLeft();
 	float GetTimeProgressRatio();
+
+	void RestartGame();
 
 	AEvent<> OnSceneLoaded; 
 private:

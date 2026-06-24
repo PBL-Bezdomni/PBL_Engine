@@ -397,6 +397,44 @@ void SceneManager::RenderScene()
 
 }
 
+void SceneManager::RestartGame()
+{
+	// Reset timers and flags
+	m_TimeLeft = TIME_LIMIT;
+	m_GameOverTriggered = false;
+	m_WaitingForLeaderName = false;
+	m_ShowLeaderBoard = false;
+	m_LeaderInputName.clear();
+	m_LeaderBoard.Show(false);
+
+	// Reset spawn manager
+	if (SpawnManager::Instance != nullptr)
+	{
+		SpawnManager::Instance->Reset();
+	}
+
+	// Reset players positions and rigidbodies
+	m_Player1.transform->Position = glm::vec3(10.0f, 0.0f, -20.0f);
+	if (m_Player1.GetComponent<RigidBody>() != nullptr)
+	{
+		m_Player1.GetComponent<RigidBody>()->Teleport(m_Player1.transform->Position);
+	}
+
+	m_Player2.transform->Position = glm::vec3(10.0f, 0.0f, -25.0f);
+	if (m_Player2.GetComponent<RigidBody>() != nullptr)
+	{
+		m_Player2.GetComponent<RigidBody>()->Teleport(m_Player2.transform->Position);
+	}
+
+	// Reset UI
+	m_MoneyPanel.Text = std::to_wstring(0);
+	{
+		int minutes = static_cast<int>(TIME_LIMIT) / 60;
+		int seconds = static_cast<int>(TIME_LIMIT) % 60;
+		m_TimerPanel.Text = std::to_wstring(minutes) + L":" + (seconds < 10 ? L"0" : L"") + std::to_wstring(seconds);
+	}
+}
+
 void SceneManager::AddAnimal(shared_ptr<GameObject> spawnedEntity)
 {
 	if (spawnedEntity != nullptr)
@@ -629,6 +667,8 @@ void SceneManager::input(GLFWwindow* window)
 			m_WaitingForLeaderName = false;
 			m_ShowLeaderBoard = true;
 			m_LeaderBoard.Show(true);
+			// Consume the current Enter key so it doesn't immediately trigger restart
+			m_ConsumeShowConfirm = true;
 		}
 
 		if (glfwGetKey(window, GLFW_KEY_BACKSPACE) == GLFW_PRESS)
@@ -640,8 +680,28 @@ void SceneManager::input(GLFWwindow* window)
 		}
 	}
 
-	if (m_WaitingForLeaderName || m_ShowLeaderBoard)
+	if (m_WaitingForLeaderName)
 	{
+		return;
+	}
+
+	if (m_ShowLeaderBoard)
+	{
+		// If we just transitioned to leaderboard, wait for key release to avoid immediate restart
+		if (m_ConsumeShowConfirm)
+		{
+			if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_RELEASE && glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE)
+			{
+				m_ConsumeShowConfirm = false;
+			}
+			return;
+		}
+
+		// Restart when player acknowledges leaderboard
+		if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+		{
+			RestartGame();
+		}
 		return;
 	}
 
