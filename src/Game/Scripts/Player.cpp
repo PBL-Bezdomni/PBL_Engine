@@ -70,7 +70,7 @@ void Player::Awake()
     m_ChargeMeter->GetComponent<Model>()->ReassignShader(*m_ChargeMeterShader);
     // Maybe custom texture for meter
     // m_ChargeMeter->GetComponent<Model>()->AssignTexture();
-    m_ChargeMeter->transform->Position = glm::vec3(0.f, -0.1f, 4.f / m_ModelScaler);
+    m_ChargeMeter->transform->Position = glm::vec3(0.f, 1.f, 4.f / m_ModelScaler);
     m_ChargeMeter->transform->EulerAngles = glm::vec3(0.f, -90.f, 0.f);
     m_ChargeMeter->transform->Scale = glm::vec3(2.6f / m_ModelScaler, 1.0f, 0.5f / m_ModelScaler);
     m_ChargeMeter->SetActive(false);
