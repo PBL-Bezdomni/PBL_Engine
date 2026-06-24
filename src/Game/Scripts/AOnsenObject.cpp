@@ -216,3 +216,16 @@ void AOnsenObject::DrawUpdate()
 		m_IconShader->SetFloat("u_height", m_IconScale.y);
 	}
 }
+
+std::vector<Animal*> AOnsenObject::GetAnimalsInObject()
+{
+	std::vector<Animal*> animals;
+	for (int i = 0; i < m_MaxSlots; i++)
+	{
+		if (m_Slots[i].IsOccupied && m_Slots[i].OccupyingAnimal != nullptr)
+		{
+			animals.push_back(m_Slots[i].OccupyingAnimal);
+		}
+	}
+	return animals;
+}

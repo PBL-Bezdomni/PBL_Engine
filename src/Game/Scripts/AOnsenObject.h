@@ -55,6 +55,7 @@ public:
 
 	TutorialArrow* GetTutorialArrow();
 	void DrawUpdate() override;
+	std::vector<Animal*> GetAnimalsInObject();
 private:
 	AssetManager* m_AssetMgr;
 	SceneManager* m_SceneMgr;
