@@ -15,16 +15,38 @@ uniform mat4 projection;
 uniform mat4 lightSpaceMatrix;
 
 uniform bool u_IsInstanced;
+uniform bool isGrassWind;
+uniform bool isBambooWind;
+uniform float u_Time;
 
 void main()
 {
 
 	mat4 finalModel = u_IsInstanced ? (model * aInstanceMatrix) : model;
 
-	gl_Position = projection * view * finalModel * vec4(aPos, 1.0);
+	vec3 pos = aPos;
+	if (isGrassWind || isBambooWind)
+	{
+		float windSpeed;
+		if(isBambooWind)
+			windSpeed = 1.0;
+		else
+			windSpeed = 2.5;
+		float windStrength = 0.15;
+		
+		float mask = pos.x; 
+
+
+		float wave = sin(u_Time * windSpeed + finalModel[3].x + finalModel[3].z) * windStrength;
+
+		pos.x += wave * mask;
+		pos.z += wave * 0.5 * mask;
+	}
+
+	gl_Position = projection * view * finalModel * vec4(pos, 1.0);
 	TexCoord = aTexCoord;
-	FragPos = vec3(finalModel * vec4(aPos, 1.0f));
-	//FragPos = aPos;
+	FragPos = vec3(finalModel * vec4(pos, 1.0f));
+	//FragPos = pos;
 	Normal = mat3(transpose(inverse(finalModel))) * aNormal;
 	//Normal = aNormal;
 	FragPosLightSpace = lightSpaceMatrix * vec4(FragPos, 1.0);

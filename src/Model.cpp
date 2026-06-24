@@ -103,7 +103,17 @@ void Model::Draw(glm::mat4 modelMatrix, Shader* shader)
         shaderToUse = m_Shader;
     }
     shaderToUse.Use();
-    shaderToUse.SetBool("u_IsInstanced", false);
+    shaderToUse.SetFloat("u_Time", (float)glfwGetTime());
+    if (GetOwner()->m_isWater) {
+        shaderToUse.SetBool("isWater", true);
+        
+    }
+    if (GetOwner()->m_isGrassWinded) {
+        shaderToUse.SetBool("isGrassWind", true);
+    }
+    if (GetOwner()->m_isBambooWinded) {
+        shaderToUse.SetBool("isBambooWind", true);
+    }
     if (Instancing > 1)
     {
         shaderToUse.SetBool("u_IsInstanced", true);
@@ -151,6 +161,10 @@ void Model::Draw(glm::mat4 modelMatrix, Shader* shader)
     if (m_IsHighlighted) {
         shaderToUse.SetBool("u_IsHighlighted", false);
     }
+    shaderToUse.SetBool("u_IsInstanced", false);
+    shaderToUse.SetBool("isWater", false);
+    shaderToUse.SetBool("isGrassWind", false);
+    shaderToUse.SetBool("isBambooWind", false);
 }
 
 void Model::LoadModel(string path)

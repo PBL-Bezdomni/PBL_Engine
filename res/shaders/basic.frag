@@ -11,6 +11,10 @@ in vec4 FragPosLightSpace;
 uniform bool u_IsHighlighted;
 uniform vec3 u_GlowColor;
 
+uniform sampler2D waterTexture;
+uniform bool isWater;
+uniform float u_Time;
+
 uniform sampler2D texture_diffuse1;
 uniform sampler2D texture_diffuse2;
 uniform sampler2D texture_diffuse3;
@@ -65,6 +69,8 @@ vec3 CalcSpotLight(Light light, vec3 norm, vec3 viewDir, vec3 objectColor);
 
 float ShadowCalculation(vec4 fragPosLightSpace, sampler2D map);
 
+
+
 void main()
 {
     //FragColor = texture(texture_diffuse1, TexCoord);
@@ -80,8 +86,17 @@ void main()
         norm = normalize(Normal);
     }
     vec3 viewDir = normalize(viewPos - FragPos);
-
-    vec4 texColor = texture(texture_diffuse1, TexCoord);
+    vec4 texColor;
+    if (isWater) 
+    {
+        vec2 flowSpeed = vec2(-0.01, 0.0); 
+        vec2 animatedUV = TexCoord + (flowSpeed * u_Time);
+        texColor = texture(waterTexture, animatedUV); 
+    } 
+    else 
+    { 
+        texColor = texture(texture_diffuse1, TexCoord);
+    }
     if (texColor.a < 0.1)
     {
         discard;

@@ -61,6 +61,9 @@ public:
 	string Name;
 	int ID;
 	bool m_isVisible = true;
+	bool m_isWater = false;
+	bool m_isGrassWinded = false;
+	bool m_isBambooWinded = false;
 	GameObject();
 	vector<GameObject*> Children;
 	

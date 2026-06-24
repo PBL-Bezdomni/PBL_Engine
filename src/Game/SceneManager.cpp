@@ -201,6 +201,11 @@ void SceneManager::UpdateScene()
 
 void SceneManager::RenderScene()
 {
+	int windowH, windowW;
+	glfwGetWindowSize(WindowMgr->GetWindowPointer(), &windowW, &windowH);
+	if (windowW == 0 || windowH == 0) {
+		return;
+	}
 
 	AssetMgr->BasicShader->Use();
 	AssetMgr->BasicShader->SetBool("useDirLight", false);
@@ -226,8 +231,6 @@ void SceneManager::RenderScene()
 
     m_WorldParent.UpdateSelfAndChild();
 
-	int windowH, windowW;
-	glfwGetWindowSize(WindowMgr->GetWindowPointer(), &windowW, &windowH);
 	glViewport(0, 0, windowW, windowH);
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -462,6 +465,7 @@ void SceneManager::LoadModels()
 	m_GameObjects.insert(m_GameObjects.end(), objs.begin(), objs.end());
 	m_WorldParent.UpdateSelfAndChild();
 	m_WorldParent.GetChildByName("Bonsai")->m_isVisible = false;
+	m_WorldParent.GetChildByName("Water")->m_isWater = true;
 	
 	SetByMask(grassMatrices, 3, "res/textures/scene_textures/GrassPosition.png", 0.1f);
 	for (int i = 0; i < 3; i++) {
@@ -469,6 +473,7 @@ void SceneManager::LoadModels()
 		Grass[i] = GameObject();
 		Grass[i].ID = 999 - i;
 		Grass[i].Name = "Grass" + to_string(i);
+		Grass[i].m_isGrassWinded = true;
 		Model grassModel(*AssetMgr->BasicShader, "res/models/scene_models/Grass.fbx", grassMatrices[i].size(), grassMatrices[i]);
 		if (i == 0) {
 			grassModel.AssignTexture(*AssetMgr->GetTexture("res/textures/scene_textures/Grass1_DefaultMaterial_BaseColor.png"));
@@ -507,6 +512,7 @@ void SceneManager::LoadModels()
 	Bamboo.ID = 996;
 	Bamboo.Name = "Bamboo";
 	Bamboo.m_isVisible = false;
+	Bamboo.m_isBambooWinded = true;
 	Model b_model(*AssetMgr->BasicShader, "res/models/scene_models/Bambooes.fbx", bambooMatrices.size(), bambooMatrices);
 	Bamboo.AddComponent<Model>(b_model);
 	m_WorldParent.GetChildByName("Ground")->AddChild(&Bamboo);
