@@ -539,14 +539,14 @@ void SceneManager::LoadModels()
 	for(int i = 1; i < 4; i++)
 		m_WorldParent.GetChildByName("LillyPot" + to_string(i))->m_isBambooWinded = true;
 	
-	SetByMask(grassMatrices, 3, "res/textures/scene_textures/GrassPosition.png", 0.1f);
+	SetByMask(grassMatrices, 3, Loader::RelativePath() +"res/textures/scene_textures/GrassPosition.png", 0.1f);
 	for (int i = 0; i < 3; i++) {
 		m_WorldParent.GetChildByName("Ground")->RemoveChild(m_WorldParent.GetChildByName("Grass" + to_string(i)));
 		Grass[i] = GameObject();
 		Grass[i].ID = 999 - i;
 		Grass[i].Name = "Grass" + to_string(i);
 		Grass[i].m_isGrassWinded = true;
-		Model grassModel(*AssetMgr->BasicShader, "res/models/scene_models/Grass.fbx", grassMatrices[i].size(), grassMatrices[i]);
+		Model grassModel(*AssetMgr->BasicShader, (Loader::RelativePath() + "res/models/scene_models/Grass.fbx").c_str(), grassMatrices[i].size(), grassMatrices[i]);
 		if (i == 0) {
 			grassModel.AssignTexture(*AssetMgr->GetTexture("res/textures/scene_textures/Grass1_DefaultMaterial_BaseColor.png"));
 			Grass[i].AddComponent<Model>(grassModel);
@@ -566,7 +566,7 @@ void SceneManager::LoadModels()
 
 
 	m_LightSourceObject = GameObject();
-	Model lightModel = *AssetMgr->GetModel(*AssetMgr->LightSourceShader, "res/models/sphere/ball.obj");
+	Model lightModel = *AssetMgr->GetModel(*AssetMgr->LightSourceShader,  "res/models/sphere/ball.obj");
 	m_LightSourceObject.AddComponent<Model>(lightModel);
 	
 	m_LightSource = GameObject();
@@ -576,23 +576,23 @@ void SceneManager::LoadModels()
 	//m_LightSource.transform->Position = glm::vec3(0.f, 15.0f, -30.0f);
 	
 	m_WorldParent.GetChildByName("Ground")->RemoveChild(m_WorldParent.GetChildByName("Bamboo"));
-	SetByMask(&bambooMatrices, 0, "res/textures/scene_textures/BambooPosition.png", 0.01f);
+	SetByMask(&bambooMatrices, 0, Loader::RelativePath() + "res/textures/scene_textures/BambooPosition.png", 0.01f);
 	Bamboo = GameObject();
 	Bamboo.ID = 996;
 	Bamboo.Name = "Bamboo";
 	Bamboo.m_isVisible = false;
 	Bamboo.m_isBambooWinded = true;
-	Model b_model(*AssetMgr->BasicShader, "res/models/scene_models/Bambooes.fbx", bambooMatrices.size(), bambooMatrices);
+	Model b_model(*AssetMgr->BasicShader, (Loader::RelativePath()+"res/models/scene_models/Bambooes.fbx").c_str(), bambooMatrices.size(), bambooMatrices);
 	Bamboo.AddComponent<Model>(b_model);
 	m_WorldParent.GetChildByName("Ground")->AddChild(&Bamboo);
 
 	m_WorldParent.GetChildByName("Ground")->RemoveChild(m_WorldParent.GetChildByName("Bush"));
-	SetByMask(&bushMatrices, 0, "res/textures/scene_textures/BushPosition.png", 0.002f);
+	SetByMask(&bushMatrices, 0, Loader::RelativePath()+"res/textures/scene_textures/BushPosition.png", 0.002f);
 	Bush = GameObject();
 	Bush.ID = 995;
 	Bush.Name = "Bush";
 	Bush.m_isVisible = false;
-	Model bu_model(*AssetMgr->BasicShader, "res/models/scene_models/Bush.fbx", bushMatrices.size(), bushMatrices);
+	Model bu_model(*AssetMgr->BasicShader, (Loader::RelativePath()+"res/models/scene_models/Bush.fbx").c_str(), bushMatrices.size(), bushMatrices);
 	Bush.AddComponent<Model>(bu_model);
 	m_WorldParent.GetChildByName("Ground")->AddChild(&Bush);
 

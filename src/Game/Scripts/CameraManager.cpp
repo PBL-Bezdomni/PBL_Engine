@@ -30,8 +30,8 @@ void CameraManager::Update()
 
         float distance = glm::distance(pos1, pos2);
 
-        float minZoom = 30.0f;
-        float maxZoom = 80.0f;
+        float minZoom = 17.0f;
+        float maxZoom = 60.0f;
 
         float zoomMultiplier = 0.4f;
 
