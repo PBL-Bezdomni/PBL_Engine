@@ -61,7 +61,7 @@ void Animal::Awake()
             m_RB->PrepareInit(glm::vec3(1.f));
         }
         ParticleEmitter* emitter = m_Owner->AddComponent<ParticleEmitter>();
-        emitter->Initialize("res/shaders/basicParticles.vert", "res/shaders/basicParticles.frag", "res/shaders/basicParticles.comp", "res/models/primitives/plane.obj", "res/textures/UI/bubble.png");
+        emitter->Initialize("res/shaders/basicParticles.vert", "res/shaders/basicParticles.frag", "res/shaders/basicParticles.comp", "res/models/primitives/plane.obj", "res/textures/UI/particle/stink/stink.png");
         emitter->SetSpawnRate(10);
         emitter->SetBulk(3);
         emitter->MaxVelocity = glm::vec3(1.f, 3.f, 1.f);

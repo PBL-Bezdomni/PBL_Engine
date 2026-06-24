@@ -229,7 +229,7 @@ float ShadowCalculation(vec4 fragPosLightSpace, sampler2D map)
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
     projCoords = projCoords * 0.5 + 0.5;
     
-    // Защита от теней за пределами источника света
+
     if(projCoords.z > 1.0)
         return 0.0;
 
@@ -237,15 +237,15 @@ float ShadowCalculation(vec4 fragPosLightSpace, sampler2D map)
     vec3 normal = normalize(Normal);
     vec3 lightDir = normalize(-dirLight.direction); 
     
-    // Немного смягчили bias для мягких теней
-    float bias = max(0.001 * (1.0 - dot(normal, lightDir)), 0.0005);
+
+    float bias = max(0.006 * (1.0 - dot(normal, lightDir)), 0.0006);
 
     float shadow = 0.0;
     vec2 texelSize = 1.0 / textureSize(map, 0);
     
-    // Настройки мягкости
-    int radius = 2;          // Радиус размытия (2 = 5x5, 3 = 7x7)
-    float spread = 2.0;      // Насколько сильно пиксели отступают друг от друга
+
+    int radius = 2;          
+    float spread = 2.0;
     
     float samples = pow((radius * 2.0 + 1.0), 2.0); // Общее количество сэмплов
 
