@@ -11,6 +11,10 @@ in vec4 FragPosLightSpace;
 uniform bool u_IsHighlighted;
 uniform vec3 u_GlowColor;
 
+uniform sampler2D waterTexture;
+uniform bool isWater;
+uniform float u_Time;
+
 uniform sampler2D texture_diffuse1;
 uniform sampler2D texture_diffuse2;
 uniform sampler2D texture_diffuse3;
@@ -65,6 +69,8 @@ vec3 CalcSpotLight(Light light, vec3 norm, vec3 viewDir, vec3 objectColor);
 
 float ShadowCalculation(vec4 fragPosLightSpace, sampler2D map);
 
+
+
 void main()
 {
     //FragColor = texture(texture_diffuse1, TexCoord);
@@ -80,12 +86,22 @@ void main()
         norm = normalize(Normal);
     }
     vec3 viewDir = normalize(viewPos - FragPos);
-
-    vec4 texColor = texture(texture_diffuse1, TexCoord);
-//    if (texColor.a < 0.1)
-//    {
-//        discard;
-//    }
+    vec4 texColor;
+    if (isWater) 
+    {
+        vec2 flowSpeed = vec2(-0.01, 0.0); 
+        vec2 animatedUV = TexCoord + (flowSpeed * u_Time);
+        texColor = texture(waterTexture, animatedUV); 
+    } 
+    else 
+    { 
+        texColor = texture(texture_diffuse1, TexCoord);
+    }
+    texColor.rgb = pow(texColor.rgb, vec3(2.2));
+    if (texColor.a < 0.1)
+    {
+        discard;
+    }
     vec3 result = vec3(0.0);
     if (useDirLight)
     {
@@ -100,6 +116,9 @@ void main()
         result += CalcSpotLight(spotLight, norm, viewDir, vec3(texColor));
     }
 
+    result = result / (result + vec3(1.0));
+    result = pow(result, vec3(1.0 / 2.2));
+
     FragColor = vec4(result, texColor.a);
     NormalColor = normalize(Normal);
 
@@ -113,23 +132,36 @@ void main()
 
 vec3 CalcDirLight(vec3 norm, vec3 viewDir, vec3 objectColor)
 {
+    float sunIntensity = 2.5f;
     vec3 lightDir = normalize(-dirLight.direction);
     vec3 reflectDir = reflect(-lightDir, norm);
 
-    vec3 ambient = ambientStrength * dirLight.color;
+    vec3 actualLightColor = dirLight.color * sunIntensity;
+
+    vec3 ambient = ambientStrength * actualLightColor;
 
     float diff = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse = diff * dirLight.color;
+    vec3 diffuse = diff * actualLightColor;
 
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 256);
-    vec3 specular = specularStrength * spec * dirLight.color;
+    vec3 specular = specularStrength * spec * actualLightColor;
 
     float shadow = ShadowCalculation(FragPosLightSpace, shadowMap);                      
     float staticShadow = ShadowCalculation(FragPosLightSpace, staticShadowMap);
-    
     // Comments left for demonstration purpose
     // Both static and dynamic shadow maps
-    return  (ambient + (1.0 - (shadow + staticShadow)) * (diffuse + specular)) * objectColor;
+
+    float combinedShadow = max(shadow, staticShadow);
+    vec3 shadowColorTint = vec3(0.15, 0.20, 0.35) * diffuse;
+    vec3 finalLight = ambient + mix(diffuse + specular, shadowColorTint, combinedShadow);
+    float rimFactor = 1.0 - max(dot(viewDir, norm), 0.0);
+    rimFactor = smoothstep(0.6, 1.0, rimFactor); 
+    vec3 rimLight = rimFactor * vec3(0.3, 0.5, 0.6) * diff;
+    
+    return (finalLight + rimLight) * objectColor;
+
+
+    //return (ambient + (1.0 - combinedShadow) * (diffuse + specular)) * objectColor;
     // Only static shadow map
 //    return  (ambient + (1.0 - staticShadow) * (diffuse + specular)) * objectColor;
     // Only dynamic shadow map
@@ -194,35 +226,38 @@ vec3 CalcSpotLight(Light light, vec3 norm, vec3 viewDir, vec3 objectColor)
 
 float ShadowCalculation(vec4 fragPosLightSpace, sampler2D map)
 {
-    
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
-    
     projCoords = projCoords * 0.5 + 0.5;
     
-    float closestDepth = texture(map, projCoords.xy).r; 
-    
-    float currentDepth = projCoords.z;
-    
-    vec3 normal = normalize(Normal);
 
+    if(projCoords.z > 1.0)
+        return 0.0;
+
+    float currentDepth = projCoords.z;
+    vec3 normal = normalize(Normal);
     vec3 lightDir = normalize(-dirLight.direction); 
-    float bias = max(0.005 * (1.0 - dot(normal, lightDir)), 0.005);
+    
+
+    float bias = max(0.006 * (1.0 - dot(normal, lightDir)), 0.0006);
 
     float shadow = 0.0;
     vec2 texelSize = 1.0 / textureSize(map, 0);
-    for(int x = -1; x <= 1; ++x)
+    
+
+    int radius = 2;          
+    float spread = 2.0;
+    
+    float samples = pow((radius * 2.0 + 1.0), 2.0); // Общее количество сэмплов
+
+    for(int x = -radius; x <= radius; ++x)
     {
-        for(int y = -1; y <= 1; ++y)
+        for(int y = -radius; y <= radius; ++y)
         {
-            float pcfDepth = texture(map, projCoords.xy + vec2(x, y) * texelSize).r; 
-            shadow += currentDepth - bias > pcfDepth  ? 1.0 : 0.0;        
+            float pcfDepth = texture(map, projCoords.xy + vec2(x, y) * texelSize * spread).r; 
+            shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;        
         }    
     }
-    shadow /= 9.0;
-    
-   
-    if(projCoords.z > 1.0)
-        shadow = 0.0;
+    shadow /= samples;
         
     return shadow;
 }

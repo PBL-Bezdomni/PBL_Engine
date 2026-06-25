@@ -46,6 +46,7 @@ struct GameObjectData
 	vector<string> Scripts;
 
 	vector<GameObjectData> Children;
+
 };
 
 class GameObject
@@ -62,6 +63,11 @@ public:
 	Transform* transform;
 	string Name;
 	int ID;
+	bool m_isVisible = true;
+	bool m_isWater = false;
+	bool m_isGrassWinded = false;
+	bool m_isBambooWinded = false;
+	bool isShadowed = true;
 	GameObject();
 	vector<GameObject*> Children;
 	
@@ -73,6 +79,7 @@ public:
 	void AddChild(GameObject* child);
 	void RemoveChild(GameObject* child);
 	void DrawSelfAndChild();
+	void DrawSelfAndChildFiltered(bool filter);
 	void DrawSekfAndChildShadow(Shader* shader, bool drawOnlyDynamic);
 	void DrawSelf(Shader* shader);
 	glm::vec3 GetWorldPosition();
@@ -148,6 +155,8 @@ public:
 
 		return result;
 	}
+
+	GameObject* GetChildByName(const string& findName);
 
 	template<typename T>
 	vector<T*> FindComponentsInChildren(bool getFirst = false)
