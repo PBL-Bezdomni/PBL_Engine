@@ -239,7 +239,8 @@ void GameObject::DrawSelfAndChildFiltered(bool filter) {
 
         for (auto&& child : Children)
         {
-            child->DrawSelfAndChildFiltered(filter);
+            if(drawDecoration)
+                child->DrawSelfAndChildFiltered(filter);
         }
     }
 }
