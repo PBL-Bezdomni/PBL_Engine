@@ -32,7 +32,7 @@ void Animal::Awake()
     // TODO add scripts for every animal kind, that will override enum
     if (m_Owner->Name.find("bunny") != std::string::npos)
     {
-        m_ModelScaler = 2.5f; // bunny size
+        m_ModelScaler = 3.0f; // bunny size
         m_ModelOffset = glm::vec3(-1.0f, 0.0f, 0.0f); // change if bunny is not in center of circle
         m_Indicator->transform->Position = glm::vec3(0.f, -1.0f / m_ModelScaler, 0.f) - (m_ModelOffset / m_ModelScaler);
         m_Indicator->transform->Scale = glm::vec3(8.0f / m_ModelScaler);
@@ -58,7 +58,7 @@ void Animal::Awake()
     }
     else if (m_Owner->Name.find("skunk") != std::string::npos)
     {
-        m_ModelScaler = 2.0f; // skunk size
+        m_ModelScaler = 2.5f; // skunk size
         m_ModelOffset = glm::vec3(-4.0f, 0.0f, 3.0f); // change if skunk is not in center of circle
         m_Indicator->transform->Position = glm::vec3(0.0f, -2.0f / m_ModelScaler, 2.5f / m_ModelScaler) - (m_ModelOffset / m_ModelScaler);
         m_Indicator->transform->Scale = glm::vec3(12.0f / m_ModelScaler);

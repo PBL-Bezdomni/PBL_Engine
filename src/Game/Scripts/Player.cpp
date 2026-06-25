@@ -279,8 +279,9 @@ void Player::Update()
 
         glm::vec3 currentVel = rb->GetLinearVelocity();
         glm::vec3 targetVel = direction * speed;
-
+        
         rb->SetLinearVelocity(glm::vec3(targetVel.x, currentVel.y, targetVel.z));
+        m_Owner->transform->Position.y -= 1.6f;
     }
     else
     {
