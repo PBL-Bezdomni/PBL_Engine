@@ -277,7 +277,7 @@ shared_ptr<GameObject> SpawnManager::CreateBunny(shared_ptr<Shader> shader, std:
 	shared_ptr<GameObject> animal = CreateAnimal(animShader, "res/models/animations/animals/bunny-animations/bunny-waiting.glb", "bunny", index, "res/models/animations/animals/bunny-animations/bunny-waiting.glb");
 	Animator* animator = animal->GetComponent<Animator>();
 	Model* model = animal->GetComponent<Model>();
-	animal->transform->Scale = glm::vec3(2.f);
+	animal->transform->Scale = glm::vec3(2.5f);
 
 	if (animator != nullptr && model != nullptr)
 	{

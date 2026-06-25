@@ -735,7 +735,6 @@ void Animal::ResetEverythingSpawn(glm::vec3 spawnPosition)
 
     if (m_Owner->Name.find("bear") != std::string::npos) AssignBearTexture();
 }
-
 void Animal::AssignBearTexture() {
     int randomTextureIndex = Random::GetRandomInt(0, 5);
     std::string texturePath = "";
