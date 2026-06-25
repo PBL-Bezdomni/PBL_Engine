@@ -30,6 +30,7 @@ void Animal::Awake()
     AssignWalkEmitter();
     AssignInteractionEmitter();
     // TODO add scripts for every animal kind, that will override enum
+    float progressBarYPos = 10.f;
     if (m_Owner->Name.find("bunny") != std::string::npos)
     {
         m_ModelScaler = 3.0f; // bunny size
@@ -55,6 +56,7 @@ void Animal::Awake()
         {
             m_RB->PrepareInit(glm::vec3(2.f));
         }
+        progressBarYPos = 15.f;
     }
     else if (m_Owner->Name.find("skunk") != std::string::npos)
     {
@@ -74,6 +76,7 @@ void Animal::Awake()
         emitter->MaxLife = 0.9f;
         emitter->Color = glm::vec4(0.211f, 0.578f, 0.234f, 1.f);
         emitter->Play();
+        progressBarYPos = 15.f;
     }
     else
     {
@@ -91,12 +94,11 @@ void Animal::Awake()
     m_ProgressBar = m_SceneMgr->Instantiate(m_Owner, "res/models/primitives/plane.obj", m_AssetMgr->ProgressBarShader);
     m_ProgressBar->Name = "ProgressBar";
     m_ProgressBar->isShadowed = false;
-    m_ProgressBar->transform->Position = glm::vec3(0.f, 10.0f / m_ModelScaler, 0.f);
+    m_ProgressBar->transform->Position = glm::vec3(0.f, progressBarYPos / m_ModelScaler, 0.f);
     m_ProgressBar->transform->EulerAngles = glm::vec3(90.0f, 0.0f, 0.0f);
     m_ProgressBar->transform->Scale = glm::vec3(1.0f / m_ModelScaler);
     m_ProgressBar->SetActive(false);
     SetProgressBarShader(m_AssetMgr->ProgressBarShader);
-
 
     m_Checkmark = m_SceneMgr->Instantiate(m_Owner, "res/models/primitives/plane.obj", m_AssetMgr->WorldUIShader);
     m_Checkmark->Name = "Checkmark";
