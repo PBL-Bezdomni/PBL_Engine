@@ -5,6 +5,7 @@
 #include <map>
 #include <functional>
 #include <algorithm>
+#include <glm/glm.hpp>
 
 enum class BindingType { Button, Axis, Trigger, TriggerButton };
 
