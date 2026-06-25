@@ -32,8 +32,10 @@ void Animal::Awake()
     // TODO add scripts for every animal kind, that will override enum
     if (m_Owner->Name.find("bunny") != std::string::npos)
     {
-        m_Indicator->transform->Position = glm::vec3(0.f, -1.0, 0.f);
-        m_Indicator->transform->Scale = glm::vec3(8.0f);
+        m_ModelScaler = 2.5f; // bunny size
+        m_ModelOffset = glm::vec3(-1.0f, 0.0f, 0.0f); // change if bunny is not in center of circle
+        m_Indicator->transform->Position = glm::vec3(0.f, -1.0f / m_ModelScaler, 0.f) - (m_ModelOffset / m_ModelScaler);
+        m_Indicator->transform->Scale = glm::vec3(8.0f / m_ModelScaler);
         if (m_RB != nullptr)
         {
             m_RB->PrepareInit(glm::vec3(0.5f));
@@ -45,8 +47,9 @@ void Animal::Awake()
     }
     else if (m_Owner->Name.find("bear") != std::string::npos)
     {
-        m_Indicator->transform->Position = glm::vec3(5.0f, -5.5f, 0.0f);
-        m_Indicator->transform->Scale = glm::vec3(20.0f);
+        m_ModelScaler = 1.0f; // bear size
+        m_Indicator->transform->Position = glm::vec3(5.0f / m_ModelScaler, -5.5f / m_ModelScaler, 0.0f);
+        m_Indicator->transform->Scale = glm::vec3(20.0f / m_ModelScaler);
         AssignBearTexture();
         if (m_RB != nullptr)
         {
@@ -55,9 +58,10 @@ void Animal::Awake()
     }
     else if (m_Owner->Name.find("skunk") != std::string::npos)
     {
-        m_Indicator->transform->Position = glm::vec3(0.0f, -2.0f, 2.5f);
-        m_Indicator->transform->Scale = glm::vec3(12.0f);
-        m_Owner->transform->Scale = glm::vec3(2.0f);
+        m_ModelScaler = 2.0f; // skunk size
+        m_ModelOffset = glm::vec3(-4.0f, 0.0f, 3.0f); // change if skunk is not in center of circle
+        m_Indicator->transform->Position = glm::vec3(0.0f, -2.0f / m_ModelScaler, 2.5f / m_ModelScaler) - (m_ModelOffset / m_ModelScaler);
+        m_Indicator->transform->Scale = glm::vec3(12.0f / m_ModelScaler);
         if (m_RB != nullptr)
         {
             m_RB->PrepareInit(glm::vec3(1.f));
@@ -74,7 +78,8 @@ void Animal::Awake()
     else
     {
         // Failsafe
-	    m_Indicator->transform->Scale = glm::vec3(2.0f, 2.0f, 2.0f);
+        m_ModelScaler = 1.0f;
+        m_Indicator->transform->Scale = glm::vec3(2.0f / m_ModelScaler);
         if (m_RB != nullptr)
         {
             m_RB->PrepareInit(glm::vec3(1.f));
@@ -86,9 +91,9 @@ void Animal::Awake()
     m_ProgressBar = m_SceneMgr->Instantiate(m_Owner, "res/models/primitives/plane.obj", m_AssetMgr->ProgressBarShader);
     m_ProgressBar->Name = "ProgressBar";
     m_ProgressBar->isShadowed = false;
-    m_ProgressBar->transform->Position = glm::vec3(0.f, 10.0f, 0.f);
+    m_ProgressBar->transform->Position = glm::vec3(0.f, 10.0f / m_ModelScaler, 0.f);
     m_ProgressBar->transform->EulerAngles = glm::vec3(90.0f, 0.0f, 0.0f);
-    m_ProgressBar->transform->Scale = glm::vec3(1.0f, 1.0f, 1.0f);
+    m_ProgressBar->transform->Scale = glm::vec3(1.0f / m_ModelScaler);
     m_ProgressBar->SetActive(false);
     SetProgressBarShader(m_AssetMgr->ProgressBarShader);
 
@@ -96,9 +101,9 @@ void Animal::Awake()
     m_Checkmark = m_SceneMgr->Instantiate(m_Owner, "res/models/primitives/plane.obj", m_AssetMgr->WorldUIShader);
     m_Checkmark->Name = "Checkmark";
     m_Checkmark->isShadowed = false;
-    m_Checkmark->transform->Position = glm::vec3(0.f, 15.0f, 0.f);
+    m_Checkmark->transform->Position = glm::vec3(0.f, 15.0f / m_ModelScaler, 0.f);
     m_Checkmark->transform->EulerAngles = glm::vec3(90.0f, 0.0f, 0.0f);
-    m_Checkmark->transform->Scale = glm::vec3(1.0f, 1.0f, 1.0f);
+    m_Checkmark->transform->Scale = glm::vec3(1.0f / m_ModelScaler);
     Model* checkmarkModel = m_Checkmark->GetComponent<Model>();
     if (checkmarkModel != nullptr)
     {

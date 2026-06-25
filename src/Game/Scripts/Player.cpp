@@ -300,7 +300,7 @@ void Player::Update()
     if (m_CarriedAnimal != nullptr)
     {
 
-        glm::vec3 headPos = m_Owner->GetWorldPosition() + glm::vec3(0.0f, 3.0f, 0.0f);
+        glm::vec3 headPos = m_Owner->GetWorldPosition() + glm::vec3(0.0f, 5.0f, 0.0f);
         // m_CarriedAnimal->transform->Position = headPos;
         // m_CarriedAnimal->UpdateSelfAndChild();
 

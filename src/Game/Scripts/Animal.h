@@ -96,6 +96,8 @@ private:
     float m_IconYOffset = 40.0f;
     float m_IconSpacing = 5.0f;
     float m_IconScale = 1.7f;
+    float m_ModelScaler = 1.0f;
+    glm::vec3 m_ModelOffset = glm::vec3(0.0f, 0.0f, 0.0f);
     void UpdateObjectIcons();
     void SetObjectIcons();
 
