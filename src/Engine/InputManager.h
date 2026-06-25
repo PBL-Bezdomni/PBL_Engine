@@ -36,6 +36,7 @@ struct InputName
     const char* ACTION = "Action";
     const char* THROW = "Throw";
     const char* INTERACTION = "Interaction";
+    const char* DROP = "Drop";
 };
 
 class InputManager {

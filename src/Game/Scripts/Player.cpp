@@ -394,8 +394,17 @@ void Player::BindInput()
 
     im->subscribe(deviceID, m_InputName.ACTION, [this](float val, InputEventType type, int id)
     {
-        if (id == deviceID && type == InputEventType::Started)
-            this->HandleActionPressed();
+            if (id == deviceID)
+            {
+                if (type == InputEventType::Started)
+                {
+                    this->HandleActionPressed();
+                }
+                else if (type == InputEventType::Ended)
+                {
+                    this->m_HasPickUpReleased = true;
+                }
+            }
     });
 
     im->subscribe(deviceID, m_InputName.THROW, [this](float val, InputEventType type, int id)
@@ -419,6 +428,70 @@ void Player::BindInput()
         if (id == deviceID && type == InputEventType::Started)
             this->HandleInteractionPressed();
     });
+
+    im->subscribe(deviceID, m_InputName.DROP, [this](float val, InputEventType type, int id)
+    {
+         if (id == deviceID && type == InputEventType::Started)
+            this->HandleDropPressed();
+    });
+}
+
+void Player::HandleDropPressed()
+{
+    if (m_CarriedAnimal != nullptr)
+    {
+
+        if (m_IsChargingThrow)
+        {
+            m_IsChargingThrow = false;
+            m_ChargeMeter->SetActive(false);
+            m_ThrowCharge = m_MinThrowForce;
+        }
+
+        RigidBody* animalRb = m_CarriedAnimal->GetComponent<RigidBody>();
+        Animal* animalScript = m_CarriedAnimal->GetDerivedComponent<Animal>();
+
+        if (animalRb != nullptr)
+        {
+  
+            glm::vec3 rot = glm::vec3(m_LastLookDir.x, 0, m_LastLookDir.y);
+            glm::vec3 playerForward = glm::normalize(rot);
+
+  
+            glm::vec3 dropVelocity = playerForward * 2.0f;
+            dropVelocity.y = -2.0f;
+
+            animalRb->SetLinearVelocity(dropVelocity);
+
+
+            m_LastThrownAnimal = m_CarriedAnimal;
+            m_IgnoreThrownAnimalTimer = 1.0f;
+        }
+
+
+        if (animalScript != nullptr)
+        {
+  
+            animalScript->GetStateController()->RequestStateChange.Invoke(AnimalState::Throw);
+            animalScript->m_WasDroppedByPlayer = true;
+            animalScript->m_WaitTime = 2.0f;
+            animalScript->m_CurrentWaitTime = 0.0f;
+            animalScript->m_StuckTimer = 0.0f;
+        }
+
+
+        m_CarriedAnimal = nullptr;
+
+
+        for (AOnsenObject* obj : m_OnsenObjects)
+        {
+            TutorialArrow* arrow = obj->GetTutorialArrow();
+            if (arrow != nullptr)
+            {
+                arrow->SetActive(false, deviceID);
+            }
+        }
+    }
 }
 
 void Player::HandleActionPressed()

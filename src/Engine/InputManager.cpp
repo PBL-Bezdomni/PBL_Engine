@@ -10,6 +10,7 @@ void InputManager::Initialize()
     createAction(InputName.ACTION);
     createAction(InputName.INTERACTION);
     createAction(InputName.THROW);
+    createAction(InputName.DROP);
 
     addBinding(InputName.MOVE_FORWARD, {BindingType::Axis, GLFW_GAMEPAD_AXIS_LEFT_Y });
     addBinding(InputName.MOVE_STRAFE, {BindingType::Axis, GLFW_GAMEPAD_AXIS_LEFT_X });
@@ -17,10 +18,11 @@ void InputManager::Initialize()
     addBinding(InputName.LOOK_STRAFE, {BindingType::Axis, GLFW_GAMEPAD_AXIS_RIGHT_X });
     addBinding(InputName.ACTION, {BindingType::Button, GLFW_GAMEPAD_BUTTON_A});
     addBinding(InputName.INTERACTION, {BindingType::Button, GLFW_GAMEPAD_BUTTON_X});
-    addBinding(InputName.THROW, {BindingType::Button, GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER});
-    addBinding(InputName.THROW, { BindingType::Button, GLFW_GAMEPAD_BUTTON_LEFT_BUMPER });
-    addBinding(InputName.THROW, { BindingType::Button, GLFW_GAMEPAD_BUTTON_A });
-    addBinding(InputName.THROW, { BindingType::TriggerButton, GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER, 1.0f});
+    addBinding(InputName.DROP, { BindingType::Button, GLFW_GAMEPAD_BUTTON_B});
+    //addBinding(InputName.THROW, {BindingType::Button, GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER});
+    //addBinding(InputName.THROW, { BindingType::Button, GLFW_GAMEPAD_BUTTON_LEFT_BUMPER });
+    //addBinding(InputName.THROW, { BindingType::Button, GLFW_GAMEPAD_BUTTON_A });
+    //addBinding(InputName.THROW, { BindingType::TriggerButton, GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER, 1.0f});
 
     addBinding(InputName.ACTION, { BindingType::TriggerButton, GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER, 0.0f });
     addBinding(InputName.THROW, { BindingType::TriggerButton, GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER, 0.0f });
