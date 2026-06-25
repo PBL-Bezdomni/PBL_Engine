@@ -37,9 +37,9 @@ private:
 	float m_SpawnWaitTimer;
 	float m_AnimatedMoney = 0.0f;
 
-	int m_BunnyLimit = 6;
-	int m_BearLimit = 2;
-	int m_SkunkLimit = 3;
+	int m_BunnyLimit = 1;
+	int m_BearLimit = 0;
+	int m_SkunkLimit = 1;
 	int m_SpawnedLimit = 5;
 	int m_EarnedMoney = 0;
 	float m_SleepDuration = 5.f;

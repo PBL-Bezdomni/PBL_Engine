@@ -25,14 +25,16 @@ void Animal::Awake()
     m_RB = m_Owner->AddComponent<RigidBody>();
 	m_Indicator = m_SceneMgr->Instantiate(m_Owner, "res/models/primitives/plane.obj", m_AssetMgr->PieChartShader);
 	m_Indicator->Name = "NeedsIndicator";
-	m_Indicator->transform->Position = glm::vec3(0.f, -0.8f, 0.f);
+	m_Indicator->transform->Position = glm::vec3(0.f, -0.8f / m_ModelScaler, 0.f);
     AssignWalkEmitter();
     AssignInteractionEmitter();
     // TODO add scripts for every animal kind, that will override enum
     if (m_Owner->Name.find("bunny") != std::string::npos)
     {
-        m_Indicator->transform->Position = glm::vec3(0.f, -3.4f, 0.f);
-        m_Indicator->transform->Scale = glm::vec3(8.0f);
+        m_ModelScaler = 2.0f; // bunny size
+        m_ModelOffset = glm::vec3(-1.0f, 0.0f, 0.0f);
+        m_Indicator->transform->Position = glm::vec3(0.f, -3.4f / m_ModelScaler, 0.f) - (m_ModelOffset / m_ModelScaler);
+        m_Indicator->transform->Scale = glm::vec3(8.0f / m_ModelScaler);
         if (m_RB != nullptr)
         {
             m_RB->PrepareInit(glm::vec3(0.5f));
@@ -44,8 +46,9 @@ void Animal::Awake()
     }
     else if (m_Owner->Name.find("bear") != std::string::npos)
     {
-        m_Indicator->transform->Position = glm::vec3(5.0f, -8.4f, 0.0f);
-        m_Indicator->transform->Scale = glm::vec3(20.0f);
+        m_ModelScaler = 1.0f; // bear size
+        m_Indicator->transform->Position = glm::vec3(5.0f / m_ModelScaler, -8.4f / m_ModelScaler, 0.0f);
+        m_Indicator->transform->Scale = glm::vec3(20.0f / m_ModelScaler);
         AssignBearTexture();
         if (m_RB != nullptr)
         {
@@ -54,9 +57,10 @@ void Animal::Awake()
     }
     else if (m_Owner->Name.find("skunk") != std::string::npos)
     {
-        m_Indicator->transform->Position = glm::vec3(0.0f, -4.5f, 2.5f);
-        m_Indicator->transform->Scale = glm::vec3(12.0f);
-        m_Owner->transform->Scale = glm::vec3(2.0f);
+        m_ModelScaler = 2.0f; // skunk size
+        m_ModelOffset = glm::vec3(-4.0f, 0.0f, 3.0f);
+        m_Indicator->transform->Position = glm::vec3(0.0f, -4.5f / m_ModelScaler, 2.5f / m_ModelScaler) - (m_ModelOffset / m_ModelScaler);
+        m_Indicator->transform->Scale = glm::vec3(12.0f / m_ModelScaler);
         if (m_RB != nullptr)
         {
             m_RB->PrepareInit(glm::vec3(1.f));
@@ -73,20 +77,24 @@ void Animal::Awake()
     else
     {
         // Failsafe
-	    m_Indicator->transform->Scale = glm::vec3(2.0f, 2.0f, 2.0f);
+        m_ModelScaler = 1.0f;
+	    m_Indicator->transform->Scale = glm::vec3(2.0f / m_ModelScaler);
         if (m_RB != nullptr)
         {
             m_RB->PrepareInit(glm::vec3(1.f));
         }
     }
+
+    m_Owner->transform->Scale = glm::vec3(m_ModelScaler);
+
     SetIndicatorShader(m_AssetMgr->PieChartShader);
 
 
     m_ProgressBar = m_SceneMgr->Instantiate(m_Owner, "res/models/primitives/plane.obj", m_AssetMgr->ProgressBarShader);
     m_ProgressBar->Name = "ProgressBar";
-    m_ProgressBar->transform->Position = glm::vec3(0.f, 10.0f, 0.f);
+    m_ProgressBar->transform->Position = glm::vec3(0.f, 10.0f / m_ModelScaler, 0.f);
     m_ProgressBar->transform->EulerAngles = glm::vec3(90.0f, 0.0f, 0.0f);
-    m_ProgressBar->transform->Scale = glm::vec3(1.0f, 1.0f, 1.0f);
+    m_ProgressBar->transform->Scale = glm::vec3(1.0f / m_ModelScaler);
     m_ProgressBar->SetActive(false);
     SetProgressBarShader(m_AssetMgr->ProgressBarShader);
 
@@ -589,7 +597,7 @@ void Animal::SetObjectIcons() {
         newIcon->Name = "NeedIcon_" + std::to_string(i);
         newIcon->transform->EulerAngles = glm::vec3(90.0f, 0.0f, 0.0f);
 
-        newIcon->transform->Position = glm::vec3(0.0f, m_IconYOffset, 0.0f);
+        newIcon->transform->Position = glm::vec3(0.0f, m_IconYOffset / m_ModelScaler, 0.0f);
 
         std::string texturePath = "";
         if (m_RequiredServices[i] == AnimalNeeds::Sauna) texturePath = "res/textures/UI/objects/sauna.png";
@@ -679,7 +687,7 @@ void Animal::UpdateObjectIcons() {
 
             float currentXOffset = startXOffset + (i * m_IconSpacing);
 
-            icon->transform->Position = glm::vec3(0.0f, m_IconYOffset, 0.0f) + (localRight * currentXOffset);
+            icon->transform->Position = glm::vec3(0.0f, m_IconYOffset / m_ModelScaler, 0.0f) + (localRight * currentXOffset);
         }
     }
 }
