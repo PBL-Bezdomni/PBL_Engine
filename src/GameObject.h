@@ -68,6 +68,7 @@ public:
 	bool m_isGrassWinded = false;
 	bool m_isBambooWinded = false;
 	bool isShadowed = true;
+	bool drawDecoration = true;
 	GameObject();
 	vector<GameObject*> Children;
 	

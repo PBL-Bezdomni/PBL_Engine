@@ -269,7 +269,7 @@ void SceneManager::RenderScene()
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	m_cl->RenderQuad(*AssetMgr->CelShadingShader, true);
+	m_cl->RenderQuad(*AssetMgr->CelShadingShader, false);
 
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, m_cl->GetFBO());
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
@@ -592,6 +592,9 @@ void SceneManager::LoadModels()
 	vector<shared_ptr<GameObject>> objs = m_JSONImporter->ImportScene("scene2", &m_WorldParent);
 	m_GameObjects.insert(m_GameObjects.end(), objs.begin(), objs.end());
 	m_WorldParent.UpdateSelfAndChild();
+
+	//m_WorldParent.GetChildByName("Decoration")->drawDecoration = false;
+
 	m_WorldParent.GetChildByName("Bonsai")->m_isVisible = false;
 	m_WorldParent.GetChildByName("Water")->m_isWater = true;
 

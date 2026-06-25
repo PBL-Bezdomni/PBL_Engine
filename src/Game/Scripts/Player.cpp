@@ -279,8 +279,9 @@ void Player::Update()
 
         glm::vec3 currentVel = rb->GetLinearVelocity();
         glm::vec3 targetVel = direction * speed;
-
+        
         rb->SetLinearVelocity(glm::vec3(targetVel.x, currentVel.y, targetVel.z));
+        m_Owner->transform->Position.y -= 1.6f;
     }
     else
     {
@@ -300,7 +301,7 @@ void Player::Update()
     if (m_CarriedAnimal != nullptr)
     {
 
-        glm::vec3 headPos = m_Owner->GetWorldPosition() + glm::vec3(0.0f, 3.0f, 0.0f);
+        glm::vec3 headPos = m_Owner->GetWorldPosition() + glm::vec3(0.0f, 5.0f, 0.0f);
         // m_CarriedAnimal->transform->Position = headPos;
         // m_CarriedAnimal->UpdateSelfAndChild();
 
