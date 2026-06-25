@@ -33,6 +33,7 @@ private:
     void HandleThrowPressed();
     void HandleThrowReleased();
     void HandleInteractionPressed();
+    void HandleDropPressed();
 
     shared_ptr<GameObject> m_ChargeMeter;
     shared_ptr<Shader> m_ChargeMeterShader;

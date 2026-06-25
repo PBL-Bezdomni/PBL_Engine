@@ -311,7 +311,7 @@ void SceneManager::RenderScene()
 		m_MoneyPanel.Text = L"ERROR (nullptr)";
 		std::cout << "ERROR: SpawnManager::Instance is Null. Logic does not work.\n";
 	}
-	m_FpsPanel.Text = L"FPS: " + std::to_wstring(Time::GetFPS());
+	//m_FpsPanel.Text = L"FPS: " + std::to_wstring(Time::GetFPS());
 
 	m_UIManager.DrawPanelWithText(*AssetMgr->UIShader, *AssetMgr->TextShader, m_MoneyPanel);
 	m_UIManager.DrawPanelWithText(*AssetMgr->UIShader, *AssetMgr->TextShader, m_TimerPanel);

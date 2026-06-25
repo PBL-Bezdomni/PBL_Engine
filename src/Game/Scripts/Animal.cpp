@@ -47,7 +47,7 @@ void Animal::Awake()
     }
     else if (m_Owner->Name.find("bear") != std::string::npos)
     {
-        m_ModelScaler = 1.0f; // bear size
+        m_ModelScaler = 1.5f; // bear size
         m_Indicator->transform->Position = glm::vec3(5.0f / m_ModelScaler, -5.5f / m_ModelScaler, 0.0f);
         m_Indicator->transform->Scale = glm::vec3(20.0f / m_ModelScaler);
         AssignBearTexture();
@@ -735,7 +735,6 @@ void Animal::ResetEverythingSpawn(glm::vec3 spawnPosition)
 
     if (m_Owner->Name.find("bear") != std::string::npos) AssignBearTexture();
 }
-
 void Animal::AssignBearTexture() {
     int randomTextureIndex = Random::GetRandomInt(0, 5);
     std::string texturePath = "";

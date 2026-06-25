@@ -93,7 +93,7 @@ private:
 
     std::shared_ptr<Shader> m_ObjectNeedsShader;
     std::vector<std::shared_ptr<GameObject>> m_NeedIcons;
-    float m_IconYOffset = 40.0f;
+    float m_IconYOffset = 15.0f;
     float m_IconSpacing = 5.0f;
     float m_IconScale = 1.7f;
     float m_ModelScaler = 1.0f;
