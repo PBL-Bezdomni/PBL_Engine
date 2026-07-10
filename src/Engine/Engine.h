@@ -13,6 +13,15 @@ class Engine
 private:
 	// DEBUG
 	bool m_IsDebugDraw = false;
+	int m_DrawCounter = 0;
+	int m_InstanceDrawCounter = 0;
+	std::vector<int> m_DrawPerFrameCol;
+	std::vector<int> m_InstanceDrawPerFrameCol;
+	std::vector<int> m_AllDrawPerFrameCol;
+	std::vector<int> m_FPSCol;
+	std::vector<float> m_FrameDurationCol;
+	int m_CollectionIndex;
+	int COLLECTION_AVERAGE = 10;
 	
 	const float FIXED_TIME_STEP = 1.0f / 60.0f;
 	
@@ -48,5 +57,9 @@ public:
 	AudioManager& GetAudioManager();
 	GameManager& GetGameManager();
 	void Start();
+	void Stop();
 	int MainLoop();
+	
+	void IncreaseDrawCount(bool isInstance);
+	void FrameEnded(int fps, float dt);
 };

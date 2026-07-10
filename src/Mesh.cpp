@@ -1,5 +1,5 @@
 #include "Mesh.h"
-
+#include "Engine/Engine.h"
 #include "EngineConsts.h"
 #include "Model.h"
 
@@ -16,6 +16,8 @@ Mesh::Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture
     {
         SetupInstanceMatrix(instanceMatrix);
     }
+
+    m_Engine = &Engine::GetInstance();
 }
 
 void Mesh::SetupMesh()
@@ -129,6 +131,15 @@ void Mesh::Draw(Shader& shader)
     {
         glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
         glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
+    }
+
+    if (m_Engine == nullptr)
+    {
+        m_Engine = &Engine::GetInstance();
+    }
+    if (m_Engine != nullptr)
+    {
+        m_Engine->IncreaseDrawCount(Instancing > 1);
     }
     
     glBindVertexArray(0);

@@ -9,6 +9,8 @@ using namespace std;
 
 #define MAX_BONE_INFLUENCE 4
 
+class Engine;
+
 struct Vertex {
     glm::vec3 Position;
     glm::vec3 Normal;
@@ -39,5 +41,7 @@ private:
     
     void SetupMesh();
     void SetupInstanceMatrix(vector<glm::mat4> instanceMatrix);
+
+    Engine* m_Engine;
 };
 

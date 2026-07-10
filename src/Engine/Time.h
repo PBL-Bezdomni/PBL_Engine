@@ -1,5 +1,7 @@
 #pragma once
 
+class Engine;
+
 class Time
 {
 private:
@@ -10,6 +12,9 @@ private:
 	
 	int m_FrameCounter;
 	float m_FrameTimer;
+
+	Engine* m_Engine;
+	void FetchEngine();
 public:
 	Time() = default;
 	static void Update();

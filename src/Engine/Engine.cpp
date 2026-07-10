@@ -39,6 +39,12 @@ void Engine::Initialize()
 
 	m_GameMgr = std::make_unique<GameManager>();
 	// m_GameMgr->Initialize();
+
+	m_DrawPerFrameCol.resize(COLLECTION_AVERAGE);
+	m_InstanceDrawPerFrameCol.resize(COLLECTION_AVERAGE);
+	m_AllDrawPerFrameCol.resize(COLLECTION_AVERAGE);
+	m_FPSCol.resize(COLLECTION_AVERAGE);
+	m_FrameDurationCol.resize(COLLECTION_AVERAGE);
 }
 
 void Engine::SecondPassInitialization()
@@ -131,5 +137,57 @@ int Engine::MainLoop()
 
 	// TODO stop everything
 	return 0;
+}
+
+void Engine::IncreaseDrawCount(bool isInstance)
+{
+	if (isInstance)
+	{
+		m_InstanceDrawCounter++;
+	}
+	else
+	{
+		m_DrawCounter++;
+	}
+}
+
+void Engine::FrameEnded(int fps, float dt)
+{
+	m_CollectionIndex++;
+	m_CollectionIndex %= COLLECTION_AVERAGE;
+
+	m_DrawPerFrameCol[m_CollectionIndex] = m_DrawCounter;
+	m_InstanceDrawPerFrameCol[m_CollectionIndex] = m_InstanceDrawCounter; 
+	m_AllDrawPerFrameCol[m_CollectionIndex] = m_DrawCounter + m_InstanceDrawCounter;
+	m_DrawCounter = 0;
+	m_InstanceDrawCounter = 0;
+	m_FPSCol[m_CollectionIndex] = fps;
+	m_FrameDurationCol[m_CollectionIndex] = dt; 
+}
+
+void Engine::Stop()
+{
+	int avDraw = 0;
+	int avInsDraw = 0;
+	int avAllDraw = 0;
+	int avFPS = 0;
+	float avDT = 0;
+	
+	for (int i = 0; i < COLLECTION_AVERAGE; i++)
+	{
+		avDraw += m_DrawPerFrameCol[i];
+		avInsDraw += m_InstanceDrawPerFrameCol[i];
+		avAllDraw += m_AllDrawPerFrameCol[i];
+		avFPS += m_FPSCol[i];
+		avDT += m_FrameDurationCol[i];
+	}
+	avDraw = avDraw / COLLECTION_AVERAGE;
+	avInsDraw = avInsDraw / COLLECTION_AVERAGE;
+	avAllDraw = avAllDraw / COLLECTION_AVERAGE;
+	avFPS /= COLLECTION_AVERAGE;
+	avDT /= COLLECTION_AVERAGE;
+
+	JSONImporter js = JSONImporter();
+	js.SaveOptimizationStats(avDraw, avInsDraw, avAllDraw, avFPS, avDT);
 }
 
