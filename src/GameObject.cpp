@@ -239,7 +239,7 @@ void GameObject::DrawSelfAndChildFiltered(bool filter) {
 
         for (auto&& child : Children)
         {
-            if(drawDecoration)
+            if(m_DrawDecoration)
                 child->DrawSelfAndChildFiltered(filter);
         }
     }
@@ -327,5 +327,14 @@ void GameObject::Destroy()
         {
             child->Destroy();
         }
+    }
+}
+
+void GameObject::SetDecorationDraw(bool set)
+{
+    m_DrawDecoration = set;
+    for (auto&& child : Children)
+    {
+        child->SetDecorationDraw(set);
     }
 }

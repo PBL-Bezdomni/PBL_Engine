@@ -77,6 +77,8 @@ void SceneManager::Initialize()
 
 	m_LeaderBoard.Init(&m_UIManager, m_UIPanelTex.ID, glm::vec2(50.0f,50.0f), glm::vec2(400.0f,200.0f), 1.0f);
 	m_LeaderBoard.LoadFromFile(m_LeaderFilePath);
+
+	glEnable(GL_CULL_FACE); 
 }
 
 void SceneManager::LoadScene()
@@ -280,7 +282,10 @@ void SceneManager::RenderScene()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_DEPTH_TEST);
 	glDepthMask(GL_TRUE);
-	m_WorldParent.DrawSelfAndChildFiltered(false);
+	if (m_DrawDecoration)
+	{
+		m_WorldParent.DrawSelfAndChildFiltered(false);
+	}
 	glDepthMask(GL_TRUE);
 
 	// IMPORTANT: Do not write things below Freetype/UI, if you do not know what you are doing, thanks :)
@@ -311,7 +316,7 @@ void SceneManager::RenderScene()
 		m_MoneyPanel.Text = L"ERROR (nullptr)";
 		std::cout << "ERROR: SpawnManager::Instance is Null. Logic does not work.\n";
 	}
-	//m_FpsPanel.Text = L"FPS: " + std::to_wstring(Time::GetFPS());
+	m_FpsPanel.Text = L"FPS: " + std::to_wstring(Time::GetFPS());
 
 	m_UIManager.DrawPanelWithText(*AssetMgr->UIShader, *AssetMgr->TextShader, m_MoneyPanel);
 	m_UIManager.DrawPanelWithText(*AssetMgr->UIShader, *AssetMgr->TextShader, m_TimerPanel);
@@ -544,7 +549,7 @@ void SceneManager::UpdateShaderLight(GameObject* gameObject, Shader& shader, Sha
 		dLight->SetLightValues(shader);
 		glm::mat4 lightSpaceMatrix(0.0f);
 		m_DynamicDepthMap = dLight->GetDynamicShadowMap(m_WorldParent, depthShader);
-		if (!m_HasStaticMapLoaded)
+		if (!m_HasStaticMapLoaded || !m_IsOptimizationOn)
 		{
 			m_StaticDepthMap = dLight->GetStaticShadowMap(m_WorldParent, depthShader);
 			m_HasStaticMapLoaded = true;
@@ -780,6 +785,32 @@ void SceneManager::input(GLFWwindow* window)
 			RestartGame();
 		}
 		return;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
+	{
+		if (!m_HasOptimizationChanged)
+		{
+			ToggleOptimization();
+			m_HasOptimizationChanged = true;
+		}
+	}
+	else if (m_HasOptimizationChanged)
+	{
+		m_HasOptimizationChanged = false;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS)
+	{
+		if (!m_HasDecorationChanged)
+		{
+			ToggleDecoration();
+			m_HasDecorationChanged = true;
+		}
+	}
+	else if (m_HasDecorationChanged)
+	{
+		m_HasDecorationChanged = false;
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
@@ -1054,4 +1085,40 @@ void SceneManager::SetByMask(std::vector<glm::mat4>* matrices, int arraySize, st
 	}
 	stbi_image_free(data);
 
+}
+void SceneManager::ToggleOptimization()
+{
+	m_IsOptimizationOn = !m_IsOptimizationOn;
+	
+
+	if (m_IsOptimizationOn)
+	{
+		std::cout << "optimization ON\n";
+		glEnable(GL_CULL_FACE);
+	}
+	else
+	{
+		std::cout << "optimization OFF\n";
+		glDisable(GL_CULL_FACE); 
+	}
+}
+
+void SceneManager::ToggleDecoration()
+{
+	m_DrawDecoration = !m_DrawDecoration;
+	Bamboo.SetActive(m_DrawDecoration);
+	for (int i = 0; i < 3; i++)
+	{
+		Grass[i].SetActive(m_DrawDecoration);
+	}
+	m_HasStaticMapLoaded = false;
+
+	if (m_DrawDecoration)
+	{
+		std::cout << "decoration ON\n";
+	}
+	else
+	{
+		std::cout << "decoration OFF\n";
+	}
 }

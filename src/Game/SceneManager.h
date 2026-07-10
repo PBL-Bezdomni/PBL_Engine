@@ -131,4 +131,11 @@ private:
 	std::vector<glm::mat4> bambooMatrices;
 	GameObject Grass[3];
 	std::vector<glm::mat4> grassMatrices[3];
+
+	bool m_IsOptimizationOn = true;
+	bool m_HasOptimizationChanged = false;
+	bool m_HasDecorationChanged = false;
+	bool m_DrawDecoration = true;
+	void ToggleOptimization();
+	void ToggleDecoration();
 };

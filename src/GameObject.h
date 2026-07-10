@@ -59,6 +59,8 @@ private:
 	vector<GameObject*> m_PendingChildren;
 
 	void AddPendingChildren();
+
+	bool m_DrawDecoration = true;
 public:
 	Transform* transform;
 	string Name;
@@ -68,7 +70,7 @@ public:
 	bool m_isGrassWinded = false;
 	bool m_isBambooWinded = false;
 	bool isShadowed = true;
-	bool drawDecoration = true;
+	
 	GameObject();
 	vector<GameObject*> Children;
 	
@@ -92,6 +94,8 @@ public:
 
 	void Destroy();
 	bool IsPendingDestroy() const { return m_PendingDestroy; }
+
+	void SetDecorationDraw(bool set);
 
 	// template methods, must be in header apparently
 	template<typename T, typename... Args>
