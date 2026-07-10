@@ -787,7 +787,7 @@ void SceneManager::input(GLFWwindow* window)
 		return;
 	}
 
-	if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
 	{
 		if (!m_HasOptimizationChanged)
 		{
@@ -813,7 +813,7 @@ void SceneManager::input(GLFWwindow* window)
 		m_HasDecorationChanged = false;
 	}
 
-	if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS)
 	{
 		if (!m_HasParticlesChanged)
 		{
