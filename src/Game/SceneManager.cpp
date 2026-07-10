@@ -813,6 +813,19 @@ void SceneManager::input(GLFWwindow* window)
 		m_HasDecorationChanged = false;
 	}
 
+	if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
+	{
+		if (!m_HasParticlesChanged)
+		{
+			m_ParticleSystem.GetComponent<ParticleSystem>()->ToggleCPUDispatch();
+			m_HasParticlesChanged = true;
+		}
+	}
+	else if (m_HasParticlesChanged)
+	{
+		m_HasParticlesChanged = false;
+	}
+
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
 		MainCamera->ProcessKeyboard(FORWARD, Time::GetDeltaTime());

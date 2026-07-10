@@ -35,7 +35,14 @@ void ParticleSystem::Awake()
 void ParticleSystem::Update()
 {
 	Component::Update();
-	Dispatch();
+	if (m_IsCPU)
+	{
+		DispatchCPU();	
+	}
+	else
+	{
+		Dispatch();
+	}
 }
 
 uint64_t ParticleSystem::CreateEmitter(const char* vertPath, const char* fragPath, const char* compPath, const char* modelPath, const char* texPath)
@@ -127,4 +134,55 @@ void ParticleSystem::Dispatch()
 		// glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
 		glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT |	GL_BUFFER_UPDATE_BARRIER_BIT);
 	}
+}
+
+void ParticleSystem::DispatchCPU()
+{
+	for (auto [id, shader] : m_ComputeGraphicalShaderMap)
+	{
+		GLuint ssbo = m_BuffersMap.at(id);
+		shader->Use();
+		glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+
+		Particle* particles = (Particle*)glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(Particle) * MAX_PARTICLES, GL_MAP_WRITE_BIT);
+
+		if (!particles) return;
+
+		float dt = Time::GetDeltaTime();
+		for (int i = 0; i < MAX_PARTICLES; i++)
+		{
+
+			Particle& p = particles[i];
+
+			if(p.alive == 0)
+				continue;
+
+			p.life -= dt;
+
+			if(p.life <= 0.0)
+			{
+				p.alive = 0;
+				particles[i] = p;
+				continue;
+			}
+
+			// movement
+			p.position =  glm::vec4(glm::vec3(p.position) + glm::vec3(p.velocity) * dt, 1);
+
+			// smoke rises
+			p.velocity.y += 0.5f * dt;
+
+			// drag
+			p.velocity = glm::vec4(glm::vec3(p.velocity) * 0.98f, 1);
+
+			particles[i] = p;
+		}
+
+		glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+	}
+}
+
+void ParticleSystem::ToggleCPUDispatch()
+{
+	m_IsCPU = !m_IsCPU;
 }

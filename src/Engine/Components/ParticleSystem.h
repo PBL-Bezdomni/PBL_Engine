@@ -32,6 +32,8 @@ public:
 
 	uint64_t CreateEmitter(const char* vertPath, const char* fragPath, const char* compPath, const char* modelPath, const char* texPath);
 	void Emit(ParticleEmitter& emitter, uint32_t count);
+
+	void ToggleCPUDispatch();
 private:
 	const uint32_t MAX_PARTICLES = 100;
 	uint32_t m_NextEmitterID = 0;
@@ -48,4 +50,6 @@ private:
 
 	GLuint InitialBuffers();
 	void Dispatch();
+	void DispatchCPU();
+	bool m_IsCPU = false;
 };

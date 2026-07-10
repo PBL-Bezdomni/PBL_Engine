@@ -135,6 +135,7 @@ private:
 	bool m_IsOptimizationOn = true;
 	bool m_HasOptimizationChanged = false;
 	bool m_HasDecorationChanged = false;
+	bool m_HasParticlesChanged = false;
 	bool m_DrawDecoration = true;
 	void ToggleOptimization();
 	void ToggleDecoration();
