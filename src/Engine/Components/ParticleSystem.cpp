@@ -185,4 +185,12 @@ void ParticleSystem::DispatchCPU()
 void ParticleSystem::ToggleCPUDispatch()
 {
 	m_IsCPU = !m_IsCPU;
+	if (m_IsCPU)
+	{
+		std::cout << "CPU Dispatch ON\n";
+	}
+	else
+	{
+		std::cout << "CPU Dispatch OFF\n";
+	}
 }

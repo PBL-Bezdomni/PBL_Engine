@@ -186,6 +186,7 @@ void Engine::Stop()
 	avAllDraw = avAllDraw / COLLECTION_AVERAGE;
 	avFPS /= COLLECTION_AVERAGE;
 	avDT /= COLLECTION_AVERAGE;
+	avDT *= 1000;
 
 	JSONImporter js = JSONImporter();
 	js.SaveOptimizationStats(avDraw, avInsDraw, avAllDraw, avFPS, avDT);
