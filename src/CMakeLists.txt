@@ -45,10 +45,27 @@ target_link_libraries(${PROJECT_NAME} Jolt)
 target_link_libraries(${PROJECT_NAME} nlohmann_json::nlohmann_json)
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD 
-				   COMMAND ${CMAKE_COMMAND} -E create_symlink 
-				   ${CMAKE_SOURCE_DIR}/res 
-				   ${CMAKE_CURRENT_BINARY_DIR}/res)
+                   COMMAND ${CMAKE_COMMAND} -E copy_directory 
+                   "${CMAKE_SOURCE_DIR}/res" 
+                   "$<TARGET_FILE_DIR:${PROJECT_NAME}>/res"
+                   COMMENT "Copying resources..."
+)
 
+# Автоматическое копирование системных DLL (MSVC Runtime) для портативного билда
 if(MSVC)
-    target_compile_definitions(${PROJECT_NAME} PUBLIC NOMINMAX)
+    set(MSVC_RUNTIME_FILES
+        "C:/Windows/System32/vcruntime140.dll"
+        "C:/Windows/System32/vcruntime140_1.dll"
+        "C:/Windows/System32/msvcp140.dll"
+    )
+
+    foreach(DLL_FILE ${MSVC_RUNTIME_FILES})
+        if(EXISTS ${DLL_FILE})
+            add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${DLL_FILE}"
+                "$<TARGET_FILE_DIR:${PROJECT_NAME}>/"
+            )
+        endif()
+    endforeach()
 endif()
