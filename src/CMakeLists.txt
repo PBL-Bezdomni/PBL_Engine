@@ -51,7 +51,7 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
                    COMMENT "Copying resources..."
 )
 
-# Автоматическое копирование системных DLL (MSVC Runtime) для портативного билда
+
 if(MSVC)
     set(MSVC_RUNTIME_FILES
         "C:/Windows/System32/vcruntime140.dll"
