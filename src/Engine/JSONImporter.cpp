@@ -161,9 +161,14 @@ json JSONImporter::GetData(const char* fileName)
     return data;
 }
 
-void JSONImporter::SaveData(string fileName, json data)
+void JSONImporter::SaveData(string fileName, json data, bool useRelativePath)
 {
-    string fullPath = Loader::RelativePath() + BASE_PATH + fileName + JSON_SUFFIX;
+    string fullPath;
+    if (useRelativePath)
+    {
+        fullPath += Loader::RelativePath(); 
+    }
+    fullPath += BASE_PATH + fileName + JSON_SUFFIX;
 
     std::ofstream file(fullPath);
     if (!file.is_open())
@@ -304,5 +309,5 @@ void JSONImporter::SaveLog(string cpu, string logicProcessor, string gpuVendor, 
     data["FPS"] = fps;
     data["FRAME_DURATION"] = dt;
 
-    SaveData("log", data);
+    SaveData("log", data, false);
 }
