@@ -29,3 +29,5 @@ thirdparty/freetype-2.14.3/subprojects
 #cmake-build-*
 
 .DS_Store
+
+res/json/run_stats.json

@@ -1,5 +1,6 @@
 #include "Time.h"
 #include <GLFW/glfw3.h>
+#include "Engine/Engine.h"
 
 Time Time::m_Instance;
 
@@ -17,6 +18,9 @@ void Time::Update()
 		m_Instance.m_FrameCounter = 0;
 		m_Instance.m_FrameTimer = 0;
 	}
+
+	m_Instance.FetchEngine();
+	m_Instance.m_Engine->FrameEnded(m_Instance.m_FPS, m_Instance.m_DeltaTime);
 }
 
 float Time::GetDeltaTime()
@@ -29,3 +33,10 @@ int Time::GetFPS()
 	return m_Instance.m_FPS;
 }
 
+void Time::FetchEngine()
+{
+	if (m_Engine == nullptr)
+	{
+		m_Engine = &Engine::GetInstance();
+	}
+}

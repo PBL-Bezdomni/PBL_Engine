@@ -278,3 +278,15 @@ void JSONImporter::SetGameObjectsID(GameObjectData& objData)
         SetGameObjectsID(child);
     }
 }
+
+void JSONImporter::SaveOptimizationStats(int draw, int inst, int all, int fps, float dt)
+{
+    json data;
+    data["DRAW"] = draw;
+    data["INSTANCE"] = inst;
+    data["ALL_DRAW"] = all;
+    data["FPS"] = fps;
+    data["FRAME_DURATION"] = dt;
+
+    SaveData("run_stats", data);
+}
