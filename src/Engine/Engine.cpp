@@ -1,6 +1,8 @@
 #include "Engine.h"
 #include "Loader.h"
 #include "Time.h"
+#include <gl/GL.h>
+#include <windows.h>
 
 Engine& Engine::GetInstance()
 {
@@ -158,7 +160,85 @@ void Engine::Stop()
 	avFPS /= COLLECTION_AVERAGE;
 	avDT /= COLLECTION_AVERAGE;
 
+	SYSTEM_INFO sysInfo = {};
+	GetNativeSystemInfo(&sysInfo);
+
+	string cpu = GetCPUInfo();
+	string lp = to_string(sysInfo.dwNumberOfProcessors);
+	string gpuVendor = GetGPUInfo(0);
+	string gpuRenderer = GetGPUInfo(1);
+	string glVersion = GetGPUInfo(2);
+	string ramTotal = GetRAMInfo(0);
+	string ramAvailable = GetRAMInfo(1);
+
 	JSONImporter js = JSONImporter();
-	js.SaveLog("", "", "", avFPS, avDT);
+	js.SaveLog(cpu, lp, gpuVendor, gpuRenderer, glVersion, ramTotal, ramAvailable, avFPS, avDT);
+}
+
+std::string Engine::GetCPUInfo()
+{
+	HKEY hKey;
+
+	LONG result = RegOpenKeyExA(HKEY_LOCAL_MACHINE, "HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0", 0, KEY_QUERY_VALUE, &hKey);
+	string cpuName = "Unknown";
+
+	if (result == ERROR_SUCCESS)
+	{
+		char buffer[512] = {};
+		DWORD bufferSize = sizeof(buffer);
+		DWORD type = 0;
+
+		result = RegQueryValueExA(hKey, "ProcessorNameString", nullptr, &type, reinterpret_cast<LPBYTE>(buffer), &bufferSize);
+
+		if (result == ERROR_SUCCESS && type == REG_SZ)
+		{
+			cpuName = buffer;
+		}
+
+		RegCloseKey(hKey);
+	}
+
+	return cpuName;
+}
+
+std::string Engine::GetGPUInfo(int t)
+{
+	const GLubyte* name;
+	if (t == 1)
+	{
+		name = glGetString(GL_RENDERER);
+	}
+	else if (t == 2)
+	{
+		name = glGetString(GL_VERSION);
+	}
+	else
+	{
+		name = glGetString(GL_VENDOR);
+	}
+	
+	return  name ? reinterpret_cast<const char*>(name) : "Unknown";
+}
+
+std::string Engine::GetRAMInfo(int t)
+{
+	MEMORYSTATUSEX statex;
+	statex.dwLength = sizeof(statex);
+
+	GlobalMemoryStatusEx(&statex);
+	const double GB = 1024.0 * 1024.0 * 1024.0;
+
+	unsigned long long ram;
+	
+	if (t == 0)
+	{
+		ram = statex.ullTotalPhys;		
+	}
+	else
+	{
+		ram = statex.ullAvailPhys;
+	}
+	
+	return to_string(ram / GB);
 }
 

@@ -291,12 +291,16 @@ void JSONImporter::SaveOptimizationStats(int draw, int inst, int all, int fps, f
     SaveData("run_stats", data);
 }
 
-void JSONImporter::SaveLog(string cpu, string gpu, string ram, int fps, float dt)
+void JSONImporter::SaveLog(string cpu, string logicProcessor, string gpuVendor, string gpuRenderer, string glVersion, string ramTotal, string ramAvailable, int fps, float dt)
 {
     json data;
     data["CPU"] = cpu;
-    data["GPU"] = gpu;
-    data["RAM"] = ram;
+    data["LOGICAL_PROCESSOR"] = logicProcessor;
+    data["GPU_VENDOR"] = gpuVendor;
+    data["GPU_RENDERER"] = gpuRenderer;
+    data["GL_VERSION"] = glVersion;
+    data["RAM_TOTAL"] = ramTotal;
+    data["RAM_AVAILABLE"] = ramAvailable;
     data["FPS"] = fps;
     data["FRAME_DURATION"] = dt;
 

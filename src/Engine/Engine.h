@@ -38,6 +38,10 @@ private:
 	
 	void Initialize();
 	void SecondPassInitialization();
+
+	std::string GetCPUInfo();
+	std::string GetGPUInfo(int t);
+	std::string GetRAMInfo(int t);
 public:
 	const char* GLSL_VERSION = "#version 430";
 	const int32_t GL_VERSION_MAJOR = 4;
