@@ -54,6 +54,7 @@ public:
     void LoadCameraData(const char* filename, Camera* camera);
 
     void SaveOptimizationStats(int draw, int inst, int all, int fps, float dt);
+    void SaveLog(string cpu, string gpu, string ram, int fps, float dt);
 private:
     const char* BASE_PATH = "res/json/";
     const char* JSON_SUFFIX = ".json";

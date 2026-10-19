@@ -13,11 +13,6 @@ class Engine
 private:
 	// DEBUG
 	bool m_IsDebugDraw = false;
-	int m_DrawCounter = 0;
-	int m_InstanceDrawCounter = 0;
-	std::vector<int> m_DrawPerFrameCol;
-	std::vector<int> m_InstanceDrawPerFrameCol;
-	std::vector<int> m_AllDrawPerFrameCol;
 	std::vector<int> m_FPSCol;
 	std::vector<float> m_FrameDurationCol;
 	int m_CollectionIndex;
@@ -60,6 +55,5 @@ public:
 	void Stop();
 	int MainLoop();
 	
-	void IncreaseDrawCount(bool isInstance);
 	void FrameEnded(int fps, float dt);
 };

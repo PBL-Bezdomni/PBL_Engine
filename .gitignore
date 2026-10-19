@@ -31,3 +31,4 @@ thirdparty/freetype-2.14.3/subprojects
 .DS_Store
 
 res/json/run_stats.json
+res/json/log.json

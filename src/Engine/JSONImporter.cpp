@@ -290,3 +290,15 @@ void JSONImporter::SaveOptimizationStats(int draw, int inst, int all, int fps, f
 
     SaveData("run_stats", data);
 }
+
+void JSONImporter::SaveLog(string cpu, string gpu, string ram, int fps, float dt)
+{
+    json data;
+    data["CPU"] = cpu;
+    data["GPU"] = gpu;
+    data["RAM"] = ram;
+    data["FPS"] = fps;
+    data["FRAME_DURATION"] = dt;
+
+    SaveData("log", data);
+}
